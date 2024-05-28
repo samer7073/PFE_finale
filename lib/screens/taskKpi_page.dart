@@ -1,0 +1,141 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/services/ApiTaskKpi.dart';
+import '../models/TaskpiModel.dart';
+
+class TaskKpiPage extends StatefulWidget {
+  const TaskKpiPage({super.key});
+
+  @override
+  State<TaskKpiPage> createState() => _TaskKpiPageState();
+}
+
+class _TaskKpiPageState extends State<TaskKpiPage> {
+  late Future<TaskKpiModel> futureApiResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    futureApiResponse = ApiTaskKpi.getApiResponse();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FutureBuilder<TaskKpiModel>(
+          future: futureApiResponse,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData) {
+              TaskKpiModel? data = snapshot.data;
+              return GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
+                children: [
+                  _buildKpiCard(
+                      'Today',
+                      data?.today,
+                      Icons.today,
+                      Color.fromARGB(255, 244, 245, 247),
+                      Colors.blue[700],
+                      Color.fromARGB(255, 0, 4, 9)),
+                  _buildKpiCard(
+                      'This Week',
+                      data?.thisWeek,
+                      Icons.calendar_view_week,
+                      Color.fromARGB(255, 244, 245, 247),
+                      Colors.green[700],
+                      Color.fromARGB(255, 0, 6, 1)),
+                  _buildKpiCard(
+                      'Tomorrow',
+                      data?.tomorrow,
+                      Icons.calendar_today,
+                      Color.fromARGB(255, 244, 245, 247),
+                      Colors.pink[700],
+                      const Color.fromARGB(255, 8, 0, 5)),
+                  _buildKpiCard(
+                      'Upcoming',
+                      data?.upcoming,
+                      Icons.upcoming,
+                      Color.fromARGB(255, 244, 245, 247),
+                      Colors.orange[700],
+                      const Color.fromARGB(255, 10, 4, 0)),
+                  _buildKpiCard(
+                      'Created',
+                      data?.created,
+                      Icons.create,
+                      const Color.fromARGB(255, 239, 243, 243),
+                      Colors.teal[700],
+                      const Color.fromARGB(255, 1, 13, 11)),
+                  _buildKpiCard(
+                      'Invited',
+                      data?.invited,
+                      Icons.person_add,
+                      const Color.fromARGB(255, 247, 246, 244),
+                      Colors.amber[700],
+                      const Color.fromARGB(255, 11, 5, 1)),
+                  _buildKpiCard(
+                      'Is Overdue',
+                      data?.isOverdue,
+                      Icons.warning,
+                      Color.fromARGB(255, 244, 245, 247),
+                      Colors.red[700],
+                      const Color.fromARGB(255, 17, 3, 3)),
+                  _buildKpiCard(
+                      'Visio',
+                      data?.visio,
+                      Icons.video_call,
+                      Color.fromARGB(255, 244, 245, 247),
+                      Colors.indigo[700],
+                      const Color.fromARGB(255, 2, 3, 13)),
+                ],
+              );
+            } else {
+              return Center(child: Text('No data available'));
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildKpiCard(String title, int? value, IconData icon, Color? bgColor,
+      Color? iconColor, Color? textColor) {
+    return Card(
+      color: bgColor, // Background color for the card
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 40, color: iconColor), // Icon color
+            SizedBox(height: 16.0),
+            Text(
+              '$value',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: textColor, // Text color
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                color: textColor, // Text color
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
