@@ -13,20 +13,21 @@ class ticketListRow extends StatelessWidget {
   final Color colorContainer;
   final String messageContainer;
   final String ownerImage;
+  final String Pipeline;
 
-  const ticketListRow({
-    super.key,
-    required this.SourceIcon,
-    required this.id,
-    required this.title,
-    required this.owner,
-    required this.createTime,
-    required this.stateIcon,
-    required this.stateMessage,
-    required this.colorContainer,
-    required this.messageContainer,
-    required this.ownerImage,
-  });
+  const ticketListRow(
+      {super.key,
+      required this.SourceIcon,
+      required this.id,
+      required this.title,
+      required this.owner,
+      required this.createTime,
+      required this.stateIcon,
+      required this.stateMessage,
+      required this.colorContainer,
+      required this.messageContainer,
+      required this.ownerImage,
+      required this.Pipeline});
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +36,18 @@ class ticketListRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 20,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
+                  Text(
+                    "Ref :",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Text(
                     id,
                     style: TextStyle(
@@ -62,9 +67,17 @@ class ticketListRow extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.bodyText1,
+              Row(
+                children: [
+                  Text(
+                    "Label : ",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ],
               ),
               SizedBox(
                 width: 10,
@@ -91,35 +104,48 @@ class ticketListRow extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                owner,
-                style: Theme.of(context).textTheme.bodyText1,
+              Row(
+                children: [
+                  Text(
+                    "Pipeline : ",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  Text(Pipeline,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black)),
+                ],
               ),
-              ownerImage.length == 1
-                  ? CircleAvatar(
-                      backgroundColor: Colors
-                          .blue, // Choisissez une couleur de fond appropriée
-                      child: Text(
-                        ownerImage,
-                        style: TextStyle(
-                            color: Colors
-                                .white), // Choisissez une couleur de texte appropriée
-                      ),
-                      radius: 15,
-                    )
-                  : CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          "https://spherebackdev.cmk.biz:4543/storage/uploads/$ownerImage"),
-                      radius: 15,
-                    ),
+              Row(
+                children: [
+                  Text(
+                    owner,
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ownerImage.length == 1
+                      ? CircleAvatar(
+                          backgroundColor: Colors
+                              .blue, // Choisissez une couleur de fond appropriée
+                          child: Text(
+                            ownerImage,
+                            style: TextStyle(
+                                color: Colors
+                                    .white), // Choisissez une couleur de texte appropriée
+                          ),
+                          radius: 15,
+                        )
+                      : CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              "https://spherebackdev.cmk.biz:4543/storage/uploads/$ownerImage"),
+                          radius: 15,
+                        ),
+                ],
+              ),
             ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 20,
-          )
+          Divider()
         ],
       ),
     );

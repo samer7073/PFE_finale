@@ -25,9 +25,6 @@ class DealListRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 20,
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -141,9 +138,7 @@ class DealListRow extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: 20,
-        )
+        Divider()
       ],
     );
   }

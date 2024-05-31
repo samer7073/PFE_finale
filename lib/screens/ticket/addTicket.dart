@@ -89,7 +89,8 @@ class _AddTicketState extends State<AddTicket> {
   @override
   Widget build(BuildContext context) {
     return loading
-        ? CircularProgressIndicator()
+        ? Scaffold(
+            body: Container(child: Center(child: CircularProgressIndicator())))
         : Scaffold(
             appBar: AppBar(
               title: Text("Ajouter un ${widget.titel}"),
@@ -101,8 +102,8 @@ class _AddTicketState extends State<AddTicket> {
                 child: Column(
                   children: [
                     ExpansionPanelList(
-                      expandIconColor: Colors.purple,
-                      dividerColor: Colors.purple,
+                      expandIconColor: Colors.blue,
+                      dividerColor: Colors.grey,
                       expandedHeaderPadding:
                           EdgeInsets.all(0), // Optional: adjust padding
                       expansionCallback: (panelIndex, isExpanded) {

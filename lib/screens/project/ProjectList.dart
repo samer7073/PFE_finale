@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 // ignore_for_file: use_build_context_synchronously
 
@@ -164,7 +166,7 @@ class _ProjectListState extends State<ProjectList> {
                       )
                     ]),
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                      padding: const EdgeInsets.all(10.0),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(
@@ -185,7 +187,8 @@ class _ProjectListState extends State<ProjectList> {
                             reference: project.reference,
                             title: project.label,
                             owner: project.owner,
-                            ownerImage: project.owner_avatar),
+                            ownerImage: project.owner_avatar,
+                            pipline: project.pipeline),
                       ),
                     ),
                   );

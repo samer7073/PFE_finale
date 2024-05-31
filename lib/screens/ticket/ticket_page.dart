@@ -69,7 +69,10 @@ class _TicketState extends State<TicketPage> {
                     )),
           );
         },
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       appBar: AppBar(
         title: Text('Tickets'),

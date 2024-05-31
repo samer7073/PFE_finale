@@ -420,7 +420,13 @@ class _ComptePageState extends State<ComptePage> {
     final providerLangue = Provider.of<LangueProvider>(context);
     log(providerLangue.locale.toString() + "***************************");
     return loading
-        ? Loading()
+        ? Scaffold(
+            body: Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          )
         : Scaffold(
             appBar: AppBar(
               title: Text(AppLocalizations.of(context).myaccount),
@@ -502,7 +508,8 @@ class _ComptePageState extends State<ComptePage> {
                                 borderRadius: BorderRadius.circular(18),
                                 borderSide: BorderSide.none,
                               ),
-                              fillColor: Color.fromARGB(255, 46, 90, 249).withOpacity(0.1),
+                              fillColor: Color.fromARGB(255, 46, 90, 249)
+                                  .withOpacity(0.1),
                               filled: true,
                               prefixIcon: const Icon(
                                 Icons.person,
@@ -520,7 +527,8 @@ class _ComptePageState extends State<ComptePage> {
                                 borderRadius: BorderRadius.circular(18),
                                 borderSide: BorderSide.none,
                               ),
-                              fillColor: Color.fromARGB(255, 15, 65, 245).withOpacity(0.1),
+                              fillColor: Color.fromARGB(255, 15, 65, 245)
+                                  .withOpacity(0.1),
                               filled: true,
                               prefixIcon: const Icon(
                                 Icons.mail,
@@ -539,7 +547,8 @@ class _ComptePageState extends State<ComptePage> {
                                 borderRadius: BorderRadius.circular(18),
                                 borderSide: BorderSide.none,
                               ),
-                              fillColor: Color.fromARGB(255, 15, 65, 245).withOpacity(0.1),
+                              fillColor: Color.fromARGB(255, 15, 65, 245)
+                                  .withOpacity(0.1),
                               filled: true,
                               prefixIcon: const Icon(
                                 Icons.phone,
@@ -630,13 +639,13 @@ class _ComptePageState extends State<ComptePage> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 50, vertical: 16),
                               backgroundColor:
-                                  Color.fromARGB(255, 246, 228, 250),
+                                  Color.fromARGB(255, 228, 246, 250),
                             ),
                             child: Text(
                               "Save",
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Color.fromARGB(255, 145, 33, 250),
+                                color: Color.fromARGB(255, 40, 5, 243),
                                 fontWeight: FontWeight.w900,
                               ),
                             ),

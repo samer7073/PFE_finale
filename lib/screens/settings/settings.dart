@@ -289,8 +289,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                               });
                                             },
                                             icon: Icon(securePassword == false
-                                                ? Icons.remove_red_eye
-                                                : Icons.security_outlined),
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
                                           ),
                                           labelText: "Current Password",
                                         ),
@@ -314,8 +314,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                               });
                                             },
                                             icon: Icon(securePassword == false
-                                                ? Icons.remove_red_eye
-                                                : Icons.security_outlined),
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
                                           ),
                                           labelText: "New Password",
                                         ),

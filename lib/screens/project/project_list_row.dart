@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last
 
-import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
 
 class ProjectListRow extends StatelessWidget {
   final String reference;
@@ -9,27 +10,30 @@ class ProjectListRow extends StatelessWidget {
   final String owner;
   final String ownerImage;
   final String createTime;
+  final String pipline;
   const ProjectListRow(
       {super.key,
       required this.reference,
       required this.title,
       required this.owner,
       required this.ownerImage,
-      required this.createTime});
+      required this.createTime,
+      required this.pipline});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 20,
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
+                Text(
+                  "Ref : ",
+                  style: TextStyle(color: Colors.black),
+                ),
                 Text(
                   reference,
                   style: TextStyle(
@@ -47,14 +51,14 @@ class ProjectListRow extends StatelessWidget {
           height: 10,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text(
+              "Label : ",
+              style: TextStyle(color: Colors.black),
+            ),
             Text(
               title,
               style: Theme.of(context).textTheme.bodyText1,
-            ),
-            SizedBox(
-              width: 10,
             ),
           ],
         ),
@@ -64,35 +68,50 @@ class ProjectListRow extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              owner,
-              style: Theme.of(context).textTheme.bodyText1,
+            Row(
+              children: [
+                Text(
+                  "Pipeline : ",
+                  style: TextStyle(color: Colors.black),
+                ),
+                Text(
+                  pipline,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+              ],
             ),
-            ownerImage.length == 1
-                ? CircleAvatar(
-                    backgroundColor: Colors
-                        .blue, // Choisissez une couleur de fond appropriée
-                    child: Text(
-                      ownerImage,
-                      style: TextStyle(
-                          color: Colors
-                              .white), // Choisissez une couleur de texte appropriée
-                    ),
-                    radius: 15,
-                  )
-                : CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "https://spherebackdev.cmk.biz:4543/storage/uploads/$ownerImage"),
-                    radius: 15,
-                  ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  owner,
+                  style: TextStyle(color: Colors.black),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                ownerImage.length == 1
+                    ? CircleAvatar(
+                        backgroundColor: Colors
+                            .blue, // Choisissez une couleur de fond appropriée
+                        child: Text(
+                          ownerImage,
+                          style: TextStyle(
+                              color: Colors
+                                  .white), // Choisissez une couleur de texte appropriée
+                        ),
+                        radius: 15,
+                      )
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            "https://spherebackdev.cmk.biz:4543/storage/uploads/$ownerImage"),
+                        radius: 15,
+                      ),
+              ],
+            ),
           ],
         ),
-        SizedBox(
-          height: 10,
-        ),
-        SizedBox(
-          height: 20,
-        )
+        Divider()
       ],
     );
   }

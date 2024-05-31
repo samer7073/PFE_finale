@@ -69,8 +69,12 @@ class _LoginPageState extends State<LoginPage> {
     log("Url build---------------------------------------- $url");
     log('build ${themeProvider.isDarkMode}');
     return loading
-        ? Center(
-            child: CircularProgressIndicator(),
+        ? Scaffold(
+            body: Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
           )
         : Scaffold(
             body: Container(
@@ -188,18 +192,16 @@ class _LoginPageState extends State<LoginPage> {
                                         Navigator.pop(context);
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        shape: StadiumBorder(),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 50, vertical: 16),
-                                        backgroundColor:
-                                            Color.fromARGB(255, 246, 228, 250),
-                                      ),
+                                          shape: StadiumBorder(),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 50, vertical: 16),
+                                          backgroundColor: Color.fromARGB(
+                                              255, 181, 218, 240)),
                                       child: Text(
                                         "Modify",
                                         style: TextStyle(
                                             fontSize: 14,
-                                            color: Color.fromARGB(
-                                                255, 145, 33, 250),
+                                            color: Colors.blue,
                                             fontWeight: FontWeight.w900),
                                       ),
                                     )
@@ -213,15 +215,14 @@ class _LoginPageState extends State<LoginPage> {
                     });
               },
               style: ElevatedButton.styleFrom(
-                shape: StadiumBorder(),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-                backgroundColor: Color.fromARGB(255, 246, 228, 250),
-              ),
+                  shape: StadiumBorder(),
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+                  backgroundColor: Colors.white),
               child: Text(
                 "modify",
                 style: TextStyle(
                     fontSize: 14,
-                    color: Color.fromARGB(255, 145, 33, 250),
+                    color: Colors.blue,
                     fontWeight: FontWeight.w900),
               ),
             )
@@ -361,13 +362,13 @@ class _LoginPageState extends State<LoginPage> {
             style: ElevatedButton.styleFrom(
               shape: StadiumBorder(),
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-              backgroundColor: Color.fromARGB(255, 105, 192, 243),
+              backgroundColor: Color.fromARGB(255, 181, 218, 240),
             ),
             child: Text(
               AppLocalizations.of(context).login,
               style: TextStyle(
                   fontSize: 14,
-                  color: Color.fromARGB(255, 10, 52, 104),
+                  color: Colors.blue,
                   fontWeight: FontWeight.w900),
             ),
           ),

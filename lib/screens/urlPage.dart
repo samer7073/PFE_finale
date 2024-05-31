@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -92,7 +94,8 @@ class _UrlPageState extends State<UrlPage> {
                           borderRadius: BorderRadius.circular(18),
                           borderSide: BorderSide.none,
                         ),
-                        fillColor: Colors.purple.withOpacity(0.1),
+                        fillColor:
+                            Color.fromARGB(255, 39, 149, 176).withOpacity(0.1),
                         filled: true,
                         prefixIcon: const Icon(
                           Icons.link,
@@ -119,13 +122,13 @@ class _UrlPageState extends State<UrlPage> {
                       shape: StadiumBorder(),
                       padding:
                           EdgeInsets.symmetric(horizontal: 50, vertical: 16),
-                      backgroundColor: Color.fromARGB(255, 246, 228, 250),
+                      backgroundColor: Color.fromARGB(255, 228, 244, 250),
                     ),
                     child: Text(
                       "Save",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color.fromARGB(255, 145, 33, 250),
+                        color: Colors.blue,
                         fontWeight: FontWeight.w900,
                       ),
                     ),

@@ -140,7 +140,7 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                 headerBuilder: (context, isExpanded) {
                   return ListTile(
                     title: Text(
-                      'Aujourd\'hui',
+                      'Today',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   );

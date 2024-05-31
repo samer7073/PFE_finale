@@ -1891,18 +1891,21 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
   InputDecoration DecorationTextFormField() {
     return InputDecoration(
       constraints: BoxConstraints(),
-      labelStyle: TextStyle(color: Colors.purple),
-      hintStyle: TextStyle(color: Colors.purple),
+      labelStyle: TextStyle(color: Colors.blue),
+      hintStyle: TextStyle(color: Colors.blue),
       focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.purple),
-          borderRadius: BorderRadius.circular(5.5)),
+        borderSide: BorderSide(color: Colors.blue),
+        borderRadius: BorderRadius.circular(5.5),
+      ),
       enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.purple),
-          borderRadius: BorderRadius.circular(5.5)),
+        borderSide: BorderSide(color: Colors.blue),
+        borderRadius: BorderRadius.circular(5.5),
+      ),
       contentPadding: EdgeInsets.all(10),
       filled: true,
+      fillColor: Colors.lightBlueAccent.withOpacity(0.1),
       border: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.green), // Couleur du bord
+        borderSide: BorderSide(color: Colors.blue), // Couleur du bord
       ),
       labelText: widget.dataFieldGroup.alias,
     );

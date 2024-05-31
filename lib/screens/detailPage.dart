@@ -99,6 +99,11 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
+  // Utility method to remove square brackets from strings
+  String removeBrackets(String value) {
+    return value.replaceAll('[', '').replaceAll(']', '');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,7 +262,7 @@ class _DetailPageState extends State<DetailPage> {
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                         subtitle: Text(
-                          entry.value.toString(),
+                          removeBrackets(entry.value.toString()),
                           style: TextStyle(color: Colors.black),
                         ),
                       );

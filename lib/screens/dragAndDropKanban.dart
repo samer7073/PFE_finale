@@ -53,6 +53,7 @@ class _DragAndDropKanban extends State<DragAndDropKanban> {
         children: [
           DragAndDropItem(
               child: ticketListRow(
+                  Pipeline: ticket.pipeline,
                   SourceIcon: Icons.abc,
                   id: ticket.reference,
                   title: ticket.type_ticket,

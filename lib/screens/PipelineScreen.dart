@@ -28,6 +28,39 @@ class _PipelineScreenState extends State<PipelineScreen> {
   Pipeline? selectedPipeline;
   int? selectedStageId;
   List<KanbanElement>? kanbanData;
+  bool loading = false;
+  bool stageLoading = false; // Add a separate loading indicator for stages
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirstStage();
+  }
+
+  void _initializeFirstStage() async {
+    setState(() {
+      loading = true;
+    });
+    try {
+      PipelineResponse response =
+          await GetPipelineApi.getPipelines(widget.idFamily);
+      if (response.data.isNotEmpty) {
+        selectedPipeline = response.data.first;
+        if (selectedPipeline!.stages.isNotEmpty) {
+          selectedStageId = selectedPipeline!.stages.first.id;
+          KanbanResponse kanbanResponse =
+              await GetKanbanApi.getKanban(selectedStageId.toString());
+          kanbanData = kanbanResponse.data;
+        }
+      }
+    } catch (e) {
+      print('Error initializing first stage: $e');
+    }
+    setState(() {
+      loading = false;
+    });
+  }
+
   void deleteKanbanElement(KanbanElement element) async {
     setState(() {
       kanbanData!.remove(element);
@@ -58,12 +91,16 @@ class _PipelineScreenState extends State<PipelineScreen> {
     }
   }
 
-  bool loading = false;
-
   @override
   Widget build(BuildContext context) {
     return loading
-        ? Loading()
+        ? Scaffold(
+            body: Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          )
         : Scaffold(
             body: FutureBuilder<PipelineResponse>(
               future: GetPipelineApi.getPipelines(widget.idFamily),
@@ -79,7 +116,6 @@ class _PipelineScreenState extends State<PipelineScreen> {
                     );
                   }
                   selectedPipeline ??= snapshot.data!.data.first;
-                  log("------------------" + selectedPipeline!.id.toString());
 
                   return Column(
                     children: [
@@ -99,6 +135,7 @@ class _PipelineScreenState extends State<PipelineScreen> {
                                   selectedStageId = null;
                                   kanbanData =
                                       null; // Réinitialiser kanbanData à null lors du changement de pipeline
+                                  _initializeFirstStage();
                                 });
                               },
                               items: snapshot.data!.data
@@ -129,7 +166,8 @@ class _PipelineScreenState extends State<PipelineScreen> {
                               onTap: () async {
                                 setState(() {
                                   selectedStageId = stage.id;
-                                  loading = true;
+                                  stageLoading =
+                                      true; // Set stage loading to true
                                 });
                                 try {
                                   KanbanResponse kanbanResponse =
@@ -137,10 +175,15 @@ class _PipelineScreenState extends State<PipelineScreen> {
                                           stage.id.toString());
                                   setState(() {
                                     kanbanData = kanbanResponse.data;
-                                    loading = false;
+                                    stageLoading =
+                                        false; // Set stage loading to false
                                   });
                                 } catch (e) {
                                   print('Error fetching kanban data: $e');
+                                  setState(() {
+                                    stageLoading =
+                                        false; // Set stage loading to false even on error
+                                  });
                                 }
                               },
                               child: Container(
@@ -169,51 +212,51 @@ class _PipelineScreenState extends State<PipelineScreen> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      if (kanbanData == null || kanbanData!.isEmpty)
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              'Aucune donnée à afficher pour cette étape',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        )
-                      else if (selectedStageId == null)
-                        Text(
-                          'Please select a stage to view data',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        )
-                      else
-                        Expanded(
-                          child: ListView.builder(
-                            itemCount: kanbanData!.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              KanbanElement stageKanban = kanbanData![index];
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) {
-                                      return DetailElment(
-                                        idElment: stageKanban.elementId,
-                                        idFamily: widget.idFamily,
-                                        roomId: "1000",
-                                        refenrce: stageKanban.reference,
-                                        label: stageKanban.labelData,
-                                        pipeline_id: selectedPipeline!.id,
+                      Expanded(
+                        child: stageLoading
+                            ? Container(
+                                child: Center(
+                                    child:
+                                        CircularProgressIndicator())) // Show loading indicator for stage data
+                            : kanbanData == null || kanbanData!.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'Aucune donnée à afficher pour cette étape',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    itemCount: kanbanData!.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      KanbanElement stageKanban =
+                                          kanbanData![index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                            builder: (context) {
+                                              return DetailElment(
+                                                idElment: stageKanban.elementId,
+                                                idFamily: widget.idFamily,
+                                                roomId: "1000",
+                                                refenrce: stageKanban.reference,
+                                                label: stageKanban.labelData,
+                                                pipeline_id:
+                                                    selectedPipeline!.id,
+                                              );
+                                            },
+                                          ));
+                                        },
+                                        child: Cardwidget(
+                                          element: stageKanban,
+                                          deleteFunction: deleteKanbanElement,
+                                          familyId: widget.idFamily,
+                                        ),
                                       );
                                     },
-                                  ));
-                                },
-                                child: Cardwidget(
-                                  element: stageKanban,
-                                  deleteFunction: deleteKanbanElement,
-                                  familyId: widget.idFamily,
-                                ),
-                              );
-                            },
-                          ),
-                        )
+                                  ),
+                      )
                     ],
                   );
                 }

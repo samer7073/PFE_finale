@@ -158,6 +158,7 @@ class _TicketListState extends State<TicketList> {
                       ));
                     },
                     child: ticketListRow(
+                      Pipeline: ticket.pipeline,
                       SourceIcon: Icons.abc,
                       id: ticket.reference,
                       title: ticket.type_ticket,

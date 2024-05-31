@@ -7,7 +7,7 @@ import 'package:flutter_application_stage_project/services/sharedPreference.dart
 
 class GetTicketApi {
   static Future<Ticket> getAllTickets(String id_family) async {
-    log("ticket api");
+    log("ticket ap--------i");
     final token = await SharedPrefernce.getToken("token");
     log("$token");
     final url =
@@ -20,6 +20,7 @@ class GetTicketApi {
         'Authorization': 'Bearer $token',
       },
     );
+    log("ggggggggggggggggggggggg");
 
     if (response.statusCode == 200) {
       log(response.body);
