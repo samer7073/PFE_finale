@@ -6,14 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/core/constants/FieldWidgetGeneratorUpdate.dart';
 import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdate.dart';
 import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdateResponse.dart';
-import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
+
 import '../models/fields/datafieldsresponse.dart';
 import '../models/fields/fileData.dart';
 import '../services/ApiField.dart';
 import '../services/ApiFieldGroup.dart';
 import '../services/ApiFieldPost.dart';
 import 'homeNavigate_page.dart';
-import 'loading.dart';
 
 class EditElment extends StatefulWidget {
   final String title;
@@ -85,19 +84,23 @@ class _EditElmentState extends State<EditElment> {
   bool loading = true;
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? Loading()
-        : Scaffold(
-            appBar: AppBar(title: Text("Ajouter un ${widget.title}")),
-            body: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(title: Text("Ajouter un ${widget.title}")),
+      body: loading
+          ? Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : SingleChildScrollView(
               child: Form(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey,
                 child: Column(
                   children: [
                     ExpansionPanelList(
-                      expandIconColor: Colors.purple,
-                      dividerColor: Colors.purple,
+                      expandIconColor: Colors.blue,
+                      dividerColor: Colors.grey,
                       expansionCallback: (panelIndex, isExpanded) {
                         final groupId = data[panelIndex].id.toString();
                         if (!isExpanded && !dataGroupMap.containsKey(groupId)) {
@@ -111,7 +114,10 @@ class _EditElmentState extends State<EditElment> {
                         return ExpansionPanel(
                           headerBuilder: (context, isExpanded) {
                             return ListTile(
-                              title: Text(item.label),
+                              title: Text(
+                                item.label,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               onTap: () {},
                             );
                           },
@@ -242,6 +248,6 @@ class _EditElmentState extends State<EditElment> {
                 ),
               ),
             ),
-          );
+    );
   }
 }
