@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/services/ApiDetailElment.dart';
 import 'package:flutter_application_stage_project/services/ApiUpdateStageFamily.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 
 import '../models/detailModel.dart';
+import '../providers/theme_provider.dart';
 import '../services/sharedPreference.dart';
 
 class DetailPage extends StatefulWidget {
@@ -24,11 +26,13 @@ class _DetailPageState extends State<DetailPage> {
   late Future<DetailResponse> futureApiResponse;
   late Future<List<Stage>> futureStages;
   late Future<String> futurePipelineName;
+  late ThemeProvider themeProvider;
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    themeProvider = Provider.of<ThemeProvider>(context, listen: false);
   }
 
   void fetchData() {
@@ -84,7 +88,10 @@ class _DetailPageState extends State<DetailPage> {
     if (responseCode == 200) {
       // Mise à jour réussie, recharge les données
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Stage updated successfully'),
+        content: Text(
+          'Stage updated successfully',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.green,
       ));
       setState(() {
@@ -93,7 +100,10 @@ class _DetailPageState extends State<DetailPage> {
     } else {
       // Échec de la mise à jour
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Failed to update stage'),
+        content: Text(
+          'Failed to update stage',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.green,
       ));
     }
@@ -106,6 +116,8 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: FutureBuilder<DetailResponse>(
         future: futureApiResponse,
@@ -123,77 +135,7 @@ class _DetailPageState extends State<DetailPage> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 20,
-                ),
-                /*
-                FutureBuilder<String>(
-                  future: futurePipelineName,
-                  builder: (context, pipelineSnapshot) {
-                    if (pipelineSnapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (pipelineSnapshot.hasError) {
-                      return Center(
-                          child: Text('Error: ${pipelineSnapshot.error}'));
-                    } else if (!pipelineSnapshot.hasData) {
-                      return Center(child: Text('No pipeline name found'));
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              pipelineSnapshot.data!,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                            FutureBuilder<List<Stage>>(
-                              future: futureStages,
-                              builder: (context, stagesSnapshot) {
-                                if (stagesSnapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                } else if (stagesSnapshot.hasError) {
-                                  return Center(
-                                      child: Text(
-                                          'Error: ${stagesSnapshot.error}'));
-                                } else if (!stagesSnapshot.hasData ||
-                                    stagesSnapshot.data!.isEmpty) {
-                                  return Center(child: Text('No stages found'));
-                                } else {
-                                  List<Stage> stages = stagesSnapshot.data!;
-                                  return DropdownButton<int>(
-                                    value: selectedStageId,
-                                    items: stages.map((Stage stage) {
-                                      return DropdownMenuItem<int>(
-                                        value: stage.id,
-                                        child: Text(stage.label),
-                                      );
-                                    }).toList(),
-                                    onChanged: (int? newValue) {
-                                      if (newValue != null) {
-                                        setState(() {
-                                          selectedStageId = newValue;
-                                          updateStage(
-                                              widget.elementId, newValue);
-                                        });
-                                      }
-                                    },
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                ),
-                */
+                SizedBox(height: 20),
                 FutureBuilder<List<Stage>>(
                   future: futureStages,
                   builder: (context, stagesSnapshot) {
@@ -228,7 +170,9 @@ class _DetailPageState extends State<DetailPage> {
                                     child: Text(
                                       stage.label,
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
                                         fontWeight: isSelected
                                             ? FontWeight.bold
                                             : FontWeight.normal,
@@ -263,7 +207,8 @@ class _DetailPageState extends State<DetailPage> {
                         ),
                         subtitle: Text(
                           removeBrackets(entry.value.toString()),
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black),
                         ),
                       );
                     }).toList(),

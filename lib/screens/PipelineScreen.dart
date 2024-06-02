@@ -1,15 +1,13 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/KanbanModels/Element.dart';
 import 'package:flutter_application_stage_project/models/KanbanModels/KanbanResponse.dart';
 import 'package:flutter_application_stage_project/screens/loading.dart';
 import 'package:flutter_application_stage_project/services/GetKanbanApi.dart';
-
+import 'package:provider/provider.dart';
 import '../models/pipelines/pipelineModel.dart';
 import '../models/pipelines/pipelineRespone.dart';
+import '../providers/theme_provider.dart';
 import '../services/ApiDeleteElment.dart';
 import '../services/ApiGetPiplineAllFamilies.dart';
 import 'Card.dart';
@@ -30,10 +28,12 @@ class _PipelineScreenState extends State<PipelineScreen> {
   List<KanbanElement>? kanbanData;
   bool loading = false;
   bool stageLoading = false; // Add a separate loading indicator for stages
+  late ThemeProvider themeProvider;
 
   @override
   void initState() {
     super.initState();
+    themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     _initializeFirstStage();
   }
 
@@ -93,6 +93,9 @@ class _PipelineScreenState extends State<PipelineScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final isDarkMode = brightness == Brightness.dark;
+
     return loading
         ? Scaffold(
             body: Container(
@@ -146,9 +149,12 @@ class _PipelineScreenState extends State<PipelineScreen> {
                                   child: Text(
                                     pipeline.label,
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.0,
-                                        color: Colors.black),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.0,
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
                                   ),
                                 );
                               }).toList(),
@@ -195,7 +201,9 @@ class _PipelineScreenState extends State<PipelineScreen> {
                                 decoration: BoxDecoration(
                                   color: selectedStageId == stage.id
                                       ? Color.fromARGB(255, 82, 104, 250)
-                                      : Color.fromARGB(255, 242, 242, 242),
+                                      : isDarkMode
+                                          ? Colors.grey[800]
+                                          : Color.fromARGB(255, 242, 242, 242),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: Text(
@@ -203,7 +211,9 @@ class _PipelineScreenState extends State<PipelineScreen> {
                                   style: TextStyle(
                                     color: isSelected
                                         ? Colors.white
-                                        : Colors.black,
+                                        : isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
                                   ),
                                 ),
                               ),
@@ -239,7 +249,7 @@ class _PipelineScreenState extends State<PipelineScreen> {
                                               return DetailElment(
                                                 idElment: stageKanban.elementId,
                                                 idFamily: widget.idFamily,
-                                                roomId: "1000",
+                                                roomId: stageKanban.room_id,
                                                 refenrce: stageKanban.reference,
                                                 label: stageKanban.labelData,
                                                 pipeline_id:

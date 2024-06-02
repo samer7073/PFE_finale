@@ -1138,7 +1138,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                 return DropdownMenuItem<String>(
                   value: color['value'],
                   child: Padding(
-                    padding:  EdgeInsets.only(left: 10),
+                    padding: EdgeInsets.only(left: 10),
                     child: Text(
                       color['label']!,
                       style:
@@ -1459,7 +1459,10 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                   height: 10,
                 ),
                 DropdownButtonFormField<String>(
-                  hint: Text("Select " + widget.dataFieldGroup.alias),
+                  hint: Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text("Select " + widget.dataFieldGroup.alias),
+                  ),
                   icon: Icon(
                     Icons.arrow_drop_down,
                     color: Colors.black,
@@ -1497,9 +1500,12 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                   items: _dropdownItems.map<DropdownMenuItem<String>>((item) {
                     return DropdownMenuItem<String>(
                       value: item['id'],
-                      child: Text(
-                        item['label'],
-                        style: TextStyle(fontSize: 14),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          item['label'],
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
                     );
                   }).toList(),
@@ -1529,7 +1535,10 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                   height: 10,
                 ),
                 DropdownButtonFormField<String>(
-                  hint: Text("Select " + widget.dataFieldGroup.alias),
+                  hint: Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text("Select " + widget.dataFieldGroup.alias),
+                  ),
                   icon: Icon(
                     Icons.arrow_drop_down,
                     color: Colors.black,
@@ -1570,9 +1579,12 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                       .map<DropdownMenuItem<String>>((item) {
                     return DropdownMenuItem<String>(
                       value: item.id.toString(),
-                      child: Text(
-                        item.label,
-                        style: TextStyle(fontSize: 14),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          item.label,
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
                     );
                   }).toList(),

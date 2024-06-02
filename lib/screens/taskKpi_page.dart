@@ -107,7 +107,7 @@ class _TaskKpiPageState extends State<TaskKpiPage> {
   Widget _buildKpiCard(String title, int? value, IconData icon, Color? bgColor,
       Color? iconColor, Color? textColor) {
     return Card(
-      color: bgColor, // Background color for the card
+      //color: bgColor, // Background color for the card
       elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
@@ -117,22 +117,12 @@ class _TaskKpiPageState extends State<TaskKpiPage> {
           children: [
             Icon(icon, size: 40, color: iconColor), // Icon color
             SizedBox(height: 16.0),
-            Text(
-              '$value',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: textColor, // Text color
-              ),
-            ),
+            Text('$value',
+                style: Theme.of(context).textTheme.headlineSmall // Text color
+
+                ),
             SizedBox(height: 8.0),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                color: textColor, // Text color
-              ),
-            ),
+            Text(title, style: Theme.of(context).textTheme.bodyLarge),
           ],
         ),
       ),

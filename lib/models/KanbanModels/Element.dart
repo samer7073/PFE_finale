@@ -10,26 +10,27 @@ class KanbanElement {
   final String labelData;
   final Creator creator;
   final String reference;
+  final String room_id;
 
-  KanbanElement({
-    required this.elementId,
-    required this.familyId,
-    this.status,
-    required this.stageId,
-    required this.requiredFields,
-    required this.canCreateRoom,
-    required this.labelData,
-    required this.creator,
-    required this.reference,
-  });
+  KanbanElement(
+      {required this.elementId,
+      required this.familyId,
+      this.status,
+      required this.stageId,
+      required this.requiredFields,
+      required this.canCreateRoom,
+      required this.labelData,
+      required this.creator,
+      required this.reference,
+      required this.room_id});
 
   factory KanbanElement.fromJson(Map<String, dynamic> json) {
     // Extract the reference value from the info list
     String reference = '';
     if (json['element_info']['info'] is List) {
       for (var item in json['element_info']['info']) {
-        if (item.containsKey('Référence')) {
-          reference = item['Référence'] ?? '';
+        if (item.containsKey('Reference')) {
+          reference = item['Reference'] ?? '';
           break;
         }
       }
@@ -47,6 +48,7 @@ class KanbanElement {
           ? Creator.fromJson(json['element_info']['creator'])
           : Creator(id: '', label: '', avatar: ''),
       reference: reference,
+      room_id: "${json['room_id']}" ?? '',
     );
   }
 }

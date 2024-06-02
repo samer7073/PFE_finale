@@ -32,12 +32,11 @@ class DealListRow extends StatelessWidget {
               children: [
                 Text(
                   "Ref: ",
-                  style: TextStyle(color: Colors.black),
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
                 Text(
                   reference,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
+                  style: Theme.of(context).textTheme.bodyText1,
                 )
               ],
             ),
@@ -57,12 +56,11 @@ class DealListRow extends StatelessWidget {
               children: [
                 Text(
                   "Organisation: ",
-                  style: TextStyle(color: Colors.black),
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
                 Text(
                   organisation,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
+                  style: Theme.of(context).textTheme.bodyText1,
                 )
               ],
             ),
@@ -75,7 +73,7 @@ class DealListRow extends StatelessWidget {
           children: [
             Text(
               "Label :",
-              style: TextStyle(color: Colors.black),
+              style: Theme.of(context).textTheme.subtitle2,
             ),
             SizedBox(
               width: 10,
@@ -96,7 +94,7 @@ class DealListRow extends StatelessWidget {
               children: [
                 Text(
                   "Pipeline :",
-                  style: TextStyle(color: Colors.black),
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
                 SizedBox(
                   width: 10,
@@ -112,7 +110,7 @@ class DealListRow extends StatelessWidget {
               children: [
                 Text(
                   owner,
-                  style: TextStyle(color: Colors.black),
+                  style: Theme.of(context).textTheme.subtitle1,
                 ),
                 SizedBox(
                   width: 10,

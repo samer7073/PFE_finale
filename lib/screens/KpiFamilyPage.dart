@@ -3,6 +3,9 @@ import 'package:flutter_application_stage_project/models/KpiFamily/KpiResponseMo
 import 'package:flutter_application_stage_project/models/KpiFamily/StageKpiModel.dart';
 import 'package:flutter_application_stage_project/services/ApiKpiFamily.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/theme_provider.dart';
 
 class KpiFamilyPage extends StatefulWidget {
   final String family_id;
@@ -14,11 +17,12 @@ class KpiFamilyPage extends StatefulWidget {
 
 class _KpiFamilyPageState extends State<KpiFamilyPage> {
   late Future<KpiResponseModel> _futureKpiResponse;
-
+  late ThemeProvider themeProvider;
   @override
   void initState() {
     super.initState();
     _futureKpiResponse = ApiKpiFamily.getKpiFamily(widget.family_id);
+    themeProvider = Provider.of<ThemeProvider>(context, listen: false);
   }
 
   @override
@@ -55,10 +59,12 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
               children: [
                 Text(
                   data.data[index].pipeline,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                      color: themeProvider.isDarkMode == true
+                          ? Colors.white
+                          : Colors.black),
                 ),
                 const SizedBox(height: 10),
                 _buildBarChart(data.data[index].stages),
@@ -86,11 +92,15 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
-              tooltipBgColor: Colors.blueGrey,
+              tooltipBgColor:
+                  themeProvider.isDarkMode == true ? Colors.blue : Colors.blue,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
                   rod.y.toString(),
-                  const TextStyle(color: Color.fromARGB(255, 217, 148, 230)),
+                  TextStyle(
+                      color: themeProvider.isDarkMode == true
+                          ? Colors.white
+                          : Colors.black),
                 );
               },
             ),
@@ -113,8 +123,9 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
   SideTitles _buildBottomTitles(List<StageKpiModel> stages) {
     return SideTitles(
       showTitles: true,
-      getTextStyles: (value) =>
-          const TextStyle(color: Colors.black, fontSize: 12),
+      getTextStyles: (value) => TextStyle(
+          color: themeProvider.isDarkMode == true ? Colors.white : Colors.black,
+          fontSize: 12),
       margin: 20,
       rotateAngle: 30,
       getTitles: (value) {
@@ -132,8 +143,9 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
 
     return SideTitles(
       showTitles: true,
-      getTextStyles: (value) =>
-          const TextStyle(color: Colors.black, fontSize: 12),
+      getTextStyles: (value) => TextStyle(
+          color: themeProvider.isDarkMode == true ? Colors.white : Colors.black,
+          fontSize: 12),
       margin: 10,
       reservedSize: 40,
       getTitles: (value) {

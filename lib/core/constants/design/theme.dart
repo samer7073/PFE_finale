@@ -38,9 +38,7 @@ class MyThemes {
       bodyText1: TextStyle(
           fontSize: 16, color: Colors.black), // Your custom body text style
       bodyText2: TextStyle(fontSize: 14, color: Colors.grey),
-      subtitle1: TextStyle(
-        fontSize: 16,
-      ),
+      subtitle1: TextStyle(fontSize: 16, color: Colors.black),
       subtitle2: TextStyle(fontSize: 14, color: Colors.grey),
       button: TextStyle(fontSize: 16, color: Colors.white),
       caption: TextStyle(fontSize: 12, color: Colors.grey),
@@ -77,7 +75,7 @@ class MyThemes {
       color: Colors.black,
     ),
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.blue,
         shape: CircleBorder(
           eccentricity: 0.9,
         )),
@@ -85,19 +83,18 @@ class MyThemes {
       inputDecorationTheme: InputDecorationTheme(
           outlineBorder: BorderSide.none,
           border: InputBorder.none,
-          iconColor: Colors.purple,
-          suffixIconColor: Colors.purple),
+          iconColor: Colors.blue,
+          suffixIconColor: Colors.blue),
     ),
     textTheme: TextTheme(
       headline1: TextStyle(
           fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),
       headline2: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      headline3: TextStyle(fontSize: 16, color: Colors.black),
       bodyText1: TextStyle(
           fontSize: 16, color: Colors.white), // Your custom body text style
       bodyText2: TextStyle(fontSize: 14, color: Colors.grey),
-      subtitle1: TextStyle(
-        fontSize: 16,
-      ),
+      subtitle1: TextStyle(fontSize: 16, color: Colors.white),
       subtitle2: TextStyle(fontSize: 14, color: Colors.grey),
       button: TextStyle(fontSize: 16, color: Colors.white),
       caption: TextStyle(fontSize: 12, color: Colors.grey),
@@ -108,15 +105,15 @@ class MyThemes {
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       showSelectedLabels: true,
       showUnselectedLabels: true,
-      selectedIconTheme: IconThemeData(color: Colors.purple),
+      selectedIconTheme: IconThemeData(color: Colors.blue),
       unselectedIconTheme: IconThemeData(color: Colors.white),
-      selectedItemColor: Colors.purple,
+      selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.white,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
       titleTextStyle: TextStyle(color: Colors.white, fontSize: 22),
-      iconTheme: IconThemeData(color: Colors.purple),
+      iconTheme: IconThemeData(color: Colors.blue),
     ),
     // Utilisation de ThemeData.dark().copyWith() pour créer un thème sombre à partir du thème par défaut
     scaffoldBackgroundColor: Colors.black,

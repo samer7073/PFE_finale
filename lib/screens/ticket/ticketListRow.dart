@@ -43,16 +43,12 @@ class ticketListRow extends StatelessWidget {
                 children: [
                   Text(
                     "Ref :",
-                    style: TextStyle(color: Colors.black),
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    id,
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  )
+                  Text(id, style: Theme.of(context).textTheme.bodyLarge)
                 ],
               ),
               Text(
@@ -71,12 +67,9 @@ class ticketListRow extends StatelessWidget {
                 children: [
                   Text(
                     "Label : ",
-                    style: TextStyle(color: Colors.black),
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
+                  Text(title, style: Theme.of(context).textTheme.bodyLarge),
                 ],
               ),
               SizedBox(
@@ -108,18 +101,16 @@ class ticketListRow extends StatelessWidget {
                 children: [
                   Text(
                     "Pipeline : ",
-                    style: TextStyle(color: Colors.black),
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
-                  Text(Pipeline,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black)),
+                  Text(Pipeline, style: Theme.of(context).textTheme.bodyLarge),
                 ],
               ),
               Row(
                 children: [
                   Text(
                     owner,
-                    style: TextStyle(color: Colors.black),
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                   SizedBox(
                     width: 10,

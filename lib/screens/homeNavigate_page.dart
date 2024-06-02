@@ -46,7 +46,6 @@ class _HomeNavigateState extends State<HomeNavigate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
         body: _pageOptions[selectedPage],
         bottomNavigationBar: BottomNavigationBar(
           items: [

@@ -201,8 +201,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
               padding: EdgeInsets.all(15),
               child: Text(
                 "ACCOUNT",
-                style:
-                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.subtitle2,
               ),
             ), //Text(AppLocalizations.of(context).account)),
             Container(
