@@ -15,11 +15,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   String _viewMode = 'List view';
-  bool _isDropdownVisible = false;
 
   // List of widgets for different views
   static final List<Widget> _widgetOptions = <Widget>[
-    const ListViewPage(),
+    TaskListPage(),
     const KanbanBoard(),
     const Calendarviewpage(),
   ];
@@ -35,77 +34,60 @@ class _HomeScreenState extends State<HomeScreen> {
   void _changeViewMode(String viewMode) {
     setState(() {
       _viewMode = viewMode;
-      _isDropdownVisible = false; // Hide dropdown after selection
     });
     int newIndex = ['List view', 'Kanban', 'Calendar'].indexOf(viewMode);
     _onItemTapped(newIndex);
-  }
-
-  // Toggle dropdown visibility
-  void _toggleDropdownVisibility() {
-    setState(() {
-      _isDropdownVisible = !_isDropdownVisible;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Activity',
-              style: TextStyle(color: Colors.blue, fontSize: 25),
+            DropdownButton<String>(
+              value: _viewMode,
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  _changeViewMode(newValue);
+                }
+              },
+              items: <String>['List view', 'Kanban', 'Calendar']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              underline: Container(),
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+              style: const TextStyle(color: Colors.blue, fontSize: 16),
+              dropdownColor: Colors.white,
             ),
-            GestureDetector(
-              onTap: _toggleDropdownVisibility,
-              child: Row(
-                children: [
-                  Text(
-                    _viewMode,
-                    style: const TextStyle(color: Colors.blue, fontSize: 16),
-                  ),
-                  const Icon(Icons.arrow_drop_down, color: Colors.blue),
-                ],
+            const Expanded(
+              child: Center(
+                child: Text(
+                  'Activity',
+                  style: TextStyle(color: Colors.blue, fontSize: 24),
+                ),
               ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.notifications_active_rounded),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TaskLogScreen()),
+                );
+              },
             ),
           ],
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              // Action for filtering
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications_active_rounded),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TaskNotificationScreen()),
-              );
-            },
-          ),
-        ],
+        centerTitle: true,
       ),
       body: Column(
         children: [
-          if (_isDropdownVisible)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildViewModeButton('List view'),
-                  _buildViewModeButton('Kanban'),
-                  _buildViewModeButton('Calendar'),
-                ],
-              ),
-            ),
           Expanded(child: _widgetOptions.elementAt(_selectedIndex)),
         ],
       ),
@@ -121,20 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Colors.white,
         ),
         backgroundColor: Colors.blue,
-      ),
-    );
-  }
-
-  // Build view mode button
-  Widget _buildViewModeButton(String mode) {
-    return ElevatedButton(
-      onPressed: () {
-        _changeViewMode(mode);
-      },
-      child: Text(mode),
-      style: ElevatedButton.styleFrom(
-        foregroundColor: _viewMode == mode ? Colors.white : Colors.grey,
-        backgroundColor: _viewMode == mode ? Colors.purple : Colors.white,
       ),
     );
   }

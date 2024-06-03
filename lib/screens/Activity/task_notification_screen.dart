@@ -1,72 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_task_notification.dart';
 
-class TaskNotificationScreen extends StatefulWidget {
+class TaskLogScreen extends StatefulWidget {
   @override
-  _TaskNotificationScreenState createState() => _TaskNotificationScreenState();
+  _TaskLogScreenState createState() => _TaskLogScreenState();
 }
 
-class _TaskNotificationScreenState extends State<TaskNotificationScreen> {
-  List<dynamic> taskLogs = [];
-  int notificationCount = 0;
-  bool isLoading = true;
+class _TaskLogScreenState extends State<TaskLogScreen> {
+  final TaskLogService taskLogService = TaskLogService();
+  late Future<Map<String, dynamic>> futureTaskLogs;
+  late Future<Map<String, dynamic>> futureNotificationNumbers;
 
   @override
   void initState() {
     super.initState();
-    fetchTaskLogs();
-    fetchNotificationCount();
+    futureTaskLogs = taskLogService.fetchTaskLogs();
+    futureNotificationNumbers = taskLogService.getNotificationNumber();
   }
 
-  Future<void> fetchTaskLogs() async {
+  Future<void> markLogAsRead(String logId, int taskId, String action) async {
     try {
-      final logs = await TaskApiService.fetchTaskLogs();
-      setState(() {
-        taskLogs = logs;
-        isLoading = false;
-      });
+      final response = await taskLogService.markLogAsRead(logId, taskId, action);
+      print('Response: $response');
+      // Handle the response as needed
     } catch (e) {
-      print('Error fetching task logs: $e');
-      setState(() {
-        isLoading = false;
-      });
+      print('Error: $e');
+      // Handle the error as needed
     }
   }
 
-  Future<void> fetchNotificationCount() async {
+  Future<void> markAllLogsAsRead() async {
     try {
-      final count = await TaskApiService.fetchNotificationCount();
+      final response = await taskLogService.markAllLogsAsRead();
+      print('Response: $response');
+      // Refresh the task logs after marking all as read
       setState(() {
-        notificationCount = count;
+        futureTaskLogs = taskLogService.fetchTaskLogs();
       });
     } catch (e) {
-      print('Error fetching notification count: $e');
-    }
-  }
-
-  Future<void> updateTaskLogRead(String logId, String taskId) async {
-    try {
-      await TaskApiService.updateTaskLogRead(logId, taskId);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Task log updated successfully'),
-      ));
-      fetchTaskLogs(); // Refresh the task logs
-      fetchNotificationCount(); // Refresh the notification count
-    } catch (e) {
-      print('Error updating task log: $e');
-    }
-  }
-
-  Future<void> updateAllTaskLogsRead() async {
-    try {
-      await TaskApiService.updateAllTaskLogsRead();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('All task logs marked as read'),
-      ));
-      fetchTaskLogs(); // Refresh the task logs
-      fetchNotificationCount(); // Refresh the notification count
-    } catch (e) {
-      print('Error updating all task logs: $e');
+      print('Error: $e');
+      // Handle the error as needed
     }
   }
 
@@ -74,46 +47,78 @@ class _TaskNotificationScreenState extends State<TaskNotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Notifications'),
+        title: const Text('Task Logs'),
         actions: [
           IconButton(
             icon: const Icon(Icons.mark_email_read),
-            onPressed: () => updateAllTaskLogsRead(),
+            onPressed: markAllLogsAsRead,
           ),
         ],
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Padding(
+      body: Column(
+        children: [
+          FutureBuilder<Map<String, dynamic>>(
+            future: futureNotificationNumbers,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (snapshot.hasData) {
+                final notificationNumbers = snapshot.data!;
+                return Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'You have $notificationCount new notifications',
-                    style: const TextStyle(fontSize: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text('Task Notifications: ${notificationNumbers['task_count']}'),
+                      Text('Visio Notifications: ${notificationNumbers['visio_count']}'),
+                    ],
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
+                );
+              } else {
+                return const Center(child: Text('No data found'));
+              }
+            },
+          ),
+          Expanded(
+            child: FutureBuilder<Map<String, dynamic>>(
+              future: futureTaskLogs,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData) {
+                  final taskLogs = snapshot.data!['data'];
+                  return ListView.builder(
                     itemCount: taskLogs.length,
                     itemBuilder: (context, index) {
+                      final log = taskLogs[index];
+                      final logId = log['id'] ?? '';
+                      final taskId = log['task_id'] != null ? int.parse(log['task_id']) : 0;
+                      final action = log['action'] != null ? log['action'].join(", ") : '';
+
                       return ListTile(
-                        title: Text(taskLogs[index]['type'] ?? 'Unknown Type'),
-                        subtitle: Text(taskLogs[index]['message'] ??
-                            'No message available'),
+                        title: Text(action),
+                        subtitle: Text('User: ${log['user']} - Created At: ${log['created_at']}'),
                         trailing: IconButton(
-                          icon: const Icon(Icons.mark_email_read),
-                          onPressed: () => updateTaskLogRead(
-                            taskLogs[index]['id'],
-                            taskLogs[index]['task_id'],
-                          ),
+                          icon: const Icon(Icons.check),
+                          onPressed: () {
+                            markLogAsRead(logId, taskId, action);
+                          },
                         ),
                       );
                     },
-                  ),
-                ),
-              ],
+                  );
+                } else {
+                  return const Center(child: Text('No data found'));
+                }
+              },
             ),
+          ),
+        ],
+      ),
     );
   }
 }

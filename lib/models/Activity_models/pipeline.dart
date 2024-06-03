@@ -22,6 +22,7 @@ class Stage {
   final int id;
   final String label;
   final String color;
+  
 
   Stage({required this.id, required this.label, required this.color});
 

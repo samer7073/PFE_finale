@@ -11,9 +11,9 @@ class ActivityElment {
   int tasksTypeId;
   OwnerActivityModel owner;
   String priority;
-  int stageId;
-  String stageLabel;
-  String pipelineLabel;
+  int? stageId; // Changed to nullable
+  String? stageLabel; // Changed to nullable
+  String? pipelineLabel; // Changed to nullable
   bool isOverdue;
   List<dynamic> guests;
   List<dynamic> followers;
@@ -31,10 +31,10 @@ class ActivityElment {
     required this.endTime,
     required this.tasksTypeId,
     required this.owner,
-    required this.priority,
-    required this.stageId,
-    required this.stageLabel,
-    required this.pipelineLabel,
+    this.priority = '', // Default value if null
+    this.stageId, // Nullable field
+    this.stageLabel, // Nullable field
+    this.pipelineLabel, // Nullable field
     required this.isOverdue,
     required this.guests,
     required this.followers,
@@ -45,27 +45,26 @@ class ActivityElment {
   });
 
   factory ActivityElment.fromJson(Map<String, dynamic> json) {
-  return ActivityElment(
-    id: json['id'],
-    label: json['label'],
-    startDate: json['start_date'],
-    startTime: json['start_time'],
-    endDate: json['end_date'],
-    endTime: json['end_time'],
-    tasksTypeId: json['tasks_type_id'],
-    owner: OwnerActivityModel.fromJson(json['owner_id']), // Parse owner data
-    priority: json['priority'] ?? "",
-    stageId: json['stage_id'],
-    stageLabel: json['stage_label'],
-    pipelineLabel: json['pipeline_label'],
-    isOverdue: json['is_overdue'],
-    guests: json['guests'],
-    followers: json['followers'],
-    creator: CreatorActivityModel.fromJson(json['creator']),
-    familyLabel: json['family_label'],
-    elementLabel: json['element_label'],
-    createdAt: json['created_at'],
-  );
-}
-
+    return ActivityElment(
+      id: json['id'],
+      label: json['label'],
+      startDate: json['start_date'],
+      startTime: json['start_time'],
+      endDate: json['end_date'],
+      endTime: json['end_time'],
+      tasksTypeId: json['tasks_type_id'],
+      owner: OwnerActivityModel.fromJson(json['owner_id']), // Parse owner data
+      priority: json['priority'] ?? '', // Provide default value if null
+      stageId: json['stage_id'], // Nullable field
+      stageLabel: json['stage_label'], // Nullable field
+      pipelineLabel: json['pipeline_label'], // Nullable field
+      isOverdue: json['is_overdue'],
+      guests: json['guests'],
+      followers: json['followers'],
+      creator: CreatorActivityModel.fromJson(json['creator']),
+      familyLabel: json['family_label'],
+      elementLabel: json['element_label'],
+      createdAt: json['created_at'],
+    );
+  }
 }

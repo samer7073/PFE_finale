@@ -1,17 +1,20 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mercure_client/mercure_client.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:flutter_application_stage_project/core/constants/design/theme.dart';
+import 'package:flutter_application_stage_project/providers/langue_provider.dart';
+import 'package:flutter_application_stage_project/providers/theme_provider.dart';
 import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
 import 'package:flutter_application_stage_project/screens/home_page.dart';
 import 'package:flutter_application_stage_project/screens/login_page.dart';
 import 'package:flutter_application_stage_project/screens/onboarding_screen.dart';
-import 'package:flutter_application_stage_project/providers/langue_provider.dart';
-import 'package:flutter_application_stage_project/providers/theme_provider.dart';
-import 'package:flutter_application_stage_project/core/constants/design/theme.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 const String onboardingCompletedKey = 'onboardingCompleted';
 
@@ -72,6 +75,30 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late Mercure _mercure;
+  final List<String> _events = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialisez votre objet Mercure
+    _mercure = Mercure(
+      url: 'https://spheremercuredev.cmk.biz:4443/.well-known/mercure',
+      token: widget.token,
+      topics: ['/notification/dev/user/9bd65c0d-8b1c-4a4a-9c1a-2ed56e6c5776'],
+    );
+
+    // Ecoutez les événements Mercure
+
+    _mercure.listen((event) {
+      setState(() {
+        _events.add(event.data);
+        log('New Mercure event: ${event.type}'); // Log the event data
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider =
@@ -88,14 +115,16 @@ class _MyAppState extends State<MyApp> {
           if (widget.showOnboarding) {
             return const OnBoardingScreen();
           } else if (widget.token.isNotEmpty) {
-            return const HomeNavigate(id_page: 0);
+            return HomeNavigate(id_page: 0);
           } else {
             return const LoginPage();
           }
         },
         '/login': (context) => const LoginPage(), // Assuming LoginPage exists
-        '/home': (context) => const HomePage(),
-        '/homeNavigate': (context) => const HomeNavigate(id_page: 0),
+        '/home': (context) => HomePage(),
+        '/homeNavigate': (context) => HomeNavigate(
+              id_page: 0,
+            ),
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,

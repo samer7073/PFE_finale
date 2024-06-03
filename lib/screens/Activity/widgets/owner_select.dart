@@ -37,6 +37,26 @@ class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
     return '';
   }
 
+  Widget _buildAvatar(String? avatarUrl, String ownerName) {
+    if (avatarUrl == null || avatarUrl.isEmpty) {
+      String initials = _getInitials(ownerName);
+      return CircleAvatar(
+        backgroundColor: Colors.blue,
+        child: Text(
+          initials,
+          style: const TextStyle(color: Colors.white),
+        ),
+        radius: 15,
+      );
+    } else {
+      return CircleAvatar(
+        backgroundImage: NetworkImage(
+            "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatarUrl"),
+        radius: 15,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,7 +66,7 @@ class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
           padding: const EdgeInsets.all(16.0),
           child: TextField(
             decoration: InputDecoration(
-              labelText: 'Write here!',
+              labelText: 'Search',
               labelStyle: const TextStyle(color: Colors.grey),
               hintText: 'Search for owners',
               hintStyle: const TextStyle(color: Colors.grey),
@@ -54,15 +74,16 @@ class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                    color: const Color.fromARGB(255, 240, 209, 246)),
+                borderSide:
+                    const BorderSide(color: Color.fromARGB(255, 58, 119, 216)),
                 borderRadius: BorderRadius.circular(8.0),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(
-                    color: const Color.fromARGB(255, 240, 209, 246)),
+                borderSide:
+                    const BorderSide(color: Color.fromARGB(255, 58, 119, 216)),
                 borderRadius: BorderRadius.circular(8.0),
               ),
+              prefixIcon: const Icon(Icons.search, color: Colors.grey),
             ),
             onChanged: _filterUsers,
           ),
@@ -73,9 +94,9 @@ class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
             itemBuilder: (context, index) {
               final user = filteredUsers[index];
               return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: const Color.fromARGB(255, 240, 209, 246),
-                  child: Text(_getInitials(user['label'])),
+                leading: _buildAvatar(
+                  user['avatar'],
+                  user['label'],
                 ),
                 title: Text(user['label']),
                 onTap: () {
@@ -90,7 +111,7 @@ class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
           child: ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all<Color>(
-                  const Color.fromARGB(255, 240, 209, 246)),
+                  const Color.fromARGB(255, 58, 119, 216)),
             ),
             onPressed: () {
               Navigator.pop(context);

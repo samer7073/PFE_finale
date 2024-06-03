@@ -13,17 +13,19 @@ Map<String, IconData> iconMap = {
 
 class TaskTypeSelector extends StatefulWidget {
   final int? initialSelectedId;
-  final Function(int, String) onSelected; // Modifiez cette ligne
+  final Function(int, String) onSelected;
 
-  TaskTypeSelector({this.initialSelectedId, required this.onSelected});
+  const TaskTypeSelector(
+      {super.key, this.initialSelectedId, required this.onSelected});
 
   @override
+  // ignore: library_private_types_in_public_api
   _TaskTypeSelectorState createState() => _TaskTypeSelectorState();
 }
 
 class _TaskTypeSelectorState extends State<TaskTypeSelector> {
   int? _selectedTaskTypeId;
-  List<TaskType>? taskTypes;
+  List<TaskType>? taskTypes = []; // Initialize with an empty list
 
   @override
   void initState() {
@@ -40,10 +42,6 @@ class _TaskTypeSelectorState extends State<TaskTypeSelector> {
 
   @override
   Widget build(BuildContext context) {
-    if (taskTypes == null) {
-      return Center(child: CircularProgressIndicator());
-    }
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -58,23 +56,25 @@ class _TaskTypeSelectorState extends State<TaskTypeSelector> {
                   onTap: () {
                     setState(() {
                       _selectedTaskTypeId = taskType.id;
-                      widget.onSelected(taskType.id, taskType.label); // Modifiez cette ligne
+                      widget.onSelected(taskType.id, taskType.label);
                     });
                   },
                   child: CircleAvatar(
                     radius: 30,
-                    backgroundColor: isSelected ? Colors.purple[100] : Colors.grey[200],
+                    backgroundColor:
+                        isSelected ? Colors.purple[100] : Colors.grey[200],
                     child: Icon(
                       iconMap[taskType.icon] ?? Icons.help_outline,
-                      color: Color(int.parse('FF' + taskType.color.substring(1), radix: 16)),
+                      color: Color(int.parse('FF${taskType.color.substring(1)}',
+                          radix: 16)),
                     ),
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   taskType.label,
                   style: TextStyle(
-                    color: isSelected ? Colors.purple[100] : Colors.black,
+                    color: isSelected ? Colors.purple : Colors.black,
                   ),
                 ),
               ],

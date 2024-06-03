@@ -198,7 +198,8 @@ class _DetailPageState extends State<DetailPage> {
                 Expanded(
                   child: ListView(
                     children: detailData.data.entries
-                        .where((entry) => entry.key != 'id')
+                        .where((entry) =>
+                            entry.key != 'id' && entry.key != 'stage_id')
                         .map((entry) {
                       return ListTile(
                         title: Text(

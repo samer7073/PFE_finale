@@ -14,8 +14,8 @@ class Task {
   final String endTime;
   final String description;
   final String note;
-  final int? stageId;
-  final String stageLabel;
+  int? stageId;
+  String stageLabel;
   final String pipelineLabel;
   final int? familyId;
   final String familyLabel;
@@ -28,6 +28,11 @@ class Task {
   final bool? reminderBeforeEnd;
   final String location;
   final String reminder;
+  final String iconColor;
+  final bool isOverdue;
+  final String? roomId;
+   String stageColor;
+   int stagePercent;
 
   Task({
     required this.id,
@@ -58,10 +63,16 @@ class Task {
     required this.reminderBeforeEnd,
     required this.location,
     required this.reminder,
+    required this.iconColor,
     this.isChecked = false,
+    required this.isOverdue,
+    this.roomId,
+    this.stageColor = '#000000', // Valeur par défaut
+    this.stagePercent = 0, // Valeur par défaut
   });
 
-  factory Task.fromJson(Map<String, dynamic> json) {
+  factory Task.fromJson(Map<String, dynamic> json,
+      {int stagePercent = 0, String stageColor = '#000000'}) {
     // Handle both API structures for owner information
     String ownerId = '';
     String ownerLabel = '';
@@ -76,7 +87,6 @@ class Task {
       ownerLabel = json['owner_label'] ?? '';
       ownerAvatar = json['owner_avatar'] ?? '';
     }
-
     return Task(
       id: json['id'] ?? '',
       label: json['label'] ?? '',
@@ -105,10 +115,34 @@ class Task {
       followers: List<Map<String, dynamic>>.from(json['followers'] ?? []),
       location: json['location'] ?? '',
       reminder: json['Reminder'] ?? '',
+      iconColor: json['icon_color'] ?? '#000000',
       reminderBeforeEnd: json['reminder_before_end'] == null
           ? null
           : json['reminder_before_end'] == 1,
+      isOverdue: json['is_overdue'] ?? false,
+      roomId: json['room_id']?.toString(),
+      stageColor: json['stage_color'] ?? stageColor,
+      stagePercent: json['stage_percent'] ?? stagePercent,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'label': label,
+      'priority': priority,
+      'start_date': startDate,
+      'end_date': endDate,
+      'owner_avatar': ownerAvatar,
+      'icon_color': iconColor,
+      'tasks_type_id': tasksTypeId,
+      'stage_label': stageLabel,
+      'family_label': familyLabel,
+      'element_label': elementLabel,
+      'guests': guests,
+      'followers': followers,
+      'room_id': roomId, // Include roomId in JSON
+    };
   }
 }
 

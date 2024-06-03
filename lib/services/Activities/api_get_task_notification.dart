@@ -1,87 +1,110 @@
 import 'dart:convert';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
+class TaskLogService {
+  final String fetchLogsUrl = "https://spherebackdev.cmk.biz:4543/api/mobile/tasks/log";
+  final String markAsReadUrl = "https://spherebackdev.cmk.biz:4543/api/mobile/tasks/make-log-read";
+  final String markAllAsReadUrl = "https://spherebackdev.cmk.biz:4543/api/mobile/tasks/make-all-logs-read";
+  final String notificationNumberUrl = "https://spherebackdev.cmk.biz:4543/api/mobile/tasks/notification-number";
+  final String dashboardUrl = "https://spherebackdev.cmk.biz:4543/api/mobile/tasks/dashboard";
 
-class TaskApiService {
-  static const String baseUrl = 'https://spherebackdev.cmk.biz:4543/api/mobile';
-
-  static Future<List<dynamic>> fetchTaskLogs() async {
+  Future<Map<String, dynamic>> fetchTaskLogs() async {
     final token = await SharedPrefernce.getToken("token");
-    String todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final response = await http.get(
-      Uri.parse('$baseUrl/tasks/log?date=$todayDate'),
+      Uri.parse(fetchLogsUrl),
       headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body)['data'];
-      return List<Map<String, dynamic>>.from(data);
+      return json.decode(response.body);
     } else {
       throw Exception('Failed to load task logs');
     }
   }
 
-  static Future<int> fetchNotificationCount() async {
+  Future<Map<String, dynamic>> markLogAsRead(String logId, int taskId, String action) async {
     final token = await SharedPrefernce.getToken("token");
-    final response = await http.get(
-      Uri.parse('$baseUrl/tasks/notification-number'),
+    final response = await http.post(
+      Uri.parse(markAsReadUrl),
       headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'log_id': logId,
+        'task_id': taskId,
+        'action': action,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to mark log as read');
+    }
+  }
+
+  Future<Map<String, dynamic>> markAllLogsAsRead() async {
+    final token = await SharedPrefernce.getToken("token");
+    final response = await http.post(
+      Uri.parse(markAllAsReadUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
 
     if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      final taskCount = jsonResponse['task_count'];
-      final visioCount = jsonResponse['visio_count'];
-      if (taskCount != null && visioCount != null) {
-        return taskCount + visioCount;
-      } else {
-        throw Exception('Notification counts are null');
-      }
+      return json.decode(response.body);
     } else {
-      throw Exception('Failed to load notification count');
+      throw Exception('Failed to mark all logs as read');
     }
   }
 
-  static Future<void> updateTaskLogRead(String logId, String taskId) async {
+  Future<Map<String, dynamic>> getNotificationNumber() async {
     final token = await SharedPrefernce.getToken("token");
-    final response = await http.post(
-      Uri.parse('$baseUrl/tasks/make-log-read'),
-      body: jsonEncode({
-        'log_id': logId,
-        'task_id': taskId,
-        'action': 'read',
-      }),
+    final response = await http.get(
+      Uri.parse(notificationNumberUrl),
       headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update task log');
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to get notification number');
     }
   }
 
-  static Future<void> updateAllTaskLogsRead() async {
+  Future<Map<String, dynamic>> getDashboardData(String start, String end) async {
     final token = await SharedPrefernce.getToken("token");
     final response = await http.post(
-      Uri.parse('$baseUrl/tasks/make-all-logs-read'),
+      Uri.parse(dashboardUrl),
       headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
         'Authorization': 'Bearer $token',
+      },
+      body: {
+        'start': start,
+        'end': end,
       },
     );
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update all task logs');
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to get dashboard data');
     }
   }
 }

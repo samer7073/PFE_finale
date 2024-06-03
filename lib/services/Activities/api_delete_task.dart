@@ -2,7 +2,7 @@ import 'package:flutter_application_stage_project/services/sharedPreference.dart
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<bool> deleteTasks(List<String> taskIds) async {
+Future<bool> deleteTasks(String  taskId) async {
   final token = await SharedPrefernce.getToken("token");
   const url = 'https://spherebackdev.cmk.biz:4543/api/mobile/tasks/delete';
   final response = await http.post(
@@ -12,7 +12,7 @@ Future<bool> deleteTasks(List<String> taskIds) async {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     },
-    body: jsonEncode({"id": taskIds}),
+    body: jsonEncode({"id": taskId}),
   );
 
   if (response.statusCode == 200) {

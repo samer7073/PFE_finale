@@ -4,10 +4,12 @@ class FollowersSelectionSheet extends StatefulWidget {
   final List<dynamic> followers;
   final List<dynamic> selectedFollowers;
 
-  const FollowersSelectionSheet({required this.followers, required this.selectedFollowers});
+  const FollowersSelectionSheet(
+      {required this.followers, required this.selectedFollowers});
 
   @override
-  _FollowersSelectionSheetState createState() => _FollowersSelectionSheetState();
+  _FollowersSelectionSheetState createState() =>
+      _FollowersSelectionSheetState();
 }
 
 class _FollowersSelectionSheetState extends State<FollowersSelectionSheet> {
@@ -40,16 +42,6 @@ class _FollowersSelectionSheetState extends State<FollowersSelectionSheet> {
     });
   }
 
-  String _getInitials(String name) {
-    List<String> names = name.split(" ");
-    String initials = "";
-    int numWords = names.length > 2 ? 2 : names.length;
-    for (int i = 0; i < numWords; i++) {
-      initials += names[i][0];
-    }
-    return initials;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -74,15 +66,8 @@ class _FollowersSelectionSheetState extends State<FollowersSelectionSheet> {
               final follower = _filteredFollowers[index];
               final isSelected = _selectedFollowers.contains(follower);
               return CheckboxListTile(
-                activeColor: const Color.fromARGB(255, 240, 209, 246),
-                secondary: CircleAvatar(
-                  
-                  child: Text(
-                    _getInitials(follower['label']),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: Colors.purple,
-                ),
+                activeColor: Colors.blue,
+                secondary: _buildAvatar(follower),
                 title: Text(follower['label']),
                 value: isSelected,
                 onChanged: (bool? value) {
@@ -100,14 +85,33 @@ class _FollowersSelectionSheetState extends State<FollowersSelectionSheet> {
         ),
         ElevatedButton(
           style: ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 240, 209, 246)),
-  ),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                const Color.fromARGB(255, 58, 119, 216)),
+          ),
           onPressed: () {
             Navigator.pop(context, _selectedFollowers);
           },
-          child: Text('Done', style: TextStyle(color: Colors.white),),
+          child: Text('Done', style: TextStyle(color: Colors.white)),
         ),
       ],
     );
+  }
+
+  Widget _buildAvatar(Map<String, dynamic> user) {
+    String avatarUrl = user['avatar'] ?? '';
+    String initials = user['label'].split(' ').map((name) => name[0]).join();
+
+    return avatarUrl.isNotEmpty
+        ? CircleAvatar(
+            backgroundImage: NetworkImage(
+                "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatarUrl"),
+          )
+        : CircleAvatar(
+            backgroundColor: Colors.blue,
+            child: Text(
+              initials,
+              style: const TextStyle(color: Colors.white),
+            ),
+          );
   }
 }

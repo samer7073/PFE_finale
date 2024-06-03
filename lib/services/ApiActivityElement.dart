@@ -41,6 +41,7 @@ class ApiActivityElement {
       if (response.statusCode == 200) {
         final jsonData = response.data;
         final List<dynamic> dataList = jsonData['data'];
+        log("-----------------$jsonData['data']");
         List<ActivityElment> activityElements =
             dataList.map((json) => ActivityElment.fromJson(json)).toList();
         return activityElements;

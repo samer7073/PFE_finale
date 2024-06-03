@@ -6,15 +6,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
+import 'package:flutter_application_stage_project/screens/EventListenerScreen.dart';
 import 'package:flutter_application_stage_project/screens/PipelineScreen.dart';
 
 import 'package:flutter_application_stage_project/screens/ticket/addTicket.dart';
 
 import 'package:flutter_application_stage_project/screens/ticket/ticket_list.dart';
 import 'package:provider/provider.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../CustomSearchDelegate.dart';
 import '../notifications/notifications_page.dart';
+import '../websoket.dart';
 
 class TicketPage extends StatefulWidget {
   const TicketPage({Key? key}) : super(key: key);
@@ -90,7 +93,7 @@ class _TicketState extends State<TicketPage> {
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return NotificationsPage();
+                  return MercureEventsPage();
                 },
               ));
             },

@@ -4,7 +4,8 @@ class GuestsSelectionSheet extends StatefulWidget {
   final List<dynamic> guests;
   final List<dynamic> selectedGuests;
 
-  const GuestsSelectionSheet({required this.guests, required this.selectedGuests});
+  const GuestsSelectionSheet(
+      {required this.guests, required this.selectedGuests});
 
   @override
   _GuestsSelectionSheetState createState() => _GuestsSelectionSheetState();
@@ -40,16 +41,6 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
     });
   }
 
-  String _getInitials(String name) {
-    List<String> names = name.split(" ");
-    String initials = "";
-    int numWords = names.length > 2 ? 2 : names.length;
-    for (int i = 0; i < numWords; i++) {
-      initials += names[i][0];
-    }
-    return initials;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -74,14 +65,8 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
               final guest = _filteredGuests[index];
               final isSelected = _selectedGuests.contains(guest);
               return CheckboxListTile(
-                activeColor: Colors.purple,
-                secondary: CircleAvatar(
-                  child: Text(
-                    _getInitials(guest['label']),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: const Color.fromARGB(255, 240, 209, 246),
-                ),
+                activeColor: Colors.blue,
+                secondary: _buildAvatar(guest),
                 title: Text(guest['label']),
                 value: isSelected,
                 onChanged: (bool? value) {
@@ -99,14 +84,33 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
         ),
         ElevatedButton(
           style: ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 240, 209, 246)),
-  ),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                const Color.fromARGB(255, 58, 119, 216)),
+          ),
           onPressed: () {
             Navigator.pop(context, _selectedGuests);
           },
-          child: Text('Done', style: TextStyle(color: Colors.white),),
+          child: Text('Done', style: TextStyle(color: Colors.white)),
         ),
       ],
     );
+  }
+
+  Widget _buildAvatar(Map<String, dynamic> user) {
+    String avatarUrl = user['avatar'] ?? '';
+    String initials = user['label'].split(' ').map((name) => name[0]).join();
+
+    return avatarUrl.isNotEmpty
+        ? CircleAvatar(
+            backgroundImage: NetworkImage(
+                "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatarUrl"),
+          )
+        : CircleAvatar(
+            backgroundColor: Colors.blue,
+            child: Text(
+              initials,
+              style: const TextStyle(color: Colors.white),
+            ),
+          );
   }
 }
