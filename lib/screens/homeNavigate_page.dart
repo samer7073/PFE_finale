@@ -10,6 +10,7 @@ import 'package:flutter_application_stage_project/screens/project/Project_page.d
 import 'package:flutter_application_stage_project/screens/home_page.dart';
 import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
 
+import '../services/MercureNotificationService.dart';
 import 'Activity/home_view.dart';
 import 'detail/kanban_page.dart';
 import 'detailElment.dart';
@@ -26,6 +27,7 @@ class _HomeNavigateState extends State<HomeNavigate> {
   @override
   void initState() {
     log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+    MercureNotificationService().initialize();
     // TODO: implement initState
     super.initState();
     if (widget.id_page != 0) {
@@ -33,6 +35,10 @@ class _HomeNavigateState extends State<HomeNavigate> {
         selectedPage = widget.id_page;
       });
     }
+  }
+
+  void mercure() async {
+    MercureNotificationService().initialize();
   }
 
   int selectedPage = 0;

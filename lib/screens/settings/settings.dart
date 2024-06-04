@@ -27,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../main.dart';
+import '../../services/MercureNotificationService.dart';
 import '../homeNavigate_page.dart';
 import '../loading.dart';
 import 'changesLanguges_page.dart';
@@ -880,6 +881,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                     if (logoutResponse == "Logout successful") {
                                       removeToken();
                                       removeUuid();
+                                      MercureNotificationService().dispose();
                                       Navigator.pushNamedAndRemoveUntil(
                                           context, '/login', (route) => false);
                                     }

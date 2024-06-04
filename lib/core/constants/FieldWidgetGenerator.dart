@@ -713,6 +713,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
         return Padding(
           padding: const EdgeInsets.all(10.0),
           child: TextFormField(
+            //textAlign: TextAlign.end,
             validator: widget.dataFieldGroup.required == true
                 ? (value) {
                     if (value!.isEmpty) {
@@ -777,9 +778,9 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                 ),
               ),
               contentPadding: EdgeInsets.symmetric(
-                  vertical: 2.0,
+                  vertical: 1.0,
                   horizontal:
-                      2.0), // Ajustez cette ligne pour réduire la hauteur
+                      1.0), // Ajustez cette ligne pour réduire la hauteur
             ),
           ),
         );
@@ -1195,15 +1196,17 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         : null,
                     value: _selectedValue,
                     decoration: InputDecoration(
-                      labelStyle: TextStyle(color: Colors.purple),
-                      hintStyle: TextStyle(color: Colors.purple),
+                      labelStyle: TextStyle(color: Colors.grey),
+                      hintStyle: TextStyle(color: Colors.grey),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(5.5)),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple),
+                          borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(5.5)),
                       border: OutlineInputBorder(),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -1221,7 +1224,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     borderRadius: BorderRadius.circular(10),
                     icon: Icon(
                       Icons.keyboard_arrow_down,
-                      color: Colors.purple,
+                      color: Colors.black,
                     ),
                     style: TextStyle(fontSize: 16, color: Colors.black),
                     items: _currencies.map<DropdownMenuItem<String>>((item) {
@@ -1284,7 +1287,17 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               ),
               DropdownButtonFormField(
                   decoration: InputDecoration(
+                    labelStyle: TextStyle(color: Colors.grey),
+                    hintStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(5.5)),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(5.5)),
                     border: OutlineInputBorder(),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
                   ),
                   validator: widget.dataFieldGroup.required == true
                       ? (value) {
@@ -1307,7 +1320,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                   borderRadius: BorderRadius.circular(10),
                   icon: Icon(
                     Icons.keyboard_arrow_down,
-                    color: Colors.purple,
+                    color: Colors.black,
                   ),
                   style: TextStyle(
                     fontSize: 16,

@@ -2,9 +2,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/services/MercureNotificationService.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mercure_client/mercure_client.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -63,41 +63,12 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   final bool showOnboarding;
   final String token;
 
   const MyApp({Key? key, required this.showOnboarding, required this.token})
       : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late Mercure _mercure;
-  final List<String> _events = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Initialisez votre objet Mercure
-    _mercure = Mercure(
-      url: 'https://spheremercuredev.cmk.biz:4443/.well-known/mercure',
-      token: widget.token,
-      topics: ['/notification/dev/user/9bd65c0d-8b1c-4a4a-9c1a-2ed56e6c5776'],
-    );
-
-    // Ecoutez les événements Mercure
-
-    _mercure.listen((event) {
-      setState(() {
-        _events.add(event.data);
-        log('New Mercure event: ${event.type}'); // Log the event data
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,15 +77,15 @@ class _MyAppState extends State<MyApp> {
     final langueProvider =
         Provider.of<LangueProvider>(context); // Access LangueProvider
 
-    log('Building MaterialApp with token: ${widget.token}'); // Log the token before using it
+    log('Building MaterialApp with token: $token'); // Log the token before using it
 
     return MaterialApp(
       initialRoute: '/',
       routes: {
         '/': (context) {
-          if (widget.showOnboarding) {
+          if (showOnboarding) {
             return const OnBoardingScreen();
-          } else if (widget.token.isNotEmpty) {
+          } else if (token.isNotEmpty) {
             return HomeNavigate(id_page: 0);
           } else {
             return const LoginPage();
@@ -122,9 +93,7 @@ class _MyAppState extends State<MyApp> {
         },
         '/login': (context) => const LoginPage(), // Assuming LoginPage exists
         '/home': (context) => HomePage(),
-        '/homeNavigate': (context) => HomeNavigate(
-              id_page: 0,
-            ),
+        '/homeNavigate': (context) => HomeNavigate(id_page: 0),
       },
       localizationsDelegates: const [
         AppLocalizations.delegate,

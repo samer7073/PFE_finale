@@ -17,7 +17,6 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../CustomSearchDelegate.dart';
 import '../notifications/notifications_page.dart';
-import '../websoket.dart';
 
 class TicketPage extends StatefulWidget {
   const TicketPage({Key? key}) : super(key: key);

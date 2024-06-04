@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:mercure_client/mercure_client.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../services/sharedPreference.dart';
+import 'package:permission_handler/permission_handler.dart'; // Ajoutez cette ligne
 
 class MercureEventsPage extends StatefulWidget {
   const MercureEventsPage({Key? key}) : super(key: key);
@@ -14,25 +16,96 @@ class MercureEventsPage extends StatefulWidget {
 class _MercureEventsPageState extends State<MercureEventsPage> {
   late Mercure _mercure;
   final List<String> _events = [];
+  late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
   @override
   void initState() {
     super.initState();
+    _initializeNotifications();
     _initializeMercure();
+  }
+
+  void _initializeNotifications() async {
+    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iOSSettings = DarwinInitializationSettings();
+    const initializationSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iOSSettings,
+    );
+
+    final result = await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) async {
+        // handle your notification response here
+      },
+    );
+
+    if (result == true) {
+      print('Notification initialization successful');
+    } else {
+      print('Notification initialization failed');
+    }
+
+    // Check permissions for Android 13+ and iOS
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
+
+    // Create a notification channel for Android
+    const androidChannel = AndroidNotificationChannel(
+      'channel_id',
+      'channel_name',
+      description: 'channel_description',
+      importance: Importance.max,
+    );
+
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidChannel);
+  }
+
+  void _showNotification(String eventData) async {
+    const androidDetails = AndroidNotificationDetails(
+      'channel_id',
+      'channel_name',
+      channelDescription: 'channel_description',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: false,
+    );
+    const iOSDetails = DarwinNotificationDetails();
+    const notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iOSDetails,
+    );
+
+    await _flutterLocalNotificationsPlugin
+        .show(
+          0,
+          'New Mercure Event',
+          eventData,
+          notificationDetails,
+        )
+        .then((value) => print('Notification shown successfully'))
+        .catchError((error) => print('Error showing notification: $error'));
   }
 
   void _initializeMercure() async {
     try {
-      print('Initializing Mercure...'); // Ajoutez ce log
+      print('Initializing Mercure...');
       final token = await SharedPrefernce.getToken("token");
-      print('Retrieved token: $token'); // Ajoutez ce log
+      print('Retrieved token: $token');
 
       if (token == null) {
-        print('Token is null, cannot initialize Mercure'); // Ajoutez ce log
+        print('Token is null, cannot initialize Mercure');
         return;
       }
 
-      // Initialize Mercure object
       _mercure = Mercure(
         url: 'https://spheremercuredev.cmk.biz:4443/.well-known/mercure',
         token:
@@ -44,19 +117,26 @@ class _MercureEventsPageState extends State<MercureEventsPage> {
       );
 
       _mercure.listen((event) {
+        var eventData = jsonDecode(event.data);
+        log("**************************** ${eventData['type_event']}");
         if (event.data.contains('task')) {
-          print('Received event with task: ${event.data}'); // Ajoutez ce log
+          print('Received event with task: ${event.data}');
           setState(() {
             _events.add(event.data);
-            print(
-                'New Mercure event with task: ${event.data}'); // Ajoutez ce log
+            _showNotification(event.data);
+            print('New Mercure event with task: ${event.data}');
           });
         }
       });
-      print('Mercure connection established'); // Ajoutez ce log
+      print('Mercure connection established');
     } catch (error) {
-      print('Error initializing Mercure: $error'); // Ajoutez ce log
+      print('Error initializing Mercure: $error');
     }
+  }
+
+  void _onButtonPressed() {
+    print('Button pressed');
+    _showNotification("Button clicked");
   }
 
   @override
@@ -75,6 +155,11 @@ class _MercureEventsPageState extends State<MercureEventsPage> {
                 );
               },
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _onButtonPressed,
+        child: Icon(Icons.notification_add),
+        tooltip: 'Show Notification',
+      ),
     );
   }
 }

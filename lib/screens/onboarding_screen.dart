@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -37,48 +39,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void initState() {
     super.initState();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    /*
-
-    // Add a listener for system theme changes
-    SystemChrome.setSystemUIOverlayStyle(
-      themeProvider.isDarkMode
-          ? SystemUiOverlayStyle.dark
-          : SystemUiOverlayStyle.light,
-    );
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateTheme();
-    });
-    */
   }
 
-/*
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    log("je suis dans  le did change dependencies-----------------------------------------");
-
-    if (isFirstBuild) {
-      isFirstBuild = false;
-      final brightness = MediaQuery.of(context).platformBrightness;
-      isSystemThemeDark = brightness == Brightness.dark;
-      _updateTheme();
-    } 
-  }
-
-  void _updateTheme() {
-    log("la valeur de isdark dans _Uptheme ${themeProvider.isDarkMode}");
-    log("La valeur isSystemThemeDark  $isSystemThemeDark");
-    themeProvider.setIsDark(isSystemThemeDark);
-    log("la valeur de isdark dans _UPtheme Apres setIsdark === ${themeProvider.isDarkMode}");
-    setState(() {}); // Trigger a rebuild
-    log("la valeur  Apres setate de _UPtheme === ${themeProvider.isDarkMode}");
-  }
-  */
   Future<void> markOnboardingComplete() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(onboardingCompletedKey, true);
@@ -119,7 +81,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       fontWeight: FontWeight.w400,
                       color: themeProvider.isDarkMode == true
                           ? Colors.white
-                          : Colors.purple,
+                          : Colors.blue,
                     ),
                   ),
                 ),
@@ -141,7 +103,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             fontWeight: FontWeight.w400,
                             color: themeProvider.isDarkMode == true
                                 ? Colors.white
-                                : Colors.purple,
+                                : Colors.blue,
                           ),
                         ),
                       )
@@ -159,7 +121,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             fontWeight: FontWeight.w400,
                             color: themeProvider.isDarkMode == true
                                 ? Colors.white
-                                : Colors.purple,
+                                : Colors.blue,
                           ),
                         ),
                       ),
