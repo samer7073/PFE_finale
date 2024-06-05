@@ -1,27 +1,23 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors
 
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/profil/Profile.dart';
-
+import 'package:flutter_application_stage_project/screens/NotficationPage.dart';
 import 'package:flutter_application_stage_project/screens/containerDashbored.dart';
 import 'package:flutter_application_stage_project/screens/taskKpi_page.dart';
+import 'package:flutter_application_stage_project/services/ApiGetJWT.dart';
 import 'package:flutter_application_stage_project/services/ApiGetProfile.dart';
-
 import 'package:provider/provider.dart';
 import 'package:flutter_application_stage_project/screens/settings/settings.dart';
-
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
-
 import '../models/profil/Avatar.dart';
 import '../models/profil/Email.dart';
 import '../models/profil/Name.dart';
 import '../models/profil/PhoneNumber.dart';
 import '../services/sharedPreference.dart';
-
 import 'package:fl_chart/fl_chart.dart';
-
 import 'KpiFamilyPage.dart';
 import 'loading.dart';
 
@@ -38,54 +34,28 @@ class _HomePageState extends State<HomePage>
   late TabController _tabController;
   int selectedIndex = 0;
 
-  final Map<int, String> bottomTitle = {
-    0: 'Jan',
-    10: 'Feb',
-    20: 'Mar',
-    30: 'Apr',
-    40: 'May',
-    50: 'Jun',
-    60: 'Jul',
-    70: 'Aug',
-    80: 'Sep',
-    90: 'Oct',
-    100: 'Nov',
-    110: 'Dec',
-  };
-  final Map<int, String> leftTitle = {
-    0: '0',
-    20: '2K',
-    40: '4K',
-    60: '6K',
-    80: '8K',
-    100: '10K'
-  };
-  final List<FlSpot> _data = [
-    FlSpot(1, 3),
-    FlSpot(3, 5),
-    FlSpot(5, 4),
-    FlSpot(7, 6),
-    FlSpot(9, 8),
-  ];
   String? storedToken;
   String? image;
   String? storedUuid;
+  String? storedJwt;
+
   @override
   void initState() {
     super.initState();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     _tabController = TabController(length: 4, vsync: this);
     log("Init state activated: isDarkMode = ${themeProvider.isDarkMode}");
-    _loadString();
+    _loadStoredData();
     fetchProfile();
   }
 
   void _saveString(String key, String value) async {
     await SharedPrefernce.saveToken(key, value);
-    _loadString(); // Reload the string after saving
+    _loadStoredData(); // Reload all stored data after saving
   }
 
   Profile? _profile;
+
   Future<void> fetchProfile() async {
     try {
       Profile profileResponse = await ApiProfil.getProfil();
@@ -95,24 +65,23 @@ class _HomePageState extends State<HomePage>
         loading = false;
         _profile = profileResponse;
       });
-      _saveString("uuid", _profile!.uuid);
-      print(_profile);
+      // _saveString("uuid", _profile!.uuid);
     } catch (e) {
       print('Failed to fetch Profile: $e');
+      setState(() {
+        loading = false;
+      });
     }
   }
 
-  void _loadString() async {
-    String? retrievedString = await SharedPrefernce.getToken('token');
+  void _loadStoredData() async {
+    String? token = await SharedPrefernce.getToken('token');
+    String? uuid = await SharedPrefernce.getToken('uuid');
+    String? jwt = await SharedPrefernce.getToken('jwt');
     setState(() {
-      storedToken = retrievedString;
-    });
-  }
-
-  void _loadSUid() async {
-    String? retrievedString = await SharedPrefernce.getToken('uuid');
-    setState(() {
-      storedUuid = retrievedString;
+      storedToken = token;
+      storedUuid = uuid;
+      storedJwt = jwt;
     });
   }
 
@@ -124,6 +93,11 @@ class _HomePageState extends State<HomePage>
 
   void goToSettingsPage() {
     Navigator.push(context, MaterialPageRoute(builder: (_) => Settings()));
+  }
+
+  void goToNotif() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => NotificationPage()));
   }
 
   bool loading = true;
@@ -139,7 +113,7 @@ class _HomePageState extends State<HomePage>
                 padding: const EdgeInsets.only(left: 10),
                 child: GestureDetector(
                   onTap: goToSettingsPage,
-                  child: _profile!.avatar.label.length == 1
+                  child: _profile != null && _profile!.avatar.label.length == 1
                       ? CircleAvatar(
                           backgroundColor: Colors
                               .blue, // Choisissez une couleur de fond appropriée
@@ -151,11 +125,13 @@ class _HomePageState extends State<HomePage>
                           ),
                           radius: 15,
                         )
-                      : CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://spherebackdev.cmk.biz:4543/storage/uploads/${_profile!.avatar.label}"),
-                          radius: 15,
-                        ),
+                      : _profile != null
+                          ? CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  "https://spherebackdev.cmk.biz:4543/storage/uploads/${_profile!.avatar.label}"),
+                              radius: 15,
+                            )
+                          : CircularProgressIndicator(),
                 ),
               ),
               centerTitle: true,
@@ -174,7 +150,7 @@ class _HomePageState extends State<HomePage>
               actions: [
                 IconButton(
                   icon: const Icon(Icons.notifications_none_sharp, size: 30),
-                  onPressed: goToSettingsPage,
+                  onPressed: goToNotif,
                 ),
               ],
             ),

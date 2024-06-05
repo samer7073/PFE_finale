@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import '../CustomSearchDelegate.dart';
+import '../NotficationPage.dart';
 import '../PipelineScreen.dart';
 import '../notifications/notifications_page.dart';
 import '../ticket/addTicket.dart';
@@ -73,7 +74,7 @@ class _DealPageState extends State<DealPage> {
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return NotificationsPage();
+                  return NotificationPage();
                 },
               ));
             },

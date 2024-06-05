@@ -3,13 +3,16 @@ import 'dart:developer';
 
 import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
 import 'package:flutter_application_stage_project/screens/PipelineScreen.dart';
+import 'package:flutter_application_stage_project/screens/contactPage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
 
 import 'package:flutter_application_stage_project/screens/home_page.dart';
 import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/NotificationProvider.dart';
 import '../services/MercureNotificationService.dart';
 import 'Activity/home_view.dart';
 import 'detail/kanban_page.dart';
@@ -26,10 +29,18 @@ class HomeNavigate extends StatefulWidget {
 class _HomeNavigateState extends State<HomeNavigate> {
   @override
   void initState() {
-    log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-    MercureNotificationService().initialize();
-    // TODO: implement initState
     super.initState();
+    log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+
+    // Obtenez le fournisseur de notifications
+    final notificationProvider =
+        Provider.of<NotificationProvider>(context, listen: false);
+
+    // Vérifiez si la notification est activée
+    if (notificationProvider.notification == true) {
+      MercureNotificationService().initialize();
+    }
+
     if (widget.id_page != 0) {
       setState(() {
         selectedPage = widget.id_page;
@@ -48,6 +59,7 @@ class _HomeNavigateState extends State<HomeNavigate> {
     TicketPage(),
     DealPage(), // KanbanPage1(),
     ProjectPage(),
+    ContactPage()
   ];
   @override
   Widget build(BuildContext context) {
@@ -117,6 +129,18 @@ class _HomeNavigateState extends State<HomeNavigate> {
                 // color: Colors.purple,
               ),
               label: "Projects",
+            ),
+            BottomNavigationBarItem(
+              //backgroundColor: Color.fromARGB(255, 246, 214, 252),
+              icon: Icon(
+                Icons.person_2_outlined,
+                // color: selectedIndex == 3 ? Colors.purple : Colors.black,
+              ),
+              activeIcon: Icon(
+                Icons.person_2_rounded,
+                // color: Colors.purple,
+              ),
+              label: "Contacts",
             ),
           ],
 

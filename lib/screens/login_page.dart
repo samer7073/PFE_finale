@@ -8,6 +8,7 @@ import 'package:flutter_application_stage_project/screens/verifier_password.dart
 import 'package:flutter_application_stage_project/services/loginApi.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../services/ApiGetJWT.dart';
 import '../services/sharedPreference.dart';
 import 'loading.dart';
 
@@ -308,11 +309,18 @@ class _LoginPageState extends State<LoginPage> {
                 try {
                   final loginResponse =
                       await loginAPI.loginUser(email, password, url);
-                  setState(() {
-                    loading = false;
-                  });
+
                   if (loginResponse.success) {
                     _saveString('token', loginResponse.token.access_token);
+                    log("token:************ ${loginResponse.token.access_token}");
+                    final jwtResponse = await ApiGetJwt.getJwt();
+                    log("jwt :-------- ${jwtResponse.jwtMercure}");
+                    _saveString('jwt', jwtResponse.jwtMercure);
+                    log("Uuid :-------- ${jwtResponse.uuid}");
+                    _saveString("uuid", jwtResponse.uuid);
+                    setState(() {
+                      loading = false;
+                    });
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/homeNavigate', (route) => false);
                   }

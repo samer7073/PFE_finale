@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 
 import '../../providers/theme_provider.dart';
 import '../CustomSearchDelegate.dart';
+import '../NotficationPage.dart';
 import '../PipelineScreen.dart';
 import '../notifications/notifications_page.dart';
-
 
 class ProjectPage extends StatefulWidget {
   const ProjectPage({super.key});
@@ -70,7 +70,7 @@ class _ProjectPageState extends State<ProjectPage> {
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return NotificationsPage();
+                  return NotificationPage();
                 },
               ));
             },

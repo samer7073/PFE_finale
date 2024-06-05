@@ -71,68 +71,72 @@ class MercureNotificationService {
   Future<void> _initializeMercure() async {
     try {
       print('Initializing Mercure...');
-      final token = await SharedPrefernce.getToken("token");
-      print('Retrieved token: $token');
+      final jwt = await SharedPrefernce.getToken("jwt");
+      print('Retrieved token: $jwt');
+      final uuid = await SharedPrefernce.getToken("uuid");
+      print('Retrieved uuid: $uuid');
 
-      if (token == null) {
+      if (jwt == null) {
         print('Token is null, cannot initialize Mercure');
         return;
       }
+      if (uuid == null) {
+        print('uuid is null, cannot initialize Mercure');
+        return;
+      }
+      if (uuid != null && jwt != null) {
+        _mercure = Mercure(
+          url: 'https://spheremercuredev.cmk.biz:4443/.well-known/mercure',
+          token: jwt,
+          topics: ['/notification/dev/user/$uuid', '/chat/dev/user/232'],
+        );
 
-      _mercure = Mercure(
-        url: 'https://spheremercuredev.cmk.biz:4443/.well-known/mercure',
-        token:
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJtZXJjdXJlIjp7InN1YnNjcmliZSI6WyIvY2hhdC9kZXYvdXNlci80MjIiLCIvbm90aWZpY2F0aW9uL2Rldi91c2VyLzliZDY1YzBkLThiMWMtNGE0YS05YzFhLTJlZDU2ZTZjNTc3NiIsIi8ud2VsbC1rbm93bi9tZXJjdXJlL3N1YnNjcmlwdGlvbnMve3RvcGljfXsvc3Vic2NyaWJlcn0iXSwicGF5bG9hZCI6eyJ1c2VyX3VpZCI6IjliZDY1YzBkLThiMWMtNGE0YS05YzFhLTJlZDU2ZTZjNTc3NiIsImRhdGV0aW1lIjoiMjAyNC0wNi0wM1QxNTo1ODo1Ni4wMzI5OTlaIn19fQ.VA2LYoy24WnDM6nEXue3z2do3XKV5ID3gY6WIgdjJryUII9fIEketOfZpoLtiSn4c8czbtkZI5teflm6lz01xxQAtroNNy6YOTuLFowSxOUQU1NhvpBWDZGLprWzImggmZtOe9LFikjvwSg-rFU5202TMaGYZSihhTNMMhmoyURHJdXxQUSd_29jUt_eJe5zkwrOi1ikoVhN6GIme6_JWb0XCyspOwDiM4byymlB_iZJOlQtbSM_nTBm3RMlnJ_6tPBNoCBgfMIMbHaebfNjs3u7aRxfnOabJdf4PW5Hu2vPC3rUvEcShZ3ZOhGQM2MsiHpepRBEL7akSDLwpTbpsSjNzjQN0pXH5qD9-IYMSfpKnmEOwY4Q9QmD2iyMcIFFEq1wpWBYtan5ZzEeiRbN9-8BIRWqrGnqMYNcx1mjTGddYH9pUWe2UAOl33SGOpjpTZ66C1QXvA_NynZVZpyVDo3Q7yaXnJp4xCtyH9HU52aSQ0wdBGQhXPpvmTUkLA5zE9Q5kxz2-Y5doQ91QOI_Q0HWcJN4SFOTaY6fTB1fGC-3VkuYAU_rrlr8xfPbIhq9SLuBa9u8RCnM9cwX8ORBGPXLiFvpiE8mo-yM_O0S-QUaKFnisQZQ5p_wEJNd0l9s_z633ZAbItdm0-gLqAPVLM2hEV150dJXy243bG5BuZA",
-        topics: [
-          '/chat/dev/user/422',
-          '/notification/dev/user/9bd65c0d-8b1c-4a4a-9c1a-2ed56e6c5776'
-        ],
-      );
+        _subscription = _mercure.listen((event) {
+          var eventData = jsonDecode(event.data);
+          log("**************************** ${eventData['type_event']}");
+          if ([
+            'new_task',
+            'update_priority_task',
+            'update_stage_task',
+            'update_task',
+            'delete_task'
+          ].contains(eventData['type_event'])) {
+            print('Received relevant event: ${event.data}');
 
-      _subscription = _mercure.listen((event) {
-        var eventData = jsonDecode(event.data);
-        log("**************************** ${eventData['type_event']}");
-        if ([
-          'new_task',
-          'update_priority_task',
-          'update_stage_task',
-          'update_task',
-          'delete_task'
-        ].contains(eventData['type_event'])) {
-          print('Received relevant event: ${event.data}');
+            if (eventData['type_event'] == "new_task") {
+              String title = eventData['type_event'].replaceAll('_', ' ');
+              String initiatorName =
+                  "${eventData['initiator']['label']} create new task";
+              _showNotification(title, initiatorName);
+            }
+            if (eventData['type_event'] == "update_task") {
+              String title = eventData['type_event'].replaceAll('_', ' ');
+              String initiatorName =
+                  "${eventData['initiator']['label']} ${eventData['action']} ${eventData['label']}  ";
+              _showNotification(title, initiatorName);
+            }
+            if (eventData['type_event'] == "delete_task") {
+              String title = eventData['type_event'].replaceAll('_', ' ');
+              String initiatorName =
+                  "${eventData['initiator']['label']} ${eventData['action'][0]} ${eventData['action'][1]}   ";
+              _showNotification(title, initiatorName);
+            }
+            if (eventData['type_event'] == "update_stage_task") {
+              String title = eventData['type_event'].replaceAll('_', ' ');
+              String initiatorName =
+                  "${eventData['initiator']['label']} has changed the stage of the activity  ${eventData['action'][1]} ";
+              _showNotification(title, initiatorName);
+            }
+            if (eventData['type_event'] == "update_priority_task") {
+              String title = eventData['type_event'].replaceAll('_', ' ');
+              String initiatorName =
+                  "${eventData['initiator']['label']} updated the priority of the activity  ${eventData['action'][1]} ";
+              _showNotification(title, initiatorName);
+            }
+          }
+        });
+      }
 
-          if (eventData['type_event'] == "new_task") {
-            String title = eventData['type_event'].replaceAll('_', ' ');
-            String initiatorName =
-                "${eventData['initiator']['label']} create new task";
-            _showNotification(title, initiatorName);
-          }
-          if (eventData['type_event'] == "update_task") {
-            String title = eventData['type_event'].replaceAll('_', ' ');
-            String initiatorName =
-                "${eventData['initiator']['label']} ${eventData['action']} ${eventData['label']}  ";
-            _showNotification(title, initiatorName);
-          }
-          if (eventData['type_event'] == "delete_task") {
-            String title = eventData['type_event'].replaceAll('_', ' ');
-            String initiatorName =
-                "${eventData['initiator']['label']} ${eventData['action'][0]} ${eventData['action'][1]}   ";
-            _showNotification(title, initiatorName);
-          }
-          if (eventData['type_event'] == "update_stage_task") {
-            String title = eventData['type_event'].replaceAll('_', ' ');
-            String initiatorName =
-                "${eventData['initiator']['label']} has changed the stage of the activity  ${eventData['action'][1]} ";
-            _showNotification(title, initiatorName);
-          }
-          if (eventData['type_event'] == "update_priority_task") {
-            String title = eventData['type_event'].replaceAll('_', ' ');
-            String initiatorName =
-                "${eventData['initiator']['label']} updated the priority of the activity  ${eventData['action'][1]} ";
-            _showNotification(title, initiatorName);
-          }
-        }
-      });
       print('Mercure connection established');
     } catch (error) {
       print('Error initializing Mercure: $error');

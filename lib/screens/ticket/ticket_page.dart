@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../CustomSearchDelegate.dart';
+import '../NotficationPage.dart';
 import '../notifications/notifications_page.dart';
 
 class TicketPage extends StatefulWidget {
@@ -92,7 +93,7 @@ class _TicketState extends State<TicketPage> {
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return MercureEventsPage();
+                  return NotificationPage();
                 },
               ));
             },

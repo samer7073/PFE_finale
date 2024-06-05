@@ -27,7 +27,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../main.dart';
+import '../../providers/NotificationProvider.dart';
 import '../../services/MercureNotificationService.dart';
+import '../NotficationPage.dart';
 import '../homeNavigate_page.dart';
 import '../loading.dart';
 import 'changesLanguges_page.dart';
@@ -84,6 +86,10 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
     await SharedPrefernce.removeData("uuid");
   }
 
+  void removeJwt() async {
+    await SharedPrefernce.removeData("jwt");
+  }
+
   String valueSelected = '';
   Future<void>? _launched;
   Future<void> _launchInBrowser(Uri url) async {
@@ -132,7 +138,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return NotificationsPage();
+                  return NotificationPage();
                 },
               ));
             },
@@ -148,56 +154,6 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /*
-            Text(
-              AppLocalizations.of(context).theme,
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            SizedBox(height: 10),
-            Container(
-              height: 50,
-              child: customSwitch(
-                AppLocalizations.of(context).darkMode,
-                themeProvider.isDarkMode,
-                (value) {
-                  themeProvider.toggleTheme();
-                },
-                context,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              AppLocalizations.of(context).language,
-              style: Theme.of(context).textTheme.bodyText2,
-            ),
-            SizedBox(height: 15),
-            DropdownMenu<String>(
-              textStyle: Theme.of(context).textTheme.bodyText1,
-              width: 370,
-              initialSelection: valueSelected,
-              dropdownMenuEntries: [
-                DropdownMenuEntry(value: "English", label: "English"),
-                DropdownMenuEntry(value: "Francais", label: "Francais"),
-                DropdownMenuEntry(value: "العربية", label: "العربية"),
-              ],
-              onSelected: (String? newValue) {
-                setState(() {
-                  valueSelected = newValue!;
-                  if (newValue == "English") {
-                    langueProvider.setLocale(Locale('en'));
-                    log("Selected language: English");
-                  } else if (newValue == "Francais") {
-                    langueProvider.setLocale(Locale('fr'));
-                    log("Selected language: Francais");
-                  } else if (newValue == "العربية") {
-                    langueProvider.setLocale(Locale('ar'));
-                    log("Selected language: Arabic");
-                  }
-                });
-              },
-
-            ),
-            */
             Container(
               padding: EdgeInsets.all(15),
               child: Text(
@@ -544,155 +500,6 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                       ],
                     ),
                   ),
-
-                  /*
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return SecuritePage();
-                        },
-                      ));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.local_police_rounded,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context)
-                                  .securityandpermissions,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            )
-                          ],
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.blue,
-                          size: 15,
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return IndisponibilitePage();
-                        },
-                      ));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.display_settings_outlined,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context).unavailability,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            )
-                          ],
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.blue,
-                          size: 15,
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return ActiviteSettingsPage();
-                        },
-                      ));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.timeline,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Timeline",
-                              style: Theme.of(context).textTheme.subtitle1,
-                            )
-                          ],
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.blue,
-                          size: 15,
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return Apropos();
-                        },
-                      ));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.info_outline_rounded,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context).about,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            )
-                          ],
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.blue,
-                          size: 15,
-                        )
-                      ],
-                    ),
-                  ),
-                  */
                   SizedBox(
                     height: 30,
                   )
@@ -742,14 +549,20 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                             )
                           ],
                         ),
-                        CupertinoSwitch(
-                          activeColor: Colors.blue,
-                          value: notification,
-                          onChanged: (value) {
-                            setState(() {
-                              notification = value;
-                            });
-                          },
+                        Consumer<NotificationProvider>(
+                          builder: (context, notifier, _) => CupertinoSwitch(
+                            activeColor: Colors.blue,
+                            value: notifier.notification,
+                            onChanged: (value) {
+                              if (value == true) {
+                                MercureNotificationService().initialize();
+                              } else {
+                                MercureNotificationService().dispose();
+                              }
+                              notifier.notification = value;
+                              log(value.toString());
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -881,6 +694,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                     if (logoutResponse == "Logout successful") {
                                       removeToken();
                                       removeUuid();
+                                      removeJwt();
                                       MercureNotificationService().dispose();
                                       Navigator.pushNamedAndRemoveUntil(
                                           context, '/login', (route) => false);
@@ -958,31 +772,3 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
     );
   }
 }
-/*
-
-Widget customSwitch(
-  String text,
-  bool val,
-  onChangeMethod,
-  BuildContext context,
-) {
-  log("la valeur de button switch ==== $val");
-  return Padding(
-    padding: EdgeInsets.only(top: 0, left: 0, right: 0),
-    child: Row(
-      children: [
-        Text(
-          text,
-          style: Theme.of(context).textTheme.bodyText1,
-        ),
-        Spacer(),
-        CupertinoSwitch(
-          activeColor: Colors.blue,
-          value: val,
-          onChanged: onChangeMethod,
-        ),
-      ],
-    ),
-  );
-}
-*/
