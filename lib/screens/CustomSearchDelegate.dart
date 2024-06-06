@@ -47,7 +47,7 @@ class CustomSearchDelegate extends SearchDelegate {
         return ListView.builder(
           itemCount: data?.length,
           itemBuilder: (context, index) {
-            return GestureDetector(
+            return InkWell(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(
                   builder: (context) {
@@ -113,7 +113,6 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // Display suggestions based on the current query
     return FutureBuilder<List<TicketData>>(
       future: _ticketList.getTicketList(query: query, idFamily: idFamily),
       builder: (context, snapshot) {
@@ -131,8 +130,46 @@ class CustomSearchDelegate extends SearchDelegate {
                 query = '${data?[index].reference}';
                 showResults(context);
               },
-              title: Text('${data?[index].reference}'),
-              subtitle: Text('${data?[index].type_ticket}'),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('${data?[index].reference}'),
+                  Text(
+                    '${data?[index].created_at}',
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${data?[index].type_ticket}'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${data?[index].owner}',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      data?[index].owner_avatar.length == 1
+                          ? CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              child: Text(
+                                '${data?[index].owner_avatar}',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              radius: 15,
+                            )
+                          : CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                "https://spherebackdev.cmk.biz:4543/storage/uploads/${data?[index].owner_avatar}",
+                              ),
+                              radius: 15,
+                            ),
+                    ],
+                  ),
+                ],
+              ),
             );
           },
         );

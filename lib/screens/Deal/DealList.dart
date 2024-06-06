@@ -158,7 +158,7 @@ class _DealsPageState extends State<DealsPage> {
                   ]),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: GestureDetector(
+                    child: InkWell(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {

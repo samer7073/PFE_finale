@@ -2,7 +2,7 @@
 import 'dart:developer';
 
 import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
-import 'package:flutter_application_stage_project/screens/PipelineScreen.dart';
+
 import 'package:flutter_application_stage_project/screens/contactPage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +15,6 @@ import 'package:provider/provider.dart';
 import '../providers/NotificationProvider.dart';
 import '../services/MercureNotificationService.dart';
 import 'Activity/home_view.dart';
-import 'detail/kanban_page.dart';
-import 'detailElment.dart';
 
 class HomeNavigate extends StatefulWidget {
   final int id_page;

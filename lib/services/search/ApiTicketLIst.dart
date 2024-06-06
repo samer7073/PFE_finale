@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:http/http.dart' as http;
-
 import '../../models/ticket/ticketData.dart';
 import '../sharedPreference.dart';
 
@@ -29,10 +27,12 @@ class ApiTicketList {
         final data = jsonResponse['data'] as List;
         results = data.map((e) => TicketData.fromJson(e)).toList();
         if (query != null) {
-          results = results
-              .where((element) =>
-                  element.reference.toLowerCase().contains(query.toLowerCase()))
-              .toList();
+          final queryLower = query.toLowerCase();
+          results = results.where((element) {
+            return element.reference.toLowerCase().contains(queryLower) ||
+                element.owner.toLowerCase().contains(queryLower) ||
+                element.label.toLowerCase().contains(queryLower);
+          }).toList();
         }
       } else {
         log("fetch error: ${response.statusCode}");

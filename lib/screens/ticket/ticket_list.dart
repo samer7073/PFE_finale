@@ -142,7 +142,7 @@ class _TicketListState extends State<TicketList> {
                       backgroundColor: Colors.green,
                     )
                   ]),
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
