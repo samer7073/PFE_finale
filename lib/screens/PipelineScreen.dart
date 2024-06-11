@@ -12,6 +12,7 @@ import '../services/ApiDeleteElment.dart';
 import '../services/ApiGetPiplineAllFamilies.dart';
 import 'Card.dart';
 import 'detailElment.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PipelineScreen extends StatefulWidget {
   final String idFamily;
@@ -74,19 +75,19 @@ class _PipelineScreenState extends State<PipelineScreen> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Element supprimer avec succès !'),
+            content: Text('Item deleted successfully!'),
           ),
         );
       } else {
         // Show error snackbar
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur : Element non supprimé")),
+          SnackBar(content: Text("Error: Item not deleted")),
         );
       }
     } catch (e) {
       // Handle error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur : Element non supprimé")),
+        SnackBar(content: Text("Error: Item not deleted")),
       );
     }
   }
@@ -132,14 +133,23 @@ class _PipelineScreenState extends State<PipelineScreen> {
                             child: DropdownButton<Pipeline>(
                               isExpanded: false,
                               value: selectedPipeline,
-                              onChanged: (Pipeline? newValue) {
+                              onChanged: (Pipeline? newValue) async {
                                 setState(() {
                                   selectedPipeline = newValue;
-                                  selectedStageId = null;
-                                  kanbanData =
-                                      null; // Réinitialiser kanbanData à null lors du changement de pipeline
-                                  _initializeFirstStage();
+                                  selectedStageId =
+                                      selectedPipeline!.stages.first.id;
                                 });
+
+                                try {
+                                  KanbanResponse kanbanResponse =
+                                      await GetKanbanApi.getKanban(
+                                          selectedStageId.toString());
+                                  setState(() {
+                                    kanbanData = kanbanResponse.data;
+                                  });
+                                } catch (e) {
+                                  print('Error fetching kanban data: $e');
+                                }
                               },
                               items: snapshot.data!.data
                                   .map<DropdownMenuItem<Pipeline>>(
@@ -231,7 +241,7 @@ class _PipelineScreenState extends State<PipelineScreen> {
                             : kanbanData == null || kanbanData!.isEmpty
                                 ? Center(
                                     child: Text(
-                                      'Aucune donnée à afficher pour cette étape',
+                                      'No data to display for this stage',
                                       style: TextStyle(fontSize: 16),
                                     ),
                                   )

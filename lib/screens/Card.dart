@@ -7,6 +7,7 @@ import 'package:flutter_application_stage_project/models/KanbanModels/Element.da
 
 import '../services/ApiDeleteElment.dart';
 import 'EditElment.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Cardwidget extends StatefulWidget {
   final KanbanElement element;
@@ -45,7 +46,7 @@ class _CardwidgetState extends State<Cardwidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: const Color.fromARGB(255, 236, 236, 236),
+      color: Color.fromARGB(255, 245, 244, 244),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
@@ -57,7 +58,8 @@ class _CardwidgetState extends State<Cardwidget> {
           children: <Widget>[
             Row(
               children: [
-                Text("Ref:", style: TextStyle(color: Colors.black)),
+                Text(AppLocalizations.of(context).ref + " ",
+                    style: TextStyle(color: Colors.black)),
                 SizedBox(
                   width: 5,
                 ),
@@ -68,17 +70,6 @@ class _CardwidgetState extends State<Cardwidget> {
             ),
             SizedBox(
               height: 10,
-            ),
-            Row(
-              children: [
-                Text("Label:", style: TextStyle(color: Colors.black)),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(widget.element.labelData,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black)),
-              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -117,8 +108,8 @@ class _CardwidgetState extends State<Cardwidget> {
                 IconButton(
                   icon: const Icon(
                     Icons.note_alt_rounded,
-                    size: 18,
-                    color: Color.fromARGB(255, 8, 181, 14),
+                    size: 28,
+                    color: Color.fromARGB(255, 28, 175, 9),
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -135,26 +126,17 @@ class _CardwidgetState extends State<Cardwidget> {
                 ),
                 IconButton(
                   icon: const Icon(
-                    Icons.chat,
-                    size: 18,
+                    Icons.visibility,
+                    size: 28,
                     color: Colors.blue,
                   ),
-                  onPressed: () {
-                    /*
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatRoomScreen(task: widget.task),
-                      ),
-                    );
-                    */
-                  },
+                  onPressed: () {},
                   tooltip: 'Chat',
                 ),
                 IconButton(
                   icon: const Icon(
                     Icons.delete,
-                    size: 18,
+                    size: 28,
                     color: Colors.red,
                   ),
                   onPressed: () {

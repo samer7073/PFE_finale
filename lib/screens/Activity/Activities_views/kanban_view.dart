@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/pipeline.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
+import 'package:flutter_application_stage_project/screens/Activity/create_task.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/card.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_pipeline.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_kanban_view.dart';
@@ -62,7 +63,8 @@ class _KanbanBoardState extends State<KanbanBoard> {
     }
   }
 
-  Future<void> _loadTasksInParallel(String pipelineId, List<Stage> stages) async {
+  Future<void> _loadTasksInParallel(
+      String pipelineId, List<Stage> stages) async {
     List<Future<List<Task>>> futures = stages.map((stage) {
       return getTasksForKanban(pipelineId, stage.id);
     }).toList();
@@ -197,7 +199,7 @@ class _KanbanBoardState extends State<KanbanBoard> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 color: selectedStageId == stage.id
-                                    ? Color.fromARGB(255, 127, 177, 189)
+                                    ? const Color.fromARGB(255, 127, 177, 189)
                                     : const Color.fromARGB(255, 242, 242, 242),
                               ),
                               child: Center(
@@ -239,6 +241,19 @@ class _KanbanBoardState extends State<KanbanBoard> {
                   ),
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CreateTaskScreen()),
+            );
+          },
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.blue,
+        ),
       ),
     );
   }
@@ -251,7 +266,7 @@ class KanbanStage extends StatefulWidget {
   final Function(int, Task) onStageChanged;
 
   KanbanStage({
-     super.key,
+    super.key,
     required this.pipelineId,
     required this.stage,
     required this.tasks,
@@ -322,7 +337,7 @@ class _KanbanStageState extends State<KanbanStage> {
                       task: task,
                       onStageChanged: (newStageId) =>
                           _onStageChanged(newStageId, task),
-                           onDelete: () => _removeTask(task), 
+                      onDelete: () => _removeTask(task),
                     );
                   },
                 ),

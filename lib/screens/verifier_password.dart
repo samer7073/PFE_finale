@@ -111,7 +111,11 @@ class _VerfierPasswordState extends State<VerfierPassword> {
   @override
   Widget build(BuildContext context) {
     return loading
-        ? Loading()
+        ? Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
         : Scaffold(
             appBar: AppBar(),
             body: SingleChildScrollView(
@@ -135,7 +139,8 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                       keyboardType: TextInputType.number,
                       mainAxisAlignment: MainAxisAlignment.center,
                       numberOfFields: 6,
-                      fillColor: Color.fromARGB(255, 39, 69, 176).withOpacity(0.1),
+                      fillColor:
+                          Color.fromARGB(255, 39, 69, 176).withOpacity(0.1),
                       filled: true,
                       onSubmit: (value) {
                         log("OTP CODE EST : $value");

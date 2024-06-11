@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import '../models/ActivityElment.dart/ActivityEementModel.dart';
-import '../models/ActivityElment.dart/ActivityResponse.dart';
+
 import '../services/ApiActivityElement.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ActivityElmentPage extends StatefulWidget {
   final String idElment;
@@ -140,14 +141,16 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                 headerBuilder: (context, isExpanded) {
                   return ListTile(
                     title: Text(
-                      'Today',
+                      AppLocalizations.of(context).today,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   );
                 },
                 body: _activityElements.isEmpty
                     ? Center(
-                        child: Text('Aucune donnée pour aujourd\'hui'),
+                        child: Text(
+                          AppLocalizations.of(context).no_activities_today,
+                        ),
                       )
                     : Column(
                         children: _activityElements.map((activityElement) {
@@ -167,14 +170,16 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                 headerBuilder: (context, isExpanded) {
                   return ListTile(
                     title: Text(
-                      'Upcoming',
+                      AppLocalizations.of(context).upcoming,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   );
                 },
                 body: _activityElementUpcoming.isEmpty
                     ? Center(
-                        child: Text('Aucune activité à venir'),
+                        child: Text(
+                          AppLocalizations.of(context).no_upcoming_activities,
+                        ),
                       )
                     : Column(
                         children:
@@ -195,14 +200,16 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                 headerBuilder: (context, isExpanded) {
                   return ListTile(
                     title: Text(
-                      'History',
+                      AppLocalizations.of(context).history,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   );
                 },
                 body: _activityElementHistory.isEmpty
                     ? Center(
-                        child: Text('Aucune activité passée'),
+                        child: Text(
+                          AppLocalizations.of(context).no_past_activities,
+                        ),
                       )
                     : Column(
                         children:

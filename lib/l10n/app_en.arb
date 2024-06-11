@@ -1,202 +1,99 @@
 {
   "helloWorld": "Hello World!",
-  "@helloWorld": {
-    "description": "The conventional newborn programmer greeting"
-  },
   "homePage": "Home", 
-  "@homePage": {
-    "description": "Home"
-  },
   "calls": "Calls",
-  "@calls": {
-    "description": "Calls"
-  },
   "chats": "Chats",
-  "@chats": {
-    "description": "Chats"
-  },
   "settings": "Settings",
-  "@settings": {
-    "description": "Settings"
-  },
   "email": "Email",
-  "@email": {
-    "description": "Email"
-  },
   "password": "Password",
-  "@password": {
-    "description": "Password"
-  },
   "login": "Login",
-  "@login": {
-    "description": "Login"
-  },
   "profile": "Profile",
-  "@profile": {
-    "description": "Profile"
-  },
   "theme": "Theme",
-  "@theme": {
-    "description": "Theme"
-  },
   "darkMode": "Dark Mode",
-  "@darkMode": {
-    "description": "Dark Mode"
-  },
   "verificationCode": "Verification Code",
-  "@verificationCode": {
-    "description": "Verification Code"
-  },
   "forgotPassword": "Forgot Password?",
-  "@forgotPassword": {
-    "description": "Forgot Password?"
-  },
   "skip": "Skip",
-  "@skip": {
-    "description": "Skip"
-  },
   "done": "Done",
-  "@done": {
-    "description": "Done"
-  },
   "next": "Next",
-  "@next": {
-    "description": "Next"
-  },
   "discussions": "Discussions",
-  "@discussions": {
-    "description": "Discussions"
-  },
   "headerLogin": "Welcome Back",
-  "@headerLogin": {
-    "description": "Welcome Back"
-  },
   "textLogin": "Enter your credential to login",
-  "@textLogin": {
-    "description": "Enter your credential to login"
-  },
-  "theme": "Theme",
-  "@Theme": {
-    "description": "Theme"
-  },
-  "darkMode": "Dark Mode ",
-  "@darkMode": {
-    "description": "Dark Mode "
-  },
   "english": "English",
-  "@english": {
-    "description": "english"
-  },
   "french": "French",
-  "@french": {
-    "description": "french"
-  },
   "arabic": "Arabic",
-  "@arabic": {
-    "description": "arabic"
-  },
   "drawerHome": "H O M E",
-  "@drawerHome": {
-    "description": "H O M E"
-  },
   "drawerProfile": "P R O F I L E",
-  "@drawerHome": {
-    "description": "P R O F I L E"
-  },
   "drawerSettings": "S E T T I N G S",
-  "@drawerHome": {
-    "description": "S E T T I N G S"
-  },
   "drawerLogout": "L O G O U T",
-  "@drawerHome": {
-    "description": "L O G O U T"
-  },
   "language": "Language",
-  "@drawerHome": {
-    "description": "language"
-  },
   "tickets": "Tickets",
-  "@ticket": {
-    "description": "ticket"
-  },
   "activities": "Activities",
-  "@activities": {
-    "description": "activities"
-  },
   "deals": "Deals",
-  "@deals": {
-    "description": "deals"
-  },
   "account": "Account",
-  "@account": {
-    "description": "account"
-  },
   "confidentiality": "Confidentiality",
-  "@confidentiality": {
-    "description": "confidentiality"
-  },
   "securityandpermissions": "Security and permissions",
-  "@securityandpermissions": {
-    "description": "securityandpermissions"
-  },
   "unavailability": "Unavailability",
-  "@unavailability": {
-    "description": "unavailability"
-  },
   "about": "About",
-  "@about": {
-    "description": "about"
-  },
   "contentanddisplay": "Content and display",
-  "@contentanddisplay": {
-    "description": "contentanddisplay"
-  },
   "notifications": "Notifications",
-  "@notifications": {
-    "description": "notifications"
-  }
-  ,
   "languages": "Languages",
-  "@languages": {
-    "description": "languages"
-  }
-  ,
   "display": "Display",
-  "@Display": {
-    "description": "Display"
-  }
-  ,
   "connection": "Connection",
-  "@Connection": {
-    "description": "Connection"
-  }
-  ,
   "disconnect": "Disconnect",
-  "@Disconnect": {
-    "description": "Disconnect"
-  },
   "myaccount": "My account",
-  "@myaccount": {
-    "description": "My account"
-  },
   "choosealanguage": "Choose a language",
-  "@choosealanguage": {
-    "description": "Choose a language"
-  },
   "applicationlanguage": "Application language",
-  "@applicationlanguage": {
-    "description": "Application language"
-  },
   "selectyourdefaultapplicationlanguage": "Select your default application language",
-  "@selectyourdefaultapplicationlanguage": {
-    "description": "Select your default application language"
-  },
-  "enterValidEmail": "enter Valid Email",
-  "@enterValidEmail": {
-    "description": "enterValidEmail"
-  },
+  "enterValidEmail": "Enter Valid Email",
   "fieldRequired": "Field Required",
-  "@fieldRequired": {
-    "description": "fieldRequired"
-  }
+  "contacts": "Contacts",
+  "projects": "Projects",
+  "overview": "Overview",
+  "activity": "Activity",
+  "ticket": "Ticket",
+  "deal": "Deal",
+  "project": "Project",
+  "thisWeek": "This Week",
+  "today": "Today",
+  "upcoming": "Upcoming",
+  "tomorrow": "Tomorrow",
+  "invited": "Invited",
+  "created": "Created",
+  "visio": "Visio",
+  "isOverdue": "Is overdue",
+  "label": "Label",
+  "emailNotAvailable": "Email: (Email not available)",
+  "email": "Email",
+  "phoneNumberNotAvailable": "Phone Number: (Phone number not available)",
+  "phoneNumber": "Phone Number",
+  "noLabel": "No Label",
+  "contactDetails": "Contact Details",
+  "changeYourPassword": "Change your password",
+  "currentPassword": "Current Password",
+  "pleaseEnterYourCurrentPassword": "Please enter your current password",
+  "newPassword": "New Password",
+  "pleaseEnterYourNewPassword": "Please enter your new password",
+  "passwordRequirements": "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.",
+  "passwordConfirmation": "Password Confirmation",
+  "pleaseConfirmYourNewPassword": "Please confirm your new password",
+  "passwordConfirmationDoesNotMatch": "Password confirmation does not match",
+  "returnlabel": "Return",
+  "failedToChangePassword": "Failed to change password. Please try again later.",
+  "ok": "OK",
+  "save": "Save",
+  "ref": "Ref",
+  "pipeline": "Pipeline",
+  "organisation": "Organisation",
+  "listView": "List view",
+  "kanban": "Kanban",
+  "comment": "Comment",
+  "overview": "Overview",
+  "details": "Details",
+  "today": "Today",
+  "upcoming": "Upcoming",
+  "history": "History",
+  "no_activities_today": "No activities for today",
+  "no_upcoming_activities": "No upcoming activities",
+  "no_past_activities": "No past activities",
+  "pipeline": "Pipeline"
 }

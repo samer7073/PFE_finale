@@ -8,6 +8,7 @@ import '../PipelineScreen.dart';
 import '../notifications/notifications_page.dart';
 import '../ticket/addTicket.dart';
 import 'DealList.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DealPage extends StatefulWidget {
   const DealPage({super.key});
@@ -59,7 +60,7 @@ class _DealPageState extends State<DealPage> {
         ),
       ),
       appBar: AppBar(
-        title: Text('Deals'),
+        title: Text(AppLocalizations.of(context).deals),
         actions: [
           IconButton(
             onPressed: () {

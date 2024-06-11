@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/contactModel/data.dart';
 import 'package:flutter_application_stage_project/screens/ContactDeatails.dart';
 import 'package:flutter_application_stage_project/services/contact/ApiContact.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -59,7 +60,7 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Contacts"),
+        title: Text(AppLocalizations.of(context).contacts),
         centerTitle: true,
       ),
       body: Column(

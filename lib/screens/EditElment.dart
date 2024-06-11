@@ -13,6 +13,7 @@ import '../services/ApiField.dart';
 import '../services/ApiFieldGroup.dart';
 import '../services/ApiFieldPost.dart';
 import 'homeNavigate_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditElment extends StatefulWidget {
   final String title;
@@ -85,7 +86,7 @@ class _EditElmentState extends State<EditElment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Ajouter un ${widget.title}")),
+      appBar: AppBar(title: Text("Edit a ${widget.title}")),
       body: loading
           ? Container(
               child: Center(
@@ -212,8 +213,7 @@ class _EditElmentState extends State<EditElment> {
                                           );
                                         }
                                       }),
-                                  content:
-                                      Text('Formulaire soumis avec succès !'),
+                                  content: Text('Form submitted successfully!'),
                                 ),
                               );
                             } else if (postUpdate == 500) {
@@ -223,7 +223,7 @@ class _EditElmentState extends State<EditElment> {
                                   action: SnackBarAction(
                                       label: "Ok", onPressed: () {}),
                                   content: Text(
-                                      'Vérifiez les validations de vos champs requis'),
+                                      'Please check the validations of your required fields.'),
                                 ),
                               );
                             }
@@ -237,12 +237,12 @@ class _EditElmentState extends State<EditElment> {
                               action:
                                   SnackBarAction(label: "Ok", onPressed: () {}),
                               content: Text(
-                                  'Vérifiez les validations de vos champs requis'),
+                                  'Please check the validations of your required fields.'),
                             ),
                           );
                         }
                       },
-                      child: Text("Enregistrer"),
+                      child: Text("Save"),
                     )
                   ],
                 ),

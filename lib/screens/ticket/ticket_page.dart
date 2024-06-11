@@ -1,23 +1,18 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
 import 'package:flutter_application_stage_project/screens/EventListenerScreen.dart';
 import 'package:flutter_application_stage_project/screens/PipelineScreen.dart';
-
 import 'package:flutter_application_stage_project/screens/ticket/addTicket.dart';
-
 import 'package:flutter_application_stage_project/screens/ticket/ticket_list.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-
 import '../CustomSearchDelegate.dart';
 import '../NotficationPage.dart';
 import '../notifications/notifications_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TicketPage extends StatefulWidget {
   const TicketPage({Key? key}) : super(key: key);
@@ -28,16 +23,23 @@ class TicketPage extends StatefulWidget {
 
 class _TicketState extends State<TicketPage> {
   late ThemeProvider themeProvider;
+  late String _viewMode;
+
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    log("test Init state activted ");
+    log("test Init state activated");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    log("valeur isdark  dans initstate ${themeProvider.isDarkMode}");
+    log("valeur isdark dans initstate ${themeProvider.isDarkMode}");
+    _viewMode = AppLocalizations.of(context).listView;
   }
 
   int _selectedIndex = 0;
-  String _viewMode = 'List view';
 
   static List<Widget> _widgetOptions = <Widget>[
     TicketList(),
@@ -54,7 +56,10 @@ class _TicketState extends State<TicketPage> {
     setState(() {
       _viewMode = viewMode;
     });
-    int newIndex = ['List view', 'Kanban '].indexOf(viewMode);
+    int newIndex = [
+      AppLocalizations.of(context).listView,
+      AppLocalizations.of(context).kanban
+    ].indexOf(viewMode);
     _onItemTapped(newIndex);
   }
 
@@ -66,10 +71,11 @@ class _TicketState extends State<TicketPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AddTicket(
-                      family_id: "6",
-                      titel: "Ticket",
-                    )),
+              builder: (context) => AddTicket(
+                family_id: "6",
+                titel: "Ticket",
+              ),
+            ),
           );
         },
         child: Icon(
@@ -78,7 +84,7 @@ class _TicketState extends State<TicketPage> {
         ),
       ),
       appBar: AppBar(
-        title: Text('Tickets'),
+        title: Text(AppLocalizations.of(context).tickets),
         actions: [
           IconButton(
             onPressed: () {
@@ -106,7 +112,10 @@ class _TicketState extends State<TicketPage> {
             initialValue: _viewMode,
             onSelected: _changeViewMode,
             itemBuilder: (BuildContext context) {
-              return ['List view', 'Kanban ']
+              return [
+                AppLocalizations.of(context).listView,
+                AppLocalizations.of(context).kanban
+              ]
                   .map((mode) => PopupMenuItem(
                         value: mode,
                         child: Text(mode),

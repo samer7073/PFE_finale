@@ -4,6 +4,7 @@ import 'package:flutter_application_stage_project/screens/Activity/Activities_vi
 import 'package:flutter_application_stage_project/screens/Activity/Activities_views/list_view.dart';
 import 'package:flutter_application_stage_project/screens/Activity/create_task.dart';
 import 'package:flutter_application_stage_project/screens/Activity/task_notification_screen.dart';
+import 'package:flutter_application_stage_project/screens/NotficationPage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // List of widgets for different views
   static final List<Widget> _widgetOptions = <Widget>[
-    TaskListPage(),
+    const TaskListPage(),
     const KanbanBoard(),
     const Calendarviewpage(),
   ];
@@ -78,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => TaskLogScreen()),
+                  MaterialPageRoute(builder: (context) => NotificationPage()),
                 );
               },
             ),
@@ -91,19 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(child: _widgetOptions.elementAt(_selectedIndex)),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CreateTaskScreen()),
-          );
-        },
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.blue,
-      ),
+      
     );
   }
 }

@@ -745,7 +745,10 @@ class _FieldWidgetGeneratorUpdateState
                       "field[${widget.dataFieldGroup.id.toString()}][1]");
                   log(widget.formMap.toString());
                 },
-                icon: Icon(Icons.cancel),
+                icon: Icon(
+                  Icons.cancel,
+                  color: Colors.blue,
+                ),
               ),
               prefixIcon: IconButton(
                   onPressed: () async {
@@ -775,7 +778,7 @@ class _FieldWidgetGeneratorUpdateState
                       });
                     }
                   },
-                  icon: Icon(Icons.date_range, color: Colors.purple)),
+                  icon: Icon(Icons.date_range, color: Colors.blue)),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10.0),
@@ -820,7 +823,7 @@ class _FieldWidgetGeneratorUpdateState
                       .remove("field[${widget.dataFieldGroup.id.toString()}]");
                   log(widget.formMap.toString());
                 },
-                icon: Icon(Icons.cancel, color: Colors.purple),
+                icon: Icon(Icons.cancel, color: Colors.blue),
               ),
               prefixIcon: IconButton(
                   onPressed: () async {
@@ -886,7 +889,7 @@ class _FieldWidgetGeneratorUpdateState
                       .remove("field[${widget.dataFieldGroup.id.toString()}]");
                   log(widget.formMap.toString());
                 },
-                icon: Icon(Icons.cancel, size: 20, color: Colors.purple),
+                icon: Icon(Icons.cancel, size: 20, color: Colors.blue),
               ),
               prefixIcon: IconButton(
                   onPressed: () async {
@@ -910,7 +913,7 @@ class _FieldWidgetGeneratorUpdateState
                       log(widget.formMap.toString());
                     }
                   },
-                  icon: Icon(Icons.date_range, size: 20, color: Colors.purple)),
+                  icon: Icon(Icons.date_range, size: 20, color: Colors.blue)),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10.0),
@@ -957,7 +960,7 @@ class _FieldWidgetGeneratorUpdateState
                 },
                 icon: Icon(
                   Icons.cancel,
-                  color: Colors.purple,
+                  color: Colors.blue,
                 ),
               ),
               prefixIcon: IconButton(
@@ -983,7 +986,7 @@ class _FieldWidgetGeneratorUpdateState
                       log(widget.formMap.toString());
                     }
                   },
-                  icon: Icon(Icons.date_range, color: Colors.purple)),
+                  icon: Icon(Icons.date_range, color: Colors.blue)),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10.0),

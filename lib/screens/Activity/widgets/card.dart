@@ -28,8 +28,7 @@ class TaskCard1 extends StatefulWidget {
 }
 
 class _TaskCard1State extends State<TaskCard1> {
-  late String currentPriority;
-  late String currentStageLabel;
+  late Task _task;
   late Map<int, IconData> taskTypeIcons = {};
   Map<int, Stage> _stages = {};
   final Map<int, int> _stagePercents = {
@@ -43,8 +42,7 @@ class _TaskCard1State extends State<TaskCard1> {
   @override
   void initState() {
     super.initState();
-    currentPriority = widget.task.priority ?? 'None';
-    currentStageLabel = widget.task.stageLabel;
+    _task = widget.task;
     _fetchTaskTypeIcons();
     _preloadStages();
   }
@@ -53,8 +51,7 @@ class _TaskCard1State extends State<TaskCard1> {
     try {
       _stages = await _fetchStages();
       if (mounted) {
-        setState(
-            () {}); // Forcer la reconstruction du widget après le chargement des stages
+        setState(() {});
       }
     } catch (e) {
       if (mounted) {
@@ -122,36 +119,76 @@ class _TaskCard1State extends State<TaskCard1> {
     }
   }
 
-  Widget _buildAvatar(String avatar) {
-    return CircleAvatar(
-      backgroundColor: avatar.length == 1 ? Colors.blue : null,
-      backgroundImage: avatar.length == 1
-          ? null
-          : NetworkImage(
-              "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatar"),
-      radius: 15,
-      child: avatar.length == 1
-          ? Text(avatar, style: const TextStyle(color: Colors.white))
-          : null,
-    );
+  Widget _buildAvatar(String? avatar, String label) {
+    if (avatar == null || avatar.isEmpty || avatar.length == 1) {
+      String initial = avatar != null && avatar.length == 1
+          ? avatar
+          : (label.isNotEmpty ? label[0].toUpperCase() : '?');
+      return CircleAvatar(
+        radius: 15,
+        backgroundColor: Colors.blueGrey, // Set a background color if needed
+        child: Text(
+          initial,
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 15,
+        backgroundColor: Colors.transparent, // Ensure background is transparent
+        child: ClipOval(
+          child: Image.network(
+            "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatar",
+            fit: BoxFit.cover,
+            width: 30,
+            height: 30,
+            errorBuilder: (context, error, stackTrace) {
+              return CircleAvatar(
+                radius: 15,
+                backgroundColor:
+                    Colors.blueGrey, // Set a background color if needed
+                child: Text(
+                  label.isNotEmpty ? label[0].toUpperCase() : '?',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
   }
 
-  Widget _buildAvatars(List<String?> avatars, {int maxAvatars = 3}) {
+  Widget _buildAvatars(List<Map<String, String?>> avatarsAndLabels,
+      {int maxAvatars = 3}) {
     List<Widget> avatarWidgets = [];
-    for (int i = 0; i < avatars.length && i < maxAvatars; i++) {
-      avatarWidgets.add(
-          Positioned(left: i * 20.0, child: _buildAvatar(avatars[i] ?? "")));
-    }
-    if (avatars.length > maxAvatars) {
+    for (int i = 0; i < avatarsAndLabels.length && i < maxAvatars; i++) {
       avatarWidgets.add(Positioned(
-          left: maxAvatars * 20.0,
-          child: CircleAvatar(
-              radius: 15, child: Text('+${avatars.length - maxAvatars}'))));
+        left: i * 20.0,
+        child: _buildAvatar(
+            avatarsAndLabels[i]['avatar'], avatarsAndLabels[i]['label']!),
+      ));
+    }
+    if (avatarsAndLabels.length > maxAvatars) {
+      avatarWidgets.add(Positioned(
+        left: maxAvatars * 20.0,
+        child: CircleAvatar(
+          radius: 15,
+          backgroundColor: const Color.fromARGB(
+              255, 50, 63, 69), // Set a background color if needed
+          child: Text(
+            '+${avatarsAndLabels.length - maxAvatars}',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ));
     }
     return Container(
-        width: (maxAvatars + 1) * 20.0,
-        height: 40,
-        child: Stack(children: avatarWidgets));
+      width: (maxAvatars + 1) * 30.0, // Adjust width to ensure full display
+      height: 40,
+      color: Colors.transparent, // Ensure background is transparent
+      child: Stack(children: avatarWidgets),
+    );
   }
 
   void _showPriorityDialog() {
@@ -163,11 +200,10 @@ class _TaskCard1State extends State<TaskCard1> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildPriorityOption('Low', Colors.grey),
+              _buildPriorityOption('Low', Colors.green),
               _buildPriorityOption('Medium', Colors.blue),
               _buildPriorityOption('High', Colors.orange),
               _buildPriorityOption('Urgent', Colors.red),
-              _buildPriorityOption('None', Colors.transparent),
             ],
           ),
         );
@@ -185,47 +221,19 @@ class _TaskCard1State extends State<TaskCard1> {
       onTap: () async {
         Navigator.of(context).pop();
         try {
-          await updateTaskPriority(widget.task.id, priority);
+          await updateTaskPriority(_task.id, priority);
           if (mounted) {
             setState(() {
-              currentPriority = priority;
+              _task.priority = priority;
             });
+            _showUpdateDialog('Priority updated to $priority');
           }
         } catch (e) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to update priority: $e')));
+            _showUpdateDialog('Failed to update priority: $e');
           }
         }
       },
-    );
-  }
-
-  Widget _buildPriorityFlag(String priority) {
-    Color flagColor;
-    switch (priority.toLowerCase()) {
-      case 'low':
-        flagColor = Colors.grey;
-        break;
-      case 'medium':
-        flagColor = Colors.blue;
-        break;
-      case 'high':
-        flagColor = Colors.orange;
-        break;
-      case 'urgent':
-        flagColor = Colors.red;
-        break;
-      default:
-        flagColor = Colors.transparent;
-        break;
-    }
-    return GestureDetector(
-      onTap: _showPriorityDialog,
-      child: Stack(alignment: Alignment.center, children: [
-        const Icon(Icons.flag_outlined, color: Colors.black),
-        Icon(Icons.flag, color: flagColor)
-      ]),
     );
   }
 
@@ -249,20 +257,19 @@ class _TaskCard1State extends State<TaskCard1> {
                 onTap: () async {
                   Navigator.of(context).pop();
                   try {
-                    await updateTaskStage(widget.task.id, stage.id);
+                    await updateTaskStage(_task.id, stage.id);
                     widget.onStageChanged(stage.id);
                     if (mounted) {
                       setState(() {
-                        currentStageLabel = stage.label;
-                        widget.task.stagePercent =
-                            _stagePercents[stage.id] ?? 0;
-                        widget.task.stageColor = stage.color;
+                        _task.stageLabel = stage.label;
+                        _task.stagePercent = _stagePercents[stage.id] ?? 0;
+                        _task.stageColor = stage.color;
                       });
+                      _showUpdateDialog('Stage updated to ${stage.label}');
                     }
                   } catch (e) {
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Failed to update stage: $e')));
+                      _showUpdateDialog('Failed to update stage: $e');
                     }
                   }
                 },
@@ -271,6 +278,54 @@ class _TaskCard1State extends State<TaskCard1> {
           ),
         );
       },
+    );
+  }
+
+  void _showUpdateDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Update Status'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildPriorityFlag(String priority) {
+    Color flagColor;
+    switch (priority.toLowerCase()) {
+      case 'low':
+        flagColor = Colors.green;
+        break;
+      case 'medium':
+        flagColor = Colors.blue;
+        break;
+      case 'high':
+        flagColor = Colors.orange;
+        break;
+      case 'urgent':
+        flagColor = Colors.red;
+        break;
+      default:
+        flagColor = Colors.transparent;
+        break;
+    }
+    return GestureDetector(
+      onTap: _showPriorityDialog,
+      child: Stack(alignment: Alignment.center, children: [
+        const Icon(Icons.flag_outlined, color: Colors.black),
+        Icon(Icons.flag, color: flagColor)
+      ]),
     );
   }
 
@@ -306,34 +361,41 @@ class _TaskCard1State extends State<TaskCard1> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime startDate = _parseDate(widget.task.startDate);
-    DateTime endDate = _parseDate(widget.task.endDate);
+    DateTime startDate = _parseDate(_task.startDate);
+    DateTime endDate = _parseDate(_task.endDate);
     bool isOverdue = endDate.isBefore(DateTime.now());
 
-    IconData taskIcon =
-        taskTypeIcons[widget.task.tasksTypeId] ?? Icons.help_outline;
+    IconData taskIcon = taskTypeIcons[_task.tasksTypeId] ?? Icons.help_outline;
 
     return Card(
       margin: const EdgeInsets.all(10.0),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 5,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Level 1
             Row(
               children: [
-                _buildAvatar(widget.task.ownerAvatar),
+                _buildAvatar(_task.ownerAvatar, _task.ownerLabel),
                 const SizedBox(width: 20.0),
-                Icon(taskIcon, color: _parseColor(widget.task.iconColor)),
+                Icon(taskIcon, color: _parseColor(_task.iconColor)),
                 const SizedBox(width: 8.0),
-                Text(
-                  widget.task.label.length > 20
-                      ? '${widget.task.label.substring(0, 20)}...'
-                      : widget.task.label,
+                Expanded(
+                  child: Text(
+                    _task.label,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                const Spacer(),
-                _buildPriorityFlag(currentPriority),
+                _buildPriorityFlag(_task.priority ?? 'None'),
               ],
             ),
             const SizedBox(height: 10.0),
@@ -347,9 +409,9 @@ class _TaskCard1State extends State<TaskCard1> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        "Start: ${DateFormat('dd-MM-yyyy ').format(startDate)}"),
+                        "Start: ${DateFormat('dd-MM-yyyy').format(startDate)}"),
                     Text(
-                      "End: ${DateFormat('dd-MM-yyyy ').format(endDate)}",
+                      "End: ${DateFormat('dd-MM-yyyy').format(endDate)}",
                       style: TextStyle(
                           color: isOverdue ? Colors.red : Colors.black),
                     ),
@@ -357,8 +419,11 @@ class _TaskCard1State extends State<TaskCard1> {
                 ),
                 const Spacer(),
                 _buildAvatars(
-                    widget.task.guests
-                        .map((guest) => guest['avatar'] as String?)
+                    _task.guests
+                        .map((guest) => {
+                              'avatar': guest['avatar'] as String?,
+                              'label': guest['label'] as String
+                            })
                         .toList(),
                     maxAvatars: 4),
               ],
@@ -366,24 +431,22 @@ class _TaskCard1State extends State<TaskCard1> {
             const SizedBox(height: 10.0),
 
             // Level 3
-            if (widget.task.familyLabel != null &&
-                widget.task.familyLabel!.isNotEmpty)
+            if (_task.familyLabel != null && _task.familyLabel!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: Row(
                   children: [
-                    Text("Family: ${widget.task.familyLabel}"),
+                    Text("Family: ${_task.familyLabel}"),
                     const Spacer(),
                   ],
                 ),
               ),
-            if (widget.task.elementLabel != null &&
-                widget.task.elementLabel!.isNotEmpty)
+            if (_task.elementLabel != null && _task.elementLabel!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: Row(
                   children: [
-                    Text("Element: ${widget.task.elementLabel}"),
+                    Text("Element: ${_task.elementLabel}"),
                     const Spacer(),
                   ],
                 ),
@@ -398,9 +461,7 @@ class _TaskCard1State extends State<TaskCard1> {
                   GestureDetector(
                     onTap: _showStageDialog,
                     child: _buildStageProgressIndicator(
-                        widget.task.stagePercent,
-                        widget.task.stageLabel,
-                        widget.task.stageColor),
+                        _task.stagePercent, _task.stageLabel, _task.stageColor),
                   ),
                 ],
               ),
@@ -408,8 +469,11 @@ class _TaskCard1State extends State<TaskCard1> {
 
             // Level 4
             _buildAvatars(
-                widget.task.followers
-                    .map((follower) => follower['avatar'] as String?)
+                _task.followers
+                    .map((follower) => {
+                          'avatar': follower['avatar'] as String?,
+                          'label': follower['label'] as String
+                        })
                     .toList(),
                 maxAvatars: 4),
             const SizedBox(height: 10.0),
@@ -422,14 +486,13 @@ class _TaskCard1State extends State<TaskCard1> {
                   icon: const Icon(
                     Icons.remove_red_eye,
                     size: 20,
-                    color: Colors.purple,
+                    color: Colors.blue,
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            TaskDetailPage(taskId: widget.task.id),
+                        builder: (context) => TaskDetailPage(taskId: _task.id),
                       ),
                     );
                   },
@@ -438,30 +501,36 @@ class _TaskCard1State extends State<TaskCard1> {
                   icon: const Icon(
                     Icons.edit,
                     size: 20,
-                    color: Colors.purple,
+                    color: Colors.blue,
                   ),
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    final updatedTask = await Navigator.push<Task>(
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            UpdateTaskScreen(taskId: widget.task.id),
+                            UpdateTaskScreen(taskId: _task.id),
                       ),
                     );
+
+                    if (updatedTask != null) {
+                      setState(() {
+                        _task = updatedTask;
+                      });
+                    }
                   },
                 ),
                 IconButton(
                     icon: const Icon(
                       Icons.chat,
                       size: 20,
-                      color: Colors.purple,
+                      color: Colors.blue,
                     ),
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => RommCommentairePage(
-                            roomId: widget.task.roomId ?? 'null',
+                            roomId: _task.roomId ?? 'null',
                           ),
                         ),
                       );
@@ -489,7 +558,7 @@ class _TaskCard1State extends State<TaskCard1> {
                             ),
                             TextButton(
                               onPressed: () {
-                                deleteTasks(widget.task.id).then((_) {
+                                deleteTasks(_task.id).then((_) {
                                   Navigator.of(context).pop();
                                   widget
                                       .onDelete(); // Notify parent of deletion

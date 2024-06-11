@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/ContactDeatilsElment.dart';
 import '../models/contactModel/ContactModelDetails/ApiResponseContactDeatils.dart';
 import '../services/contact/ApiContact.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ContactDetailsPage extends StatefulWidget {
   final String contactId;
@@ -24,7 +25,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contact Details'),
+        title: Text(AppLocalizations.of(context).contactDetails),
       ),
       body: FutureBuilder<ApiResponseContactDetails>(
         future: _futureContactDetails,
@@ -65,7 +66,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                 children: <Widget>[
                   Card(
                     child: ListTile(
-                      title: Text('Label: ${contactDetails!.info.label}',
+                      title: Text(
+                          AppLocalizations.of(context).label +
+                              ' ${contactDetails!.info.label}',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
@@ -75,8 +78,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                       title: Text(
                         contactDetails.info.email == "null" ||
                                 contactDetails.info.email!.isEmpty
-                            ? 'Email: (Email not available)'
-                            : 'Email: ${contactDetails.info.email}',
+                            ? AppLocalizations.of(context).emailNotAvailable
+                            : AppLocalizations.of(context).email +
+                                ' ${contactDetails.info.email}',
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -87,8 +91,10 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                       title: Text(
                         contactDetails.info.phoneNumber == "null" ||
                                 contactDetails.info.phoneNumber!.isEmpty
-                            ? 'Phone Number: (Phone number not available)'
-                            : 'Phone Number: $cleanedPhoneNumber',
+                            ? AppLocalizations.of(context)
+                                .phoneNumberNotAvailable
+                            : AppLocalizations.of(context).phoneNumber +
+                                ' $cleanedPhoneNumber',
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -96,7 +102,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ExpansionTile(
                       title: Text(
-                          'Deals (${contactDetails.relations.deal!.length})',
+                          AppLocalizations.of(context).deals +
+                              '(${contactDetails.relations.deal!.length})',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       children: contactDetails.relations.deal!
                           .map((deal) => ListTile(
@@ -109,7 +116,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                     },
                                   ));
                                 },
-                                title: Text(deal.label ?? 'No Label'),
+                                title: Text(deal.label ??
+                                    AppLocalizations.of(context).noLabel),
                                 leading: Icon(Icons.business),
                               ))
                           .toList(),
@@ -118,7 +126,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ExpansionTile(
                       title: Text(
-                          'Projects (${contactDetails.relations.project!.length})',
+                          AppLocalizations.of(context).projects +
+                              ' (${contactDetails.relations.project!.length})',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       children: contactDetails.relations.project!
                           .map((project) => ListTile(
@@ -131,7 +140,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                     },
                                   ));
                                 },
-                                title: Text(project.label ?? 'No Label'),
+                                title: Text(project.label ??
+                                    AppLocalizations.of(context).noLabel),
                                 leading: Icon(Icons.work),
                               ))
                           .toList(),
@@ -140,7 +150,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ExpansionTile(
                       title: Text(
-                          'Helpdesk (${contactDetails.relations.helpdesk!.length})',
+                          AppLocalizations.of(context).tickets +
+                              ' (${contactDetails.relations.helpdesk!.length})',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       children: contactDetails.relations.helpdesk!
                           .map((helpdesk) => ListTile(
@@ -153,7 +164,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                     },
                                   ));
                                 },
-                                title: Text(helpdesk.label ?? 'No Label'),
+                                title: Text(helpdesk.label ??
+                                    AppLocalizations.of(context).noLabel),
                                 leading: Icon(Icons.help),
                               ))
                           .toList(),

@@ -97,6 +97,12 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     fetchTaskDetails(widget.taskId);
   }
 
+  void _validateForm() {
+    final bool isTaskTypeValid = selectedTaskTypeId != null;
+    final bool isOwnerValid = selectedOwner != null;
+    final bool isTaskNameValid = _taskNameController.text.isNotEmpty;
+  }
+
   @override
   void dispose() {
     _taskNameController.dispose();
@@ -141,6 +147,10 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
 
       setState(() {
         selectedPriority = task.priority.isEmpty ? null : task.priority;
+        if (selectedPriority != null &&
+            !priorities.contains(selectedPriority)) {
+          selectedPriority = null;
+        }
         selectedTaskTypeId = task.tasksTypeId;
         selectedStageId = task.stageId;
         selectedModuleId = task.familyId;
@@ -284,7 +294,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(isStartTime ? 'Select Start Time' : 'Select End Time'),
-          content: Container(
+          content: SizedBox(
             height: 100,
             width: 100,
             child: CupertinoDatePicker(
@@ -505,7 +515,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
   void onTaskTypeSelected(int id, String label) {
     setState(() {
       selectedTaskTypeId = id;
-      _taskNameController.text = label; // Update label field
+      _taskNameController.text = label; // Mettre à jour le champ de label
+      _validateForm();
     });
   }
 
@@ -540,27 +551,6 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     return items;
   }
 
-  List<DropdownMenuItem<String>> _buildPriorityDropdownMenuItems() {
-    return [
-      const DropdownMenuItem<String>(
-        value: 'low',
-        child: Text('Low'),
-      ),
-      const DropdownMenuItem<String>(
-        value: 'medium',
-        child: Text('Medium'),
-      ),
-      const DropdownMenuItem<String>(
-        value: 'high',
-        child: Text('High'),
-      ),
-      const DropdownMenuItem<String>(
-        value: 'urgent',
-        child: Text('Urgent'),
-      ),
-    ];
-  }
-
   List<DropdownMenuItem<String>> _buildRelatedModuleDropdownMenuItems() {
     if (relatedModules.isEmpty) {
       return [
@@ -579,37 +569,6 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
               child: Text(relatedModule['label']),
             ))
         .toList();
-  }
-
-  DropdownButtonFormField<String> _buildRelatedModuleDropdown() {
-    return DropdownButtonFormField<String>(
-      value: relatedModules
-              .any((module) => module['id'] == selectedRelatedModuleId)
-          ? selectedRelatedModuleId
-          : null,
-      items: _buildRelatedModuleDropdownMenuItems(),
-      onChanged: (String? newValue) {
-        setState(() {
-          selectedRelatedModuleId = newValue;
-        });
-      },
-      decoration: InputDecoration(
-        hintText: 'Select Related Module',
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.blueGrey),
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-    );
-  }
-
-  void _clearRelatedModuleSelection() {
-    setState(() {
-      selectedRelatedModuleId = null;
-    });
   }
 
   void _handleStartDateSelection() async {
@@ -680,29 +639,39 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     });
   }
 
-  Widget _buildAvatar(String? avatar, String label) {
-    if (avatar != null && avatar.isNotEmpty) {
+  Widget _buildAvatar(String? avatar, String ownerLabel) {
+    if (avatar == null || avatar.length == 1) {
+      // Show the initial of the owner's name if avatar is null or empty
+      String initial =
+          ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?';
       return CircleAvatar(
-        backgroundImage: NetworkImage(
-          'https://spherebackdev.cmk.biz:4543/storage/uploads/$avatar',
+        backgroundColor: Colors.blue,
+        radius: 15,
+        child: Text(
+          initial,
+          style: const TextStyle(color: Colors.white),
         ),
-        radius: 20,
       );
     } else {
-      return Container(
-        width: 40,
-        height: 40,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.blueGrey,
-        ),
-        child: Center(
-          child: Text(
-            label.split(' ').map((name) => name[0]).join(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+      return CircleAvatar(
+        backgroundColor: Colors.transparent,
+        radius: 20,
+        child: ClipOval(
+          child: Image.network(
+            "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatar",
+            fit: BoxFit.cover,
+            width: 30,
+            height: 30,
+            errorBuilder: (context, error, stackTrace) {
+              return CircleAvatar(
+                backgroundColor: Colors.blue,
+                radius: 20,
+                child: Text(
+                  ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            },
           ),
         ),
       );
@@ -719,7 +688,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
             style: TextStyle(color: Colors.blue, fontSize: 25),
           ),
         ),
-        body: Center(child: CircularProgressIndicator()),
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -880,6 +849,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                 onPressed: () {
                                   setState(() {
                                     selectedOwner = null;
+                                    _validateForm();
                                   });
                                 },
                               ),
@@ -1513,7 +1483,9 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                             ),
                           ),
                         ),
-                      const SizedBox(height: 16.0),
+                      const SizedBox(
+                        height: 18,
+                      ),
                       const Text(
                         'Select Related Module',
                         style: TextStyle(
@@ -1524,27 +1496,46 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      TextField(
-                        controller: _locationController,
+                      InputDecorator(
                         decoration: InputDecoration(
-                          hintText: 'Enter Activity location',
+                          hintText: 'Select Related Module',
                           hintStyle: const TextStyle(
                               fontSize: 15, color: Colors.blueGrey),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
                           enabledBorder: OutlineInputBorder(
                             borderSide:
                                 const BorderSide(color: Colors.blueGrey),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Container(
+                          height: 20,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: selectedRelatedModuleId,
+                              isExpanded: true,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedRelatedModuleId = newValue;
+                                  isRelatedModuleValid = true;
+                                });
+                              },
+                              items: _buildRelatedModuleDropdownMenuItems(),
+                            ),
                           ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 12.0),
                         ),
                       ),
-                      const SizedBox(height: 18.0),
+                      if (!isRelatedModuleValid)
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            'Please select a related module',
+                            style: TextStyle(color: Colors.red, fontSize: 12.0),
+                          ),
+                        ),
                       const Text(
                         'Select Priority',
                         style: TextStyle(
@@ -1570,22 +1561,27 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           ),
                         ),
                         child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Colors.blueGrey),
-                            value: selectedPriority,
-                            isExpanded: false,
-                            icon: const Icon(Icons.arrow_drop_down),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedPriority = newValue;
-                              });
-                            },
-                            items: _buildPriorityDropdownMenuItems(),
+                            child: DropdownButton<String>(
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.blueGrey,
                           ),
-                        ),
+                          value: selectedPriority,
+                          isExpanded: false,
+                          icon: const Icon(Icons.arrow_drop_down),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedPriority = newValue;
+                            });
+                          },
+                          items: priorities.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        )),
                       ),
                       const SizedBox(height: 18.0),
                       const Text(

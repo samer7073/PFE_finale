@@ -10,6 +10,7 @@ import 'dart:convert';
 import '../models/detailModel.dart';
 import '../providers/theme_provider.dart';
 import '../services/sharedPreference.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DetailPage extends StatefulWidget {
   final String elementId;
@@ -104,7 +105,7 @@ class _DetailPageState extends State<DetailPage> {
           'Failed to update stage',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.red,
       ));
     }
   }
@@ -132,90 +133,167 @@ class _DetailPageState extends State<DetailPage> {
             var detailData = snapshot.data!;
             int selectedStageId = detailData.data['stage_id'];
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 20),
-                FutureBuilder<List<Stage>>(
-                  future: futureStages,
-                  builder: (context, stagesSnapshot) {
-                    if (stagesSnapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (stagesSnapshot.hasError) {
-                      return Center(
-                          child: Text('Error: ${stagesSnapshot.error}'));
-                    } else if (!stagesSnapshot.hasData ||
-                        stagesSnapshot.data!.isEmpty) {
-                      return Center(child: Text('No stages found'));
-                    } else {
-                      List<Stage> stages = stagesSnapshot.data!;
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: stages.map((stage) {
-                            bool isSelected = stage.id == selectedStageId;
-                            return GestureDetector(
-                              onTap: () {
-                                updateStage(widget.elementId, stage.id);
-                              },
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 20),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 15.0),
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 5.0),
-                                    child: Text(
-                                      stage.label,
-                                      style: TextStyle(
-                                        color: isDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: isSelected
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FutureBuilder<String>(
+                      future: futurePipelineName,
+                      builder: (context, pipelineSnapshot) {
+                        if (pipelineSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (pipelineSnapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${pipelineSnapshot.error}'));
+                        } else if (!pipelineSnapshot.hasData) {
+                          return Center(child: Text('No pipeline name found'));
+                        } else {
+                          String pipelineName = pipelineSnapshot.data!;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context).pipeline + " ",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                Text(
+                                  '$pipelineName',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    FutureBuilder<List<Stage>>(
+                      future: futureStages,
+                      builder: (context, stagesSnapshot) {
+                        if (stagesSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (stagesSnapshot.hasError) {
+                          return Center(
+                              child: Text('Error: ${stagesSnapshot.error}'));
+                        } else if (!stagesSnapshot.hasData ||
+                            stagesSnapshot.data!.isEmpty) {
+                          return Center(child: Text('No stages found'));
+                        } else {
+                          List<Stage> stages = stagesSnapshot.data!;
+                          return Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                              color: themeProvider.isDarkMode
+                                  ? Colors.black
+                                  : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: stages.map((stage) {
+                                  bool isSelected = stage.id == selectedStageId;
+                                  return GestureDetector(
+                                    onTap: () {
+                                      updateStage(widget.elementId, stage.id);
+                                    },
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 300),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 10.0, horizontal: 15.0),
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 5.0),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? Colors.blue
+                                            : Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? Colors.blue
+                                              : Colors.white,
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        stage.label,
+                                        style: TextStyle(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  if (isSelected)
-                                    Container(
-                                      height: 2.0,
-                                      color: Color(int.parse(stage.color
-                                          .replaceFirst('#', '0xff'))),
-                                      width: 60.0,
-                                    ),
-                                ],
+                                  );
+                                }).toList(),
                               ),
-                            );
-                          }).toList(),
-                        ),
-                      );
-                    }
-                  },
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      AppLocalizations.of(context).details,
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: themeProvider.isDarkMode
+                            ? Colors.black
+                            : Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: themeProvider.isDarkMode
+                                ? Colors.black
+                                : Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: detailData.data.entries
+                            .where((entry) =>
+                                entry.key != 'id' && entry.key != 'stage_id')
+                            .map((entry) {
+                          return ListTile(
+                            title: Text(
+                              entry.key.toUpperCase(),
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                            subtitle: Text(
+                              removeBrackets(entry.value.toString()),
+                              style: TextStyle(
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: ListView(
-                    children: detailData.data.entries
-                        .where((entry) =>
-                            entry.key != 'id' && entry.key != 'stage_id')
-                        .map((entry) {
-                      return ListTile(
-                        title: Text(
-                          entry.key.toUpperCase(),
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ),
-                        subtitle: Text(
-                          removeBrackets(entry.value.toString()),
-                          style: TextStyle(
-                              color: isDarkMode ? Colors.white : Colors.black),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
+              ),
             );
           }
         },

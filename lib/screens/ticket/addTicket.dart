@@ -93,7 +93,7 @@ class _AddTicketState extends State<AddTicket> {
             body: Container(child: Center(child: CircularProgressIndicator())))
         : Scaffold(
             appBar: AppBar(
-              title: Text("Ajouter un ${widget.titel}"),
+              title: Text("Add a ${widget.titel}"),
             ),
             body: SingleChildScrollView(
               child: Form(
@@ -208,18 +208,20 @@ class _AddTicketState extends State<AddTicket> {
                                           );
                                         }
                                       }),
-                                  content:
-                                      Text('Formulaire soumis avec succès !'),
+                                  content: Text('Form submitted successfully!'),
                                 ),
                               );
                             } else if (fielPostResponse == 500) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  backgroundColor: Colors.purple[200],
+                                  backgroundColor: Colors.green,
                                   action: SnackBarAction(
-                                      label: "Ok", onPressed: () {}),
+                                      textColor: Colors.white,
+                                      label: "Ok",
+                                      
+                                      onPressed: () {}),
                                   content: Text(
-                                      'Vérifiez les validations de vos champs requis'),
+                                      'Please check the validations for your required fields.'),
                                 ),
                               );
                             }
@@ -229,16 +231,16 @@ class _AddTicketState extends State<AddTicket> {
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              backgroundColor: Colors.purple[200],
+                              backgroundColor: Colors.orange,
                               action:
                                   SnackBarAction(label: "Ok", onPressed: () {}),
                               content: Text(
-                                  'Vérifiez les validations de vos champs requis'),
+                                  'Please check the validations for your required fields.'),
                             ),
                           );
                         }
                       },
-                      child: Text("Enregistrer"),
+                      child: Text("Save"),
                     )
                   ],
                 ),

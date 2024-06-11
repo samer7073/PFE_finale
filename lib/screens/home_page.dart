@@ -20,6 +20,7 @@ import '../services/sharedPreference.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'KpiFamilyPage.dart';
 import 'loading.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -138,13 +139,13 @@ class _HomePageState extends State<HomePage>
               title: Text('Comunik Sphere'),
               bottom: TabBar(
                 controller: _tabController,
-                tabs: const [
+                tabs: [
                   Tab(
-                    text: 'Activity',
+                    text: AppLocalizations.of(context).activities,
                   ),
-                  Tab(text: 'Ticket'),
-                  Tab(text: 'Deal'),
-                  Tab(text: 'Project')
+                  Tab(text: AppLocalizations.of(context).ticket),
+                  Tab(text: AppLocalizations.of(context).deal),
+                  Tab(text: AppLocalizations.of(context).project)
                 ],
               ),
               actions: [

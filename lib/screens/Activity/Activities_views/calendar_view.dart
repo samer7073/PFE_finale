@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
+import 'package:flutter_application_stage_project/screens/Activity/create_task.dart';
 import 'package:flutter_application_stage_project/screens/Activity/task_detail.dart';
 import 'package:flutter_application_stage_project/screens/Activity/update_task.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_calendar_view.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_delete_task.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class TaskListRow extends StatelessWidget {
   final int tasksTypeId;
@@ -13,12 +15,14 @@ class TaskListRow extends StatelessWidget {
   final String owner;
   final String ownerImage;
   final String priority;
+  final String startDate;
+  final String startTime;
   final String endDate;
   final String endTime;
   final bool isOverdue;
   final Map<String, IconData> iconMap;
   final VoidCallback onDeleteIconTap;
-  final VoidCallback onTap; // Add onTap callback
+  final VoidCallback onTap;
 
   const TaskListRow({
     super.key,
@@ -27,18 +31,20 @@ class TaskListRow extends StatelessWidget {
     required this.owner,
     required this.ownerImage,
     required this.priority,
+    required this.startDate,
+    required this.startTime,
     required this.endDate,
     required this.endTime,
     required this.isOverdue,
     required this.iconMap,
     required this.onDeleteIconTap,
-    required this.onTap, // Initialize onTap
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, // Use onTap callback
+      onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -66,14 +72,27 @@ class TaskListRow extends StatelessWidget {
                   ),
                 ),
                 Flexible(
-                  child: Text(
-                    'End: $endDate $endTime',
-                    style: TextStyle(
-                      color: isOverdue ? Colors.red : Colors.black,
-                      fontWeight:
-                          isOverdue ? FontWeight.bold : FontWeight.normal,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Start: $startDate $startTime',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        'End: $endDate $endTime',
+                        style: TextStyle(
+                          color: isOverdue ? Colors.red : Colors.black,
+                          fontWeight:
+                              isOverdue ? FontWeight.bold : FontWeight.normal,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -99,6 +118,7 @@ class TaskListRow extends StatelessWidget {
                         radius: 15,
                       )
                     : CircleAvatar(
+                        backgroundColor: Colors.transparent,
                         backgroundImage: NetworkImage(
                             "https://spherebackdev.cmk.biz:4543/storage/uploads/$ownerImage"),
                         radius: 15,
@@ -116,7 +136,7 @@ class TaskListRow extends StatelessWidget {
     Color flagColor;
     switch (priority?.toLowerCase()) {
       case 'low':
-        flagColor = Colors.grey;
+        flagColor = Colors.green;
         break;
       case 'medium':
         flagColor = Colors.blue;
@@ -175,6 +195,7 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
   DateTime _focusedDay = DateTime.now();
   List<Task> _tasks = [];
   Map<DateTime, List<Task>> _taskEvents = {};
+  String _noTasksMessage = '';
 
   Map<String, IconData> iconMap = {
     'CalendarOutlined': Icons.calendar_today,
@@ -196,9 +217,23 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
     final start = DateFormat('yyyy-MM-dd').format(_selectedDay);
     final end = DateFormat('yyyy-MM-dd').format(_selectedDay);
     final tasks = await fetchTasks(start, end);
+
+    // Sort tasks by time (assumes tasks have a startTime field)
+    tasks.sort((a, b) {
+      final aTime = DateFormat('HH:mm').parse(a.startTime);
+      final bTime = DateFormat('HH:mm').parse(b.startTime);
+      return aTime.compareTo(bTime);
+    });
+
     setState(() {
       _tasks = tasks;
       _updateTaskEvents(tasks);
+      if (tasks.isEmpty) {
+        _noTasksMessage =
+            'There are no tasks for ${DateFormat('dd MMMM yyyy').format(_selectedDay)}';
+      } else {
+        _noTasksMessage = '';
+      }
     });
   }
 
@@ -211,6 +246,16 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
       }
       taskEvents[date]!.add(task);
     }
+
+    // Sort tasks within each day by time
+    taskEvents.forEach((key, value) {
+      value.sort((a, b) {
+        final aTime = DateFormat('HH:mm').parse(a.startTime);
+        final bTime = DateFormat('HH:mm').parse(b.startTime);
+        return aTime.compareTo(bTime);
+      });
+    });
+
     setState(() {
       _taskEvents = taskEvents;
     });
@@ -219,7 +264,7 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
   Future<bool?> _showDeleteConfirmationDialog(String taskId) async {
     return showDialog<bool>(
       context: context,
-      barrierDismissible: false, // user must tap button for dismissal
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Delete Task'),
@@ -251,7 +296,7 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
 
   Future<void> _deleteTask(String taskId) async {
     try {
-      await deleteTasks(taskId); // Call your API to delete the task
+      await deleteTasks(taskId);
       setState(() {
         _tasks.removeWhere((task) => task.id == taskId);
         _updateTaskEvents(_tasks);
@@ -261,38 +306,6 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
         SnackBar(content: Text('Failed to delete task: $e')),
       );
     }
-  }
-
-  Widget _buildPriorityFlag(String? priority) {
-    Color flagColor;
-    switch (priority?.toLowerCase()) {
-      case 'low':
-        flagColor = Colors.grey;
-        break;
-      case 'medium':
-        flagColor = Colors.blue;
-        break;
-      case 'high':
-        flagColor = Colors.orange;
-        break;
-      case 'urgent':
-        flagColor = Colors.red;
-        break;
-      default:
-        flagColor = Colors.transparent;
-        break;
-    }
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        const Icon(Icons.flag_outlined, color: Colors.black),
-        Icon(Icons.flag, color: flagColor),
-      ],
-    );
-  }
-
-  IconData _getIconData(int tasksTypeId) {
-    return iconMap[tasksTypeId] ?? Icons.help_outline;
   }
 
   @override
@@ -305,7 +318,6 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
         ),
         child: Column(
           children: [
-            /////////////////////////////////////Calendar////////////////////////////////////
             TableCalendar(
               firstDay: DateTime.utc(2020, 1, 1),
               lastDay: DateTime.utc(2030, 12, 31),
@@ -347,13 +359,12 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
                 ),
               ),
             ),
-            ///////////////////////////////////Display Activities cards//////////////////////////////
             Expanded(
               child: _tasks.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Text(
-                        'No Tasks For Today',
-                        style: TextStyle(
+                        _noTasksMessage,
+                        style: const TextStyle(
                           fontSize: 17,
                           color: Colors.blue,
                         ),
@@ -363,8 +374,40 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
                       itemCount: _tasks.length,
                       itemBuilder: (context, index) {
                         final task = _tasks[index];
-                        return SwipeToDelete(
+                        return Slidable(
                           key: Key(task.id),
+                          endActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) =>
+                                    _showDeleteConfirmationDialog(task.id)
+                                        .then((value) {
+                                  if (value == true) _deleteTask(task.id);
+                                }),
+                                backgroundColor: Colors.red.withOpacity(0.1),
+                                foregroundColor: Colors.red,
+                                icon: Icons.delete,
+                                label: 'Delete',
+                              ),
+                              SlidableAction(
+                                onPressed: (context) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UpdateTaskScreen(
+                                        taskId: task.id,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                backgroundColor: Colors.green.withOpacity(0.1),
+                                foregroundColor: Colors.green,
+                                icon: Icons.edit,
+                                label: 'Edit',
+                              ),
+                            ],
+                          ),
                           child: Card(
                             margin: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 16.0),
@@ -374,6 +417,8 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
                               owner: task.ownerLabel,
                               ownerImage: task.ownerAvatar,
                               priority: task.priority,
+                              startDate: task.startDate,
+                              startTime: task.startTime,
                               endDate: task.endDate,
                               endTime: task.endTime,
                               isOverdue: task.isOverdue,
@@ -392,29 +437,12 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
                                   MaterialPageRoute(
                                     builder: (context) => TaskDetailPage(
                                       taskId: task.id,
-                                    ), // Pass taskId to TaskDetailPage
+                                    ),
                                   ),
                                 );
                               },
                             ),
                           ),
-                          onDelete: () async {
-                            final bool? result =
-                                await _showDeleteConfirmationDialog(task.id);
-                            if (result == true) {
-                              await _deleteTask(task.id);
-                            }
-                          },
-                          onEdit: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => UpdateTaskScreen(
-                                    taskId:
-                                        task.id), // Pass taskId to TaskEditPage
-                              ),
-                            );
-                          },
                         );
                       },
                     ),
@@ -422,89 +450,18 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class SwipeToDelete extends StatefulWidget {
-  final Widget child;
-  final Future<void> Function() onDelete;
-  final VoidCallback onEdit; // Add onEdit callback
-
-  const SwipeToDelete({
-    Key? key,
-    required this.child,
-    required this.onDelete,
-    required this.onEdit, // Initialize onEdit
-  }) : super(key: key);
-
-  @override
-  _SwipeToDeleteState createState() => _SwipeToDeleteState();
-}
-
-class _SwipeToDeleteState extends State<SwipeToDelete> {
-  double offset = 0.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        setState(() {
-          offset += details.delta.dx;
-          if (offset > 0) offset = 0;
-          if (offset < -150) offset = -150; // Increase limit for both icons
-        });
-      },
-      onHorizontalDragEnd: (details) {
-        if (offset <= -75) {
-          // Adjust for halfway swipe
-          setState(() {
-            offset = -150;
-          });
-        } else {
-          setState(() {
-            offset = 0;
-          });
-        }
-      },
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Container(
-              color: Colors.white,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () {
-                        widget.onEdit();
-                        setState(() {
-                          offset = 0;
-                        });
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () async {
-                        await widget.onDelete();
-                        setState(() {
-                          offset = 0;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Transform.translate(
-            offset: Offset(offset, 0),
-            child: widget.child,
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateTaskScreen()),
+          );
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.blue,
       ),
     );
   }

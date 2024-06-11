@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/commanitaireRoom/Message.dart';
 import 'package:intl/intl.dart';
@@ -113,65 +112,69 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
                                       message.sender.image.length == 1
                                           ? Colors.blue
                                           : null,
+                                  radius: 25,
                                   child: message.sender.image.length == 1
                                       ? Text(
                                           message.sender.image,
                                           style: TextStyle(color: Colors.white),
                                         )
                                       : null,
-                                  radius: 25,
                                 ),
                               if (!isCurrentUser) SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (!isCurrentUser)
-                                    Text(
-                                      message.sender.name,
-                                      style: TextStyle(
-                                          color: Colors.grey[700],
-                                          fontSize: 12),
-                                    ),
-                                  if (!isCurrentUser) SizedBox(height: 10),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 14, vertical: 10),
-                                    decoration: BoxDecoration(
-                                      color: isCurrentUser
-                                          ? Colors.green
-                                          : Colors.grey[400],
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(10),
-                                        topLeft: Radius.circular(10),
-                                        bottomRight: isCurrentUser
-                                            ? Radius.circular(0)
-                                            : Radius.circular(10),
-                                        bottomLeft: isCurrentUser
-                                            ? Radius.circular(10)
-                                            : Radius.circular(0),
+                              Flexible(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (!isCurrentUser)
+                                      Text(
+                                        message.sender.name,
+                                        style: TextStyle(
+                                            color: Color.fromARGB(255, 84, 84, 84),
+                                            fontSize: 12),
+                                      ),
+                                    if (!isCurrentUser) SizedBox(height: 5),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 14, vertical: 10),
+                                      decoration: BoxDecoration(
+                                        color: isCurrentUser
+                                            ? Color.fromARGB(255, 4, 160, 116)
+                                            : Color.fromARGB(255, 71, 70, 70),
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(10),
+                                          topLeft: Radius.circular(10),
+                                          bottomRight: isCurrentUser
+                                              ? Radius.circular(0)
+                                              : Radius.circular(10),
+                                          bottomLeft: isCurrentUser
+                                              ? Radius.circular(10)
+                                              : Radius.circular(0),
+                                        ),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            message.message,
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          SizedBox(height: 5),
+                                          Text(
+                                            DateFormat('dd/MM/yyyy HH:mm')
+                                                .format(DateTime.parse(message
+                                                    .createdAt
+                                                    .toString())),
+                                            style: TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 10),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          message.message,
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          DateFormat('dd/MM/yyyy HH:mm').format(
-                                              DateTime.parse(message.createdAt
-                                                  .toString())),
-                                          style: TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 10),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               if (isCurrentUser) SizedBox(width: 10),
                             ],

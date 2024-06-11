@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/services/ApiTaskKpi.dart';
 import '../models/TaskpiModel.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TaskKpiPage extends StatefulWidget {
   const TaskKpiPage({super.key});
@@ -38,56 +39,56 @@ class _TaskKpiPageState extends State<TaskKpiPage> {
                 mainAxisSpacing: 16.0,
                 children: [
                   _buildKpiCard(
-                      'Today',
+                      AppLocalizations.of(context).today,
                       data?.today,
                       Icons.today,
                       Color.fromARGB(255, 244, 245, 247),
                       Colors.blue[700],
                       Color.fromARGB(255, 0, 4, 9)),
                   _buildKpiCard(
-                      'This Week',
+                      AppLocalizations.of(context).thisWeek,
                       data?.thisWeek,
                       Icons.calendar_view_week,
                       Color.fromARGB(255, 244, 245, 247),
                       Colors.green[700],
                       Color.fromARGB(255, 0, 6, 1)),
                   _buildKpiCard(
-                      'Tomorrow',
+                      AppLocalizations.of(context).tomorrow,
                       data?.tomorrow,
                       Icons.calendar_today,
                       Color.fromARGB(255, 244, 245, 247),
                       Colors.pink[700],
                       const Color.fromARGB(255, 8, 0, 5)),
                   _buildKpiCard(
-                      'Upcoming',
+                      AppLocalizations.of(context).upcoming,
                       data?.upcoming,
                       Icons.upcoming,
                       Color.fromARGB(255, 244, 245, 247),
                       Colors.orange[700],
                       const Color.fromARGB(255, 10, 4, 0)),
                   _buildKpiCard(
-                      'Created',
+                      AppLocalizations.of(context).created,
                       data?.created,
                       Icons.create,
                       const Color.fromARGB(255, 239, 243, 243),
                       Colors.teal[700],
                       const Color.fromARGB(255, 1, 13, 11)),
                   _buildKpiCard(
-                      'Invited',
+                      AppLocalizations.of(context).invited,
                       data?.invited,
                       Icons.person_add,
                       const Color.fromARGB(255, 247, 246, 244),
                       Colors.amber[700],
                       const Color.fromARGB(255, 11, 5, 1)),
                   _buildKpiCard(
-                      'Is Overdue',
+                      AppLocalizations.of(context).isOverdue,
                       data?.isOverdue,
                       Icons.warning,
                       Color.fromARGB(255, 244, 245, 247),
                       Colors.red[700],
                       const Color.fromARGB(255, 17, 3, 3)),
                   _buildKpiCard(
-                      'Visio',
+                      AppLocalizations.of(context).visio,
                       data?.visio,
                       Icons.video_call,
                       Color.fromARGB(255, 244, 245, 247),

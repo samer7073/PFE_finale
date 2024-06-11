@@ -1,7 +1,7 @@
 class Task {
   final String id;
   final String label;
-  final String priority;
+  String priority;
   final String creatorLabel;
   final String creatorAvatar;
   final String ownerId;

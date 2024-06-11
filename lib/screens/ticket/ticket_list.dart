@@ -12,7 +12,7 @@ import 'package:flutter_application_stage_project/screens/ticket/ticketListRow.d
 import '../../models/ticket/ticket.dart';
 import '../../models/ticket/ticketData.dart';
 import '../../services/tickets/getTicketApi.dart';
-import '../loading.dart';
+
 
 class TicketList extends StatefulWidget {
   const TicketList({Key? key}) : super(key: key);
@@ -59,19 +59,19 @@ class _TicketListState extends State<TicketList> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Element supprimer avec succès !'),
+            content: Text('Item successfully deleted!'),
           ),
         );
       } else {
         // Show error snackbar
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur : Element non supprimé")),
+          SnackBar(content: Text("Error: Item not deleted")),
         );
       }
     } catch (e) {
       // Handle error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur : Element non supprimé")),
+        SnackBar(content: Text("Error: Item not deleted")),
       );
     }
   }

@@ -3,6 +3,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProjectListRow extends StatelessWidget {
   final String reference;
@@ -31,7 +32,7 @@ class ProjectListRow extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  "Ref : ",
+                  AppLocalizations.of(context).ref + " ",
                   style: Theme.of(context).textTheme.subtitle2,
                 ),
                 Text(
@@ -52,13 +53,14 @@ class ProjectListRow extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Label : ",
+              AppLocalizations.of(context).label + " ",
               style: Theme.of(context).textTheme.subtitle2,
             ),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
+            Text(title,
+                style: TextStyle(
+                    color: Color.fromARGB(255, 5, 104, 225),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold)),
           ],
         ),
         SizedBox(
@@ -70,7 +72,7 @@ class ProjectListRow extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  "Pipeline : ",
+                  AppLocalizations.of(context).pipeline + " ",
                   style: Theme.of(context).textTheme.subtitle2,
                 ),
                 Text(

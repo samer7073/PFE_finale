@@ -7,6 +7,7 @@ import 'ActivityElmentPage.dart';
 import 'RoomCommenatire.dart';
 import 'loading.dart';
 import 'overview_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DetailElment extends StatefulWidget {
   final String idElment;
@@ -55,11 +56,11 @@ class _DetailElmentState extends State<DetailElment>
         title: Text(widget.refenrce),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'Detail'),
-            Tab(text: 'OverView'),
-            Tab(text: 'Commentaire'),
-            Tab(text: 'Activity'),
+          tabs: [
+            Tab(text: AppLocalizations.of(context).details),
+            Tab(text: AppLocalizations.of(context).overview),
+            Tab(text: AppLocalizations.of(context).comment),
+            Tab(text: AppLocalizations.of(context).activity),
           ],
         ),
       ),

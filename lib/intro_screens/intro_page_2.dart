@@ -18,13 +18,33 @@ class _IntroPage2State extends State<IntroPage2> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset(
-          'assets/undraw_undraw_undraw_undraw_undraw_undraw_completion_progress_1oxr_gag2_-1-_0h44_-1-_vov5_-1-_wbt2_(1)_fu4s.png',
+          'assets/undraw_Modern_design_re_dlp8.png',
         ),
         /*
         LottieBuilder.network(
             "https://lottie.host/733c2bef-77f6-46cc-825a-40a99f75b9c2/OvJNIiqfXL.json"),
             */
-        Text('Page 2'),
+        Text(
+          "Efficiently manage your activities",
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          "Optimize your helpdesk support.",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          "Master your projects",
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        SizedBox(
+          height: 10,
+        ),
       ],
     ));
   }

@@ -30,11 +30,11 @@ class MyTimelineTile extends StatelessWidget {
         isFirst: isFirst,
         isLast: isLast,
         beforeLineStyle: LineStyle(
-          color: Colors.deepPurple,
+          color: Colors.green,
           thickness: 4,
         ),
         afterLineStyle: LineStyle(
-          color: Colors.deepPurple,
+          color: Colors.green,
           thickness: 4,
         ),
         indicatorStyle: IndicatorStyle(
@@ -43,7 +43,7 @@ class MyTimelineTile extends StatelessWidget {
           indicator: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isPast ? Colors.deepPurple : Colors.grey,
+              color: isPast ? Color.fromARGB(255, 23, 162, 28) : Colors.grey,
             ),
             child: Center(
               child: Icon(

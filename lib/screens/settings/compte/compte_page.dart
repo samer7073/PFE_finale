@@ -642,7 +642,7 @@ class _ComptePageState extends State<ComptePage> {
                                   Color.fromARGB(255, 228, 246, 250),
                             ),
                             child: Text(
-                              "Save",
+                              AppLocalizations.of(context).save,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Color.fromARGB(255, 40, 5, 243),

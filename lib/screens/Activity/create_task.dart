@@ -26,12 +26,13 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final _formKey = GlobalKey<FormState>();
   int? selectedTaskTypeId;
   bool isTaskTypeValid = true;
-  int? selectedStageId;
+  int? selectedStageId = 20;
   bool isStageValid = true;
   int? selectedModuleId;
   String? selectedRelatedModuleId;
   bool reminderBeforeEnd = false;
   bool isLoading = false;
+  final ValueNotifier<bool> _canCreateTask = ValueNotifier<bool>(false);
 
   final TextEditingController _taskNameController = TextEditingController();
   final TextEditingController _startDateController = TextEditingController();
@@ -83,6 +84,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     _startTimeController.text = DateFormat('HH:mm').format(_startTime);
     _endTimeController.text = DateFormat('HH:mm').format(_endTime);
     _reminderDurationController.text = selectedReminderDuration;
+    _taskNameController.addListener(_validateForm);
 
     // Set default date to today's date
     _startDateController.text = DateFormat('d/M/y').format(DateTime.now());
@@ -92,6 +94,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     fetchStagesFromApi();
     fetchGuestsFromApi();
     fetchModulesFromApi();
+  }
+
+  void _validateForm() {
+    final bool isTaskTypeValid = selectedTaskTypeId != null;
+    final bool isOwnerValid = selectedOwner != null;
+    final bool isTaskNameValid = _taskNameController.text.isNotEmpty;
+
+    _canCreateTask.value = isTaskTypeValid && isOwnerValid && isTaskNameValid;
   }
 
   Future<void> fetchUsersFromApi() async {
@@ -197,7 +207,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     if (selected != null) {
       setState(() {
         selectedOwner = selected;
-        isOwnerValid = true;
+        _validateForm();
       });
     }
   }
@@ -329,93 +339,100 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     );
   }
 
-  void _createTask() async {
-    setState(() {
-      isTaskTypeValid = selectedTaskTypeId != null;
-      isOwnerValid = selectedOwner != null;
-    });
+ void _createTask() async {
+  setState(() {
+    isTaskTypeValid = selectedTaskTypeId != null;
+    isOwnerValid = selectedOwner != null;
+  });
 
-    if (_formKey.currentState!.validate() && isTaskTypeValid && isOwnerValid) {
-      bool confirm = await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Confirmation'),
-          content: const Text('Are you sure you want to create this task?'),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(false),
-            ),
-            TextButton(
-              child: const Text('Confirm'),
-              onPressed: () => Navigator.of(context).pop(true),
-            ),
-          ],
-        ),
+  if (_formKey.currentState!.validate() && isTaskTypeValid && isOwnerValid) {
+    bool confirm = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmation'),
+        content: const Text('Are you sure you want to create this task?'),
+        actions: [
+          TextButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          TextButton(
+            child: const Text('Confirm'),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+
+    if (!confirm) return;
+
+    final formattedStartDate = DateFormat('dd-MM-yyyy')
+        .format(DateFormat('d/M/y').parse(_startDateController.text));
+    final formattedEndDate = DateFormat('dd-MM-yyyy')
+        .format(DateFormat('d/M/y').parse(_endDateController.text));
+
+    final taskData = {
+      'label': _taskNameController.text,
+      'tasks_type_id': selectedTaskTypeId,
+      'start_date': formattedStartDate,
+      'end_date': formattedEndDate,
+      'start_time': _startTimeController.text,
+      'end_time': _endTimeController.text,
+      'owner_id': selectedOwner!['id'],
+      'stage_id': selectedStageId,
+      'guests': selectedGuests.map((guest) => guest['id']).toList(),
+      'followers': selectedFollowers.map((follower) => follower['id']).toList(),
+      'family_id': selectedModuleId,
+      'element_id': selectedRelatedModuleId,
+      'description': _descriptionController.text,
+      'notes': _noteController.text,
+      'reminder_before_end': reminderBeforeEnd,
+      'upload': uploadedFiles.map((file) => 0).toList(),
+      'priority': selectedPriority,
+      'send_email': sendEmailToExternalMembers,
+      'Reminder': '$selectedReminderDuration $selectedTimeUnit',
+    };
+
+    try {
+      final newTask = await createTask(taskData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Task created successfully!')),
       );
-
-      if (!confirm) return;
-
-      final formattedStartDate = DateFormat('dd-MM-yyyy')
-          .format(DateFormat('d/M/y').parse(_startDateController.text));
-      final formattedEndDate = DateFormat('dd-MM-yyyy')
-          .format(DateFormat('d/M/y').parse(_endDateController.text));
-
-      final taskData = {
-        'label': _taskNameController.text,
-        'tasks_type_id': selectedTaskTypeId,
-        'start_date': formattedStartDate,
-        'end_date': formattedEndDate,
-        'start_time': _startTimeController.text,
-        'end_time': _endTimeController.text,
-        'owner_id': selectedOwner!['id'],
-        'stage_id': selectedStageId,
-        'guests': selectedGuests.map((guest) => guest['id']).toList(),
-        'followers':
-            selectedFollowers.map((follower) => follower['id']).toList(),
-        'family_id': selectedModuleId,
-        'element_id': selectedRelatedModuleId,
-        'description': _descriptionController.text,
-        'notes': _noteController.text,
-        'reminder_before_end': reminderBeforeEnd,
-        'upload': uploadedFiles.map((file) => 0).toList(),
-        'priority': selectedPriority,
-        'send_email': sendEmailToExternalMembers,
-        'Reminder': '$selectedReminderDuration $selectedTimeUnit',
-      };
-
-      print('Task Data: $taskData'); // Log the task data before sending
-
-      try {
-        await createTask(taskData);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Task created successfully!')),
-        );
-        Navigator.pop(context, true); // Pass true as the result
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create task: $e')),
-        );
-      }
-    } else {
-      if (selectedOwner == null) {
-        setState(() {
-          isOwnerValid = false;
-        });
-      }
-      if (selectedTaskTypeId == null) {
-        setState(() {
-          isTaskTypeValid = false;
-        });
-      }
+      if (!mounted) return;
+      Navigator.pop(context, newTask); // Retourne la nouvelle tâche
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to create task: $e')),
+      );
+    }
+  } else {
+    if (selectedOwner == null) {
+      setState(() {
+        isOwnerValid = false;
+      });
+    }
+    if (selectedTaskTypeId == null) {
+      setState(() {
+        isTaskTypeValid = false;
+      });
     }
   }
+}
+
 
   void onTaskTypeSelected(int id, String label) {
     setState(() {
       selectedTaskTypeId = id;
       _taskNameController.text = label; // Mettre à jour le champ de label
+      _validateForm();
     });
+  }
+
+  @override
+  void dispose() {
+    _taskNameController.dispose();
+    _canCreateTask.dispose();
+    super.dispose();
   }
 
   List<DropdownMenuItem<int>> _buildDropdownMenuItems(List<dynamic> modules) {
@@ -610,16 +627,23 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           actions: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ElevatedButton(
-                  onPressed: _createTask,
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                  ),
-                  child: const Icon(
-                    Icons.check,
-                    color: Colors.blueGrey,
-                  )),
+              child: ValueListenableBuilder<bool>(
+                valueListenable: _canCreateTask,
+                builder: (context, canCreate, child) {
+                  return ElevatedButton(
+                    onPressed: canCreate ? _createTask : null,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        canCreate ? Colors.blue : Colors.grey,
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -743,6 +767,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 onPressed: () {
                                   setState(() {
                                     selectedOwner = null;
+                                    _validateForm();
                                   });
                                 },
                               ),

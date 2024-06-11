@@ -11,6 +11,7 @@ import '../CustomSearchDelegate.dart';
 import '../NotficationPage.dart';
 import '../PipelineScreen.dart';
 import '../notifications/notifications_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProjectPage extends StatefulWidget {
   const ProjectPage({super.key});
@@ -55,7 +56,7 @@ class _ProjectPageState extends State<ProjectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Projects'),
+        title: Text(AppLocalizations.of(context).projects),
         actions: [
           IconButton(
             onPressed: () {

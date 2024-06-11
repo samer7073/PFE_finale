@@ -157,7 +157,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
             Container(
               padding: EdgeInsets.all(15),
               child: Text(
-                "ACCOUNT",
+                AppLocalizations.of(context).account,
                 style: Theme.of(context).textTheme.subtitle2,
               ),
             ), //Text(AppLocalizations.of(context).account)),
@@ -187,7 +187,9 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                           children: [
                             Icon(
                               Icons.person,
-                              color: Colors.black,
+                              color: themeProvider.isDarkMode == false
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                             SizedBox(
                               width: 10,
@@ -228,7 +230,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                 (BuildContext context, StateSetter setState) {
                               return AlertDialog(
                                 scrollable: true,
-                                title: Text("Change your password"),
+                                title: Text(AppLocalizations.of(context)
+                                    .changeYourPassword),
                                 content: Form(
                                   key: _formKey,
                                   child: Column(
@@ -248,11 +251,14 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                                 ? Icons.visibility_off
                                                 : Icons.visibility),
                                           ),
-                                          labelText: "Current Password",
+                                          labelText:
+                                              AppLocalizations.of(context)
+                                                  .currentPassword,
                                         ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return 'Please enter your current password';
+                                            return AppLocalizations.of(context)
+                                                .pleaseEnterYourCurrentPassword;
                                           }
                                           return null;
                                         },
@@ -273,11 +279,14 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                                 ? Icons.visibility_off
                                                 : Icons.visibility),
                                           ),
-                                          labelText: "New Password",
+                                          labelText:
+                                              AppLocalizations.of(context)
+                                                  .newPassword,
                                         ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return 'Please enter your new password';
+                                            return AppLocalizations.of(context)
+                                                .pleaseEnterYourNewPassword;
                                           }
                                           // Password validation regex
                                           String pattern =
@@ -285,7 +294,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                           RegExp regex = RegExp(pattern);
 
                                           if (!regex.hasMatch(value)) {
-                                            return 'Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.';
+                                            return AppLocalizations.of(context)
+                                                .passwordRequirements;
                                           }
 
                                           return null;
@@ -307,14 +317,18 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                                 ? Icons.visibility_off
                                                 : Icons.visibility),
                                           ),
-                                          labelText: "Password Confirmation",
+                                          labelText:
+                                              AppLocalizations.of(context)
+                                                  .passwordConfirmation,
                                         ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return 'Please confirm your new password';
+                                            return AppLocalizations.of(context)
+                                                .pleaseConfirmYourNewPassword;
                                           }
                                           if (value != newPassword.text) {
-                                            return 'Password confirmation does not match';
+                                            return AppLocalizations.of(context)
+                                                .passwordConfirmationDoesNotMatch;
                                           }
                                           // Password validation regex
                                           String pattern =
@@ -322,7 +336,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                           RegExp regex = RegExp(pattern);
 
                                           if (!regex.hasMatch(value)) {
-                                            return 'Password must be at least 8 characters  long, include an uppercase letter, a lowercase letter, a number, and a special character.';
+                                            return AppLocalizations.of(context)
+                                                .passwordRequirements;
                                           }
 
                                           return null;
@@ -337,7 +352,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                       Navigator.of(context).pop(true);
                                       // User confirmed deletion
                                     },
-                                    child: Text("Return"),
+                                    child: Text(AppLocalizations.of(context)
+                                        .returnlabel),
                                   ),
                                   ElevatedButton(
                                     onPressed: () async {
@@ -372,8 +388,9 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                                 builder: (context) {
                                                   return AlertDialog(
                                                     title: Text("Error"),
-                                                    content: Text(
-                                                        "Failed to change password. Please try again later."),
+                                                    content: Text(AppLocalizations
+                                                            .of(context)
+                                                        .failedToChangePassword),
                                                     actions: [
                                                       TextButton(
                                                         onPressed: () {
@@ -415,8 +432,9 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                             builder: (context) {
                                               return AlertDialog(
                                                 title: Text("Error"),
-                                                content: Text(
-                                                    "New Password and Confirmation do not match."),
+                                                content: Text(AppLocalizations
+                                                        .of(context)
+                                                    .pleaseConfirmYourNewPassword),
                                                 actions: [
                                                   TextButton(
                                                     onPressed: () {
@@ -432,7 +450,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                         }
                                       }
                                     },
-                                    child: Text("Save"),
+                                    child:
+                                        Text(AppLocalizations.of(context).save),
                                   ),
                                 ],
                               );
@@ -448,13 +467,15 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                           children: [
                             Icon(
                               Icons.security,
-                              color: Colors.black,
+                              color: themeProvider.isDarkMode == false
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                             SizedBox(
                               width: 10,
                             ),
                             Text(
-                              " Change your password",
+                              AppLocalizations.of(context).changeYourPassword,
                               style: Theme.of(context).textTheme.subtitle1,
                             )
                           ],
@@ -481,7 +502,9 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                           children: [
                             Icon(
                               Icons.lock_person_rounded,
-                              color: Colors.black,
+                              color: themeProvider.isDarkMode == false
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                             SizedBox(
                               width: 10,
@@ -538,7 +561,9 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                           children: [
                             Icon(
                               Icons.notifications_sharp,
-                              color: Colors.black,
+                              color: themeProvider.isDarkMode == false
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                             SizedBox(
                               width: 10,
@@ -585,7 +610,9 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                           children: [
                             Icon(
                               Icons.language_outlined,
-                              color: Colors.black,
+                              color: themeProvider.isDarkMode == false
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                             SizedBox(
                               width: 10,
@@ -630,7 +657,9 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                           children: [
                             Icon(
                               Icons.nightlight_sharp,
-                              color: Colors.black,
+                              color: themeProvider.isDarkMode == false
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                             SizedBox(
                               width: 10,
@@ -738,7 +767,9 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                           children: [
                             Icon(
                               Icons.logout_outlined,
-                              color: Colors.black,
+                              color: themeProvider.isDarkMode == false
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                             SizedBox(
                               width: 10,

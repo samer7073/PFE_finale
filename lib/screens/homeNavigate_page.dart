@@ -75,7 +75,7 @@ class _HomeNavigateState extends State<HomeNavigate> {
                 Icons.pie_chart,
                 //color: Colors.purple,
               ),
-              label: "Overview",
+              label: AppLocalizations.of(context).overview,
 
               // TextStyle for unselected
               // TextStyle(color: selectedIndex == 0 ? Colors.purple : Colors.black),
@@ -126,7 +126,7 @@ class _HomeNavigateState extends State<HomeNavigate> {
                 Icons.event_note_rounded,
                 // color: Colors.purple,
               ),
-              label: "Projects",
+              label: AppLocalizations.of(context).projects,
             ),
             BottomNavigationBarItem(
               //backgroundColor: Color.fromARGB(255, 246, 214, 252),
@@ -138,7 +138,7 @@ class _HomeNavigateState extends State<HomeNavigate> {
                 Icons.person_2_rounded,
                 // color: Colors.purple,
               ),
-              label: "Contacts",
+              label: AppLocalizations.of(context).contacts,
             ),
           ],
 

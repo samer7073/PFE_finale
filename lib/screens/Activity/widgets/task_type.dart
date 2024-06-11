@@ -70,13 +70,6 @@ class _TaskTypeSelectorState extends State<TaskTypeSelector> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  taskType.label,
-                  style: TextStyle(
-                    color: isSelected ? Colors.purple : Colors.black,
-                  ),
-                ),
               ],
             ),
           );
