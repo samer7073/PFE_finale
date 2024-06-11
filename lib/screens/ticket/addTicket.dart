@@ -218,7 +218,6 @@ class _AddTicketState extends State<AddTicket> {
                                   action: SnackBarAction(
                                       textColor: Colors.white,
                                       label: "Ok",
-                                      
                                       onPressed: () {}),
                                   content: Text(
                                       'Please check the validations for your required fields.'),
