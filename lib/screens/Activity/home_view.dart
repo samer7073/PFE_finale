@@ -5,6 +5,7 @@ import 'package:flutter_application_stage_project/screens/Activity/Activities_vi
 import 'package:flutter_application_stage_project/screens/Activity/create_task.dart';
 import 'package:flutter_application_stage_project/screens/Activity/task_notification_screen.dart';
 import 'package:flutter_application_stage_project/screens/NotficationPage.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +16,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  String _viewMode = 'List view';
+  late String _viewMode;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _viewMode = AppLocalizations.of(context).listView;
+  }
 
   // List of widgets for different views
   static final List<Widget> _widgetOptions = <Widget>[
@@ -36,7 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _viewMode = viewMode;
     });
-    int newIndex = ['List view', 'Kanban', 'Calendar'].indexOf(viewMode);
+    int newIndex = [
+      AppLocalizations.of(context).listView,
+      AppLocalizations.of(context).kanban,
+      AppLocalizations.of(context).calendar
+    ].indexOf(viewMode);
     _onItemTapped(newIndex);
   }
 
@@ -54,8 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   _changeViewMode(newValue);
                 }
               },
-              items: <String>['List view', 'Kanban', 'Calendar']
-                  .map<DropdownMenuItem<String>>((String value) {
+              items: <String>[
+                AppLocalizations.of(context).listView,
+                AppLocalizations.of(context).kanban,
+                AppLocalizations.of(context).calendar
+              ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -66,16 +80,16 @@ class _HomeScreenState extends State<HomeScreen> {
               style: const TextStyle(color: Colors.blue, fontSize: 16),
               dropdownColor: Colors.white,
             ),
-            const Expanded(
+            Expanded(
               child: Center(
                 child: Text(
-                  'Activity',
+                  AppLocalizations.of(context).activity,
                   style: TextStyle(color: Colors.blue, fontSize: 24),
                 ),
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.notifications_active_rounded),
+              icon: const Icon(Icons.notifications),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -92,7 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(child: _widgetOptions.elementAt(_selectedIndex)),
         ],
       ),
-      
     );
   }
 }

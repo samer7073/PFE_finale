@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 
 import '../services/sharedPreference.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Modèle de données pour une tâche
 class Task {
@@ -145,7 +146,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tasks'),
+        title: Text(AppLocalizations.of(context).notifications),
       ),
       body: ListView.builder(
         controller: _scrollController,

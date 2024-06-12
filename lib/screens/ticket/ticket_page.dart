@@ -71,7 +71,7 @@ class _TicketState extends State<TicketPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddTicket(
+              builder: (context) => AddElement(
                 family_id: "6",
                 titel: "Ticket",
               ),

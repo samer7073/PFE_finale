@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/langue_provider.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_application_stage_project/services/Activities/api_get_us
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
@@ -339,86 +342,86 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     );
   }
 
- void _createTask() async {
-  setState(() {
-    isTaskTypeValid = selectedTaskTypeId != null;
-    isOwnerValid = selectedOwner != null;
-  });
+  void _createTask() async {
+    setState(() {
+      isTaskTypeValid = selectedTaskTypeId != null;
+      isOwnerValid = selectedOwner != null;
+    });
 
-  if (_formKey.currentState!.validate() && isTaskTypeValid && isOwnerValid) {
-    bool confirm = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmation'),
-        content: const Text('Are you sure you want to create this task?'),
-        actions: [
-          TextButton(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-          TextButton(
-            child: const Text('Confirm'),
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-        ],
-      ),
-    );
-
-    if (!confirm) return;
-
-    final formattedStartDate = DateFormat('dd-MM-yyyy')
-        .format(DateFormat('d/M/y').parse(_startDateController.text));
-    final formattedEndDate = DateFormat('dd-MM-yyyy')
-        .format(DateFormat('d/M/y').parse(_endDateController.text));
-
-    final taskData = {
-      'label': _taskNameController.text,
-      'tasks_type_id': selectedTaskTypeId,
-      'start_date': formattedStartDate,
-      'end_date': formattedEndDate,
-      'start_time': _startTimeController.text,
-      'end_time': _endTimeController.text,
-      'owner_id': selectedOwner!['id'],
-      'stage_id': selectedStageId,
-      'guests': selectedGuests.map((guest) => guest['id']).toList(),
-      'followers': selectedFollowers.map((follower) => follower['id']).toList(),
-      'family_id': selectedModuleId,
-      'element_id': selectedRelatedModuleId,
-      'description': _descriptionController.text,
-      'notes': _noteController.text,
-      'reminder_before_end': reminderBeforeEnd,
-      'upload': uploadedFiles.map((file) => 0).toList(),
-      'priority': selectedPriority,
-      'send_email': sendEmailToExternalMembers,
-      'Reminder': '$selectedReminderDuration $selectedTimeUnit',
-    };
-
-    try {
-      final newTask = await createTask(taskData);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Task created successfully!')),
+    if (_formKey.currentState!.validate() && isTaskTypeValid && isOwnerValid) {
+      bool confirm = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Confirmation'),
+          content: const Text('Are you sure you want to create this task?'),
+          actions: [
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.of(context).pop(false),
+            ),
+            TextButton(
+              child: const Text('Confirm'),
+              onPressed: () => Navigator.of(context).pop(true),
+            ),
+          ],
+        ),
       );
-      if (!mounted) return;
-      Navigator.pop(context, newTask); // Retourne la nouvelle tâche
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to create task: $e')),
-      );
-    }
-  } else {
-    if (selectedOwner == null) {
-      setState(() {
-        isOwnerValid = false;
-      });
-    }
-    if (selectedTaskTypeId == null) {
-      setState(() {
-        isTaskTypeValid = false;
-      });
+
+      if (!confirm) return;
+
+      final formattedStartDate = DateFormat('dd-MM-yyyy')
+          .format(DateFormat('d/M/y').parse(_startDateController.text));
+      final formattedEndDate = DateFormat('dd-MM-yyyy')
+          .format(DateFormat('d/M/y').parse(_endDateController.text));
+
+      final taskData = {
+        'label': _taskNameController.text,
+        'tasks_type_id': selectedTaskTypeId,
+        'start_date': formattedStartDate,
+        'end_date': formattedEndDate,
+        'start_time': _startTimeController.text,
+        'end_time': _endTimeController.text,
+        'owner_id': selectedOwner!['id'],
+        'stage_id': selectedStageId,
+        'guests': selectedGuests.map((guest) => guest['id']).toList(),
+        'followers':
+            selectedFollowers.map((follower) => follower['id']).toList(),
+        'family_id': selectedModuleId,
+        'element_id': selectedRelatedModuleId,
+        'description': _descriptionController.text,
+        'notes': _noteController.text,
+        'reminder_before_end': reminderBeforeEnd,
+        'upload': uploadedFiles.map((file) => 0).toList(),
+        'priority': selectedPriority,
+        'send_email': sendEmailToExternalMembers,
+        'Reminder': '$selectedReminderDuration $selectedTimeUnit',
+      };
+
+      try {
+        final newTask = await createTask(taskData);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Task created successfully!')),
+        );
+        if (!mounted) return;
+        Navigator.pop(context, newTask); // Retourne la nouvelle tâche
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create task: $e')),
+        );
+      }
+    } else {
+      if (selectedOwner == null) {
+        setState(() {
+          isOwnerValid = false;
+        });
+      }
+      if (selectedTaskTypeId == null) {
+        setState(() {
+          isTaskTypeValid = false;
+        });
+      }
     }
   }
-}
-
 
   void onTaskTypeSelected(int id, String label) {
     setState(() {
@@ -609,19 +612,19 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Create Activity',
+          title: Text(
+            AppLocalizations.of(context).createActivity,
             style: TextStyle(color: Colors.blue, fontSize: 25),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             labelColor: Colors.blue,
             unselectedLabelColor: Colors.blue,
             indicatorColor: Colors.blue,
             tabs: [
               Tab(
-                text: 'Activity',
+                text: AppLocalizations.of(context).activity,
               ),
-              Tab(text: 'Details'),
+              Tab(text: AppLocalizations.of(context).details),
             ],
           ),
           actions: [
@@ -657,7 +660,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView(
                     children: [
-                      const Text('Activity Type *',
+                      Text(AppLocalizations.of(context).activityTypeRequired,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -668,16 +671,17 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         onSelected: onTaskTypeSelected,
                       ),
                       if (!isTaskTypeValid)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Please select an Activity type',
+                            AppLocalizations.of(context)
+                                .pleaseSelectActivityType,
                             style: TextStyle(color: Colors.red, fontSize: 12.0),
                           ),
                         ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Label *',
+                      Text(
+                        AppLocalizations.of(context).labelRequired,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -689,7 +693,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         child: TextFormField(
                           controller: _taskNameController,
                           decoration: InputDecoration(
-                            hintText: 'Enter Activity label',
+                            hintText:
+                                AppLocalizations.of(context).enterActivityLabel,
                             hintStyle: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
@@ -709,15 +714,16 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter a label';
+                              return AppLocalizations.of(context)
+                                  .pleaseEnterLabel;
                             }
                             return null;
                           },
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      const Text(
-                        'Owner *',
+                      Text(
+                        AppLocalizations.of(context).ownerRequired,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -726,7 +732,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(height: 18.0),
                       InputDecorator(
                         decoration: InputDecoration(
-                          hintText: 'Select owner',
+                          hintText: AppLocalizations.of(context).selectOwner,
                           enabledBorder: OutlineInputBorder(
                             borderSide:
                                 const BorderSide(color: Colors.blueGrey),
@@ -775,16 +781,16 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ),
                       ),
                       if (!isOwnerValid)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Please select an owner',
+                            AppLocalizations.of(context).pleaseSelectOwner,
                             style: TextStyle(color: Colors.red, fontSize: 12.0),
                           ),
                         ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Select Date Type',
+                      Text(
+                        AppLocalizations.of(context).selectDateType,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -802,8 +808,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               });
                             },
                           ),
-                          const Text(
-                            'Single Day',
+                          Text(
+                            AppLocalizations.of(context).singleDay,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -819,8 +825,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               });
                             },
                           ),
-                          const Text(
-                            'Range of Days',
+                          Text(
+                            AppLocalizations.of(context).rangeOfDays,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -835,8 +841,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Start Date',
+                                Text(
+                                  AppLocalizations.of(context).startDate,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -848,7 +854,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 TextFormField(
                                   controller: _startDateController,
                                   decoration: InputDecoration(
-                                    hintText: 'Select start date',
+                                    hintText: AppLocalizations.of(context)
+                                        .selectStartDate,
                                     hintStyle: const TextStyle(
                                         fontSize: 15, color: Colors.blueGrey),
                                     enabledBorder: OutlineInputBorder(
@@ -868,16 +875,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   onTap: _handleStartDateSelection,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please select a start date';
+                                      return AppLocalizations.of(context)
+                                          .pleaseSelectStartDate;
                                     }
                                     return null;
                                   },
                                 ),
                                 if (!isStartDateValid)
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      'Start date cannot be after end date',
+                                      AppLocalizations.of(context)
+                                          .startDateAfterEndDate,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
                                     ),
@@ -890,8 +899,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'End Date',
+                                Text(
+                                  AppLocalizations.of(context).endDate,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -903,7 +912,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 TextFormField(
                                   controller: _endDateController,
                                   decoration: InputDecoration(
-                                    hintText: 'Select end date',
+                                    hintText: AppLocalizations.of(context)
+                                        .selectEndDate,
                                     hintStyle: const TextStyle(
                                         fontSize: 15, color: Colors.blueGrey),
                                     enabledBorder: OutlineInputBorder(
@@ -923,16 +933,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   onTap: _handleStartDateSelection,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please select an end date';
+                                      return AppLocalizations.of(context)
+                                          .pleaseSelectEndDate;
                                     }
                                     return null;
                                   },
                                 ),
                                 if (!isEndDateValid)
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      'End date cannot be before start date',
+                                      AppLocalizations.of(context)
+                                          .endDateBeforeStartDate,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
                                     ),
@@ -943,8 +955,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ],
                       ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Corresponding Stage',
+                      Text(
+                        AppLocalizations.of(context).correspondingStage,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -953,7 +965,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(height: 16.0),
                       InputDecorator(
                         decoration: InputDecoration(
-                          hintText: 'Select Activity Stage',
+                          hintText:
+                              AppLocalizations.of(context).selectActivityStage,
                           hintStyle: const TextStyle(
                               fontSize: 15, color: Colors.blueGrey),
                           border: OutlineInputBorder(
@@ -989,8 +1002,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Start Time',
+                                Text(
+                                  AppLocalizations.of(context).startTime,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1002,7 +1015,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 TextFormField(
                                   controller: _startTimeController,
                                   decoration: InputDecoration(
-                                    hintText: 'Select start time',
+                                    hintText: AppLocalizations.of(context)
+                                        .selectStartTime,
                                     hintStyle: const TextStyle(
                                         fontSize: 15, color: Colors.blueGrey),
                                     enabledBorder: OutlineInputBorder(
@@ -1022,7 +1036,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   onTap: () => _selectTime(context, true),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please select a start time';
+                                      return AppLocalizations.of(context)
+                                          .pleaseSelectStartTime;
                                     }
                                     return null;
                                   },
@@ -1031,10 +1046,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   },
                                 ),
                                 if (!isStartTimeValid)
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      'Start time cannot be after end time',
+                                      AppLocalizations.of(context)
+                                          .startTimeAfterEndTime,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
                                     ),
@@ -1047,8 +1063,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'End Time',
+                                Text(
+                                  AppLocalizations.of(context).endTime,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1060,7 +1076,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 TextFormField(
                                   controller: _endTimeController,
                                   decoration: InputDecoration(
-                                    hintText: 'Select end time',
+                                    hintText: AppLocalizations.of(context)
+                                        .selectEndTime,
                                     hintStyle: const TextStyle(
                                         fontSize: 15, color: Colors.blueGrey),
                                     enabledBorder: OutlineInputBorder(
@@ -1080,7 +1097,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   onTap: () => _selectTime(context, false),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please select an end time';
+                                      return AppLocalizations.of(context)
+                                          .pleaseSelectEndTime;
                                     }
                                     return null;
                                   },
@@ -1089,10 +1107,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   },
                                 ),
                                 if (!isEndTimeValid)
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      'End time cannot be before start time',
+                                      AppLocalizations.of(context)
+                                          .endTimeBeforeStartTime,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
                                     ),
@@ -1106,8 +1125,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Guests',
+                          Text(
+                            AppLocalizations.of(context).guests,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -1119,8 +1138,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               Icons.add,
                               color: Colors.blueGrey,
                             ),
-                            label: const Text(
-                              'Add',
+                            label: Text(
+                              AppLocalizations.of(context).add,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -1172,8 +1191,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: CheckboxListTile(
                             activeColor: Colors.blueGrey,
-                            title: const Text(
-                              'Send email to external members selected',
+                            title: Text(
+                              AppLocalizations.of(context)
+                                  .sendEmailToExternalMembers,
                               style: TextStyle(color: Colors.blueGrey),
                             ),
                             value: sendEmailToExternalMembers,
@@ -1188,8 +1208,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Followers',
+                          Text(
+                            AppLocalizations.of(context).followers,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -1201,8 +1221,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               Icons.add,
                               color: Colors.blueGrey,
                             ),
-                            label: const Text(
-                              'Add',
+                            label: Text(
+                              AppLocalizations.of(context).add,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -1249,8 +1269,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           ),
                         ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Reminder before',
+                      Text(
+                        AppLocalizations.of(context).reminderBefore,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1266,7 +1286,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             child: TextField(
                               controller: _reminderDurationController,
                               decoration: InputDecoration(
-                                hintText: 'Duration',
+                                hintText: AppLocalizations.of(context).duration,
                                 hintStyle: const TextStyle(
                                     fontSize: 15, color: Colors.blueGrey),
                                 enabledBorder: OutlineInputBorder(
@@ -1297,7 +1317,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             child: DropdownButtonFormField<String>(
                               style: const TextStyle(color: Colors.blueGrey),
                               decoration: InputDecoration(
-                                hintText: 'Time Unit',
+                                hintText: AppLocalizations.of(context).timeUnit,
                                 hintStyle: const TextStyle(
                                     fontSize: 15, color: Colors.blueGrey),
                                 enabledBorder: OutlineInputBorder(
@@ -1332,8 +1352,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       const SizedBox(height: 16.0),
                       CheckboxListTile(
-                        title: const Text(
-                          'Reminder before due date',
+                        title: Text(
+                          AppLocalizations.of(context).reminderBeforeDueDate,
                           style:
                               TextStyle(color: Colors.blueGrey, fontSize: 15),
                         ),
@@ -1353,8 +1373,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView(
                     children: [
-                      const Text(
-                        'Select Module',
+                      Text(
+                        AppLocalizations.of(context).selectModule,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1378,7 +1398,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           });
                         },
                         decoration: InputDecoration(
-                          hintText: 'Select Module',
+                          hintText: AppLocalizations.of(context).selectModule,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -1394,15 +1414,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: _clearModuleSelection,
-                            child: const Text(
-                              'Clear',
+                            child: Text(
+                              AppLocalizations.of(context).clear,
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
                         ),
                       const SizedBox(height: 16.0),
-                      const Text(
-                        'Select Related Module',
+                      Text(
+                        AppLocalizations.of(context).selectRelatedModule,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1414,7 +1434,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       TextField(
                         controller: _relatedModuleSearchController,
                         decoration: InputDecoration(
-                          hintText: 'Search Related Module',
+                          hintText:
+                              AppLocalizations.of(context).searchRelatedModule,
                           hintStyle: const TextStyle(
                               fontSize: 15, color: Colors.blueGrey),
                           border: OutlineInputBorder(
@@ -1464,23 +1485,24 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: _clearRelatedModuleSelection,
-                            child: const Text(
-                              'Clear',
+                            child: Text(
+                              AppLocalizations.of(context).clear,
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
                         ),
                       if (!isRelatedModuleValid)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Please select a related module',
+                            AppLocalizations.of(context)
+                                .pleaseSelectRelatedModule,
                             style: TextStyle(color: Colors.red, fontSize: 12.0),
                           ),
                         ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Select Priority',
+                      Text(
+                        AppLocalizations.of(context).selectPriority,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1491,7 +1513,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       InputDecorator(
                         decoration: InputDecoration(
-                          hintText: 'Select Priority',
+                          hintText: AppLocalizations.of(context).selectPriority,
                           hintStyle: const TextStyle(
                               fontSize: 15, color: Colors.blueGrey),
                           border: OutlineInputBorder(
@@ -1522,8 +1544,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ),
                       ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Description',
+                      Text(
+                        AppLocalizations.of(context).description,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1535,7 +1557,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       TextFormField(
                         controller: _descriptionController,
                         decoration: InputDecoration(
-                          hintText: 'Enter Activity description',
+                          hintText: AppLocalizations.of(context)
+                              .enterActivityDescription,
                           hintStyle: const TextStyle(
                               fontSize: 15, color: Colors.blueGrey),
                           enabledBorder: OutlineInputBorder(
@@ -1556,8 +1579,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         maxLines: 4,
                       ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Note',
+                      Text(
+                        AppLocalizations.of(context).note,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1569,7 +1592,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       TextFormField(
                         controller: _noteController,
                         decoration: InputDecoration(
-                          hintText: 'Enter Activity note',
+                          hintText:
+                              AppLocalizations.of(context).enterActivityNote,
                           hintStyle: const TextStyle(
                               fontSize: 15, color: Colors.blueGrey),
                           enabledBorder: OutlineInputBorder(
@@ -1590,8 +1614,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         maxLines: 4,
                       ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Upload Files ',
+                      Text(
+                        AppLocalizations.of(context).uploadFiles,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1606,8 +1630,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               MaterialStateProperty.all<Color>(Colors.blueGrey),
                         ),
                         onPressed: _pickFiles,
-                        child: const Text(
-                          'Upload',
+                        child: Text(
+                          AppLocalizations.of(context).upload,
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

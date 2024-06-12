@@ -13,6 +13,7 @@ import 'package:flutter_application_stage_project/services/Activities/api_get_us
 import 'package:flutter_application_stage_project/services/Activities/api_guests.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_update_task.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UpdateTaskScreen extends StatefulWidget {
   final String taskId;
@@ -683,7 +684,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     if (isTaskTypeLoading) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text(
+          title:  Text(
             'Update Activity',
             style: TextStyle(color: Colors.blue, fontSize: 25),
           ),

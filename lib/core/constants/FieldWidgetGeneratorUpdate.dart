@@ -1555,7 +1555,7 @@ class _FieldWidgetGeneratorUpdateState
               ),
               Container(
                 width: 150,
-                //height: 50,
+                height: 90,
                 child: TextFormField(
                   validator: widget.dataFieldGroup.required == true
                       ? (value) {

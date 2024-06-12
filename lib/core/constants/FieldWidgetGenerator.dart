@@ -1247,8 +1247,9 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     ),
               ),
               Container(
+                alignment: Alignment.topRight,
                 width: 150,
-                //height: 50,
+                height: 90,
                 child: TextFormField(
                   validator: widget.dataFieldGroup.required == true
                       ? (value) {

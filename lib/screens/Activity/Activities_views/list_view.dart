@@ -239,7 +239,6 @@ class _TaskListPageState extends State<TaskListPage> {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.grey[200],
                       prefixIcon: const Icon(Icons.search),
                     ),
                   ),

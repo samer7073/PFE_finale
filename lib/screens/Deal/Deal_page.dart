@@ -48,7 +48,7 @@ class _DealPageState extends State<DealPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AddTicket(
+                builder: (context) => AddElement(
                       family_id: "3",
                       titel: "Deal",
                     )),

@@ -14,18 +14,18 @@ import '../../models/fields/fileData.dart';
 import '../../services/ApiField.dart';
 import '../loading.dart';
 
-class AddTicket extends StatefulWidget {
+class AddElement extends StatefulWidget {
   final String family_id;
   final String titel;
 
-  const AddTicket({required this.family_id, required this.titel, Key? key})
+  const AddElement({required this.family_id, required this.titel, Key? key})
       : super(key: key);
 
   @override
-  State<AddTicket> createState() => _AddTicketState();
+  State<AddElement> createState() => _AddElementState();
 }
 
-class _AddTicketState extends State<AddTicket> {
+class _AddElementState extends State<AddElement> {
   List<DataFields> data = [];
   Map<String, List<DataFieldGroup>> dataGroupMap = {};
   final TextEditingController emailController = TextEditingController();
