@@ -27,6 +27,7 @@ class ApiTaskKpi {
       final Map<String, dynamic> responseData = json.decode(response.body);
       return TaskKpiModel.fromJson(responseData);
     } else {
+      log(response.body);
       throw Exception('Failed to load data');
     }
   }

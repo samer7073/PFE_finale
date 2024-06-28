@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/KanbanModels/Element.dart';

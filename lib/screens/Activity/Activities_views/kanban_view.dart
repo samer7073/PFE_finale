@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/pipeline.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
@@ -129,6 +131,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = Theme.of(context).brightness;
+    final isDarkMode = brightness == Brightness.dark;
+
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -193,19 +198,28 @@ class _KanbanBoardState extends State<KanbanBoard> {
                               });
                             },
                             child: Container(
-                              height: 50,
-                              width: 150,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10.0,
+                                horizontal: 15.0,
+                              ),
+                              margin: EdgeInsets.symmetric(horizontal: 5.0),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
+                                borderRadius: BorderRadius.circular(10),
                                 color: selectedStageId == stage.id
-                                    ? const Color.fromARGB(255, 127, 177, 189)
-                                    : const Color.fromARGB(255, 242, 242, 242),
+                                    ? Color.fromARGB(255, 82, 104, 250)
+                                    : Color.fromARGB(255, 242, 242, 242),
                               ),
                               child: Center(
                                 child: Text(
                                   stage.label,
-                                  style: const TextStyle(color: Colors.blue),
+                                  style: TextStyle(
+                                    color: selectedStageId == stage.id
+                                        ? Colors.white
+                                        : isDarkMode
+                                            ? Colors.white
+                                            : Colors.black,
+                                  ),
                                 ),
                               ),
                             ),

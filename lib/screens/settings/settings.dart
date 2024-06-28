@@ -172,7 +172,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   SizedBox(
                     height: 20,
                   ),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
@@ -211,7 +211,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   SizedBox(
                     height: 30,
                   ),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       showDialog(
                         context: context,
@@ -491,7 +491,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   SizedBox(
                     height: 30,
                   ),
-                  GestureDetector(
+                  InkWell(
                     onTap: () async {
                       _launched = _launchInBrowser(toLaunch);
                     },
@@ -546,7 +546,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   SizedBox(
                     height: 20,
                   ),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
@@ -595,7 +595,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   SizedBox(
                     height: 30,
                   ),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
@@ -642,7 +642,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   SizedBox(
                     height: 30,
                   ),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
@@ -705,7 +705,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   SizedBox(
                     height: 20,
                   ),
-                  GestureDetector(
+                  InkWell(
                     onTap: () async {
                       showDialog(
                         context: context,

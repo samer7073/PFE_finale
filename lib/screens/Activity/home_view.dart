@@ -55,51 +55,36 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            DropdownButton<String>(
-              value: _viewMode,
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  _changeViewMode(newValue);
-                }
-              },
-              items: <String>[
+        title: Text(AppLocalizations.of(context).activity),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationPage()),
+              );
+            },
+          ),
+          PopupMenuButton<String>(
+            initialValue: _viewMode,
+            onSelected: (String newValue) {
+              _changeViewMode(newValue);
+            },
+            itemBuilder: (BuildContext context) {
+              return <String>[
                 AppLocalizations.of(context).listView,
                 AppLocalizations.of(context).kanban,
                 AppLocalizations.of(context).calendar
-              ].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
+              ].map<PopupMenuItem<String>>((String value) {
+                return PopupMenuItem<String>(
                   value: value,
                   child: Text(value),
                 );
-              }).toList(),
-              underline: Container(),
-              icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
-              style: const TextStyle(color: Colors.blue, fontSize: 16),
-              dropdownColor: Colors.white,
-            ),
-            Expanded(
-              child: Center(
-                child: Text(
-                  AppLocalizations.of(context).activity,
-                  style: TextStyle(color: Colors.blue, fontSize: 24),
-                ),
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.notifications),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationPage()),
-                );
-              },
-            ),
-          ],
-        ),
-        centerTitle: true,
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [

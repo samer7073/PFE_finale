@@ -361,6 +361,7 @@ class _TaskCard1State extends State<TaskCard1> {
 
   @override
   Widget build(BuildContext context) {
+    
     DateTime startDate = _parseDate(_task.startDate);
     DateTime endDate = _parseDate(_task.endDate);
     bool isOverdue = endDate.isBefore(DateTime.now());

@@ -5,21 +5,18 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/profil/Profile.dart';
 import 'package:flutter_application_stage_project/screens/NotficationPage.dart';
-import 'package:flutter_application_stage_project/screens/containerDashbored.dart';
+
 import 'package:flutter_application_stage_project/screens/taskKpi_page.dart';
-import 'package:flutter_application_stage_project/services/ApiGetJWT.dart';
+
 import 'package:flutter_application_stage_project/services/ApiGetProfile.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_stage_project/screens/settings/settings.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
-import '../models/profil/Avatar.dart';
-import '../models/profil/Email.dart';
-import '../models/profil/Name.dart';
-import '../models/profil/PhoneNumber.dart';
+
 import '../services/sharedPreference.dart';
-import 'package:fl_chart/fl_chart.dart';
+
 import 'KpiFamilyPage.dart';
-import 'loading.dart';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {

@@ -16,37 +16,49 @@ class ContactPage extends StatefulWidget {
 class _ContactPageState extends State<ContactPage> {
   List<Data> contacts = [];
   bool isLoading = false;
+  bool hasMore = true;
   int page = 1;
   ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    fetchDeals();
+    fetchContacts();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        fetchMoreDeals();
+        fetchMoreContacts();
       }
     });
   }
 
-  Future<void> fetchDeals() async {
+  Future<void> fetchContacts() async {
+    if (isLoading) return;
+
     setState(() {
       isLoading = true;
     });
 
-    List<Data> fetcheContact = await ApiContact.getAllContact(page: page);
-    setState(() {
-      contacts.addAll(fetcheContact);
-      isLoading = false;
-    });
+    try {
+      List<Data> fetchedContacts = await ApiContact.getAllContact(page: page);
+      setState(() {
+        contacts.addAll(fetchedContacts);
+        isLoading = false;
+        hasMore = fetchedContacts.length > 0;
+      });
+    } catch (error) {
+      log('Error fetching contacts: $error');
+      setState(() {
+        isLoading = false;
+        hasMore = false;
+      });
+    }
   }
 
-  Future<void> fetchMoreDeals() async {
-    if (!isLoading) {
+  Future<void> fetchMoreContacts() async {
+    if (!isLoading && hasMore) {
       page++;
-      fetchDeals();
+      await fetchContacts();
     }
   }
 
@@ -68,8 +80,16 @@ class _ContactPageState extends State<ContactPage> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: contacts.length,
+              itemCount: contacts.length + 1,
               itemBuilder: (context, index) {
+                if (index == contacts.length) {
+                  return hasMore
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      : SizedBox.shrink();
+                }
                 final contact = contacts[index];
                 return ListTile(
                   onTap: () {
@@ -81,13 +101,10 @@ class _ContactPageState extends State<ContactPage> {
                   },
                   leading: contact.avatar.length == 1
                       ? CircleAvatar(
-                          backgroundColor: Colors
-                              .blue, // Choisissez une couleur de fond appropriée
+                          backgroundColor: Colors.blue,
                           child: Text(
                             contact.avatar,
-                            style: TextStyle(
-                                color: Colors
-                                    .white), // Choisissez une couleur de texte appropriée
+                            style: TextStyle(color: Colors.white),
                           ),
                           radius: 25,
                         )
@@ -98,17 +115,10 @@ class _ContactPageState extends State<ContactPage> {
                         ),
                   title: Text(contact.label),
                   subtitle: Text(contact.familyLabel),
-                  // Ajoutez d'autres détails du contact ici si nécessaire
                 );
               },
             ),
           ),
-          if (isLoading) ...[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
-            ),
-          ],
         ],
       ),
     );
