@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/screens/login_page.dart';
 import 'package:flutter_application_stage_project/services/ApiTaskKpi.dart';
 import '../models/TaskpiModel.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'error_reporter.dart'; // Importez le gestionnaire d'erreurs
 
 class TaskKpiPage extends StatefulWidget {
   const TaskKpiPage({super.key});
@@ -16,7 +18,10 @@ class _TaskKpiPageState extends State<TaskKpiPage> {
   @override
   void initState() {
     super.initState();
-    futureApiResponse = ApiTaskKpi.getApiResponse();
+    futureApiResponse = ApiTaskKpi.getApiResponse().catchError((error) {
+      ErrorReporter.handleError(
+          error, context); // Utilisation du gestionnaire d'erreurs
+    });
   }
 
   @override
@@ -30,7 +35,8 @@ class _TaskKpiPageState extends State<TaskKpiPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return Center(
+                  child: Text('An error occurred: ${snapshot.error}'));
             } else if (snapshot.hasData) {
               TaskKpiModel? data = snapshot.data;
               return GridView.count(
@@ -108,7 +114,6 @@ class _TaskKpiPageState extends State<TaskKpiPage> {
   Widget _buildKpiCard(String title, int? value, IconData icon, Color? bgColor,
       Color? iconColor, Color? textColor) {
     return Card(
-      //color: bgColor, // Background color for the card
       elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
@@ -116,14 +121,11 @@ class _TaskKpiPageState extends State<TaskKpiPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: iconColor), // Icon color
+            Icon(icon, size: 40, color: iconColor),
             SizedBox(height: 16.0),
-            Text('$value',
-                style: Theme.of(context).textTheme.headlineSmall // Text color
-
-                ),
+            Text('$value', style: Theme.of(context).textTheme.headline6),
             SizedBox(height: 8.0),
-            Text(title, style: Theme.of(context).textTheme.bodyLarge),
+            Text(title, style: Theme.of(context).textTheme.bodyText1),
           ],
         ),
       ),

@@ -1366,6 +1366,28 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         controlAffinity: ListTileControlAffinity.leading,
                         activeColor: Colors.blueGrey,
                       ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: ValueListenableBuilder<bool>(
+                          valueListenable: _canCreateTask,
+                          builder: (context, canCreate, child) {
+                            return ElevatedButton(
+                                onPressed: canCreate ? _createTask : null,
+                                style: ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    canCreate ? Colors.blue : Colors.grey,
+                                  ),
+                                ),
+                                child: Text(
+                                  "Enrgistrer",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ));
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),

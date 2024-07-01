@@ -7,13 +7,14 @@ import 'package:http/http.dart' as http;
 import '../sharedPreference.dart';
 
 class ApiContact {
-  static Future<List<Data>> getAllContact({int page = 1}) async {
+  static Future<List<Data>> getAllContact(
+      {int page = 1, String search = ''}) async {
     log("Fetching contact from API");
     final token = await SharedPrefernce.getToken("token");
     log("Token: $token");
 
     final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/get-directory?page=$page";
+        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/get-directory?page=$page&search=$search";
     final response = await http.get(
       Uri.parse(url),
       headers: {

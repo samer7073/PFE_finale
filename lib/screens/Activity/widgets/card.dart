@@ -361,7 +361,6 @@ class _TaskCard1State extends State<TaskCard1> {
 
   @override
   Widget build(BuildContext context) {
-    
     DateTime startDate = _parseDate(_task.startDate);
     DateTime endDate = _parseDate(_task.endDate);
     bool isOverdue = endDate.isBefore(DateTime.now());
@@ -369,6 +368,7 @@ class _TaskCard1State extends State<TaskCard1> {
     IconData taskIcon = taskTypeIcons[_task.tasksTypeId] ?? Icons.help_outline;
 
     return Card(
+      color: Color.fromARGB(255, 245, 244, 244),
       margin: const EdgeInsets.all(10.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),

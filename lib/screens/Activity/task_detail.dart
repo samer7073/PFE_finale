@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/screens/Activity/comments_room.dart';
 import 'package:flutter_application_stage_project/screens/RoomCommenatire.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_task.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_task_type.dart';
@@ -67,7 +68,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     return TabBarView(
                       children: [
                         TaskDetailTab(
-                            data: data, taskTypes: taskTypeSnapshot.data!),
+                          data: data,
+                          taskTypes: taskTypeSnapshot.data!,
+                        ),
                         TaskCommentsTab(
                           roomId: data['room_id'] != null
                               ? data['room_id'].toString()
@@ -109,21 +112,26 @@ class TaskDetailTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Task Label and Type Icon
-          if (data['label'] != null)
+          if (data['label'] != null) ...[
             Row(
               children: [
-                Icon(_getIconData(taskType.icon),
-                    color: _getColorFromHex(taskType.color)),
+                Icon(
+                  _getIconData(taskType.icon),
+                  color: _getColorFromHex(taskType.color),
+                ),
                 const SizedBox(width: 16.0),
-                Text(data['label'],
-                    style: const TextStyle(
-                        fontSize: 24.0, fontWeight: FontWeight.bold)),
+                Text(
+                  data['label'],
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
-          const SizedBox(height: 16.0),
-          // Owner Avatar and Label
-          if (data['owner_id'] != null)
+            const SizedBox(height: 16.0),
+          ],
+          if (data['owner_id'] != null) ...[
             Row(
               children: [
                 _buildAvatar(data['owner_id']['avatar']),
@@ -131,62 +139,77 @@ class TaskDetailTab extends StatelessWidget {
                 Text(data['owner_id']['label'] ?? 'N/A'),
               ],
             ),
-          const SizedBox(height: 16.0),
-          // Priority
-          if (data['priority'] != null)
-            _buildDetailRow('Priority', data['priority'] ?? 'N/A',
-                color: _getPriorityFlagColor(data['priority'])),
-          // Start Date and Time
-          if (data['start_date'] != null && data['start_time'] != null)
-            _buildDetailRow('Start',
-                '${DateFormat('dd-MM-yyyy').format(startDate)} $startTime'),
-          // End Date and Time
-          if (data['end_date'] != null && data['end_time'] != null)
+            const SizedBox(height: 16.0),
+          ],
+          if (data['priority'] != null) ...[
             _buildDetailRow(
-                'End', '${DateFormat('dd-MM-yyyy').format(endDate)} $endTime',
-                valueStyle:
-                    TextStyle(color: isOverdue ? Colors.red : Colors.black)),
+              'Priority',
+              data['priority'] ?? 'N/A',
+              color: _getPriorityFlagColor(data['priority']),
+            ),
+          ],
+          if (data['start_date'] != null && data['start_time'] != null) ...[
+            _buildDetailRow(
+              'Start',
+              '${DateFormat('dd-MM-yyyy').format(startDate)} $startTime',
+            ),
+          ],
+          if (data['end_date'] != null && data['end_time'] != null) ...[
+            _buildDetailRow(
+              'End',
+              '${DateFormat('dd-MM-yyyy').format(endDate)} $endTime',
+              valueStyle: TextStyle(
+                color: isOverdue ? Colors.red : Colors.black,
+              ),
+            ),
+          ],
           const SizedBox(height: 16.0),
-          // Family
-          if (data['family_label'] != null && data['family_label'].isNotEmpty)
+          if (data['family_label'] != null &&
+              data['family_label'].isNotEmpty) ...[
             _buildDetailRow('Family', data['family_label'].toString()),
-          // Element
-          if (data['element_label'] != null && data['element_label'].isNotEmpty)
+          ],
+          if (data['element_label'] != null &&
+              data['element_label'].isNotEmpty) ...[
             _buildDetailRow('Element', data['element_label'].toString()),
+          ],
           const SizedBox(height: 16.0),
-          // Guests
-          if (data['guests'] != null && data['guests'].isNotEmpty)
+          if (data['guests'] != null && data['guests'].isNotEmpty) ...[
             _buildAvatarsSection('Guests', data['guests']),
-          // Followers
-          if (data['followers'] != null && data['followers'].isNotEmpty)
+          ],
+          if (data['followers'] != null && data['followers'].isNotEmpty) ...[
             _buildAvatarsSection('Followers', data['followers']),
+          ],
           const SizedBox(height: 16.0),
-          // Description
-          if (data['description'] != null && data['description'].isNotEmpty)
+          if (data['description'] != null &&
+              data['description'].isNotEmpty) ...[
             _buildDetailRow('Description', data['description'].toString()),
-          // Note
-          if (data['note'] != null && data['note'].isNotEmpty)
+          ],
+          if (data['note'] != null && data['note'].isNotEmpty) ...[
             _buildDetailRow('Note', data['note'].toString()),
-          // Pipeline
-          if (data['pipeline_label'] != null)
+          ],
+          if (data['pipeline_label'] != null) ...[
             _buildDetailRow('Pipeline', data['pipeline_label'].toString()),
-          // Stage
-          if (data['stage_label'] != null)
+          ],
+          if (data['stage_label'] != null) ...[
             _buildDetailRow('Stage', data['stage_label'].toString()),
+          ],
           const SizedBox(height: 16.0),
-          // Files
-          if (data['upload'] != null && (data['upload'] as List).isNotEmpty)
+          if (data['upload'] != null &&
+              (data['upload'] as List).isNotEmpty) ...[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Files:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  'Files:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 8.0),
                 ...data['upload']
                     .map<Widget>((file) => Text(file.toString()))
                     .toList(),
               ],
             ),
+          ],
         ],
       ),
     );
@@ -199,9 +222,14 @@ class TaskDetailTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(value,
-              style: valueStyle ?? TextStyle(color: color ?? Colors.black)),
+          Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Text(
+            value,
+            style: valueStyle ?? TextStyle(color: color ?? Colors.black),
+          ),
         ],
       ),
     );
@@ -211,7 +239,10 @@ class TaskDetailTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 8.0),
         _buildAvatars(people),
       ],
@@ -223,18 +254,30 @@ class TaskDetailTab extends StatelessWidget {
     for (int i = 0; i < people.length && i < 3; i++) {
       final person = people[i];
       if (person is Map && person.containsKey('avatar')) {
-        avatarWidgets.add(Positioned(
-            left: i * 20.0, child: _buildAvatar(person['avatar'] ?? "")));
+        avatarWidgets.add(
+          Positioned(
+            left: i * 20.0,
+            child: _buildAvatar(person['avatar'] ?? ""),
+          ),
+        );
       }
     }
     if (people.length > 3) {
-      avatarWidgets.add(Positioned(
+      avatarWidgets.add(
+        Positioned(
           left: 3 * 20.0,
-          child:
-              CircleAvatar(radius: 15, child: Text('+${people.length - 3}'))));
+          child: CircleAvatar(
+            radius: 15,
+            child: Text('+${people.length - 3}'),
+          ),
+        ),
+      );
     }
     return Container(
-        width: 80, height: 40, child: Stack(children: avatarWidgets));
+      width: 80,
+      height: 40,
+      child: Stack(children: avatarWidgets),
+    );
   }
 
   Widget _buildAvatar(String avatar) {
@@ -305,6 +348,6 @@ class TaskCommentsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return roomId == null
         ? const Center(child: Text("No Comment Room Available"))
-        : RommCommanitairePage(roomId: roomId!);
+        : RommCommentairePage(roomId: roomId!);
   }
 }

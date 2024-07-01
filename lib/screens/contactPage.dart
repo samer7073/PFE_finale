@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -19,6 +21,8 @@ class _ContactPageState extends State<ContactPage> {
   bool hasMore = true;
   int page = 1;
   ScrollController _scrollController = ScrollController();
+  TextEditingController _searchController = TextEditingController();
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -30,6 +34,14 @@ class _ContactPageState extends State<ContactPage> {
         fetchMoreContacts();
       }
     });
+    _searchController.addListener(() {
+      setState(() {
+        searchQuery = _searchController.text;
+        page = 1;
+        contacts.clear();
+        fetchContacts();
+      });
+    });
   }
 
   Future<void> fetchContacts() async {
@@ -40,11 +52,12 @@ class _ContactPageState extends State<ContactPage> {
     });
 
     try {
-      List<Data> fetchedContacts = await ApiContact.getAllContact(page: page);
+      List<Data> fetchedContacts =
+          await ApiContact.getAllContact(page: page, search: searchQuery);
       setState(() {
         contacts.addAll(fetchedContacts);
         isLoading = false;
-        hasMore = fetchedContacts.length > 0;
+        hasMore = false;
       });
     } catch (error) {
       log('Error fetching contacts: $error');
@@ -65,6 +78,7 @@ class _ContactPageState extends State<ContactPage> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -77,18 +91,31 @@ class _ContactPageState extends State<ContactPage> {
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search Organisation...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                prefixIcon: const Icon(Icons.search),
+              ),
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: contacts.length + 1,
+              itemCount: contacts.length + (hasMore ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index == contacts.length) {
-                  return hasMore
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(child: CircularProgressIndicator()),
-                        )
-                      : SizedBox.shrink();
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
                 }
                 final contact = contacts[index];
                 return ListTile(
