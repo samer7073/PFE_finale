@@ -1,5 +1,4 @@
-// ignore_for_file: sort_child_properties_last, prefer_const_constructors, prefer_const_literals_to_create_immutables
-
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_application_stage_project/screens/settings/settings.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
 
+import '../core/constants/shared/config.dart';
 import '../services/sharedPreference.dart';
 
 import 'KpiFamilyPage.dart';
@@ -37,6 +37,8 @@ class _HomePageState extends State<HomePage>
   String? storedUuid;
   String? storedJwt;
 
+  Future<String>? imageUrlFuture;
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +47,7 @@ class _HomePageState extends State<HomePage>
     log("Init state activated: isDarkMode = ${themeProvider.isDarkMode}");
     _loadStoredData();
     fetchProfile();
+    imageUrlFuture = Config.getApiUrl("urlImage");
   }
 
   void _saveString(String key, String value) async {
@@ -99,68 +102,84 @@ class _HomePageState extends State<HomePage>
   }
 
   bool loading = true;
+
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? Center(
+    return FutureBuilder<String>(
+      future: imageUrlFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
             child: CircularProgressIndicator(),
-          )
-        : Scaffold(
-            appBar: AppBar(
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: GestureDetector(
-                  onTap: goToSettingsPage,
-                  child: _profile != null && _profile!.avatar.label.length == 1
-                      ? CircleAvatar(
-                          backgroundColor: Colors
-                              .blue, // Choisissez une couleur de fond appropriée
-                          child: Text(
-                            _profile!.avatar.label,
-                            style: TextStyle(
-                                color: Colors
-                                    .white), // Choisissez une couleur de texte appropriée
-                          ),
-                          radius: 15,
-                        )
-                      : _profile != null
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  "https://spherebackdev.cmk.biz:4543/storage/uploads/${_profile!.avatar.label}"),
-                              radius: 15,
-                            )
-                          : CircularProgressIndicator(),
-                ),
-              ),
-              centerTitle: true,
-              title: Text('Comunik Sphere'),
-              bottom: TabBar(
-                controller: _tabController,
-                tabs: [
-                  Tab(
-                    text: AppLocalizations.of(context).activities,
-                  ),
-                  Tab(text: AppLocalizations.of(context).ticket),
-                  Tab(text: AppLocalizations.of(context).deal),
-                  Tab(text: AppLocalizations.of(context).project)
-                ],
-              ),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.notifications_none_sharp, size: 30),
-                  onPressed: goToNotif,
-                ),
-              ],
-            ),
-            body: TabBarView(
-              controller: _tabController,
-              children: [
-                TaskKpiPage(),
-                KpiFamilyPage(family_id: "6"),
-                KpiFamilyPage(family_id: "3"),
-                KpiFamilyPage(family_id: "7"),
-              ],
-            ),
           );
+        }
+
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Error loading image URL'),
+          );
+        }
+
+        String imageUrl = snapshot.data ?? "";
+
+        return Scaffold(
+          appBar: AppBar(
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: GestureDetector(
+                onTap: goToSettingsPage,
+                child: _profile != null && _profile!.avatar.label.length == 1
+                    ? CircleAvatar(
+                        backgroundColor: Colors
+                            .blue, // Choisissez une couleur de fond appropriée
+                        child: Text(
+                          _profile!.avatar.label,
+                          style: TextStyle(
+                              color: Colors
+                                  .white), // Choisissez une couleur de texte appropriée
+                        ),
+                        radius: 15,
+                      )
+                    : _profile != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                "$imageUrl${_profile!.avatar.label}"),
+                            radius: 15,
+                          )
+                        : CircularProgressIndicator(),
+              ),
+            ),
+            centerTitle: true,
+            title: Text('Comunik Sphere'),
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(
+                  text: AppLocalizations.of(context).activities,
+                ),
+                Tab(text: AppLocalizations.of(context).ticket),
+                Tab(text: AppLocalizations.of(context).deal),
+                Tab(text: AppLocalizations.of(context).project)
+              ],
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.notifications_none_sharp, size: 30),
+                onPressed: goToNotif,
+              ),
+            ],
+          ),
+          body: TabBarView(
+            controller: _tabController,
+            children: [
+              TaskKpiPage(),
+              KpiFamilyPage(family_id: "6"),
+              KpiFamilyPage(family_id: "3"),
+              KpiFamilyPage(family_id: "7"),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

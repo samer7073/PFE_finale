@@ -1,10 +1,16 @@
 import 'dart:convert';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
+// Importer le fichier de configuration
 import 'package:http/http.dart' as http;
 
+import '../../core/constants/shared/config.dart';
+
 Future<List<Task>> fetchTasks(String start, String end) async {
-  final url = Uri.parse('https://spherebackdev.cmk.biz:4543/api/mobile/tasks/get/calendar');
+  final baseUrl = await Config.getApiUrl(
+    'getTasksCalendar',
+  ); // Utiliser Config pour obtenir l'URL
+  final url = Uri.parse(baseUrl);
 
   final token = await SharedPrefernce.getToken("token");
 
@@ -28,6 +34,7 @@ Future<List<Task>> fetchTasks(String start, String end) async {
     return tasks;
   } else {
     final errorResponse = json.decode(response.body);
-    throw Exception('Failed to load tasks: ${errorResponse['message'] ?? 'Unknown error'}');
+    throw Exception(
+        'Failed to load tasks: ${errorResponse['message'] ?? 'Unknown error'}');
   }
 }

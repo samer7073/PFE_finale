@@ -3,20 +3,21 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 
+import '../core/constants/shared/config.dart';
+// Importer Config pour utiliser les URLs
+
 class ApiFieldPost {
-  static Future<int?> fieldPost(
-      Map<String, dynamic> data, int family_id) async {
+  static Future<int?> fieldPost(Map<String, dynamic> data, int familyId) async {
     final token = await SharedPrefernce.getToken("token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/create-element";
+    final apiUrl = await Config.getApiUrl(
+        "createElementUrl"); // Utilisation de l'URL à partir de Config
 
     try {
-      // Ajouter le family_id au corps de la requête
-      data['family_id'] = family_id;
-      print(data);
+      // Ajouter le familyId au corps de la requête
+      data['family_id'] = familyId;
 
       final baseOptions = BaseOptions(
-        baseUrl: url,
+        baseUrl: apiUrl,
         contentType: Headers.jsonContentType,
         validateStatus: (int? status) {
           return status != null;
@@ -29,7 +30,7 @@ class ApiFieldPost {
       var formData = FormData.fromMap(data);
 
       Response response = await dio.post(
-        url,
+        apiUrl,
         data: formData,
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
@@ -49,14 +50,15 @@ class ApiFieldPost {
   }
 
   static Future<int?> fieldUpdatePost(
-      Map<String, dynamic> data, String elment_id) async {
+      Map<String, dynamic> data, String elementId) async {
     final token = await SharedPrefernce.getToken("token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/update-element/$elment_id";
+    final apiUrl = await Config.getApiUrl("updateElementUrl");
+    // Utilisation de l'URL à partir de Config
+    log("api url $apiUrl");
 
     try {
       final baseOptions = BaseOptions(
-        baseUrl: url,
+        baseUrl: apiUrl,
         contentType: Headers.jsonContentType,
         validateStatus: (int? status) {
           return status != null;
@@ -69,7 +71,7 @@ class ApiFieldPost {
       var formData = FormData.fromMap(data);
 
       Response response = await dio.post(
-        url,
+        apiUrl + '/$elementId',
         data: formData,
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
@@ -82,7 +84,7 @@ class ApiFieldPost {
       // Retourner le code de statut HTTP de la réponse
       return response.statusCode;
     } catch (e) {
-      print('Error while performing field post request: $e');
+      log('Error while performing field update post request: $e');
       // Retourner null en cas d'erreur
       return null;
     }

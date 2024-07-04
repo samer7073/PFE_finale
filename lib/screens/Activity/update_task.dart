@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/owner_select.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_followers.dart';
+
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_guests.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/task_type.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_families.dart';
@@ -684,7 +685,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     if (isTaskTypeLoading) {
       return Scaffold(
         appBar: AppBar(
-          title:  Text(
+          title: Text(
             'Update Activity',
             style: TextStyle(color: Colors.blue, fontSize: 25),
           ),

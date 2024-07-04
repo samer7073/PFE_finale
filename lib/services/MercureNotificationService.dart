@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mercure_client/mercure_client.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -85,10 +86,12 @@ class MercureNotificationService {
         return;
       }
       if (uuid != null && jwt != null) {
+        final topic = await Config.getApiUrl("notifTopic");
         _mercure = Mercure(
-          url: 'https://spheremercuredev.cmk.biz:4443/.well-known/mercure',
+          url: await Config.getApiUrl(
+              "mercure"), //'https://spheremercuredev.cmk.biz:4443/.well-known/mercure',
           token: jwt,
-          topics: ['/notification/dev/user/$uuid', '/chat/dev/user/232'],
+          topics: ['$topic$uuid'],
         );
 
         _subscription = _mercure.listen((event) {

@@ -1,17 +1,19 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 
+import '../core/constants/shared/config.dart';
+// Importez la configuration
+
 class ApiUpdateStageFamily {
-  static Future<int?> fieldPost(String Elment_id, String StageId) async {
+  static Future<int?> fieldPost(String Element_id, String StageId) async {
     final token = await SharedPrefernce.getToken("token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/update-stage-family";
+
+    final baseUrl = await Config.getApiUrl("updateStageFamily");
 
     try {
       final baseOptions = BaseOptions(
-        baseUrl: url,
+        baseUrl: baseUrl,
         contentType: Headers.jsonContentType,
         validateStatus: (int? status) {
           return status != null;
@@ -22,12 +24,12 @@ class ApiUpdateStageFamily {
 
       // Créez FormData avec les éléments nécessaires
       var formData = FormData.fromMap({
-        'id_element': Elment_id,
+        'id_element': Element_id,
         'new_stage_id': StageId,
       });
 
       Response response = await dio.post(
-        url,
+        baseUrl,
         data: formData,
         options: Options(
           headers: {'Authorization': 'Bearer $token'},

@@ -3,15 +3,24 @@ import 'package:flutter_application_stage_project/models/Activity_models/task.da
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 
+import '../../core/constants/shared/config.dart';
+
 Future<Map<String, dynamic>> fetchTasks(int page) async {
   final token = await SharedPrefernce.getToken("token");
+  final baseUrl = await Config.getApiUrl(
+    'fetchTasks',
+  );
+  final url = Uri.parse(baseUrl +
+      '/get/table?page=$page'); // Utilisation de l'URL définie dans Config.dart
+  final headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
+
   final response = await http.post(
-    Uri.parse('https://spherebackdev.cmk.biz:4543/api/mobile/tasks/get/table?page=$page'),
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    },
+    url,
+    headers: headers,
     body: jsonEncode({}),
   );
 

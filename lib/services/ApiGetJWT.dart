@@ -7,12 +7,16 @@ import 'package:flutter_application_stage_project/models/jwt/ApiResponseJwt.dart
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 
+import '../core/constants/shared/config.dart';
+
 class ApiGetJwt {
   static Future<ApiResponseJwt> getJwt() async {
     log("JWT api");
     final token = await SharedPrefernce.getToken("token");
 
-    final url = "https://spherechatbackdev.cmk.biz:4543/index.php/api/user";
+    final url = await Config.getApiUrl('jwt');
+    // Using Config class for URL
+    log(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -26,11 +30,10 @@ class ApiGetJwt {
       log(response.body);
       final Map<String, dynamic> responseData = json.decode(response.body);
 
-      // Accéder à la clé "data" et créer un objet Profile
-
+      // Access "data" key and create ApiResponseJwt object
       return ApiResponseJwt.fromJson(responseData);
     } else {
-      throw Exception('Failed to load tickets');
+      throw Exception('Failed to load tickets222222');
     }
   }
 }

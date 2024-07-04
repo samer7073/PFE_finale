@@ -57,7 +57,7 @@ class _ProjectListState extends State<ProjectList> {
 
     try {
       final delteResponse =
-          await ApiDeleteElment.DeleteElment({"ids[]": ticket.id});
+          await ApiDeleteElement.deleteElement({"ids[]": ticket.id});
       if (delteResponse == 200) {
         // Show success snackbar
         ScaffoldMessenger.of(context).showSnackBar(
@@ -174,7 +174,7 @@ class _ProjectListState extends State<ProjectList> {
                               return DetailElment(
                                 idElment: project.id,
                                 idFamily: "7",
-                                roomId: project.room_id,
+                                roomId: project.room_id!,
                                 label: project.label,
                                 refenrce: project.reference,
                                 pipeline_id: project.pipeline_id,

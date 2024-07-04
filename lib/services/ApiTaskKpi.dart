@@ -2,16 +2,18 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
+import '../core/constants/shared/config.dart';
 import '../models/TaskpiModel.dart';
 import '../screens/error_reporter.dart';
+// Importez la configuration
 
 class ApiTaskKpi {
   static Future<TaskKpiModel> getApiResponse() async {
     log("Fetching data from API");
     final token = await SharedPrefernce.getToken("token");
     log("Token: $token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/tasks/kpi";
+
+    final url = await Config.getApiUrl("tasksKpi");
 
     try {
       final response = await http.get(

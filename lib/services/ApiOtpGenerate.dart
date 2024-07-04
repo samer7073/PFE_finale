@@ -1,20 +1,17 @@
-// ignore_for_file: prefer_const_declarations
-
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
-
+import '../core/constants/shared/config.dart';
 import '../models/login/loginResponse.dart';
+// Importez la configuration
 
 class ApiOtpGenrate {
   static Future<int?> OtpGenrate(Map<String, dynamic> data) async {
-    final url =
-        "https://sphereauthbackdev.cmk.biz:4543/index.php/api/mobile/generate-otp";
+    final baseUrl = await Config.getApiUrl("otpGenerate");
 
     try {
       final baseOptions = BaseOptions(
-        baseUrl: url,
+        baseUrl: baseUrl,
         contentType: Headers.jsonContentType,
         validateStatus: (int? status) {
           return status != null;
@@ -27,12 +24,12 @@ class ApiOtpGenrate {
       var formData = FormData.fromMap(data);
 
       Response response = await dio.post(
-        url,
+        baseUrl,
         data: formData,
         options: Options(),
       );
 
-      log("here the response -----  ${response.statusCode}");
+      log("Response status: ${response.statusCode}");
       log("${response}");
 
       // Retourner le code de statut HTTP de la réponse
@@ -45,12 +42,11 @@ class ApiOtpGenrate {
   }
 
   static Future<LoginClass?> LoginOtp(Map<String, dynamic> data) async {
-    final url =
-        "https://sphereauthbackdev.cmk.biz:4543/index.php/api/mobile/login-otp";
+    final baseUrl = await Config.getApiUrl("loginOtp");
 
     try {
       final baseOptions = BaseOptions(
-        baseUrl: url,
+        baseUrl: baseUrl,
         contentType: Headers.jsonContentType,
         validateStatus: (int? status) {
           return status != null && status < 500;
@@ -60,7 +56,7 @@ class ApiOtpGenrate {
       Dio dio = Dio(baseOptions);
 
       Response response = await dio.post(
-        url,
+        baseUrl,
         data: data, // Directly passing the Map<String, dynamic>
         options: Options(
           headers: {

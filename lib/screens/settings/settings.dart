@@ -370,8 +370,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
 
                                           try {
                                             final postPassword =
-                                                await ApiChangePasword
-                                                    .ChangePassword(data);
+                                                await ApiChangePassword
+                                                    .changePassword(data);
                                             if (postPassword == 200) {
                                               // Si la réponse de l'API est 200, procédez normalement
                                               removeToken();

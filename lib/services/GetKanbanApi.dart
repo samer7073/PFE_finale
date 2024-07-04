@@ -2,16 +2,20 @@ import 'dart:developer';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import '../core/constants/shared/config.dart';
 import '../models/KanbanModels/KanbanResponse.dart';
+// Importez la configuration
 
 class GetKanbanApi {
-  static Future<KanbanResponse> getKanban(String idPipeline) async {
+  static Future<KanbanResponse> getKanban(
+    String idPipeline,
+  ) async {
     log("kanban api");
     final token = await SharedPrefernce.getToken("token");
 
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/kanban-by-stage/$idPipeline";
+    final baseUrl = await Config.getApiUrl("kanban");
+    final url = "$baseUrl/$idPipeline";
+
     final response = await http.get(
       Uri.parse(url),
       headers: {

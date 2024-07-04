@@ -1,22 +1,20 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter_application_stage_project/core/constants/contants.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
-
+import '../core/constants/shared/config.dart';
 import '../models/login/loginResponse.dart';
+// Importez la configuration
 
 class LoginApi {
   Future<LoginClass> loginUser(
-      String email, String password, String Url) async {
-    log("url dans loginUser -------------------------------------" + Url);
-    final urlLogin = await SharedPrefernce.getToken("url");
-    log("$urlLogin");
+      String email, String password, bool isProd) async {
+    final url = await Config.getApiUrl("login",);
+    log("URL dans loginUser ------------------------------------- $url");
 
     final response = await http.post(
-      ConstantesPage(urlLogin!).baseUrl,
-      //Uri.parse("https://sphereauthbackdev.cmk.biz:4543/index.php/api/mobile/login"),
+      Uri.parse(url),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -28,14 +26,13 @@ class LoginApi {
     log(response.statusCode.toString());
 
     if (response.statusCode == 200) {
-      log("retoune 200 -----------------------------------");
+      log("retourne 200 -----------------------------------");
       return LoginClass.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
     } else {
       log("${response.statusCode}");
-      // Handle non-200 status codes with a user-friendly message
       final errorMessage = _getErrorMessage(response.statusCode, response.body);
-      throw LoginException(errorMessage); // Custom exception for login errors
+      throw LoginException(errorMessage);
     }
   }
 

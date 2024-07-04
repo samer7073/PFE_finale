@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
 class FollowersSelectionSheet extends StatefulWidget {
   final List<dynamic> followers;
   final List<dynamic> selectedFollowers;
 
-  const FollowersSelectionSheet(
-      {required this.followers, required this.selectedFollowers});
+  const FollowersSelectionSheet({
+    required this.followers,
+    required this.selectedFollowers,
+  });
 
   @override
   _FollowersSelectionSheetState createState() =>
@@ -16,6 +19,7 @@ class _FollowersSelectionSheetState extends State<FollowersSelectionSheet> {
   late List<dynamic> _selectedFollowers;
   List<dynamic> _filteredFollowers = [];
   final TextEditingController _searchController = TextEditingController();
+  late String _imageUrl = '';
 
   @override
   void initState() {
@@ -23,6 +27,22 @@ class _FollowersSelectionSheetState extends State<FollowersSelectionSheet> {
     _selectedFollowers = List.from(widget.selectedFollowers);
     _filteredFollowers = widget.followers;
     _searchController.addListener(_filterFollowers);
+    _loadImageUrl();
+  }
+
+  Future<void> _loadImageUrl() async {
+    try {
+      _imageUrl = await Config.getApiUrl("imageUrl");
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load image URL: $e')),
+        );
+      }
+    }
   }
 
   @override
@@ -86,7 +106,8 @@ class _FollowersSelectionSheetState extends State<FollowersSelectionSheet> {
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
-                const Color.fromARGB(255, 58, 119, 216)),
+              const Color.fromARGB(255, 58, 119, 216),
+            ),
           ),
           onPressed: () {
             Navigator.pop(context, _selectedFollowers);
@@ -103,8 +124,7 @@ class _FollowersSelectionSheetState extends State<FollowersSelectionSheet> {
 
     return avatarUrl.isNotEmpty
         ? CircleAvatar(
-            backgroundImage: NetworkImage(
-                "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatarUrl"),
+            backgroundImage: NetworkImage("$_imageUrl/$avatarUrl"),
           )
         : CircleAvatar(
             backgroundColor: Colors.blue,

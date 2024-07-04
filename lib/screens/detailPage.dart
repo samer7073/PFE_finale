@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:flutter_application_stage_project/services/ApiDetailElment.dart';
 import 'package:flutter_application_stage_project/services/ApiUpdateStageFamily.dart';
 import 'package:http/http.dart' as http;
@@ -44,9 +47,11 @@ class _DetailPageState extends State<DetailPage> {
 
   Future<List<Stage>> fetchStages(int pipelineId) async {
     final token = await SharedPrefernce.getToken("token");
+    final baseUrl = await Config.getApiUrl("StageKanban");
+    log(baseUrl + "*************************");
+
     final response = await http.get(
-      Uri.parse(
-          'https://spherebackdev.cmk.biz:4543/index.php/api/mobile/stages/$pipelineId'),
+      Uri.parse('$baseUrl$pipelineId'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -65,9 +70,10 @@ class _DetailPageState extends State<DetailPage> {
 
   Future<String> fetchPipelineName() async {
     final token = await SharedPrefernce.getToken("token");
+    final baseUrl = await Config.getApiUrl("pipeline");
+
     final response = await http.get(
-      Uri.parse(
-          'https://spherebackdev.cmk.biz:4543/index.php/api/mobile/get-element-by-id/${widget.elementId}'),
+      Uri.parse(baseUrl + widget.elementId),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

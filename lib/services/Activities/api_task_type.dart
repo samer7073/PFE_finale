@@ -2,17 +2,20 @@ import 'package:flutter_application_stage_project/services/sharedPreference.dart
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../core/constants/shared/config.dart';
+
 class TaskType {
   final int id;
   final String label;
   final String color;
   final String icon;
 
-  TaskType(
-      {required this.id,
-      required this.label,
-      required this.color,
-      required this.icon});
+  TaskType({
+    required this.id,
+    required this.label,
+    required this.color,
+    required this.icon,
+  });
 
   factory TaskType.fromJson(Map<String, dynamic> json) {
     return TaskType(
@@ -26,13 +29,16 @@ class TaskType {
 
 Future<List<TaskType>> fetchTaskTypes() async {
   final token = await SharedPrefernce.getToken("token");
+  final baseUrl = await Config.getApiUrl(
+      'tasksConfig'); // Utilisation de l'URL définie dans Config.dart
   final headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': 'Bearer $token',
   };
+
   final response = await http.post(
-    Uri.parse('https://spherebackdev.cmk.biz:4543/api/mobile/tasks/config'),
+    Uri.parse(baseUrl),
     headers: headers,
   );
 

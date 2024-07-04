@@ -1,15 +1,19 @@
 import 'dart:developer';
 
-import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:dio/dio.dart';
-class ApiDeleteElment {
-  static Future<int?> DeleteElment(Map<String, dynamic> data) async {
+import 'package:flutter_application_stage_project/services/sharedPreference.dart';
+
+import '../core/constants/shared/config.dart'; // Importer le fichier de configuration
+
+class ApiDeleteElement {
+  static Future<int?> deleteElement(Map<String, dynamic> data) async {
     final token = await SharedPrefernce.getToken("token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/delete-elements";
-         try {
+    final url = await Config.getApiUrl(
+      'deleteElement',
+    ); // Utilisation de Config pour obtenir l'URL
+
+    try {
       // Ajouter le family_id au corps de la requête
-      
       print(data);
 
       final baseOptions = BaseOptions(
@@ -39,10 +43,9 @@ class ApiDeleteElment {
       // Retourner le code de statut HTTP de la réponse
       return response.statusCode;
     } catch (e) {
-      print('Error while performing field post request: $e');
+      print('Error while performing delete request: $e');
       // Retourner null en cas d'erreur
       return null;
     }
-
   }
 }

@@ -4,7 +4,9 @@ import 'package:flutter_application_stage_project/models/contactModel/ContactMod
 import 'package:flutter_application_stage_project/models/contactModel/data.dart';
 import 'package:http/http.dart' as http;
 
+import '../../core/constants/shared/config.dart';
 import '../sharedPreference.dart';
+// Importer le fichier de configuration
 
 class ApiContact {
   static Future<List<Data>> getAllContact(
@@ -13,8 +15,10 @@ class ApiContact {
     final token = await SharedPrefernce.getToken("token");
     log("Token: $token");
 
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/get-directory?page=$page&search=$search";
+    // Utilisation de Config pour obtenir l'URL
+    final baseUrl = await Config.getApiUrl('getDirectory');
+    final url = "$baseUrl?page=$page&search=$search";
+
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -44,8 +48,11 @@ class ApiContact {
     log("Contact Deatails ap--------i");
     final token = await SharedPrefernce.getToken("token");
     log("$token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/get-element-details/$id_Contact";
+
+    // Utilisation de Config pour obtenir l'URL
+    final baseUrl = await Config.getApiUrl('getElementDetails');
+    final url = "$baseUrl/$id_Contact";
+
     final response = await http.get(
       Uri.parse(url),
       headers: {

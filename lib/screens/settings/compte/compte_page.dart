@@ -12,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
+import '../../../core/constants/shared/config.dart';
 import '../../../models/profil/Profile.dart';
 import '../../../providers/langue_provider.dart';
 import '../../../services/ApiGetProfile.dart';
@@ -50,12 +51,29 @@ class _ComptePageState extends State<ComptePage> {
     }
   }
 
+  late String _imageUrl;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     fetchProfile();
+    _loadImageUrl();
+  }
+
+  Future<void> _loadImageUrl() async {
+    try {
+      _imageUrl = await Config.getApiUrl("urlImage");
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load image URL: $e')),
+        );
+      }
+    }
   }
 
   Profile? _profile;
@@ -473,7 +491,7 @@ class _ComptePageState extends State<ComptePage> {
                                               : CircleAvatar(
                                                   radius: 50,
                                                   backgroundImage: NetworkImage(
-                                                      "https://spherebackdev.cmk.biz:4543/storage/uploads/${_profile!.avatar.label}"),
+                                                      "$_imageUrl//${_profile!.avatar.label}"),
                                                 ),
                                     ),
                                   ),
@@ -598,7 +616,7 @@ class _ComptePageState extends State<ComptePage> {
 
                                       try {
                                         final profileModify =
-                                            await ApiProfil.ModifyProfile(
+                                            await ApiProfil.modifyProfile(
                                                 fieldValues);
                                         setState(() {
                                           loading = false;

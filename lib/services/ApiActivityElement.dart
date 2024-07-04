@@ -1,19 +1,20 @@
-// ignore_for_file: prefer_const_declarations
-
 import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
+// Importer le fichier de configuration
 
+import '../core/constants/shared/config.dart';
 import '../models/ActivityElment.dart/ActivityEementModel.dart';
 
 class ApiActivityElement {
   static Future<List<ActivityElment>?> fetchMeeting(
       String idElement, String time) async {
     final token = await SharedPrefernce.getToken("token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/get-tasks-360";
+    final url = await Config.getApiUrl(
+      'getTasks360',
+    ); // Utilisation de Config pour obtenir l'URL
 
     try {
       Map<String, dynamic> data = {'id': idElement, 'time': time};

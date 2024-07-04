@@ -8,6 +8,7 @@ import 'package:flutter_application_stage_project/screens/verifier_password.dart
 import 'package:flutter_application_stage_project/services/loginApi.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/ApiGetJWT.dart';
 import '../services/sharedPreference.dart';
 import 'loading.dart';
@@ -307,63 +308,74 @@ class _LoginPageState extends State<LoginPage> {
                 });
 
                 try {
+                  final isProd = await checkIsProd();
                   final loginResponse =
-                      await loginAPI.loginUser(email, password, url);
+                      await loginAPI.loginUser(email, password, isProd);
 
                   if (loginResponse.success) {
                     _saveString('token', loginResponse.token.access_token);
-                    log("token:************ ${loginResponse.token.access_token}");
+                    log("token: ${loginResponse.token.access_token}");
                     final jwtResponse = await ApiGetJwt.getJwt();
-                    log("jwt :-------- ${jwtResponse.jwtMercure}");
+                    log("jwt: ${jwtResponse.jwtMercure}");
                     _saveString('jwt', jwtResponse.jwtMercure);
-                    log("Uuid :-------- ${jwtResponse.uuid}");
+                    log("Uuid: ${jwtResponse.uuid}");
                     _saveString("uuid", jwtResponse.uuid);
+
                     setState(() {
                       loading = false;
                     });
+
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/homeNavigate', (route) => false);
                   }
                 } on LoginException catch (e) {
-                  log("11111");
+                  log("LoginException: $e");
                   setState(() {
                     loading = false;
                   });
+
                   showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("Ok"))
-                            ],
-                            title: Text("Probléme d'authentiification"),
-                            contentPadding: EdgeInsets.all(20),
-                            content: Text(
-                                "Merci de vérifier vos informations ou bien contacter l'adminstrateur"),
-                          ));
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Problème d'authentification"),
+                      contentPadding: EdgeInsets.all(20),
+                      content: Text(
+                        "Merci de vérifier vos informations ou bien contacter l'administrateur.\n$e",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Ok"),
+                        ),
+                      ],
+                    ),
+                  );
                 } catch (e) {
-                  log(e.toString());
+                  log("Error: $e");
                   setState(() {
                     loading = false;
                   });
+
                   showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("Ok"))
-                            ],
-                            title: Text("Probléme d'authentiification"),
-                            contentPadding: EdgeInsets.all(20),
-                            content: Text(
-                                "Merci de vérifier vos informations ou bien contacter l'adminstrateur+ ${e.toString()}"),
-                          ));
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text("Problème d'authentification"),
+                      contentPadding: EdgeInsets.all(20),
+                      content: Text(
+                        "Merci de vérifier vos informations ou bien contacter l'administrateur.\n$e",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("Ok"),
+                        ),
+                      ],
+                    ),
+                  );
                 }
               }
             },
@@ -423,5 +435,34 @@ class _LoginPageState extends State<LoginPage> {
   bool isValidEmail(String email) {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     return emailRegex.hasMatch(email);
+  }
+
+  Future<bool> checkIsProd() async {
+    final url = await getUrlFromSharedPreferences();
+    log('Stored URL: $url');
+
+    bool isProd = false;
+
+    if (url == "sphere.comunikcrm.info") {
+      log('isProd set to true');
+      isProd = true;
+    } else {
+      log('isProd set to false');
+      isProd = false;
+    }
+
+    await setIsProdInSharedPreferences(
+        isProd); // Enregistrement de la valeur isProd dans SharedPreferences
+    return isProd;
+  }
+
+  Future<String?> getUrlFromSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('url');
+  }
+
+  Future<void> setIsProdInSharedPreferences(bool isProd) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isProd', isProd);
   }
 }

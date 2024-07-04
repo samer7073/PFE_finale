@@ -67,7 +67,7 @@ class _DealsPageState extends State<DealsPage> {
 
     try {
       final delteResponse =
-          await ApiDeleteElment.DeleteElment({"ids[]": deal.id});
+          await ApiDeleteElement.deleteElement({"ids[]": deal.id});
       if (delteResponse == 200) {
         // Show success snackbar
         ScaffoldMessenger.of(context).showSnackBar(

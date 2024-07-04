@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
 class OwnerSelectionSheet extends StatefulWidget {
   final List<Map<String, dynamic>> users;
@@ -11,20 +12,28 @@ class OwnerSelectionSheet extends StatefulWidget {
 
 class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
   List<Map<String, dynamic>> filteredUsers = [];
+  late String _imageUrl;
 
   @override
   void initState() {
     super.initState();
     filteredUsers = widget.users;
+    _loadImageUrl();
   }
 
-  void _filterUsers(String query) {
-    setState(() {
-      filteredUsers = widget.users
-          .where((user) =>
-              user['label']!.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    });
+  Future<void> _loadImageUrl() async {
+    try {
+      _imageUrl = await Config.getApiUrl("urlImage");
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load image URL: $e')),
+        );
+      }
+    }
   }
 
   String _getInitials(String name) {
@@ -35,6 +44,15 @@ class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
       return nameParts[0][0].toUpperCase();
     }
     return '';
+  }
+
+  void _filterUsers(String query) {
+    setState(() {
+      filteredUsers = widget.users
+          .where((user) =>
+              user['label']!.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
   }
 
   Widget _buildAvatar(String? avatarUrl, String ownerName) {
@@ -50,8 +68,7 @@ class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
       );
     } else {
       return CircleAvatar(
-        backgroundImage: NetworkImage(
-            "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatarUrl"),
+        backgroundImage: NetworkImage("$_imageUrl/$avatarUrl"),
         radius: 15,
       );
     }
@@ -85,7 +102,7 @@ class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
               ),
               prefixIcon: const Icon(Icons.search, color: Colors.grey),
             ),
-            onChanged: _filterUsers,
+            onChanged: _filterUsers, // Utilisez la méthode _filterUsers ici
           ),
         ),
         Expanded(

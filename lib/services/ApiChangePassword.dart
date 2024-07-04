@@ -3,11 +3,14 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 
-class ApiChangePasword {
-  static Future<int?> ChangePassword(Map<String, dynamic> data) async {
+import '../core/constants/shared/config.dart';
+// Importer le fichier de configuration
+
+class ApiChangePassword {
+  static Future<int?> changePassword(Map<String, dynamic> data) async {
     final token = await SharedPrefernce.getToken("token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/change-password";
+    final url = await Config.getApiUrl(
+        'changePassword'); // Utilisation de Config pour obtenir l'URL
 
     try {
       final baseOptions = BaseOptions(
@@ -37,7 +40,7 @@ class ApiChangePasword {
       // Retourner le code de statut HTTP de la réponse
       return response.statusCode;
     } catch (e) {
-      print('Error while performing field post request: $e');
+      print('Error while performing change password request: $e');
       // Retourner null en cas d'erreur
       return null;
     }

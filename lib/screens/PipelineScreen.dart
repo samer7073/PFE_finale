@@ -70,7 +70,7 @@ class _PipelineScreenState extends State<PipelineScreen> {
     });
     try {
       final delteResponse =
-          await ApiDeleteElment.DeleteElment({"ids[]": element.elementId});
+          await ApiDeleteElement.deleteElement({"ids[]": element.elementId});
       if (delteResponse == 200) {
         // Show success snackbar
         ScaffoldMessenger.of(context).showSnackBar(

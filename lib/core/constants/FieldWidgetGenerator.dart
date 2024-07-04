@@ -1185,7 +1185,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
             children: [
               Container(
                 width: 180,
-                height: 110,
+                height: 115,
                 child: DropdownButtonFormField(
                     validator: widget.dataFieldGroup.required == true
                         ? (value) {

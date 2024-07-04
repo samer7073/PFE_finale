@@ -54,6 +54,11 @@ class _EditElmentState extends State<EditElment> {
                   isExpanded: false,
                 ))
             .toList();
+        // Ouvrir automatiquement le premier panel
+        if (data.isNotEmpty) {
+          data[0].isExpanded = true;
+          fetchFeildData(data[0].id.toString());
+        }
         loading = false;
       });
     } catch (e) {
@@ -63,7 +68,6 @@ class _EditElmentState extends State<EditElment> {
 
   Future<void> fetchFeildData(String groupId) async {
     if (fetchedGroupIds.contains(groupId)) {
-      // Si les données pour ce groupe ont déjà été récupérées, ne lancez pas d'appel API redondant
       return;
     }
 
@@ -73,8 +77,7 @@ class _EditElmentState extends State<EditElment> {
 
       setState(() {
         dataGroupMap[groupId] = fetchDataGroup.data;
-        fetchedGroupIds
-            .add(groupId); // Ajoutez l'ID du groupe aux groupes récupérés
+        fetchedGroupIds.add(groupId);
       });
     } catch (e) {
       print('Failed to fetch feild data  : $e');

@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 
+import '../../core/constants/shared/config.dart';
 import '../../models/Deal/DealModel.dart';
 import '../sharedPreference.dart';
+// Importer le fichier de configuration
 
 class ApiDeal {
   static Future<List<Deal>> getAllDeals(String idFamily, {int page = 1}) async {
@@ -11,8 +13,10 @@ class ApiDeal {
     final token = await SharedPrefernce.getToken("token");
     log("Token: $token");
 
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/get-elements-by-family/$idFamily?page=$page&limit=10";
+    // Utilisation de Config pour obtenir l'URL
+    final baseUrl = await Config.getApiUrl('getElementsByFamily');
+    final url = "$baseUrl/$idFamily?page=$page&limit=10";
+
     final response = await http.get(
       Uri.parse(url),
       headers: {

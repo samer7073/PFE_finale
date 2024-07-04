@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_declarations
-
 import 'dart:convert';
 import 'dart:developer';
 
@@ -8,13 +6,18 @@ import 'package:flutter_application_stage_project/models/profil/Profile.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 
+import '../core/constants/shared/config.dart';
+// Importez la configuration
+
 class ApiProfil {
   static Future<Profile> getProfil() async {
-    log("ticket api");
+    log("Fetching data from API");
     final token = await SharedPrefernce.getToken("token");
-    log("$token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/profile";
+    log("Token: $token");
+
+    final baseUrl = await Config.getApiUrl("profile");
+    final url = "$baseUrl";
+
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -32,14 +35,15 @@ class ApiProfil {
       final Map<String, dynamic> data = responseData['data'];
       return Profile.fromJson(data);
     } else {
-      throw Exception('Failed to load tickets');
+      throw Exception('Failed to load profile data');
     }
   }
 
-  static Future<int?> ModifyProfile(Map<String, dynamic> data) async {
+  static Future<int?> modifyProfile(Map<String, dynamic> data) async {
     final token = await SharedPrefernce.getToken("token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/edit-profile";
+
+    final baseUrl =await Config.getApiUrl("modifyProfile");
+    final url = "$baseUrl";
 
     try {
       final baseOptions = BaseOptions(
@@ -63,8 +67,8 @@ class ApiProfil {
         ),
       );
 
-      log("here the response -----  ${response.statusCode}");
-      log("${response}");
+      log("Response status: ${response.statusCode}");
+      log("Response data: ${response}");
 
       // Retourner le code de statut HTTP de la réponse
       return response.statusCode;

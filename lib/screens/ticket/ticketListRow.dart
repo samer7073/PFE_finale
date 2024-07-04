@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
 class ticketListRow extends StatelessWidget {
   final IconData SourceIcon;
@@ -30,120 +31,141 @@ class ticketListRow extends StatelessWidget {
       required this.ownerImage,
       required this.Pipeline});
 
+  Future<String> _getImageUrl() async {
+    return await Config.getApiUrl("urlImage");
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return FutureBuilder<String>(
+      future: _getImageUrl(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        if (snapshot.hasError) {
+          return Text('Error loading image URL');
+        }
+
+        String baseUrl = snapshot.data ?? "";
+
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context).ref + " ",
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(id, style: Theme.of(context).textTheme.bodyLarge)
+                    ],
+                  ),
                   Text(
-                    AppLocalizations.of(context).ref + " ",
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(id, style: Theme.of(context).textTheme.bodyLarge)
-                ],
-              ),
-              Text(
-                createTime,
-                style: Theme.of(context).textTheme.bodyText2,
-              )
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    AppLocalizations.of(context).label + " ",
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                  Text(title,
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 5, 104, 225),
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold)),
+                    createTime,
+                    style: Theme.of(context).textTheme.bodyText2,
+                  )
                 ],
               ),
               SizedBox(
-                width: 10,
-              ),
-              Container(
-                child: Center(
-                  child: Text(
-                    messageContainer,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                height: 30,
-                width: 100,
-                decoration: BoxDecoration(
-                    color: colorContainer,
-                    borderRadius: BorderRadius.horizontal(
-                        left: Radius.circular(20), right: Radius.circular(20))),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    AppLocalizations.of(context).pipeline + " ",
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                  Text(Pipeline, style: Theme.of(context).textTheme.bodyLarge),
-                ],
+                height: 10,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    owner,
-                    style: Theme.of(context).textTheme.subtitle1,
+                  Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context).label + " ",
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                      Text(title,
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 5, 104, 225),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
+                    ],
                   ),
                   SizedBox(
                     width: 10,
                   ),
-                  ownerImage.length == 1
-                      ? CircleAvatar(
-                          backgroundColor: Colors
-                              .blue, // Choisissez une couleur de fond appropriée
-                          child: Text(
-                            ownerImage,
-                            style: TextStyle(
-                                color: Colors
-                                    .white), // Choisissez une couleur de texte appropriée
-                          ),
-                          radius: 15,
-                        )
-                      : CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              "https://spherebackdev.cmk.biz:4543/storage/uploads/$ownerImage"),
-                          radius: 15,
-                        ),
+                  Container(
+                    child: Center(
+                      child: Text(
+                        messageContainer,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    height: 30,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        color: colorContainer,
+                        borderRadius: BorderRadius.horizontal(
+                            left: Radius.circular(20),
+                            right: Radius.circular(20))),
+                  ),
                 ],
               ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context).pipeline + " ",
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                      Text(Pipeline,
+                          style: Theme.of(context).textTheme.bodyLarge),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        owner,
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      ownerImage.length == 1
+                          ? CircleAvatar(
+                              backgroundColor: Colors
+                                  .blue, // Choisissez une couleur de fond appropriée
+                              child: Text(
+                                ownerImage,
+                                style: TextStyle(
+                                    color: Colors
+                                        .white), // Choisissez une couleur de texte appropriée
+                              ),
+                              radius: 15,
+                            )
+                          : CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage("$baseUrl$ownerImage"),
+                              radius: 15,
+                            ),
+                    ],
+                  ),
+                ],
+              ),
+              Divider()
             ],
           ),
-          Divider()
-        ],
-      ),
+        );
+      },
     );
   }
 }

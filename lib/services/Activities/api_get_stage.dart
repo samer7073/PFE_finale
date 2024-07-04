@@ -1,28 +1,36 @@
+// lib/services/api_service.dart
+
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert'; 
+import 'dart:convert';
 
-const String baseUrl = 'https://spherebackdev.cmk.biz:4543/api/mobile';
+import '../../core/constants/shared/config.dart';
+
 Future<List<dynamic>> fetchStages() async {
-    const String url = '$baseUrl/pipelines-by-module-system/task';
-    final token = await SharedPrefernce.getToken("token"); 
-     
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-      if (response.statusCode == 200) {
-        return json.decode(response.body)['data'];
-      } else {
-        throw Exception('Failed to load stages: Status code ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Failed to load stages: $e');
-      throw e;
+  final token = await SharedPrefernce.getToken("token");
+  final apiUrl = await Config.getApiUrl(
+      "fetchStages"); // Utilisation de l'URL de production
+  // ou Config.getApiUrl("fetchStages", false) pour l'URL de développement
+
+  final url = '$apiUrl';
+
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['data'];
+    } else {
+      throw Exception(
+          'Failed to load stages: Status code ${response.statusCode}');
     }
+  } catch (e) {
+    throw Exception('Error occurred while loading stages: $e');
   }
+}

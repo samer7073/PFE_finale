@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
 class DealListRow extends StatelessWidget {
   final String reference;
@@ -11,135 +12,153 @@ class DealListRow extends StatelessWidget {
   final String createTime;
   final String organisation;
   final String piepline;
-  const DealListRow(
-      {super.key,
-      required this.reference,
-      required this.title,
-      required this.owner,
-      required this.ownerImage,
-      required this.createTime,
-      required this.organisation,
-      required this.piepline});
+
+  const DealListRow({
+    super.key,
+    required this.reference,
+    required this.title,
+    required this.owner,
+    required this.ownerImage,
+    required this.createTime,
+    required this.organisation,
+    required this.piepline,
+  });
+
+  Future<String> _getImageUrl() async {
+    return await Config.getApiUrl("urlImage");
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return FutureBuilder<String>(
+      future: _getImageUrl(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        if (snapshot.hasError) {
+          return Text('Error loading image URL');
+        }
+
+        String baseUrl = snapshot.data ?? "";
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  AppLocalizations.of(context).ref + " ",
-                  style: Theme.of(context).textTheme.subtitle2,
+                Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).ref + " ",
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    Text(
+                      reference,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )
+                  ],
                 ),
                 Text(
-                  reference,
-                  style: Theme.of(context).textTheme.bodyText1,
+                  createTime,
+                  style: Theme.of(context).textTheme.bodyText2,
                 )
               ],
-            ),
-            Text(
-              createTime,
-              style: Theme.of(context).textTheme.bodyText2,
-            )
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Text(
-                  AppLocalizations.of(context).organisation + " ",
-                  style: Theme.of(context).textTheme.subtitle2,
-                ),
-                Text(
-                  organisation,
-                  style: Theme.of(context).textTheme.bodyText1,
-                )
-              ],
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          children: [
-            Text(
-              AppLocalizations.of(context).label,
-              style: Theme.of(context).textTheme.subtitle2,
             ),
             SizedBox(
-              width: 10,
+              height: 10,
             ),
-            Text(title,
-                style: TextStyle(
-                    color: Color.fromARGB(255, 5, 104, 225),
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold)),
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).organisation + " ",
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    Text(
+                      organisation,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    )
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 Text(
-                  AppLocalizations.of(context).pipeline + " ",
+                  AppLocalizations.of(context).label,
                   style: Theme.of(context).textTheme.subtitle2,
                 ),
                 SizedBox(
                   width: 10,
                 ),
-                Text(
-                  piepline,
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
+                Text(title,
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 5, 104, 225),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold)),
               ],
+            ),
+            SizedBox(
+              height: 10,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  owner,
-                  style: Theme.of(context).textTheme.subtitle1,
+                Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context).pipeline + " ",
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      piepline,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 10,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      owner,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    ownerImage.length == 1
+                        ? CircleAvatar(
+                            backgroundColor: Colors.blue,
+                            child: Text(
+                              ownerImage,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            radius: 15,
+                          )
+                        : CircleAvatar(
+                            backgroundImage:
+                                NetworkImage("$baseUrl$ownerImage"),
+                            radius: 15,
+                          ),
+                  ],
                 ),
-                ownerImage.length == 1
-                    ? CircleAvatar(
-                        backgroundColor: Colors
-                            .blue, // Choisissez une couleur de fond appropriée
-                        child: Text(
-                          ownerImage,
-                          style: TextStyle(
-                              color: Colors
-                                  .white), // Choisissez une couleur de texte appropriée
-                        ),
-                        radius: 15,
-                      )
-                    : CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            "https://spherebackdev.cmk.biz:4543/storage/uploads/$ownerImage"),
-                        radius: 15,
-                      ),
               ],
             ),
+            Divider()
           ],
-        ),
-        Divider()
-      ],
+        );
+      },
     );
   }
 }

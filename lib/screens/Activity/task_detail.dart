@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/Activity/comments_room.dart';
 import 'package:flutter_application_stage_project/screens/RoomCommenatire.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_task.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_task_type.dart';
 import 'package:intl/intl.dart';
+
+import '../../core/constants/shared/config.dart';
 
 class TaskDetailPage extends StatefulWidget {
   final String taskId;
@@ -16,12 +20,30 @@ class TaskDetailPage extends StatefulWidget {
 class _TaskDetailPageState extends State<TaskDetailPage> {
   late Future<Map<String, dynamic>> taskDetails;
   late Future<List<TaskType>> taskTypes;
+  late String _imageUrl;
 
   @override
   void initState() {
     super.initState();
     taskDetails = getTaskDetails(widget.taskId);
     taskTypes = fetchTaskTypes();
+    _loadImageUrl();
+  }
+
+  Future<void> _loadImageUrl() async {
+    try {
+      _imageUrl = await Config.getApiUrl("urlImage");
+      log(_imageUrl + "00000000000000000000000000000000000000");
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load image URL: $e')),
+        );
+      }
+    }
   }
 
   @override
@@ -70,6 +92,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         TaskDetailTab(
                           data: data,
                           taskTypes: taskTypeSnapshot.data!,
+                          imageUrl: _imageUrl,
                         ),
                         TaskCommentsTab(
                           roomId: data['room_id'] != null
@@ -92,8 +115,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 class TaskDetailTab extends StatelessWidget {
   final Map<String, dynamic> data;
   final List<TaskType> taskTypes;
+  final String imageUrl;
 
-  TaskDetailTab({required this.data, required this.taskTypes});
+  TaskDetailTab(
+      {required this.data, required this.taskTypes, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -281,17 +306,22 @@ class TaskDetailTab extends StatelessWidget {
   }
 
   Widget _buildAvatar(String avatar) {
-    return CircleAvatar(
-      backgroundColor: avatar.length == 1 ? Colors.blue : null,
-      backgroundImage: avatar.length == 1
-          ? null
-          : NetworkImage(
-              "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatar"),
-      radius: 15,
-      child: avatar.length == 1
-          ? Text(avatar, style: const TextStyle(color: Colors.white))
-          : null,
-    );
+    return avatar.length == 1
+        ? CircleAvatar(
+            backgroundColor:
+                Colors.blue, // Choisissez une couleur de fond appropriée
+            child: Text(
+              avatar,
+              style: TextStyle(
+                  color: Colors
+                      .white), // Choisissez une couleur de texte appropriée
+            ),
+            radius: 15,
+          )
+        : CircleAvatar(
+            backgroundImage: NetworkImage("$imageUrl/$avatar"),
+            radius: 15,
+          );
   }
 
   IconData _getIconData(String iconName) {

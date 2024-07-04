@@ -13,7 +13,6 @@ import '../../models/ticket/ticket.dart';
 import '../../models/ticket/ticketData.dart';
 import '../../services/tickets/getTicketApi.dart';
 
-
 class TicketList extends StatefulWidget {
   const TicketList({Key? key}) : super(key: key);
 
@@ -52,7 +51,7 @@ class _TicketListState extends State<TicketList> {
 
     try {
       final delteResponse =
-          await ApiDeleteElment.DeleteElment({"ids[]": ticket.id});
+          await ApiDeleteElement.deleteElement({"ids[]": ticket.id});
       if (delteResponse == 200) {
         // Show success snackbar
         ScaffoldMessenger.of(context).showSnackBar(
@@ -149,7 +148,7 @@ class _TicketListState extends State<TicketList> {
                           return DetailElment(
                             idElment: ticket.id,
                             idFamily: "6",
-                            roomId: ticket.room_id,
+                            roomId: ticket.room_id!,
                             label: ticket.label,
                             refenrce: ticket.reference,
                             pipeline_id: ticket.pipeline_id,
@@ -168,9 +167,13 @@ class _TicketListState extends State<TicketList> {
                       stateMessage: "Open",
                       colorContainer: ticket.severity == "High"
                           ? Colors.red
-                          : ticket.severity == "Normal"
+                          : ticket.severity == "Medium"
                               ? Colors.amber
-                              : Colors.green,
+                              : ticket.severity == "Normal"
+                                  ? Colors.green
+                                  : ticket.severity == "Low"
+                                      ? Colors.blue
+                                      : Colors.blue,
                       messageContainer: ticket.severity,
                       ownerImage: ticket.owner_avatar,
                     ),

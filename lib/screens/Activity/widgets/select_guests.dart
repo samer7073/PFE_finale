@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
 class GuestsSelectionSheet extends StatefulWidget {
   final List<dynamic> guests;
   final List<dynamic> selectedGuests;
 
-  const GuestsSelectionSheet(
-      {required this.guests, required this.selectedGuests});
+  const GuestsSelectionSheet({
+    required this.guests,
+    required this.selectedGuests,
+  });
 
   @override
   _GuestsSelectionSheetState createState() => _GuestsSelectionSheetState();
@@ -15,6 +18,7 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
   late List<dynamic> _selectedGuests;
   List<dynamic> _filteredGuests = [];
   final TextEditingController _searchController = TextEditingController();
+  late String _imageUrl;
 
   @override
   void initState() {
@@ -22,6 +26,22 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
     _selectedGuests = List.from(widget.selectedGuests);
     _filteredGuests = widget.guests;
     _searchController.addListener(_filterGuests);
+    _loadImageUrl();
+  }
+
+  Future<void> _loadImageUrl() async {
+    try {
+      _imageUrl = await Config.getApiUrl("imageUrl");
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load image URL: $e')),
+        );
+      }
+    }
   }
 
   @override
@@ -85,7 +105,8 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
-                const Color.fromARGB(255, 58, 119, 216)),
+              const Color.fromARGB(255, 58, 119, 216),
+            ),
           ),
           onPressed: () {
             Navigator.pop(context, _selectedGuests);
@@ -102,8 +123,7 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
 
     return avatarUrl.isNotEmpty
         ? CircleAvatar(
-            backgroundImage: NetworkImage(
-                "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatarUrl"),
+            backgroundImage: NetworkImage("$_imageUrl/$avatarUrl"),
           )
         : CircleAvatar(
             backgroundColor: Colors.blue,

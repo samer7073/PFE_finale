@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/pipeline.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
@@ -10,6 +12,8 @@ import 'package:flutter_application_stage_project/services/Activities/api_task_t
 import 'package:flutter_application_stage_project/services/Activities/api_update_priority.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_update_stage_task.dart';
 import 'package:intl/intl.dart';
+
+import '../../../core/constants/shared/config.dart';
 
 class TaskCard1 extends StatefulWidget {
   final Task task;
@@ -29,6 +33,7 @@ class TaskCard1 extends StatefulWidget {
 
 class _TaskCard1State extends State<TaskCard1> {
   late Task _task;
+  late String _imageUrl = "";
   late Map<int, IconData> taskTypeIcons = {};
   Map<int, Stage> _stages = {};
   final Map<int, int> _stagePercents = {
@@ -45,6 +50,23 @@ class _TaskCard1State extends State<TaskCard1> {
     _task = widget.task;
     _fetchTaskTypeIcons();
     _preloadStages();
+    _loadImageUrl();
+  }
+
+  Future<void> _loadImageUrl() async {
+    try {
+      _imageUrl = await Config.getApiUrl("urlImage");
+      log(_imageUrl + "---------------------------------------------------");
+      if (mounted) {
+        setState(() {});
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load image URL: $e')),
+        );
+      }
+    }
   }
 
   Future<void> _preloadStages() async {
@@ -138,7 +160,7 @@ class _TaskCard1State extends State<TaskCard1> {
         backgroundColor: Colors.transparent, // Ensure background is transparent
         child: ClipOval(
           child: Image.network(
-            "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatar",
+            "$_imageUrl/$avatar",
             fit: BoxFit.cover,
             width: 30,
             height: 30,

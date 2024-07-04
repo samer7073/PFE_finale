@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
-
+// Importez la configuration
+import '../core/constants/shared/config.dart';
 import '../models/KpiFamily/KpiResponseModel.dart';
 
 class ApiKpiFamily {
@@ -10,8 +11,9 @@ class ApiKpiFamily {
     log("Fetching data from API");
     final token = await SharedPrefernce.getToken("token");
     log("Token: $token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/kpi-family/$idFamily";
+
+    final baseUrl = await Config.getApiUrl("kpiFamily");
+    final url = "$baseUrl/$idFamily";
 
     final response = await http.get(
       Uri.parse(url),

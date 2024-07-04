@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+
+import '../../core/constants/shared/config.dart';
 import '../../models/ticket/ticketData.dart';
 import '../sharedPreference.dart';
+// Importer le fichier de configuration
 
 class ApiTicketList {
   Future<List<TicketData>> getTicketList(
@@ -11,8 +14,13 @@ class ApiTicketList {
     log("ticket api");
     final token = await SharedPrefernce.getToken("token");
     log("$token");
-    final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/get-elements-by-family/$idFamily";
+
+    // Utilisation de Config pour obtenir l'URL
+    final baseUrl = await Config.getApiUrl(
+      'getElementsByFamily',
+    );
+    final url = baseUrl + "/$idFamily";
+
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -21,6 +29,7 @@ class ApiTicketList {
         'Authorization': 'Bearer $token',
       },
     );
+
     try {
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);

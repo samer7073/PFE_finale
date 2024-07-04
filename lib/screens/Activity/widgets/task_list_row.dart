@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
 class TaskListRow extends StatelessWidget {
   final IconData taskIcon;
@@ -39,6 +40,10 @@ class TaskListRow extends StatelessWidget {
     required this.isOverdue,
   }) : super(key: key);
 
+  Future<String> _getImageUrl() async {
+    return await Config.getApiUrl("urlImage");
+  }
+
   Color _getPriorityColor(String priority) {
     switch (priority.toLowerCase()) {
       case 'urgent':
@@ -68,27 +73,52 @@ class TaskListRow extends StatelessWidget {
         ),
       );
     } else {
-      return CircleAvatar(
-        backgroundColor: Colors.transparent,
-        radius: 15,
-        child: ClipOval(
-          child: Image.network(
-            "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatar",
-            fit: BoxFit.cover,
-            width: 30,
-            height: 30,
-            errorBuilder: (context, error, stackTrace) {
-              return CircleAvatar(
-                backgroundColor: Colors.blue,
-                radius: 15,
-                child: Text(
-                  ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              );
-            },
-          ),
-        ),
+      return FutureBuilder<String>(
+        future: _getImageUrl(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircleAvatar(
+              backgroundColor: Colors.grey,
+              radius: 15,
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return CircleAvatar(
+              backgroundColor: Colors.blue,
+              radius: 15,
+              child: Text(
+                ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?',
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          }
+
+          String baseUrl = snapshot.data ?? "";
+          return CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: 15,
+            child: ClipOval(
+              child: Image.network(
+                "$baseUrl$avatar",
+                fit: BoxFit.cover,
+                width: 30,
+                height: 30,
+                errorBuilder: (context, error, stackTrace) {
+                  return CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    radius: 15,
+                    child: Text(
+                      ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
       );
     }
   }

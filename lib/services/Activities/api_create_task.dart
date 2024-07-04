@@ -3,9 +3,12 @@ import 'package:flutter_application_stage_project/models/Activity_models/task.da
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 
+import '../../core/constants/shared/config.dart';
+
 Future<Task> createTask(Map<String, dynamic> taskData) async {
   final token = await SharedPrefernce.getToken("token");
-  final url = Uri.parse('https://spherebackdev.cmk.biz:4543/api/mobile/tasks/create');
+  final baseUrl = await Config.getApiUrl("createTask");
+  final url = Uri.parse(baseUrl);
 
   final headers = {
     'Content-Type': 'application/json',
@@ -20,7 +23,8 @@ Future<Task> createTask(Map<String, dynamic> taskData) async {
 
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
-      return Task.fromJson(jsonResponse); // Assuming Task has a fromJson constructor
+      return Task.fromJson(
+          jsonResponse); // Assuming Task has a fromJson constructor
     } else {
       throw Exception('Failed to create task: ${response.statusCode}');
     }

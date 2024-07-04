@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+import '../core/constants/shared/config.dart';
 import '../models/ticket/ticketData.dart';
 import '../services/search/ApiTicketList.dart';
 import 'detailElment.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
   final String idFamily;
-
-  // Constructor with the additional string parameter
-  CustomSearchDelegate(this.idFamily);
-
   final ApiTicketList _ticketList = ApiTicketList();
+
+  CustomSearchDelegate(this.idFamily);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -84,21 +83,24 @@ class CustomSearchDelegate extends SearchDelegate {
                           '${data?[index].owner}',
                           style: Theme.of(context).textTheme.bodyText1,
                         ),
-                        data?[index].owner_avatar.length == 1
-                            ? CircleAvatar(
-                                backgroundColor: Colors.blue,
-                                child: Text(
-                                  '${data?[index].owner_avatar}',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                radius: 15,
-                              )
-                            : CircleAvatar(
+                        FutureBuilder<String>(
+                          future: Config.getApiUrl("urlImage"),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                  "https://spherebackdev.cmk.biz:4543/storage/uploads/${data?[index].owner_avatar}",
+                                  "${snapshot.data}${data?[index].owner_avatar}",
                                 ),
                                 radius: 15,
-                              ),
+                              );
+                            } else {
+                              return CircleAvatar(
+                                child: CircularProgressIndicator(),
+                                radius: 15,
+                              );
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ],
@@ -151,21 +153,24 @@ class CustomSearchDelegate extends SearchDelegate {
                         '${data?[index].owner}',
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
-                      data?[index].owner_avatar.length == 1
-                          ? CircleAvatar(
-                              backgroundColor: Colors.blue,
-                              child: Text(
-                                '${data?[index].owner_avatar}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              radius: 15,
-                            )
-                          : CircleAvatar(
+                      FutureBuilder<String>(
+                        future: Config.getApiUrl("urlImage"),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return CircleAvatar(
                               backgroundImage: NetworkImage(
-                                "https://spherebackdev.cmk.biz:4543/storage/uploads/${data?[index].owner_avatar}",
+                                "${snapshot.data}${data?[index].owner_avatar}",
                               ),
                               radius: 15,
-                            ),
+                            );
+                          } else {
+                            return CircleAvatar(
+                              child: CircularProgressIndicator(),
+                              radius: 15,
+                            );
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ],

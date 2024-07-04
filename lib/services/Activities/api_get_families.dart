@@ -1,16 +1,20 @@
 // lib/services/api_service.dart
+
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../../core/constants/shared/config.dart';
+
 Future<List<dynamic>> fetchFamilies() async {
   final token = await SharedPrefernce.getToken("token");
-  const String url =
-      'https://spherebackdev.cmk.biz:4543/api/mobile/get-families';
+  final apiUrl = await Config.getApiUrl(
+      "fetchFamilies"); // Utilisation de l'URL de production
+  // ou Config.getApiUrl("fetchFamilies", false) pour l'URL de développement
 
   try {
     final response = await http.get(
-      Uri.parse(url),
+      Uri.parse(apiUrl),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -32,8 +36,11 @@ Future<List<dynamic>> fetchFamilies() async {
 
 Future<List<dynamic>> fetchRelatedModules(int moduleId) async {
   final token = await SharedPrefernce.getToken("token");
-  final String url =
-      'https://spherebackdev.cmk.biz:4543/api/mobile/get-label-elements-by-family/$moduleId';
+  final apiUrl = Config.getApiUrl(
+      "fetchRelatedModules"); // Utilisation de l'URL de production
+  // ou Config.getApiUrl("fetchRelatedModules", false) pour l'URL de développement
+
+  final url = '$apiUrl/$moduleId';
 
   try {
     final response = await http.get(

@@ -1,20 +1,24 @@
-// ignore_for_file: prefer_const_declarations
+// ignore_for_file: prefer_const_declarations, prefer_interpolation_to_compose_strings
 
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:http/http.dart' as http;
-
 import 'package:flutter_application_stage_project/models/detailModel.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
+import 'package:http/http.dart' as http;
+
+import '../core/constants/shared/config.dart';
+// Importer le fichier de configuration
 
 class ApiDetailElment {
   static Future<DetailResponse> getDetail(String idElment) async {
     log("ticket api");
     final token = await SharedPrefernce.getToken("token");
     log("$token");
+    final baseUrl = await Config.getApiUrl('getDetail');
     final url =
-        "https://spherebackdev.cmk.biz:4543/index.php/api/mobile/get-element-by-id/$idElment";
+        baseUrl + "/$idElment"; // Utilisation de Config pour obtenir l'URL
+    log(url);
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -29,6 +33,7 @@ class ApiDetailElment {
       final Map<String, dynamic> responseData = json.decode(response.body);
       return DetailResponse.fromJson(responseData);
     } else {
+      log(response.statusCode.toString());
       throw Exception('Failed to load Details');
     }
   }
