@@ -5,17 +5,17 @@ import 'package:http/http.dart' as http;
 import '../../core/constants/shared/config.dart';
 import '../../models/Deal/DealModel.dart';
 import '../sharedPreference.dart';
-// Importer le fichier de configuration
 
 class ApiDeal {
-  static Future<List<Deal>> getAllDeals(String idFamily, {int page = 1}) async {
+  static Future<List<Deal>> getAllDeals(String idFamily,
+      {int page = 1, String search = ''}) async {
     log("Fetching deals from API");
     final token = await SharedPrefernce.getToken("token");
     log("Token: $token");
 
-    // Utilisation de Config pour obtenir l'URL
     final baseUrl = await Config.getApiUrl('getElementsByFamily');
-    final url = "$baseUrl/$idFamily?page=$page&limit=10";
+    final url =
+        "$baseUrl/$idFamily?page=$page&limit=10&search=$search"; // Ajouter search à l'URL
 
     final response = await http.get(
       Uri.parse(url),

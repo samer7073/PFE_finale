@@ -18,6 +18,8 @@ class ApiContact {
     // Utilisation de Config pour obtenir l'URL
     final baseUrl = await Config.getApiUrl('getDirectory');
     final url = "$baseUrl?page=$page&search=$search";
+    log(url);
+    log("search" + search);
 
     final response = await http.get(
       Uri.parse(url),

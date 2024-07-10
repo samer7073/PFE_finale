@@ -1,17 +1,13 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:developer';
-import 'package:flutter_application_stage_project/screens/EditElment.dart';
-import 'package:flutter_application_stage_project/screens/detailElment.dart';
-import 'package:flutter_application_stage_project/services/ApiDeleteElment.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_stage_project/screens/ticket/ticketListRow.dart';
-
+import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../models/ticket/ticket.dart';
 import '../../models/ticket/ticketData.dart';
+import '../../services/ApiDeleteElment.dart';
 import '../../services/tickets/getTicketApi.dart';
+import '../EditElment.dart';
+import '../detailElment.dart';
+import 'ticketListRow.dart';
 
 class TicketList extends StatefulWidget {
   const TicketList({Key? key}) : super(key: key);
@@ -22,25 +18,45 @@ class TicketList extends StatefulWidget {
 
 class _TicketListState extends State<TicketList> {
   List<TicketData> tickets = [];
+  bool isLoading = false;
+  int page = 1;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     fetchTickets();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        fetchMoreTickets();
+      }
+    });
   }
 
-  Map<String, dynamic> fieldValues = {};
-
   Future<void> fetchTickets() async {
-    try {
-      Ticket ticketResponse = await GetTicketApi.getAllTickets("6");
+    setState(() {
+      isLoading = true;
+    });
 
+    try {
+      Ticket ticketResponse = await GetTicketApi.getAllTickets("6", page: page);
       setState(() {
-        tickets = ticketResponse.data;
-        loading = false;
+        tickets.addAll(ticketResponse.data);
+        isLoading = false;
       });
     } catch (e) {
       print('Failed to fetch tickets: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> fetchMoreTickets() async {
+    if (!isLoading) {
+      page++;
+      fetchTickets();
     }
   }
 
@@ -53,7 +69,6 @@ class _TicketListState extends State<TicketList> {
       final delteResponse =
           await ApiDeleteElement.deleteElement({"ids[]": ticket.id});
       if (delteResponse == 200) {
-        // Show success snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green,
@@ -62,28 +77,31 @@ class _TicketListState extends State<TicketList> {
           ),
         );
       } else {
-        // Show error snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Error: Item not deleted")),
         );
       }
     } catch (e) {
-      // Handle error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: Item not deleted")),
       );
     }
   }
 
-  bool loading = true;
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? Center(child: CircularProgressIndicator())
-        : Container(
-            height:
-                MediaQuery.of(context).size.height * 0.8, // Limite la hauteur
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               itemCount: tickets.length,
               itemBuilder: (context, index) {
                 final ticket = tickets[index];
@@ -93,27 +111,24 @@ class _TicketListState extends State<TicketList> {
                       icon: Icons.delete,
                       backgroundColor: Colors.red,
                       onPressed: (context) {
-                        log("hello");
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: Text("Delete"),
                               content: Text(
-                                  "Are you sure you want to delete this ticket ?"),
+                                  "Are you sure you want to delete this ticket?"),
                               actions: [
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(true);
-                                    // User confirmed deletion
                                     deleteTicket(ticket);
                                   },
                                   child: Text("Yes"),
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(false); // User cancelled deletion
+                                    Navigator.of(context).pop(false);
                                   },
                                   child: Text("No"),
                                 )
@@ -125,7 +140,6 @@ class _TicketListState extends State<TicketList> {
                     ),
                     SlidableAction(
                       onPressed: (context) {
-                        log("edit");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -181,6 +195,15 @@ class _TicketListState extends State<TicketList> {
                 );
               },
             ),
-          );
+          ),
+          if (isLoading) ...[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }

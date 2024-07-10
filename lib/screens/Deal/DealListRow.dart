@@ -127,6 +127,7 @@ class DealListRow extends StatelessWidget {
                     ),
                   ],
                 ),
+                /*
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -153,6 +154,7 @@ class DealListRow extends StatelessWidget {
                           ),
                   ],
                 ),
+                */
               ],
             ),
             Divider()

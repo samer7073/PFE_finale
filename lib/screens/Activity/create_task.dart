@@ -1,9 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/langue_provider.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
+import 'package:flutter_application_stage_project/screens/Activity/home_view.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/owner_select.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_followers.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_guests.dart';
@@ -13,6 +18,7 @@ import 'package:flutter_application_stage_project/services/Activities/api_get_fa
 import 'package:flutter_application_stage_project/services/Activities/api_guests.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_stage.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_users.dart';
+import 'package:flutter_application_stage_project/services/Activities/api_save_files.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
@@ -305,25 +311,44 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     }
   }
 
-  Future<void> _pickFiles() async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.any,
-    );
+  List<File> fileList = [];
+  final Map<String, dynamic> formMap = {};
+  late List<int>? files = [];
+
+  void selectFiles() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(allowMultiple: true);
+
     if (result != null) {
       setState(() {
-        uploadedFiles.addAll(result.files.map((file) {
-          return {
-            'name': file.name,
-            'size': file.size,
-            'path': file.path,
-          };
-        }));
+        fileList = result.paths.map((path) => File(path!)).toList();
       });
+
+      int count = 0;
+      for (File file in fileList) {
+        final FileBytes = await file.readAsBytes();
+        String fileName = file.path.split('/').last;
+        formMap["upload[$count]"] =
+            MultipartFile.fromBytes(FileBytes, filename: fileName);
+        log("${formMap.toString()}");
+        count++;
+      }
+      // Appelez la méthode saveFiles après avoir préparé le formMap
+      List<int>? ids = await SaveFiles.saveFiles(formMap);
+      log("ids " + ids.toString());
+      setState(() {
+        files = ids;
+      });
+      if (ids != null) {
+        print("Files uploaded successfully with IDs: $ids");
+      } else {
+        print("Failed to upload files");
+      }
     }
   }
 
   Widget _buildFileList() {
+    /*
     return Column(
       children: uploadedFiles.map((file) {
         return ListTile(
@@ -339,6 +364,37 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           ),
         );
       }).toList(),
+    );
+    */
+    return Container(
+      height: fileList == null
+          ? 0
+          : fileList.length *
+              50, // Assurez-vous que cette hauteur est suffisante
+      child: fileList == null || fileList.isEmpty
+          ? Text("Aucun fichier sélectionné")
+          : ListView.builder(
+              itemCount: fileList
+                  .length, // Utilisation de fileList.length comme itemCount
+              itemBuilder: (context, index) {
+                final file = fileList[index].path.split('/').last;
+                return ListTile(
+                  title: Text('${file}'),
+                  trailing: IconButton(
+                    onPressed: () {
+                      // Supprimer l'élément de la liste fileList
+                      setState(() {
+                        fileList.removeAt(index);
+                        formMap.remove("upload[${index}]");
+                        log(formMap.toString());
+                      });
+                    },
+                    icon: Icon(Icons.delete_outline),
+                    tooltip: 'Supprimer',
+                  ),
+                );
+              },
+            ),
     );
   }
 
@@ -391,11 +447,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         'description': _descriptionController.text,
         'notes': _noteController.text,
         'reminder_before_end': reminderBeforeEnd,
-        'upload': uploadedFiles.map((file) => 0).toList(),
+        'upload': files,
         'priority': selectedPriority,
         'send_email': sendEmailToExternalMembers,
         'Reminder': '$selectedReminderDuration $selectedTimeUnit',
       };
+      log(taskData.toString());
 
       try {
         final newTask = await createTask(taskData);
@@ -403,7 +460,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           const SnackBar(content: Text('Task created successfully!')),
         );
         if (!mounted) return;
-        Navigator.pop(context, newTask); // Retourne la nouvelle tâche
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HomeScreen())); // Retourne la nouvelle tâche
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to create task: $e')),
@@ -485,8 +546,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         setState(() {
           _startDateController.text =
               DateFormat('d/M/y').format(pickedDateRange.start);
+          log("////" + _startDateController.text);
           _endDateController.text =
               DateFormat('d/M/y').format(pickedDateRange.end);
+          log("////" + _endDateController.text);
           isStartDateValid = true;
           isEndDateValid = true;
         });
@@ -587,8 +650,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   }
 
   Widget _buildAvatar(Map<String, dynamic> user) {
+    log(user.toString());
     String avatarUrl = user['avatar'] ?? '';
     String initials = user['label'].split(' ').map((name) => name[0]).join();
+    log("123" + avatarUrl);
 
     return avatarUrl.isNotEmpty
         ? CircleAvatar(
@@ -628,6 +693,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             ],
           ),
           actions: [
+            /*
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ValueListenableBuilder<bool>(
@@ -648,6 +714,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 },
               ),
             ),
+            */
           ],
         ),
         body: Padding(
@@ -1651,7 +1718,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.blueGrey),
                         ),
-                        onPressed: _pickFiles,
+                        onPressed: selectFiles,
                         child: Text(
                           AppLocalizations.of(context).upload,
                           style: TextStyle(color: Colors.white),

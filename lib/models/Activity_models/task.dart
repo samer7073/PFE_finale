@@ -31,8 +31,9 @@ class Task {
   final String iconColor;
   final bool isOverdue;
   final String? roomId;
-   String stageColor;
-   int stagePercent;
+  String stageColor;
+  int stagePercent;
+  final List<Upload> uploads;
 
   Task({
     required this.id,
@@ -68,7 +69,8 @@ class Task {
     required this.isOverdue,
     this.roomId,
     this.stageColor = '#000000', // Valeur par défaut
-    this.stagePercent = 0, // Valeur par défaut
+    this.stagePercent = 0,
+    required this.uploads, // Valeur par défaut
   });
 
   factory Task.fromJson(Map<String, dynamic> json,
@@ -123,6 +125,10 @@ class Task {
       roomId: json['room_id']?.toString(),
       stageColor: json['stage_color'] ?? stageColor,
       stagePercent: json['stage_percent'] ?? stagePercent,
+      uploads: (json['upload'] as List<dynamic>?)
+              ?.map((upload) => Upload.fromJson(upload))
+              .toList() ??
+          [],
     );
   }
 
@@ -171,5 +177,37 @@ class Follower {
       label: json['label'] ?? '',
       avatar: json['avatar'],
     );
+  }
+}
+
+class Upload {
+  final int id;
+  final String fileName;
+  final String path;
+  final String taskId;
+
+  Upload({
+    required this.id,
+    required this.fileName,
+    required this.path,
+    required this.taskId,
+  });
+
+  factory Upload.fromJson(Map<String, dynamic> json) {
+    return Upload(
+      id: json['id'] ?? 0,
+      fileName: json['fileName'] ?? '',
+      path: json['path'] ?? '',
+      taskId: json['task_id'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'fileName': fileName,
+      'path': path,
+      'task_id': taskId,
+    };
   }
 }

@@ -17,8 +17,10 @@ class Config {
     "overview": "$prodUrl:4543/index.php/api/mobile/log-family-elements",
     "updateStageFamily":
         "$prodUrl:4543/index.php/api/mobile/update-stage-family",
-    "otpGenerate": "$prodUrl:4543/index.php/api/mobile/generate-otp",
-    "loginOtp": "$prodUrl:4543/index.php/api/mobile/login-otp",
+    "otpGenerate":
+        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/generate-otp",
+    "loginOtp":
+        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/mobile/login-otp",
     "logout":
         "https://authentificationbackback.comunikcrm.info:4543/index.php/api/mobile/logout",
     "kpiFamily": "$prodUrl:4543/index.php/api/mobile/kpi-family",
@@ -28,9 +30,9 @@ class Config {
     "pipelines": "$prodUrl:4543/index.php/api/mobile/pipelines-by-family",
     "jwt": "https://sphere-chat-back.comunikcrm.info:4543/api/user",
     "generateOtp":
-        "$prodUrl:4543/index.php/api/mobile/generate-otp", // Added for ApiOtpGenrate
+        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/generate-otp", // Added for ApiOtpGenrate
     "loginOtpUrl":
-        "$prodUrl:4543/index.php/api/mobile/login-otp", // Added for ApiOtpGenrate
+        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/mobile/login-otp", // Added for ApiOtpGenrate
     "logoutUrl":
         "https://sphereauthbackdev.cmk.biz:4543/index.php/api/logout", // Added for ApiLogout
     "kpiFamilyUrl":
@@ -99,6 +101,7 @@ class Config {
     "taskNotif": "$prodUrl:4543/api/mobile/tasks/",
     "pipeline": "$prodUrl:4543/index.php/api/mobile/get-element-by-id/",
     "StageKanban": "$prodUrl:4543/index.php/api/mobile/stages/",
+    "saveFile": "$prodUrl:4543/index.php/api/tasks/upload/save",
 
     // Added for ApiFieldGroup
   };
@@ -111,8 +114,10 @@ class Config {
     "overview": "$devUrl:4543/index.php/api/mobile/log-family-elements",
     "updateStageFamily":
         "$devUrl:4543/index.php/api/mobile/update-stage-family",
-    "otpGenerate": "$devUrl:4543/index.php/api/mobile/generate-otp",
-    "loginOtp": "$devUrl:4543/index.php/api/mobile/login-otp",
+    "otpGenerate":
+        "https://sphereauthbackdev.cmk.biz:4543/index.php/api/generate-otp",
+    "loginOtp":
+        "https://sphereauthbackdev.cmk.biz:4543/index.php/api/mobile/login-otp",
     "logout": "https://sphereauthbackdev.cmk.biz:4543/index.php/api/logout",
     "kpiFamily": "$devUrl:4543/index.php/api/mobile/kpi-family",
     "profile": "$devUrl:4543/index.php/api/mobile/profile",
@@ -185,7 +190,8 @@ class Config {
     "urlImage": "$devUrl:4543/storage/uploads/",
     "taskNotif": "$devUrl:4543/api/mobile/tasks/",
     "pipeline": "$devUrl:4543/index.php/api/mobile/get-element-by-id/",
-    "StageKanban": "$devUrl:4543/index.php/api/mobile/stages/"
+    "StageKanban": "$devUrl:4543/index.php/api/mobile/stages/",
+    "saveFile": "$devUrl:4543/index.php/api/tasks/upload/save",
   };
 
   static Future<String> getApiUrl(String apiName) async {

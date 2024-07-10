@@ -11,6 +11,7 @@ import 'package:flutter_application_stage_project/providers/theme_provider.dart'
 import 'package:flutter_application_stage_project/services/ApiOtpGenerate.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/sharedPreference.dart';
 import 'loading.dart';
@@ -34,6 +35,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
   void initState() {
     super.initState();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
     postOtp();
   }
 
@@ -44,6 +46,8 @@ class _VerfierPasswordState extends State<VerfierPassword> {
       setState(() {
         loading = true;
       });
+      final isProd = await checkIsProd();
+
       final otpResponse = await ApiOtpGenrate.OtpGenrate(data);
       if (otpResponse == 200) {
         setState(() {
@@ -184,5 +188,34 @@ class _VerfierPasswordState extends State<VerfierPassword> {
               ),
             ),
           );
+  }
+
+  Future<bool> checkIsProd() async {
+    final url = await getUrlFromSharedPreferences();
+    log('Stored URL: $url');
+
+    bool isProd = false;
+
+    if (url == "sphere.comunikcrm.info") {
+      log('isProd set to true');
+      isProd = true;
+    } else {
+      log('isProd set to false');
+      isProd = false;
+    }
+
+    await setIsProdInSharedPreferences(
+        isProd); // Enregistrement de la valeur isProd dans SharedPreferences
+    return isProd;
+  }
+
+  Future<String?> getUrlFromSharedPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('url');
+  }
+
+  Future<void> setIsProdInSharedPreferences(bool isProd) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isProd', isProd);
   }
 }

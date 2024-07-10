@@ -715,6 +715,13 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                             content: Text("Do you really want to disconnect?"),
                             actions: [
                               ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(false); // User cancelled deletion
+                                },
+                                child: Text("No"),
+                              ),
+                              ElevatedButton(
                                 onPressed: () async {
                                   try {
                                     log("logout");
@@ -734,13 +741,6 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                 },
                                 child: Text("Yes"),
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .pop(false); // User cancelled deletion
-                                },
-                                child: Text("No"),
-                              )
                             ],
                           );
                         },

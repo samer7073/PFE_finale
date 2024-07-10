@@ -1,7 +1,7 @@
+import 'dart:developer';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../../core/constants/shared/config.dart';
 
 class TaskType {
@@ -21,7 +21,7 @@ class TaskType {
     return TaskType(
       id: json['id'],
       label: json['label'],
-      color: json['color'],
+      color: json['color'] ?? '#FFFFFF', // Retourne couleur blanche si null
       icon: json['icons'],
     );
   }
@@ -31,6 +31,7 @@ Future<List<TaskType>> fetchTaskTypes() async {
   final token = await SharedPrefernce.getToken("token");
   final baseUrl = await Config.getApiUrl(
       'tasksConfig'); // Utilisation de l'URL définie dans Config.dart
+  log(baseUrl);
   final headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -47,9 +48,10 @@ Future<List<TaskType>> fetchTaskTypes() async {
     List<TaskType> taskTypes = [];
     for (var type in jsonResponse['task_types']['tasks_type']) {
       taskTypes.add(TaskType.fromJson(type));
+      log(TaskType.fromJson(type).label);
     }
     return taskTypes;
   } else {
-    throw Exception('Failed to load task types: ${response.statusCode}');
+    throw Exception('Failed to load task types Api: ${response.statusCode}');
   }
 }

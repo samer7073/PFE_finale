@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
@@ -93,6 +95,44 @@ class _AddElementState extends State<AddElement> {
             body: Container(child: Center(child: CircularProgressIndicator())))
         : Scaffold(
             appBar: AppBar(
+              leading: IconButton(
+                  onPressed: () {
+                    if (widget.family_id == "6") {
+                      Navigator.pushAndRemoveUntil<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (BuildContext context) => HomeNavigate(
+                            id_page: 2,
+                          ),
+                        ),
+                        (route) =>
+                            false, //if you want to disable back feature set to false
+                      );
+                    } else if (widget.family_id == "7") {
+                      Navigator.pushAndRemoveUntil<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (BuildContext context) => HomeNavigate(
+                            id_page: 4,
+                          ),
+                        ),
+                        (route) =>
+                            false, //if you want to disable back feature set to false
+                      );
+                    } else if (widget.family_id == "3") {
+                      Navigator.pushAndRemoveUntil<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (BuildContext context) => HomeNavigate(
+                            id_page: 3,
+                          ),
+                        ),
+                        (route) =>
+                            false, //if you want to disable back feature set to false
+                      );
+                    }
+                  },
+                  icon: Icon(Icons.arrow_back)),
               title: Text("Add a ${widget.titel}"),
             ),
             body: SingleChildScrollView(

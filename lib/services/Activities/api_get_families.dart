@@ -36,7 +36,7 @@ Future<List<dynamic>> fetchFamilies() async {
 
 Future<List<dynamic>> fetchRelatedModules(int moduleId) async {
   final token = await SharedPrefernce.getToken("token");
-  final apiUrl = Config.getApiUrl(
+  final apiUrl = await Config.getApiUrl(
       "fetchRelatedModules"); // Utilisation de l'URL de production
   // ou Config.getApiUrl("fetchRelatedModules", false) pour l'URL de développement
 

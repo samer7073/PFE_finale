@@ -1,8 +1,6 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/Activity/comments_room.dart';
-import 'package:flutter_application_stage_project/screens/RoomCommenatire.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_task.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_task_type.dart';
 import 'package:intl/intl.dart';
@@ -132,6 +130,14 @@ class TaskDetailTab extends StatelessWidget {
         orElse: () => TaskType(
             id: 0, label: 'Unknown', color: '#000000', icon: 'help_outline'));
 
+    // Initialiser la liste des noms de fichiers
+    List<String> fileNames = [];
+    if (data['upload'] != null && (data['upload'] as List).isNotEmpty) {
+      fileNames = (data['upload'] as List)
+          .map((file) => (file as Map<String, dynamic>)['fileName'] as String)
+          .toList();
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -219,8 +225,7 @@ class TaskDetailTab extends StatelessWidget {
             _buildDetailRow('Stage', data['stage_label'].toString()),
           ],
           const SizedBox(height: 16.0),
-          if (data['upload'] != null &&
-              (data['upload'] as List).isNotEmpty) ...[
+          if (fileNames.isNotEmpty) ...[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -229,9 +234,7 @@ class TaskDetailTab extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8.0),
-                ...data['upload']
-                    .map<Widget>((file) => Text(file.toString()))
-                    .toList(),
+                ...fileNames.map<Widget>((fileName) => Text(fileName)).toList(),
               ],
             ),
           ],

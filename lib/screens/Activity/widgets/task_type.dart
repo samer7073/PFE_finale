@@ -36,7 +36,7 @@ class _TaskTypeSelectorState extends State<TaskTypeSelector> {
         taskTypes = types;
       });
     }).catchError((error) {
-      print('Failed to load task types: $error');
+      print('Failed to load task types hhh: $error');
     });
   }
 

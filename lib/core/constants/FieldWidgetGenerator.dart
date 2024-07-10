@@ -1475,7 +1475,10 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                 DropdownButtonFormField<String>(
                   hint: Padding(
                     padding: EdgeInsets.only(left: 10),
-                    child: Text("Select " + widget.dataFieldGroup.alias),
+                    child: Text(
+                      "Select " + widget.dataFieldGroup.alias,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   icon: Icon(
                     Icons.arrow_drop_down,
@@ -1518,7 +1521,10 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         padding: EdgeInsets.only(left: 10),
                         child: Text(
                           item['label'],
-                          style: TextStyle(fontSize: 14),
+                          style: TextStyle(
+                            fontSize: 14,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     );
@@ -1551,7 +1557,10 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                 DropdownButtonFormField<String>(
                   hint: Padding(
                     padding: EdgeInsets.only(left: 10),
-                    child: Text("Select " + widget.dataFieldGroup.alias),
+                    child: Text(
+                      "Select " + widget.dataFieldGroup.alias,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   icon: Icon(
                     Icons.arrow_drop_down,
@@ -1597,6 +1606,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         padding: EdgeInsets.only(left: 10),
                         child: Text(
                           item.label,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontSize: 14),
                         ),
                       ),

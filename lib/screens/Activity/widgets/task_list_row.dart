@@ -60,7 +60,7 @@ class TaskListRow extends StatelessWidget {
   }
 
   Widget _buildAvatar(String? avatar, String ownerLabel) {
-    if (avatar == null || avatar.isEmpty) {
+    if (avatar == null || avatar.length == 1) {
       // Show the initial of the owner's name if avatar is null or empty
       String initial =
           ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?';

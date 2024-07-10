@@ -1,3 +1,7 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +19,9 @@ import 'package:flutter_application_stage_project/services/Activities/api_guests
 import 'package:flutter_application_stage_project/services/Activities/api_update_task.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../services/Activities/api_save_files.dart';
 
 class UpdateTaskScreen extends StatefulWidget {
   final String taskId;
@@ -45,6 +52,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
   late TextEditingController _noteController;
   late TextEditingController _locationController;
   late TextEditingController _reminderDurationController;
+  late List<Upload> saveFiels = [];
 
   bool isStartDateValid = true;
   bool isEndDateValid = true;
@@ -136,6 +144,12 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
       _descriptionController.text = task.description;
       _noteController.text = task.note;
       _locationController.text = task.location;
+      if (task.uploads.isNotEmpty) {
+        saveFiels = task.uploads;
+        for (var upload in task.uploads) {
+          files!.add(upload.id);
+        }
+      }
 
       // Extract reminder duration and unit
       final reminderParts = task.reminder.split(' ');
@@ -369,25 +383,46 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     }
   }
 
-  Future<void> _pickFiles() async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.any,
-    );
+  List<File> fileList = [];
+  final Map<String, dynamic> formMap = {};
+  late List<int>? files = [];
+
+  void selectFiles() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(allowMultiple: true);
+
     if (result != null) {
       setState(() {
-        uploadedFiles.addAll(result.files.map((file) {
-          return {
-            'name': file.name,
-            'size': file.size,
-            'path': file.path,
-          };
-        }));
+        fileList = result.paths.map((path) => File(path!)).toList();
       });
+
+      int count = 0;
+      for (File file in fileList) {
+        final FileBytes = await file.readAsBytes();
+        String fileName = file.path.split('/').last;
+        formMap["upload[$count]"] =
+            MultipartFile.fromBytes(FileBytes, filename: fileName);
+        log("${formMap.toString()}");
+        count++;
+      }
+      // Appelez la méthode saveFiles après avoir préparé le formMap
+      List<int>? ids = await SaveFiles.saveFiles(formMap);
+      log("ids " + ids.toString());
+      setState(() {
+        for (var id in ids!) {
+          files!.add(id);
+        }
+      });
+      if (ids != null) {
+        print("Files uploaded successfully with IDs: $ids");
+      } else {
+        print("Failed to upload files");
+      }
     }
   }
 
   Widget _buildFileList() {
+    /*
     return Column(
       children: uploadedFiles.map((file) {
         return ListTile(
@@ -403,6 +438,37 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
           ),
         );
       }).toList(),
+    );
+    */
+    return Container(
+      height: fileList == null
+          ? 0
+          : fileList.length *
+              50, // Assurez-vous que cette hauteur est suffisante
+      child: fileList == null || fileList.isEmpty
+          ? Text("Aucun fichier sélectionné")
+          : ListView.builder(
+              itemCount: fileList
+                  .length, // Utilisation de fileList.length comme itemCount
+              itemBuilder: (context, index) {
+                final file = fileList[index].path.split('/').last;
+                return ListTile(
+                  title: Text('${file}'),
+                  trailing: IconButton(
+                    onPressed: () {
+                      // Supprimer l'élément de la liste fileList
+                      setState(() {
+                        fileList.removeAt(index);
+                        formMap.remove("upload[${index}]");
+                        log(formMap.toString());
+                      });
+                    },
+                    icon: Icon(Icons.delete_outline),
+                    tooltip: 'Supprimer',
+                  ),
+                );
+              },
+            ),
     );
   }
 
@@ -460,7 +526,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
           'description': _descriptionController.text,
           'notes': _noteController.text,
           'reminder_before_end': reminderBeforeEnd,
-          'upload': uploadedFiles.map((file) => 0).toList(),
+          'upload': files,
           'priority': selectedPriority,
           'send_email': sendEmailToExternalMembers,
           'location': _locationController.text,
@@ -1431,6 +1497,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         controlAffinity: ListTileControlAffinity.leading,
                         activeColor: Colors.blueGrey,
                       ),
+                      
                     ],
                   ),
                 ),
@@ -1669,13 +1736,52 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.blueGrey),
                         ),
-                        onPressed: _pickFiles,
+                        onPressed: selectFiles,
                         child: const Text(
                           'Upload',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
                       _buildFileList(),
+                      saveFiels == null
+                          ? Text("")
+                          : Container(
+                              height: saveFiels == null
+                                  ? 0
+                                  : saveFiels!.length * 50,
+                              child: ListView.builder(
+                                itemCount: saveFiels!.length,
+                                itemBuilder: (context, index) {
+                                  final file = saveFiels![index];
+                                  return ListTile(
+                                    trailing: IconButton(
+                                      onPressed: () {
+                                        // Supprimer l'élément de la liste fileList
+                                        setState(() {
+                                          saveFiels!.removeAt(index);
+                                          /*
+                                        widget.formMap.remove(
+                                            "field[${widget.dataFieldGroup.id.toString()}][${index}]");
+                                            */
+                                        });
+                                      },
+                                      icon: Icon(Icons.delete_outline),
+                                      tooltip: 'Supprimer',
+                                    ),
+                                    title: GestureDetector(
+                                      child: Text(
+                                        file.fileName,
+                                        style: TextStyle(
+                                            color: Colors.blue.shade600),
+                                      ),
+                                      onTap: () {
+                                        _launchInBrowser(file.fileName);
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                       const SizedBox(height: 18.0),
                     ],
                   ),
@@ -1686,5 +1792,20 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _launchInBrowser(String file_name) async {
+    Uri uri = Uri(
+      scheme: 'https',
+      host: 'spherebackdev.cmk.biz',
+      port: 4543,
+      path: '/storage/uploads/$file_name',
+    );
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $uri');
+    }
   }
 }

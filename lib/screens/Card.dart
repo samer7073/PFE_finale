@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -26,9 +24,12 @@ class Cardwidget extends StatefulWidget {
 }
 
 class _CardwidgetState extends State<Cardwidget> {
+  late Future<String> imageUrlFuture;
+
   @override
   void initState() {
     super.initState();
+    imageUrlFuture = Config.getApiUrl("urlImage");
   }
 
   String familyName(String famille) {
@@ -41,14 +42,10 @@ class _CardwidgetState extends State<Cardwidget> {
     }
   }
 
-  Future<String> _getImageUrl() async {
-    return await Config.getApiUrl("urlImage");
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: _getImageUrl(),
+      future: imageUrlFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -98,7 +95,7 @@ class _CardwidgetState extends State<Cardwidget> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    widget.element.creator.avatar.length == 1
+                    widget.element.creator.avatar.isEmpty
                         ? CircleAvatar(
                             backgroundColor: Colors.blue,
                             radius: 25,
@@ -165,15 +162,13 @@ class _CardwidgetState extends State<Cardwidget> {
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(true);
-                                    // User confirmed deletion
                                     widget.deleteFunction(widget.element);
                                   },
                                   child: Text("Yes"),
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(false); // User cancelled deletion
+                                    Navigator.of(context).pop(false);
                                   },
                                   child: Text("No"),
                                 )

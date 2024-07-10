@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
 import 'package:flutter_application_stage_project/screens/Activity/create_task.dart';
@@ -15,9 +17,10 @@ class TaskListPage extends StatefulWidget {
 }
 
 class _TaskListPageState extends State<TaskListPage> {
-  List<Task> tasks = []; // List to store tasks
-  List<Task> filteredTasks = []; // List to store filtered tasks
+  List<Task> tasks = [];
+  List<Task> filteredTasks = [];
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   Map<String, IconData> iconMap = {
     'CalendarOutlined': Icons.calendar_today,
     'MailOutlined': Icons.mail_outline,
@@ -28,17 +31,21 @@ class _TaskListPageState extends State<TaskListPage> {
     'AtSymbolIcon': Icons.alternate_email,
   };
   bool isLoading = false;
+  int currentPage = 1;
+  bool hasMorePages = true;
 
   @override
   void initState() {
     super.initState();
     _loadAllTasks();
     _searchController.addListener(_filterTasks);
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -48,11 +55,8 @@ class _TaskListPageState extends State<TaskListPage> {
       isLoading = true;
     });
 
-    int currentPage = 1;
-    bool hasMorePages = true;
-
-    while (hasMorePages) {
-      final response = await fetchTasks(currentPage);
+    try {
+      final response = await TaskService.fetchTasks(currentPage);
       final List<Task> loadedTasks = response['tasks'];
       final int lastPage = response['meta']['last_page'];
 
@@ -66,12 +70,23 @@ class _TaskListPageState extends State<TaskListPage> {
       if (currentPage > lastPage) {
         hasMorePages = false;
       }
+    } catch (e) {
+      log('Error loading tasks: $e');
+    } finally {
+      if (!mounted) return;
+      setState(() {
+        isLoading = false;
+      });
     }
+  }
 
-    if (!mounted) return;
-    setState(() {
-      isLoading = false;
-    });
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent &&
+        !isLoading &&
+        hasMorePages) {
+      _loadAllTasks();
+    }
   }
 
   void _filterTasks() {
@@ -107,6 +122,8 @@ class _TaskListPageState extends State<TaskListPage> {
     setState(() {
       tasks.clear();
       filteredTasks.clear();
+      currentPage = 1;
+      hasMorePages = true;
     });
     await _loadAllTasks();
   }
@@ -224,7 +241,7 @@ class _TaskListPageState extends State<TaskListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
+      body: isLoading && tasks.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
@@ -247,8 +264,13 @@ class _TaskListPageState extends State<TaskListPage> {
                   child: RefreshIndicator(
                     onRefresh: _refreshTasks,
                     child: ListView.builder(
-                      itemCount: filteredTasks.length,
+                      controller: _scrollController,
+                      itemCount: filteredTasks.length + (hasMorePages ? 1 : 0),
                       itemBuilder: (context, index) {
+                        if (index == filteredTasks.length) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
                         final task = filteredTasks[index];
                         return TaskListRow(
                           taskIcon: _getIconData(task.tasksTypeId),
@@ -266,8 +288,7 @@ class _TaskListPageState extends State<TaskListPage> {
                           isOverdue: task.isOverdue,
                           onDelete: () => _confirmDelete(task),
                           onEdit: () => _editTask(task),
-                          onTap: () =>
-                              _navigateToDetail(task), // Navigate to detail
+                          onTap: () => _navigateToDetail(task),
                         );
                       },
                     ),

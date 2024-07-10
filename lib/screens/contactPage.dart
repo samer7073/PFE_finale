@@ -1,14 +1,16 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/contactModel/data.dart';
 import 'package:flutter_application_stage_project/screens/ContactDeatails.dart';
 import 'package:flutter_application_stage_project/services/contact/ApiContact.dart';
-import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../core/constants/shared/config.dart';
+
 class ContactPage extends StatefulWidget {
-  const ContactPage({Key? key}) : super(key: key);
+  const ContactPage({super.key});
 
   @override
   State<ContactPage> createState() => _ContactPageState();
@@ -17,11 +19,12 @@ class ContactPage extends StatefulWidget {
 class _ContactPageState extends State<ContactPage> {
   List<Data> contacts = [];
   bool isLoading = false;
-  bool hasMore = true; // Initialize hasMore to true
+  bool hasMore = true;
   int page = 1;
-  ScrollController _scrollController = ScrollController();
-  TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
   String searchQuery = '';
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -29,16 +32,29 @@ class _ContactPageState extends State<ContactPage> {
     fetchContacts();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+              _scrollController.position.maxScrollExtent &&
+          hasMore) {
         fetchMoreContacts();
       }
     });
-    _searchController.addListener(() {
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _searchController.dispose();
+    _debounce?.cancel(); // Annuler le délai lors de la suppression de la page
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
       setState(() {
         searchQuery = _searchController.text;
         page = 1;
         contacts.clear();
-        hasMore = true; // Reset hasMore when searching
         fetchContacts();
       });
     });
@@ -57,13 +73,7 @@ class _ContactPageState extends State<ContactPage> {
       setState(() {
         contacts.addAll(fetchedContacts);
         isLoading = false;
-        // Check if there are more pages to load
-        if (fetchedContacts.isEmpty) {
-          hasMore = false;
-        } else {
-          page++; // Increment page for the next request
-          hasMore = true;
-        }
+        hasMore = fetchedContacts.length == 10; // Taille de la page est 10
       });
     } catch (error) {
       log('Error fetching contacts: $error');
@@ -76,118 +86,113 @@ class _ContactPageState extends State<ContactPage> {
 
   Future<void> fetchMoreContacts() async {
     if (!isLoading && hasMore) {
+      page++;
       await fetchContacts();
     }
   }
 
-  Future<String> _getImageUrl() async {
-    return await Config.getApiUrl("urlImage");
-  }
-
   @override
-  void dispose() {
-    _scrollController.dispose();
-    _searchController.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).contacts),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Search Organisation...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16.0),
+                  borderSide: BorderSide.none,
+                ),
+                filled: true,
+                prefixIcon: const Icon(Icons.search),
+              ),
+            ),
+          ),
+          Expanded(
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (scrollInfo is ScrollEndNotification &&
+                    _scrollController.position.extentAfter == 0 &&
+                    hasMore) {
+                  fetchMoreContacts();
+                }
+                return true;
+              },
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: contacts.length + (hasMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < contacts.length) {
+                    final contact = contacts[index];
+                    return ContactTile(contact: contact);
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
+}
+
+class ContactTile extends StatelessWidget {
+  final Data contact;
+
+  const ContactTile({Key? key, required this.contact}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: _getImageUrl(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(AppLocalizations.of(context)!.contacts),
-              centerTitle: true,
-            ),
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-
-        if (snapshot.hasError) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(AppLocalizations.of(context)!.contacts),
-              centerTitle: true,
-            ),
-            body: Center(
-              child: Text('Error loading image URL'),
-            ),
-          );
-        }
-
-        String baseUrl = snapshot.data ?? "";
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.contacts),
-            centerTitle: true,
-          ),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Search Organisation...',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    prefixIcon: const Icon(Icons.search),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: contacts.length + (hasMore ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index == contacts.length) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    final contact = contacts[index];
-                    return ListTile(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return ContactDetailsPage(contactId: contact.id);
-                          },
-                        ));
-                      },
-                      leading: contact.avatar.length == 1
-                          ? CircleAvatar(
-                              backgroundColor: Colors.blue,
-                              child: Text(
-                                contact.avatar,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              radius: 25,
-                            )
-                          : CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage("$baseUrl${contact.avatar}"),
-                              radius: 25,
-                            ),
-                      title: Text(contact.label),
-                      subtitle: Text(contact.familyLabel),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
+    return ListTile(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return ContactDetailsPage(contactId: contact.id);
+          },
+        ));
       },
+      leading: CircleAvatar(
+        radius: 25,
+        backgroundColor: Colors.blue,
+        child: contact.avatar.length == 1
+            ? Text(
+                contact.avatar,
+                style: TextStyle(color: Colors.white),
+              )
+            : FutureBuilder<String>(
+                future: Config.getApiUrl('urlImage'),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Icon(Icons.error);
+                  }
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return Icon(Icons.error);
+                  }
+                  return CircleAvatar(
+                    radius: 25,
+                    backgroundImage: NetworkImage(
+                      "${snapshot.data}${contact.avatar}",
+                    ),
+                  );
+                },
+              ),
+      ),
+      title: Text(contact.label),
+      subtitle: Text(contact.familyLabel),
     );
   }
 }

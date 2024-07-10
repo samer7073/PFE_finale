@@ -1,7 +1,7 @@
 class TicketData {
   final String id;
   final String owner;
-  final List<String> list_of_customers;
+  // final List<String> list_of_customers;
   final String perimeters;
   final String pipeline;
   final String type_ticket;
@@ -20,7 +20,7 @@ class TicketData {
   TicketData({
     required this.id,
     required this.owner,
-    required this.list_of_customers,
+    // required this.list_of_customers,
     required this.perimeters,
     required this.pipeline,
     required this.type_ticket,
@@ -41,10 +41,10 @@ class TicketData {
     return TicketData(
       id: json["id"],
       owner: json["owner"] ?? "",
-      list_of_customers: (json["list_of_customers"] as List<dynamic>?)
+      /* list_of_customers: (json["list_of_customers"] as List<dynamic>?)
               ?.map((customer) => customer.toString())
               .toList() ??
-          [],
+          [],*/
       perimeters: json["perimeters"] ?? "",
       pipeline: json["pipeline"] ?? "",
       type_ticket: json["type_ticket"] ?? "",
