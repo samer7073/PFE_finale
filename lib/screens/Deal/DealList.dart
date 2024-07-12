@@ -1,5 +1,3 @@
-// ignore_for_file: sort_child_properties_last, prefer_const_constructors
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -20,61 +18,105 @@ class DealsPage extends StatefulWidget {
 class _DealsPageState extends State<DealsPage> {
   List<Deal> deals = [];
   bool isLoading = false;
+  bool isLoadingMore = false;
+  bool hasMore = true;
   int page = 1;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     fetchDeals();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        fetchMoreDeals();
-      }
-    });
-  }
-
-  Future<void> fetchDeals() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    List<Deal> fetchedDeals = await ApiDeal.getAllDeals('3', page: page);
-    setState(() {
-      deals.addAll(fetchedDeals);
-      isLoading = false;
-    });
-  }
-
-  Future<void> fetchMoreDeals() async {
-    if (!isLoading) {
-      page++;
-      fetchDeals();
-    }
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
-  void deleteElment(Deal deal) async {
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (hasMore && !isLoadingMore) {
+        fetchMoreDeals();
+      }
+    }
+  }
+
+  Future<void> fetchDeals() async {
+    if (isLoading) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      List<Deal> fetchedDeals = await ApiDeal.getAllDeals('3', page: page);
+      setState(() {
+        deals =
+            fetchedDeals; // Remplacez les deals actuels par les deals récupérés
+        isLoading = false;
+        hasMore = fetchedDeals.length == 10; // Taille de la page est 10
+      });
+    } catch (error) {
+      log('Error fetching deals: $error');
+      setState(() {
+        isLoading = false;
+        hasMore = false;
+      });
+    }
+  }
+
+  Future<void> fetchMoreDeals() async {
+    if (isLoading || isLoadingMore) return;
+
+    setState(() {
+      isLoadingMore = true;
+    });
+
+    // Sauvegardez la position actuelle du défilement
+    double currentPosition = _scrollController.position.pixels;
+
+    try {
+      page++;
+      List<Deal> fetchedDeals = await ApiDeal.getAllDeals('3', page: page);
+      setState(() {
+        deals.addAll(fetchedDeals);
+        isLoadingMore = false;
+        hasMore = fetchedDeals.length == 10; // Taille de la page est 10
+      });
+
+      // Restaurez la position du défilement après ajout de nouveaux éléments
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollController.jumpTo(currentPosition);
+      });
+    } catch (error) {
+      log('Error fetching more deals: $error');
+      setState(() {
+        isLoadingMore = false;
+        hasMore = false;
+      });
+    }
+  }
+
+  void deleteElement(Deal deal) async {
     setState(() {
       deals.removeWhere((element) => element.id == deal.id);
     });
 
     try {
-      final delteResponse =
+      final deleteResponse =
           await ApiDeleteElement.deleteElement({"ids[]": deal.id});
-      if (delteResponse == 200) {
+      if (deleteResponse == 200) {
         // Show success snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Element supprimer avec succès !'),
+            content: Text('Element supprimé avec succès !'),
           ),
         );
       } else {
@@ -97,85 +139,93 @@ class _DealsPageState extends State<DealsPage> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: deals.length,
-              itemBuilder: (context, index) {
-                final deal = deals[index];
-                return Slidable(
-                  endActionPane: ActionPane(motion: DrawerMotion(), children: [
-                    SlidableAction(
-                      icon: Icons.delete,
-                      backgroundColor: Colors.red,
-                      onPressed: (context) {
-                        log("hello");
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Delete"),
-                              content: Text(
-                                  "Are you sure you want to delete this ticket ?"),
-                              actions: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(true);
-                                    // User confirmed deletion
-                                    deleteElment(deal);
-                                  },
-                                  child: Text("Yes"),
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (scrollInfo is ScrollEndNotification &&
+                    _scrollController.position.extentAfter == 0 &&
+                    hasMore &&
+                    !isLoadingMore) {
+                  fetchMoreDeals();
+                }
+                return true;
+              },
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: deals.length + (isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < deals.length) {
+                    final deal = deals[index];
+                    return Slidable(
+                      endActionPane:
+                          ActionPane(motion: DrawerMotion(), children: [
+                        SlidableAction(
+                          icon: Icons.delete,
+                          backgroundColor: Colors.red,
+                          onPressed: (context) {
+                            log("delete");
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text("Delete"),
+                                  content: Text(
+                                      "Are you sure you want to delete this deal?"),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                        deleteElement(deal);
+                                      },
+                                      child: Text("Yes"),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                      child: Text("No"),
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        SlidableAction(
+                          onPressed: (context) {
+                            log("edit");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditElment(
+                                  Element_id: deal.id,
+                                  family_id: "3",
+                                  title: "Deal",
                                 ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pop(false); // User cancelled deletion
-                                  },
-                                  child: Text("No"),
-                                )
-                              ],
+                              ),
                             );
                           },
-                        );
-                      },
-                    ),
-                    SlidableAction(
-                      onPressed: (context) {
-                        log("edit");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditElment(
-                              Element_id: deal.id,
-                              family_id: "3",
-                              title: "Deal",
-                            ),
-                          ),
-                        );
-                      },
-                      icon: Icons.edit,
-                      backgroundColor: Colors.green,
-                    )
-                  ]),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return DetailElment(
-                              idElment: deal.id,
-                              idFamily: "3",
-                              roomId: deal.room_id,
-                              label: deal.label,
-                              refenrce: deal.reference,
-                              pipeline_id: deal.pipeline_id,
-                            );
+                          icon: Icons.edit,
+                          backgroundColor: Colors.green,
+                        )
+                      ]),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return DetailElment(
+                                  idElment: deal.id,
+                                  idFamily: "3",
+                                  roomId: deal.room_id,
+                                  label: deal.label,
+                                  refenrce: deal.reference,
+                                  pipeline_id: deal.pipeline_id,
+                                );
+                              },
+                            ));
                           },
-                        ));
-                      },
-                      child: Column(
-                        children: [
-                          DealListRow(
+                          child: DealListRow(
                             reference: deal.reference,
                             title: deal.label,
                             owner: deal.owner,
@@ -184,12 +234,14 @@ class _DealsPageState extends State<DealsPage> {
                             organisation: deal.organisation,
                             piepline: deal.stagePipeline,
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
+                    );
+                  } else {
+                    return SizedBox.shrink(); // Retourne un widget vide
+                  }
+                },
+              ),
             ),
           ),
           if (isLoading) ...[

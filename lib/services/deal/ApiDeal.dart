@@ -14,8 +14,9 @@ class ApiDeal {
     log("Token: $token");
 
     final baseUrl = await Config.getApiUrl('getElementsByFamily');
-    final url =
-        "$baseUrl/$idFamily?page=$page&limit=10&search=$search"; // Ajouter search à l'URL
+    final url = "$baseUrl/$idFamily?page=$page&limit=10&search=$search";
+    // Ajouter search à l'URL
+    log(url);
 
     final response = await http.get(
       Uri.parse(url),

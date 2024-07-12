@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -89,16 +92,42 @@ class _TaskListPageState extends State<TaskListPage> {
     }
   }
 
-  void _filterTasks() {
+  Future<void> _filterTasks() async {
     final query = _searchController.text.toLowerCase();
     if (!mounted) return;
+
     setState(() {
-      filteredTasks = tasks.where((task) {
-        return task.label.toLowerCase().contains(query) ||
-            task.ownerLabel.toLowerCase().contains(query) ||
-            task.priority.toLowerCase().contains(query);
-      }).toList();
+      isLoading = true; // Active le chargement au début de la recherche
     });
+
+    try {
+      if (query.isEmpty) {
+        // Si la requête de recherche est vide, charger toutes les tâches pour réinitialiser la liste filtrée
+        await _loadAllTasks();
+      } else {
+        // Sinon, effectuer une recherche basée sur la requête
+        final List<Task> searchResults = await TaskService.searchTasks(query);
+        if (!mounted) return;
+
+        setState(() {
+          filteredTasks = searchResults;
+        });
+      }
+    } catch (e) {
+      log('Error filtering tasks: $e');
+      if (!mounted) return;
+
+      setState(() {
+        filteredTasks = [];
+      });
+    } finally {
+      if (!mounted) return;
+
+      setState(() {
+        isLoading =
+            false; // Désactive le chargement une fois la recherche terminée
+      });
+    }
   }
 
   Future<void> _deleteTask(String taskId) async {
@@ -247,16 +276,45 @@ class _TaskListPageState extends State<TaskListPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search tasks...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16.0),
-                        borderSide: BorderSide.none,
+                  child: SizedBox(
+                    height: 60, // Adjust the height as needed
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        suffix: IconButton(
+                          onPressed: () {
+                            _searchController
+                                .clear(); // Efface la valeur du contrôleur
+                          },
+                          icon: Center(
+                            child: Icon(
+                              Icons.cancel,
+                              size: 20,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                        hintText: 'Search tasks...',
+                        hintStyle: TextStyle(
+                          fontSize: 14, // Adjust font size as needed
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 20.0,
+                            horizontal: 12.0), // Adjust padding as needed
+                        filled: true,
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.blue,
+                          size: 20, // Adjust icon size as needed
+                        ),
                       ),
-                      filled: true,
-                      prefixIcon: const Icon(Icons.search),
+                      style: TextStyle(
+                        fontSize: 14, // Adjust font size as needed
+                      ),
                     ),
                   ),
                 ),

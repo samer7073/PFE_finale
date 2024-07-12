@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
-class ticketListRow extends StatelessWidget {
+class ticketListRow extends StatefulWidget {
   final IconData SourceIcon;
   final String id;
   final String title;
@@ -31,14 +31,23 @@ class ticketListRow extends StatelessWidget {
       required this.ownerImage,
       required this.Pipeline});
 
-  Future<String> _getImageUrl() async {
-    return await Config.getApiUrl("urlImage");
+  @override
+  State<ticketListRow> createState() => _ticketListRowState();
+}
+
+class _ticketListRowState extends State<ticketListRow> {
+  @override
+  void initState() {
+    super.initState();
+    imageUrlFuture = Config.getApiUrl("urlImage");
   }
+
+  late Future<String> imageUrlFuture;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: _getImageUrl(),
+      future: imageUrlFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -67,11 +76,12 @@ class ticketListRow extends StatelessWidget {
                       SizedBox(
                         width: 10,
                       ),
-                      Text(id, style: Theme.of(context).textTheme.bodyLarge)
+                      Text(widget.id,
+                          style: Theme.of(context).textTheme.bodyLarge)
                     ],
                   ),
                   Text(
-                    createTime,
+                    widget.createTime,
                     style: Theme.of(context).textTheme.bodyText2,
                   )
                 ],
@@ -88,7 +98,7 @@ class ticketListRow extends StatelessWidget {
                         AppLocalizations.of(context).label + " ",
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
-                      Text(title,
+                      Text(widget.title,
                           style: TextStyle(
                               color: Color.fromARGB(255, 5, 104, 225),
                               fontSize: 16,
@@ -101,14 +111,14 @@ class ticketListRow extends StatelessWidget {
                   Container(
                     child: Center(
                       child: Text(
-                        messageContainer,
+                        widget.messageContainer,
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
                     height: 30,
                     width: 100,
                     decoration: BoxDecoration(
-                        color: colorContainer,
+                        color: widget.colorContainer,
                         borderRadius: BorderRadius.horizontal(
                             left: Radius.circular(20),
                             right: Radius.circular(20))),
@@ -127,25 +137,25 @@ class ticketListRow extends StatelessWidget {
                         AppLocalizations.of(context).pipeline + " ",
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
-                      Text(Pipeline,
+                      Text(widget.Pipeline,
                           style: Theme.of(context).textTheme.bodyLarge),
                     ],
                   ),
                   Row(
                     children: [
                       Text(
-                        owner,
+                        widget.owner,
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
                       SizedBox(
                         width: 10,
                       ),
-                      ownerImage.length == 1
+                      widget.ownerImage.length == 1
                           ? CircleAvatar(
                               backgroundColor: Colors
                                   .blue, // Choisissez une couleur de fond appropriée
                               child: Text(
-                                ownerImage,
+                                widget.ownerImage,
                                 style: TextStyle(
                                     color: Colors
                                         .white), // Choisissez une couleur de texte appropriée
@@ -154,7 +164,7 @@ class ticketListRow extends StatelessWidget {
                             )
                           : CircleAvatar(
                               backgroundImage:
-                                  NetworkImage("$baseUrl$ownerImage"),
+                                  NetworkImage("$baseUrl${widget.ownerImage}"),
                               radius: 15,
                             ),
                     ],

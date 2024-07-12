@@ -1,3 +1,5 @@
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import '../core/constants/shared/config.dart';
 import '../models/ticket/ticketData.dart';
@@ -7,6 +9,8 @@ import 'detailElment.dart';
 class CustomSearchDelegate extends SearchDelegate {
   final String idFamily;
   final ApiTicketList _ticketList = ApiTicketList();
+  int _page = 1; // Numéro de page initial
+  int _pageSize = 10; // Taille de la page
 
   CustomSearchDelegate(this.idFamily);
 
@@ -157,12 +161,20 @@ class CustomSearchDelegate extends SearchDelegate {
                         future: Config.getApiUrl("urlImage"),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            return CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                "${snapshot.data}${data?[index].owner_avatar}",
-                              ),
-                              radius: 15,
-                            );
+                            return data?[index].owner_avatar.length == 1
+                                ? CircleAvatar(
+                                    backgroundColor: Colors.blue,
+                                    child: Text(
+                                      data![index].owner_avatar,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    radius: 15,
+                                  )
+                                : CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        "${snapshot.data}${data?[index].owner_avatar}"),
+                                    radius: 15,
+                                  );
                           } else {
                             return CircleAvatar(
                               child: CircularProgressIndicator(),

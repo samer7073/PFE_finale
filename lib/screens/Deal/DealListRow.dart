@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
-class DealListRow extends StatelessWidget {
+class DealListRow extends StatefulWidget {
   final String reference;
   final String title;
   final String owner;
@@ -24,14 +24,23 @@ class DealListRow extends StatelessWidget {
     required this.piepline,
   });
 
-  Future<String> _getImageUrl() async {
-    return await Config.getApiUrl("urlImage");
+  @override
+  State<DealListRow> createState() => _DealListRowState();
+}
+
+class _DealListRowState extends State<DealListRow> {
+  @override
+  void initState() {
+    super.initState();
+    imageUrlFuture = Config.getApiUrl("urlImage");
   }
+
+  late Future<String> imageUrlFuture;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: _getImageUrl(),
+      future: imageUrlFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -56,13 +65,13 @@ class DealListRow extends StatelessWidget {
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
                     Text(
-                      reference,
+                      widget.reference,
                       style: Theme.of(context).textTheme.bodyText1,
                     )
                   ],
                 ),
                 Text(
-                  createTime,
+                  widget.createTime,
                   style: Theme.of(context).textTheme.bodyText2,
                 )
               ],
@@ -80,7 +89,7 @@ class DealListRow extends StatelessWidget {
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
                     Text(
-                      organisation,
+                      widget.organisation,
                       style: Theme.of(context).textTheme.bodyText1,
                     )
                   ],
@@ -99,7 +108,7 @@ class DealListRow extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                Text(title,
+                Text(widget.title,
                     style: TextStyle(
                         color: Color.fromARGB(255, 5, 104, 225),
                         fontSize: 16,
@@ -122,39 +131,37 @@ class DealListRow extends StatelessWidget {
                       width: 10,
                     ),
                     Text(
-                      piepline,
+                      widget.piepline,
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                   ],
                 ),
-                /*
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      owner,
+                      widget.owner,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                     SizedBox(
                       width: 10,
                     ),
-                    ownerImage.length == 1
+                    widget.ownerImage.length == 1
                         ? CircleAvatar(
                             backgroundColor: Colors.blue,
                             child: Text(
-                              ownerImage,
+                              widget.ownerImage,
                               style: TextStyle(color: Colors.white),
                             ),
                             radius: 15,
                           )
                         : CircleAvatar(
                             backgroundImage:
-                                NetworkImage("$baseUrl$ownerImage"),
+                                NetworkImage("$baseUrl${widget.ownerImage}"),
                             radius: 15,
                           ),
                   ],
                 ),
-                */
               ],
             ),
             Divider()

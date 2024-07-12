@@ -95,7 +95,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                 .phoneNumberNotAvailable
                             : AppLocalizations.of(context).phoneNumber +
                                 ' $cleanedPhoneNumber',
-                        overflow: TextOverflow.ellipsis,
+                       // overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),

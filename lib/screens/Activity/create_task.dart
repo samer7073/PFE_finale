@@ -715,6 +715,56 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               ),
             ),
             */
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: _canCreateTask,
+                  builder: (context, canCreate, child) {
+                    return ElevatedButton(
+                      onPressed: canCreate ? _createTask : null,
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.disabled)) {
+                              return Colors.grey;
+                            }
+                            return Colors.blue; // Default color
+                          },
+                        ),
+                        overlayColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return Colors.blueAccent
+                                  .withOpacity(0.1); // Hover color
+                            }
+                            return Colors.transparent; // Default overlay color
+                          },
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 8.0),
+                        ),
+                      ),
+                      child: const Text(
+                        "Enregistrer",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
           ],
         ),
         body: Padding(
@@ -1433,6 +1483,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         controlAffinity: ListTileControlAffinity.leading,
                         activeColor: Colors.blueGrey,
                       ),
+                      /*
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: ValueListenableBuilder<bool>(
@@ -1455,6 +1506,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           },
                         ),
                       ),
+                      */
                     ],
                   ),
                 ),

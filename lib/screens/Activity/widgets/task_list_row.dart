@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
-class TaskListRow extends StatelessWidget {
+class TaskListRow extends StatefulWidget {
   final IconData taskIcon;
   final String taskId;
   final String taskLabel;
@@ -40,6 +40,11 @@ class TaskListRow extends StatelessWidget {
     required this.isOverdue,
   }) : super(key: key);
 
+  @override
+  State<TaskListRow> createState() => _TaskListRowState();
+}
+
+class _TaskListRowState extends State<TaskListRow> {
   Future<String> _getImageUrl() async {
     return await Config.getApiUrl("urlImage");
   }
@@ -74,7 +79,7 @@ class TaskListRow extends StatelessWidget {
       );
     } else {
       return FutureBuilder<String>(
-        future: _getImageUrl(),
+        future: imageUrlFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircleAvatar(
@@ -124,25 +129,33 @@ class TaskListRow extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    imageUrlFuture = Config.getApiUrl("urlImage");
+  }
+
+  late Future<String> imageUrlFuture;
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap, // Call onTap when the row is tapped
+      onTap: widget.onTap, // Call onTap when the row is tapped
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Slidable(
-          key: ValueKey(taskId),
+          key: ValueKey(widget.taskId),
           endActionPane: ActionPane(
             motion: const ScrollMotion(),
             children: [
               SlidableAction(
-                onPressed: (context) => onEdit(),
+                onPressed: (context) => widget.onEdit(),
                 backgroundColor: Colors.green.withOpacity(0.1),
                 foregroundColor: Colors.green,
                 icon: Icons.edit,
                 label: 'Edit',
               ),
               SlidableAction(
-                onPressed: (context) => onDelete(),
+                onPressed: (context) => widget.onDelete(),
                 backgroundColor: Colors.red.withOpacity(0.1),
                 foregroundColor: Colors.red,
                 icon: Icons.delete,
@@ -158,10 +171,10 @@ class TaskListRow extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(taskIcon, color: Colors.teal.shade700),
+                      Icon(widget.taskIcon, color: Colors.teal.shade700),
                       const SizedBox(width: 10),
                       Text(
-                        taskLabel,
+                        widget.taskLabel,
                         style: Theme.of(context).textTheme.bodyLarge,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -170,7 +183,7 @@ class TaskListRow extends StatelessWidget {
                   const SizedBox(width: 10),
                   Icon(
                     Icons.flag,
-                    color: _getPriorityColor(priority),
+                    color: _getPriorityColor(widget.priority),
                   ),
                 ],
               ),
@@ -179,9 +192,9 @@ class TaskListRow extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'End: $endDate $endTime',
+                    'End: ${widget.endDate} ${widget.endTime}',
                     style: TextStyle(
-                      color: isOverdue
+                      color: widget.isOverdue
                           ? Colors.red
                           : Theme.of(context).textTheme.bodyMedium?.color,
                       fontSize:
@@ -201,8 +214,8 @@ class TaskListRow extends StatelessWidget {
                       Text("Stage: ",
                           style: Theme.of(context).textTheme.titleSmall),
                       Text(
-                        stageLabel?.isNotEmpty == true
-                            ? stageLabel!
+                        widget.stageLabel?.isNotEmpty == true
+                            ? widget.stageLabel!
                             : "No stage available",
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
@@ -210,10 +223,10 @@ class TaskListRow extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Text(ownerLabel,
+                      Text(widget.ownerLabel,
                           style: Theme.of(context).textTheme.titleMedium),
                       const SizedBox(width: 10),
-                      _buildAvatar(ownerAvatar, ownerLabel),
+                      _buildAvatar(widget.ownerAvatar, widget.ownerLabel),
                     ],
                   ),
                 ],

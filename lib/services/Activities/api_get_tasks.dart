@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
-
 import 'package:http/http.dart' as http;
 import '../../core/constants/shared/config.dart';
 
@@ -51,6 +51,52 @@ class TaskService {
     } catch (e) {
       log('Error fetching tasks: $e');
       throw Exception('Error fetching tasks: $e');
+    }
+  }
+
+  static Future<List<Task>> searchTasks(String query) async {
+    try {
+      final token = await SharedPrefernce.getToken("token");
+      final baseUrl = await Config.getApiUrl('fetchTasks');
+      final url = Uri.parse('$baseUrl/get/table?search=$query');
+
+      log('Search URL: $url');
+
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode({
+          'query': query,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        log('Search Response JSON: $jsonResponse');
+
+        if (jsonResponse.containsKey('data')) {
+          final List<Task> searchResults = (jsonResponse['data'] as List)
+              .map((task) => Task.fromJson(task))
+              .toList();
+
+          return searchResults;
+        } else {
+          log('Invalid search response format: ${response.body}');
+          throw Exception('Invalid search response format');
+        }
+      } else {
+        log('Failed to search tasks: ${response.body}');
+        throw Exception('Failed to search tasks: ${response.body}');
+      }
+    } catch (e) {
+      log('Error searching tasks: $e');
+      throw Exception('Error searching tasks: $e');
     }
   }
 }
