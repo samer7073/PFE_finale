@@ -1048,7 +1048,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         print(rating);
                         widget.formMap[
                                 "field[${widget.dataFieldGroup.id.toString()}]"] =
-                            rating;
+                            rating.toString();
                         log(widget.formMap.toString());
                         // Appeler state.didChange pour notifier le FormField qu'il y a eu un changement
                         state.didChange(rating);
@@ -1245,12 +1245,13 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                             vertical: 2.0, horizontal: 2.0),
                       ),
                       onChanged: (value) {
+                        log("gggggggggggggggggggggggggggggggggggg");
                         setState(() {
                           _selectedItem = value;
                           _selectedValue = value;
                           log(value.toString());
                           widget.formMap[
-                                  "field[${widget.dataFieldGroup.id.toString()}][]"] =
+                                  "field[${widget.dataFieldGroup.id.toString()}][0]"] =
                               value;
                         });
                         log(widget.formMap.toString());
@@ -1295,12 +1296,12 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                           }
                         : null,
                     // Si le champ n'est pas requis, le validateur est null
-                    controller: _textEditingController,
+                    //controller: _textEditingController,
                     keyboardType: TextInputType.number,
                     decoration: DecorationTextFormField(),
                     onChanged: (value) {
                       widget.formMap[
-                              "field[${widget.dataFieldGroup.id.toString()}][]"] =
+                              "field[${widget.dataFieldGroup.id.toString()}][1]"] =
                           value;
                       log(widget.formMap.toString());
                     },
@@ -1318,7 +1319,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         _selectedValue = null; // Désélection de l'item
                         _selectedItem = null;
                         final fieldId = widget.dataFieldGroup.id.toString();
-                        widget.formMap.remove("field[$fieldId]");
+                        widget.formMap.remove("field[$fieldId][0]");
                       });
                     },
                     child: Text(
@@ -1335,6 +1336,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               ),
           ],
         );
+
       case "country":
         //fetchCountries();
         return Expanded(
@@ -1560,150 +1562,31 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
       case "select":
 
         // Si le type de champ est "select", utilisez la liste des éléments de menu déroulant chargée depuis l'API
+
         if (widget.dataFieldGroup.listfieldsview.isEmpty) {
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${widget.dataFieldGroup.alias}",
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: 350,
-                    child: DropdownButtonFormField<String>(
-                      hint: Container(
-                        width: 200,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            "Select " + widget.dataFieldGroup.alias,
-                            overflow: TextOverflow.fade,
-                          ),
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${widget.dataFieldGroup.alias}",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  width: 350,
+                  child: DropdownButtonFormField<String>(
+                    hint: Container(
+                      width: 200,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          "Select " + widget.dataFieldGroup.alias,
+                          overflow: TextOverflow.fade,
                         ),
-                      ),
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.black,
-                      ),
-                      menuMaxHeight: 300,
-                      value: _selectedValue,
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: Colors.grey),
-                        hintStyle: TextStyle(color: Colors.grey),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(5.5)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(5.5)),
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 2.0, horizontal: 2.0),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedValue = value; // Mettre à jour la sélection
-                          _selectedItem = value!;
-                          final fieldId = widget.dataFieldGroup.id.toString();
-                          if (value == null) {
-                            // Supprimer la valeur de la map si la sélection est vide
-                            widget.formMap.remove("field[$fieldId]");
-                          } else {
-                            // Mettre à jour la valeur dans la map
-                            widget.formMap["field[$fieldId]"] = value;
-                          }
-                          // Afficher la map dans les logs
-                          log(widget.formMap.toString());
-                        });
-                      },
-                      items:
-                          _dropdownItems.map<DropdownMenuItem<String>>((item) {
-                        return DropdownMenuItem<String>(
-                          value: item['id'],
-                          child: Container(
-                            width: 300,
-                            padding: EdgeInsets.only(left: 3),
-                            child: Container(
-                              width: 500,
-                              child: Text(
-                                item['label'],
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  overflow: TextOverflow.fade,
-                                ),
-                                softWrap: false,
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      validator: widget.dataFieldGroup.required == true
-                          ? (value) {
-                              if (value == null) {
-                                return 'Veuillez sélectionner une option';
-                              }
-                              return null;
-                            }
-                          : null,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  if (_selectedItem != null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedValue = null; // Désélection de l'item
-                              _selectedItem = null;
-                              final fieldId =
-                                  widget.dataFieldGroup.id.toString();
-                              widget.formMap.remove("field[$fieldId]");
-                            });
-                          },
-                          child: Text(
-                            'Deselect',
-                            style: TextStyle(
-                              color: Colors.red, // Couleur du texte
-                              fontSize: 16, // Taille de police
-                              fontWeight: FontWeight.bold, // Gras
-                              // Autres styles que vous souhaitez appliquer
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                ],
-              ),
-            ),
-          );
-        } else {
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${widget.dataFieldGroup.alias}",
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  DropdownButtonFormField<String>(
-                    hint: Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text(
-                        "Select " + widget.dataFieldGroup.alias,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     icon: Icon(
@@ -1728,8 +1611,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     onChanged: (value) {
                       setState(() {
                         _selectedValue = value; // Mettre à jour la sélection
-                        _selectedItem = value;
-                        log(_selectedValue.toString());
+                        _selectedItem = value!;
                         final fieldId = widget.dataFieldGroup.id.toString();
                         if (value == null) {
                           // Supprimer la valeur de la map si la sélection est vide
@@ -1737,22 +1619,27 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         } else {
                           // Mettre à jour la valeur dans la map
                           widget.formMap["field[$fieldId]"] = value;
-                          log(widget.formMap.toString());
                         }
                         // Afficher la map dans les logs
                         log(widget.formMap.toString());
                       });
                     },
-                    items: widget.dataFieldGroup.listfieldsview
-                        .map<DropdownMenuItem<String>>((item) {
+                    items: _dropdownItems.map<DropdownMenuItem<String>>((item) {
                       return DropdownMenuItem<String>(
-                        value: item.id.toString(),
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            item.label,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 14),
+                        value: item['id'],
+                        child: Container(
+                          width: 300,
+                          padding: EdgeInsets.only(left: 3),
+                          child: Container(
+                            width: 500,
+                            child: Text(
+                              item['label'],
+                              style: TextStyle(
+                                fontSize: 14,
+                                overflow: TextOverflow.fade,
+                              ),
+                              softWrap: false,
+                            ),
                           ),
                         ),
                       );
@@ -1766,34 +1653,143 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                           }
                         : null,
                   ),
-                  if (_selectedItem != null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _selectedValue = null; // Désélection de l'item
-                              _selectedItem = null;
-                              final fieldId =
-                                  widget.dataFieldGroup.id.toString();
-                              widget.formMap.remove("field[$fieldId]");
-                            });
-                          },
-                          child: Text(
-                            'Deselect',
-                            style: TextStyle(
-                              color: Colors.red, // Couleur du texte
-                              fontSize: 16, // Taille de police
-                              fontWeight: FontWeight.bold, // Gras
-                              // Autres styles que vous souhaitez appliquer
-                            ),
+                ),
+                SizedBox(height: 10),
+                if (_selectedItem != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedValue = null; // Désélection de l'item
+                            _selectedItem = null;
+                            final fieldId = widget.dataFieldGroup.id.toString();
+                            widget.formMap.remove("field[$fieldId]");
+                          });
+                        },
+                        child: Text(
+                          'Deselect',
+                          style: TextStyle(
+                            color: Colors.red, // Couleur du texte
+                            fontSize: 16, // Taille de police
+                            fontWeight: FontWeight.bold, // Gras
+                            // Autres styles que vous souhaitez appliquer
                           ),
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          );
+        } else {
+          return Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${widget.dataFieldGroup.alias}",
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                DropdownButtonFormField<String>(
+                  hint: Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      "Select " + widget.dataFieldGroup.alias,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                ],
-              ),
+                  ),
+                  icon: Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.black,
+                  ),
+                  menuMaxHeight: 300,
+                  value: _selectedValue,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(color: Colors.grey),
+                    hintStyle: TextStyle(color: Colors.grey),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(5.5)),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(5.5)),
+                    border: OutlineInputBorder(),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedValue = value; // Mettre à jour la sélection
+                      _selectedItem = value;
+                      log(_selectedValue.toString());
+                      final fieldId = widget.dataFieldGroup.id.toString();
+                      if (value == null) {
+                        // Supprimer la valeur de la map si la sélection est vide
+                        widget.formMap.remove("field[$fieldId]");
+                      } else {
+                        // Mettre à jour la valeur dans la map
+                        widget.formMap["field[$fieldId]"] = value;
+                        log(widget.formMap.toString());
+                      }
+                      // Afficher la map dans les logs
+                      log(widget.formMap.toString());
+                    });
+                  },
+                  items: widget.dataFieldGroup.listfieldsview
+                      .map<DropdownMenuItem<String>>((item) {
+                    return DropdownMenuItem<String>(
+                      value: item.id.toString(),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          item.label,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  validator: widget.dataFieldGroup.required == true
+                      ? (value) {
+                          if (value == null) {
+                            return 'Veuillez sélectionner une option';
+                          }
+                          return null;
+                        }
+                      : null,
+                ),
+                if (_selectedItem != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedValue = null; // Désélection de l'item
+                            _selectedItem = null;
+                            final fieldId = widget.dataFieldGroup.id.toString();
+                            widget.formMap.remove("field[$fieldId]");
+                          });
+                        },
+                        child: Text(
+                          'Deselect',
+                          style: TextStyle(
+                            color: Colors.red, // Couleur du texte
+                            fontSize: 16, // Taille de police
+                            fontWeight: FontWeight.bold, // Gras
+                            // Autres styles que vous souhaitez appliquer
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
             ),
           );
         }

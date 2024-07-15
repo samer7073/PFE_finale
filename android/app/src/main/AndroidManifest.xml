@@ -5,9 +5,9 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
-        android:label="flutter_application_stage_project"
+        android:label="Sphere Comunik"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

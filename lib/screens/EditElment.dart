@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:developer';
 
@@ -89,7 +89,47 @@ class _EditElmentState extends State<EditElment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Edit a ${widget.title}")),
+      appBar: AppBar(
+        title: Text("Edit a ${widget.title}"),
+        leading: IconButton(
+            onPressed: () {
+              if (widget.family_id == "6") {
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (BuildContext context) => HomeNavigate(
+                      id_page: 2,
+                    ),
+                  ),
+                  (route) =>
+                      false, //if you want to disable back feature set to false
+                );
+              } else if (widget.family_id == "7") {
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (BuildContext context) => HomeNavigate(
+                      id_page: 4,
+                    ),
+                  ),
+                  (route) =>
+                      false, //if you want to disable back feature set to false
+                );
+              } else if (widget.family_id == "3") {
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (BuildContext context) => HomeNavigate(
+                      id_page: 3,
+                    ),
+                  ),
+                  (route) =>
+                      false, //if you want to disable back feature set to false
+                );
+              }
+            },
+            icon: Icon(Icons.arrow_back)),
+      ),
       body: loading
           ? Container(
               child: Center(
@@ -172,53 +212,49 @@ class _EditElmentState extends State<EditElment> {
                             });
 
                             if (postUpdate == 200) {
+                              await Future.delayed(Duration(seconds: 0));
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   backgroundColor: Colors.green,
                                   action: SnackBarAction(
-                                      label: "Ok",
-                                      onPressed: () {
-                                        if (widget.family_id == "6") {
-                                          Navigator.pushAndRemoveUntil<dynamic>(
-                                            context,
-                                            MaterialPageRoute<dynamic>(
-                                              builder: (BuildContext context) =>
-                                                  HomeNavigate(
-                                                id_page: 2,
-                                              ),
-                                            ),
-                                            (route) =>
-                                                false, //if you want to disable back feature set to false
-                                          );
-                                        } else if (widget.family_id == "7") {
-                                          Navigator.pushAndRemoveUntil<dynamic>(
-                                            context,
-                                            MaterialPageRoute<dynamic>(
-                                              builder: (BuildContext context) =>
-                                                  HomeNavigate(
-                                                id_page: 4,
-                                              ),
-                                            ),
-                                            (route) =>
-                                                false, //if you want to disable back feature set to false
-                                          );
-                                        } else if (widget.family_id == "3") {
-                                          Navigator.pushAndRemoveUntil<dynamic>(
-                                            context,
-                                            MaterialPageRoute<dynamic>(
-                                              builder: (BuildContext context) =>
-                                                  HomeNavigate(
-                                                id_page: 3,
-                                              ),
-                                            ),
-                                            (route) =>
-                                                false, //if you want to disable back feature set to false
-                                          );
-                                        }
-                                      }),
+                                      label: "Ok", onPressed: () {}),
                                   content: Text('Form submitted successfully!'),
                                 ),
                               );
+                              if (widget.family_id == "6") {
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (BuildContext context) =>
+                                        HomeNavigate(
+                                      id_page: 2,
+                                    ),
+                                  ),
+                                  (route) => false,
+                                );
+                              } else if (widget.family_id == "7") {
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (BuildContext context) =>
+                                        HomeNavigate(
+                                      id_page: 4,
+                                    ),
+                                  ),
+                                  (route) => false,
+                                );
+                              } else if (widget.family_id == "3") {
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (BuildContext context) =>
+                                        HomeNavigate(
+                                      id_page: 3,
+                                    ),
+                                  ),
+                                  (route) => false,
+                                );
+                              }
                             } else if (postUpdate == 500) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

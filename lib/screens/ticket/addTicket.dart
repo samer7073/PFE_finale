@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
 import 'package:flutter/material.dart';
@@ -194,6 +194,7 @@ class _AddElementState extends State<AddElement> {
                           setState(() {
                             loading = true;
                           });
+
                           try {
                             final fielPostResponse =
                                 await ApiFieldPost.fieldPost(
@@ -202,59 +203,58 @@ class _AddElementState extends State<AddElement> {
                             setState(() {
                               loading = false;
                             });
+                            // Add delay to show SnackBar
+
                             if (fielPostResponse == 200) {
+                              await Future.delayed(Duration(seconds: 0));
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   backgroundColor: Colors.green,
                                   action: SnackBarAction(
+                                      textColor: Colors.white,
                                       label: "Ok",
-                                      onPressed: () {
-                                        log(widget.family_id);
-                                        if (widget.family_id == "6") {
-                                          Navigator.pushAndRemoveUntil<dynamic>(
-                                            context,
-                                            MaterialPageRoute<dynamic>(
-                                              builder: (BuildContext context) =>
-                                                  HomeNavigate(
-                                                id_page: 2,
-                                              ),
-                                            ),
-                                            (route) =>
-                                                false, //if you want to disable back feature set to false
-                                          );
-                                        } else if (widget.family_id == "7") {
-                                          Navigator.pushAndRemoveUntil<dynamic>(
-                                            context,
-                                            MaterialPageRoute<dynamic>(
-                                              builder: (BuildContext context) =>
-                                                  HomeNavigate(
-                                                id_page: 4,
-                                              ),
-                                            ),
-                                            (route) =>
-                                                false, //if you want to disable back feature set to false
-                                          );
-                                        } else if (widget.family_id == "3") {
-                                          Navigator.pushAndRemoveUntil<dynamic>(
-                                            context,
-                                            MaterialPageRoute<dynamic>(
-                                              builder: (BuildContext context) =>
-                                                  HomeNavigate(
-                                                id_page: 3,
-                                              ),
-                                            ),
-                                            (route) =>
-                                                false, //if you want to disable back feature set to false
-                                          );
-                                        }
-                                      }),
+                                      onPressed: () {}),
                                   content: Text('Form submitted successfully!'),
                                 ),
                               );
+                              if (widget.family_id == "6") {
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (BuildContext context) =>
+                                        HomeNavigate(
+                                      id_page: 2,
+                                    ),
+                                  ),
+                                  (route) => false,
+                                );
+                              } else if (widget.family_id == "7") {
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (BuildContext context) =>
+                                        HomeNavigate(
+                                      id_page: 4,
+                                    ),
+                                  ),
+                                  (route) => false,
+                                );
+                              } else if (widget.family_id == "3") {
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (BuildContext context) =>
+                                        HomeNavigate(
+                                      id_page: 3,
+                                    ),
+                                  ),
+                                  (route) => false,
+                                );
+                              }
                             } else if (fielPostResponse == 500) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  backgroundColor: Colors.green,
+                                  backgroundColor: Colors.red,
                                   action: SnackBarAction(
                                       textColor: Colors.white,
                                       label: "Ok",
