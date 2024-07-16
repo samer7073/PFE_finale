@@ -15,6 +15,22 @@ class CustomSearchDelegate extends SearchDelegate {
   CustomSearchDelegate(this.idFamily);
 
   @override
+  String? get searchFieldLabel => _getSearchLabel();
+
+  String _getSearchLabel() {
+    switch (idFamily) {
+      case '6':
+        return 'Search ticket';
+      case '3':
+        return 'Search deal';
+      case '7':
+        return 'Search project';
+      default:
+        return 'Search';
+    }
+  }
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(

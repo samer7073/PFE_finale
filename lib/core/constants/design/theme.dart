@@ -28,8 +28,8 @@ class MyThemes {
       inputDecorationTheme: InputDecorationTheme(
           outlineBorder: BorderSide.none,
           border: InputBorder.none,
-          iconColor: Colors.purple,
-          suffixIconColor: Colors.purple),
+          iconColor: const Color.fromARGB(255, 78, 39, 176),
+          suffixIconColor: const Color.fromARGB(255, 62, 39, 176)),
     ),
     textTheme: TextTheme(
       headline1: TextStyle(
@@ -65,8 +65,8 @@ class MyThemes {
 
     //useMaterial3: true,
     drawerTheme: const DrawerThemeData(
-      shadowColor: Colors.deepPurple,
-      backgroundColor: Colors.purple,
+      shadowColor: Color.fromARGB(255, 58, 77, 183),
+      backgroundColor: Color.fromARGB(255, 39, 53, 176),
     ),
   );
 

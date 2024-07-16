@@ -324,6 +324,24 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
   }
 
   String? _selectedItem;
+  Widget customDatePickerBuilder(BuildContext context, Widget? child) {
+    return Theme(
+      data: ThemeData.light().copyWith(
+        primaryColor: Colors.blue, // Couleur de fond de l'en-tête
+
+        colorScheme: ColorScheme.light(
+          primary: Colors.blue, // Couleur de fond de l'en-tête
+          onPrimary: Colors.white, // Couleur du texte de l'en-tête
+          surface: Colors.pink, // Couleur de fond du calendrier
+          onSurface: Colors.black, // Couleur du texte
+        ),
+        dialogBackgroundColor:
+            Colors.white, // Couleur de fond de la boîte de dialogue
+      ),
+      child: child!,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     switch (widget.dataFieldGroup.field_type) {
@@ -534,6 +552,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               prefixIcon: IconButton(
                   onPressed: () async {
                     var timeSelected = await showDateRangePicker(
+                        builder: customDatePickerBuilder,
                         context: context,
                         firstDate: DateTime.now(),
                         lastDate: DateTime(3000));
@@ -609,9 +628,9 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               prefixIcon: IconButton(
                   onPressed: () async {
                     TimeOfDay? timeOfDay = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay(hour: 00, minute: 00),
-                    );
+                        context: context,
+                        initialTime: TimeOfDay(hour: 00, minute: 00),
+                        builder: customDatePickerBuilder);
                     if (timeOfDay != null) {
                       // Vérifiez si l'heure sélectionnée n'est pas nulle
                       String formattedTime = _formatTimeOfDay(timeOfDay);
@@ -662,7 +681,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                   borderRadius: BorderRadius.circular(5.5)),
               labelText: widget.dataFieldGroup.alias,
               hintText: "Search",
-              suffix: IconButton(
+              suffixIcon: IconButton(
                 onPressed: () {
                   _textEditingController!
                       .clear(); // Efface la valeur du contrôleur
@@ -678,10 +697,22 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               prefixIcon: IconButton(
                   onPressed: () async {
                     DateTime? dateTime = await showOmniDateTimePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(3000));
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(3000),
+                      theme: ThemeData(
+                        primaryColor: Colors.blue,
+                        colorScheme: ColorScheme.light(
+                          primary: Colors.blue,
+                          onPrimary: Colors.white,
+                          surface: Colors.pink,
+                          onSurface: Colors.black,
+                        ),
+                        dialogBackgroundColor: Colors.white,
+                      ),
+                    );
+
                     if (dateTime != null) {
                       // Vérifiez si la date et l'heure sélectionnées ne sont pas nulles
 
@@ -698,6 +729,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     }
                   },
                   icon: Icon(
+                    color: Colors.blue,
                     Icons.date_range,
                     size: 20,
                   )),
@@ -715,7 +747,6 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
         return Padding(
           padding: const EdgeInsets.all(10.0),
           child: TextFormField(
-            //textAlign: TextAlign.end,
             validator: widget.dataFieldGroup.required == true
                 ? (value) {
                     if (value!.isEmpty) {
@@ -738,54 +769,60 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                   borderRadius: BorderRadius.circular(5.5)),
               labelText: widget.dataFieldGroup.alias,
               hintText: "Search",
-
-              suffix: IconButton(
-                onPressed: () {
-                  _textEditingController!
-                      .clear(); // Efface la valeur du contrôleur
-                  widget.formMap
-                      .remove("field[${widget.dataFieldGroup.id.toString()}]");
-                  log(widget.formMap.toString());
-                },
-                icon: Icon(Icons.cancel),
-              ),
+              suffixIcon: _textEditingController!.text.isNotEmpty
+                  ? IconButton(
+                      onPressed: () {
+                        _textEditingController!.clear();
+                        widget.formMap.remove(
+                            "field[${widget.dataFieldGroup.id.toString()}]");
+                        log(widget.formMap.toString());
+                      },
+                      icon: Icon(
+                        Icons.cancel,
+                        color: Colors.blue,
+                      ),
+                    )
+                  : null,
               prefixIcon: IconButton(
-                  color: Colors.blue,
-                  onPressed: () async {
-                    DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(3000),
-                    );
-                    if (picked != null) {
-                      // Vérifiez si la date sélectionnée n'est pas nulle
-                      String formattedDate =
-                          DateFormat('dd-MM-yyyy').format(picked);
-                      setState(() {
-                        _textEditingController?.text = formattedDate;
-                      });
+                color: Colors.blue,
+                onPressed: () async {
+                  DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(3000),
+                    builder: customDatePickerBuilder,
+                  );
+                  if (picked != null) {
+                    // Vérifiez si la date sélectionnée n'est pas nulle
+                    String formattedDate =
+                        DateFormat('dd-MM-yyyy').format(picked);
+                    setState(() {
+                      _textEditingController?.text = formattedDate;
+                    });
 
-                      print(formattedDate);
-                      widget.formMap[
-                              "field[${widget.dataFieldGroup.id.toString()}]"] =
-                          formattedDate;
-                      log(widget.formMap.toString());
-                    }
-                  },
-                  icon: Icon(Icons.date_range)),
+                    print(formattedDate);
+                    widget.formMap[
+                            "field[${widget.dataFieldGroup.id.toString()}]"] =
+                        formattedDate;
+                    log(widget.formMap.toString());
+                  }
+                },
+                icon: Icon(Icons.date_range),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10.0),
                 ),
               ),
               contentPadding: EdgeInsets.symmetric(
-                  vertical: 1.0,
-                  horizontal:
-                      1.0), // Ajustez cette ligne pour réduire la hauteur
+                vertical: 12.0,
+                horizontal: 12.0,
+              ), // Ajustez cette ligne pour réduire la hauteur
             ),
           ),
         );
+
       case "image":
         return Padding(
           padding: const EdgeInsets.all(10.0),

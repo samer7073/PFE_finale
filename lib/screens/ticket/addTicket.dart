@@ -159,7 +159,10 @@ class _AddElementState extends State<AddElement> {
                         return ExpansionPanel(
                           headerBuilder: (context, isExpanded) {
                             return ListTile(
-                              title: Text(item.label),
+                              title: Text(item.label,style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17
+                              ),),
                             );
                           },
                           body: dataGroupMap[item.id.toString()]?.isEmpty ??

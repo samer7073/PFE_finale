@@ -530,9 +530,28 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     return items;
   }
 
+  Widget customDatePickerBuilder(BuildContext context, Widget? child) {
+    return Theme(
+      data: ThemeData.light().copyWith(
+        primaryColor: Colors.blue, // Couleur de fond de l'en-tête
+
+        colorScheme: ColorScheme.light(
+          primary: Colors.blue, // Couleur de fond de l'en-tête
+          onPrimary: Colors.white, // Couleur du texte de l'en-tête
+          surface: Colors.white, // Couleur de fond du calendrier
+          onSurface: Colors.black, // Couleur du texte
+        ),
+        dialogBackgroundColor:
+            Colors.white, // Couleur de fond de la boîte de dialogue
+      ),
+      child: child!,
+    );
+  }
+
   void _handleStartDateSelection() async {
     if (isRange) {
       DateTimeRange? pickedDateRange = await showDateRangePicker(
+        builder: customDatePickerBuilder,
         context: context,
         firstDate: DateTime(2000),
         lastDate: DateTime(2101),
@@ -556,6 +575,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       }
     } else {
       DateTime? pickedDate = await showDatePicker(
+        builder: customDatePickerBuilder,
         context: context,
         initialDate: DateTime.now(),
         firstDate: DateTime(2000),

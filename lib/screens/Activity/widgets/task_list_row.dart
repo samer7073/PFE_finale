@@ -1,3 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
@@ -67,8 +71,7 @@ class _TaskListRowState extends State<TaskListRow> {
   Widget _buildAvatar(String? avatar, String ownerLabel) {
     if (avatar == null || avatar.length == 1) {
       // Show the initial of the owner's name if avatar is null or empty
-      String initial =
-          ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?';
+      String initial = avatar!.isNotEmpty ? avatar[0].toUpperCase() : '?';
       return CircleAvatar(
         backgroundColor: Colors.blue,
         radius: 15,
@@ -94,7 +97,7 @@ class _TaskListRowState extends State<TaskListRow> {
               backgroundColor: Colors.blue,
               radius: 15,
               child: Text(
-                ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?',
+                avatar.isNotEmpty ? avatar[0].toUpperCase() : '?',
                 style: const TextStyle(color: Colors.white),
               ),
             );
@@ -115,7 +118,7 @@ class _TaskListRowState extends State<TaskListRow> {
                     backgroundColor: Colors.blue,
                     radius: 15,
                     child: Text(
-                      ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?',
+                      avatar.isNotEmpty ? avatar[0].toUpperCase() : '?',
                       style: const TextStyle(color: Colors.white),
                     ),
                   );
@@ -132,6 +135,8 @@ class _TaskListRowState extends State<TaskListRow> {
   void initState() {
     super.initState();
     imageUrlFuture = Config.getApiUrl("urlImage");
+
+    log("12345678" + widget.ownerAvatar!);
   }
 
   late Future<String> imageUrlFuture;

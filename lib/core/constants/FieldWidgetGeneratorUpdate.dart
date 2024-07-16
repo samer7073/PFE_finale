@@ -81,8 +81,10 @@ class _FieldWidgetGeneratorUpdateState
     super.initState();
 
     // Pré-remplir la valeur sélectionnée pour le menu déroulant, si elle existe dans le formMap
+    /*
     _selectedValue =
         widget.formMap["field[${widget.dataFieldGroup.id.toString()}]"];
+        */
     // Utilisez un nouveau TextEditingController pour chaque champ de texte
     _textEditingController = TextEditingController();
     // Pré-remplissez le champ avec la valeur du formMap, si elle existe
@@ -545,12 +547,12 @@ class _FieldWidgetGeneratorUpdateState
     }
   }
 
-  Future<void> _launchInBrowser(String file_name) async {
+  Future<void> _launchInBrowser(String fileName) async {
     Uri uri = Uri(
       scheme: 'https',
       host: 'spherebackdev.cmk.biz',
       port: 4543,
-      path: '/storage/uploads/$file_name',
+      path: '/storage/uploads/$fileName',
     );
     if (!await launchUrl(
       uri,
@@ -558,6 +560,24 @@ class _FieldWidgetGeneratorUpdateState
     )) {
       throw Exception('Could not launch $uri');
     }
+  }
+
+  Widget customDatePickerBuilder(BuildContext context, Widget? child) {
+    return Theme(
+      data: ThemeData.light().copyWith(
+        primaryColor: Colors.blue, // Couleur de fond de l'en-tête
+
+        colorScheme: ColorScheme.light(
+          primary: Colors.blue, // Couleur de fond de l'en-tête
+          onPrimary: Colors.white, // Couleur du texte de l'en-tête
+          surface: Colors.pink, // Couleur de fond du calendrier
+          onSurface: Colors.black, // Couleur du texte
+        ),
+        dialogBackgroundColor:
+            Colors.white, // Couleur de fond de la boîte de dialogue
+      ),
+      child: child!,
+    );
   }
 
   TextEditingValue? initialValue;
@@ -760,7 +780,7 @@ class _FieldWidgetGeneratorUpdateState
                   borderRadius: BorderRadius.circular(5.5)),
               labelText: widget.dataFieldGroup.alias,
               hintText: "Search",
-              suffix: IconButton(
+              suffixIcon: IconButton(
                 onPressed: () {
                   _textEditingController!
                       .clear(); // Efface la valeur du contrôleur
@@ -778,6 +798,7 @@ class _FieldWidgetGeneratorUpdateState
               prefixIcon: IconButton(
                   onPressed: () async {
                     var timeSelected = await showDateRangePicker(
+                        builder: customDatePickerBuilder,
                         context: context,
                         firstDate: DateTime.now(),
                         lastDate: DateTime(3000));
@@ -809,8 +830,10 @@ class _FieldWidgetGeneratorUpdateState
                   Radius.circular(10.0),
                 ),
               ),
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 12.0,
+              ), // Ajustez cette ligne pour réduire la hauteur
             ),
           ),
         );
@@ -840,7 +863,7 @@ class _FieldWidgetGeneratorUpdateState
                   borderRadius: BorderRadius.circular(5.5)),
               labelText: widget.dataFieldGroup.alias,
               hintText: "Search",
-              suffix: IconButton(
+              suffixIcon: IconButton(
                 onPressed: () {
                   _textEditingController!
                       .clear(); // Efface la valeur du contrôleur
@@ -853,6 +876,7 @@ class _FieldWidgetGeneratorUpdateState
               prefixIcon: IconButton(
                   onPressed: () async {
                     TimeOfDay? timeOfDay = await showTimePicker(
+                      builder: customDatePickerBuilder,
                       context: context,
                       initialTime: TimeOfDay(hour: 00, minute: 00),
                     );
@@ -875,8 +899,10 @@ class _FieldWidgetGeneratorUpdateState
                   Radius.circular(10.0),
                 ),
               ),
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 12.0,
+              ), // Ajustez cette ligne pour réduire la hauteur
             ),
           ),
         );
@@ -906,7 +932,7 @@ class _FieldWidgetGeneratorUpdateState
                   borderRadius: BorderRadius.circular(5.5)),
               labelText: widget.dataFieldGroup.alias,
               hintText: "Search",
-              suffix: IconButton(
+              suffixIcon: IconButton(
                 onPressed: () {
                   _textEditingController!
                       .clear(); // Efface la valeur du contrôleur
@@ -919,6 +945,16 @@ class _FieldWidgetGeneratorUpdateState
               prefixIcon: IconButton(
                   onPressed: () async {
                     DateTime? dateTime = await showOmniDateTimePicker(
+                        theme: ThemeData(
+                          primaryColor: Colors.blue,
+                          colorScheme: ColorScheme.light(
+                            primary: Colors.blue,
+                            onPrimary: Colors.white,
+                            surface: Colors.pink,
+                            onSurface: Colors.black,
+                          ),
+                          dialogBackgroundColor: Colors.white,
+                        ),
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2000),
@@ -944,8 +980,10 @@ class _FieldWidgetGeneratorUpdateState
                   Radius.circular(10.0),
                 ),
               ),
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 12.0,
+              ), // Ajustez cette ligne pour réduire la hauteur
             ),
           ),
         );
@@ -975,7 +1013,8 @@ class _FieldWidgetGeneratorUpdateState
                   borderRadius: BorderRadius.circular(5.5)),
               labelText: widget.dataFieldGroup.alias,
               hintText: "Search",
-              suffix: IconButton(
+
+              suffixIcon: IconButton(
                 onPressed: () {
                   _textEditingController!
                       .clear(); // Efface la valeur du contrôleur
@@ -995,6 +1034,7 @@ class _FieldWidgetGeneratorUpdateState
                       initialDate: DateTime.now(),
                       firstDate: DateTime(2000),
                       lastDate: DateTime(3000),
+                      builder: customDatePickerBuilder,
                     );
                     if (picked != null) {
                       // Vérifiez si la date sélectionnée n'est pas nulle
@@ -1017,8 +1057,10 @@ class _FieldWidgetGeneratorUpdateState
                   Radius.circular(10.0),
                 ),
               ),
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 12.0,
+              ), // Ajustez cette ligne pour réduire la hauteur
             ),
           ),
         );

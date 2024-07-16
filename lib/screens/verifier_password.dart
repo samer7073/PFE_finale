@@ -151,6 +151,9 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                         setState(() {
                           otp = value;
                         });
+                        if (value.length == 6) {
+                          confirmUser(); // Appel de l'API lorsque tous les champs sont remplis
+                        }
                       },
                     ),
                     SizedBox(height: 30),

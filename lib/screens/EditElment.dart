@@ -160,7 +160,8 @@ class _EditElmentState extends State<EditElment> {
                             return ListTile(
                               title: Text(
                                 item.label,
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
                               ),
                               onTap: () {},
                             );
