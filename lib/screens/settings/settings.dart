@@ -546,51 +546,42 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   SizedBox(
                     height: 20,
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return NotificationsPage();
-                        },
-                      ));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.notifications_sharp,
-                              color: themeProvider.isDarkMode == false
-                                  ? Colors.black
-                                  : Colors.white,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context).notifications,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            )
-                          ],
-                        ),
-                        Consumer<NotificationProvider>(
-                          builder: (context, notifier, _) => CupertinoSwitch(
-                            activeColor: Colors.blue,
-                            value: notifier.notification,
-                            onChanged: (value) {
-                              if (value == true) {
-                                MercureNotificationService().initialize();
-                              } else {
-                                MercureNotificationService().dispose();
-                              }
-                              notifier.notification = value;
-                              log(value.toString());
-                            },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.notifications_sharp,
+                            color: themeProvider.isDarkMode == false
+                                ? Colors.black
+                                : Colors.white,
                           ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            AppLocalizations.of(context).notifications,
+                            style: Theme.of(context).textTheme.subtitle1,
+                          )
+                        ],
+                      ),
+                      Consumer<NotificationProvider>(
+                        builder: (context, notifier, _) => CupertinoSwitch(
+                          activeColor: Colors.blue,
+                          value: notifier.notification,
+                          onChanged: (value) {
+                            if (value == true) {
+                              MercureNotificationService().initialize();
+                            } else {
+                              MercureNotificationService().dispose();
+                            }
+                            notifier.notification = value;
+                            log(value.toString());
+                          },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 30,
@@ -642,45 +633,36 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   SizedBox(
                     height: 30,
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return Affichage();
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.nightlight_sharp,
+                            color: themeProvider.isDarkMode == false
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            AppLocalizations.of(context).display,
+                            style: Theme.of(context).textTheme.subtitle1,
+                          )
+                        ],
+                      ),
+                      CupertinoSwitch(
+                        activeColor: Colors.blue,
+                        value: themeProvider.isDarkMode,
+                        onChanged: (value) {
+                          setState(() {
+                            themeProvider.toggleTheme();
+                          });
                         },
-                      ));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.nightlight_sharp,
-                              color: themeProvider.isDarkMode == false
-                                  ? Colors.black
-                                  : Colors.white,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              AppLocalizations.of(context).display,
-                              style: Theme.of(context).textTheme.subtitle1,
-                            )
-                          ],
-                        ),
-                        CupertinoSwitch(
-                          activeColor: Colors.blue,
-                          value: themeProvider.isDarkMode,
-                          onChanged: (value) {
-                            setState(() {
-                              themeProvider.toggleTheme();
-                            });
-                          },
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 30,

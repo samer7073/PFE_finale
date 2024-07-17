@@ -10,6 +10,8 @@ class Config {
   static const String devUrl = "https://spherebackdev.cmk.biz";
 
   static const Map<String, String> apiProdUrls = {
+    "chatRomm":
+        "https://sphere-chat-back.comunikcrm.info:4543/index.php/api/get-discussion-room/",
     "kanban": "$prodUrl:4543/index.php/api/mobile/kanban-by-stage",
     "tasksKpi": "$prodUrl:4543/index.php/api/mobile/tasks/kpi",
     "login":
@@ -107,6 +109,8 @@ class Config {
   };
 
   static const Map<String, String> apiDevUrls = {
+    "chatRomm":
+        "https://spherechatbackdev.cmk.biz:4543/index.php/api/get-discussion-room/",
     "kanban": "$devUrl:4543/index.php/api/mobile/kanban-by-stage",
     "tasksKpi": "$devUrl:4543/index.php/api/mobile/tasks/kpi",
     "login":

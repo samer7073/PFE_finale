@@ -39,9 +39,13 @@ class _DetailPageState extends State<DetailPage> {
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
   }
 
-  void fetchData() {
+  late int pipelineID; // Ajout d'une variable pour stocker pipeline_label
+  void fetchData() async {
     futureApiResponse = ApiDetailElment.getDetail(widget.elementId);
-    futureStages = fetchStages(widget.pipeline_id);
+    // Attendre que futureApiResponse soit résolu pour extraire pipeline_label
+    final response = await futureApiResponse;
+    pipelineID = response.data['pipeline_id'];
+    futureStages = fetchStages(pipelineID);
     futurePipelineName = fetchPipelineName();
   }
 

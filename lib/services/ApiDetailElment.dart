@@ -16,6 +16,7 @@ class ApiDetailElment {
     final token = await SharedPrefernce.getToken("token");
     log("$token");
     final baseUrl = await Config.getApiUrl('getDetail');
+    
     final url =
         baseUrl + "/$idElment"; // Utilisation de Config pour obtenir l'URL
     log(url);

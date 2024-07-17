@@ -6,14 +6,14 @@ class Otp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle otpTextStyle = TextStyle(
+    TextStyle otpTextStyle = const TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.normal,
       color: Colors.black,
     );
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       child: SizedBox(
         height: 68,
         width: 35,

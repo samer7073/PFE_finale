@@ -23,6 +23,7 @@ class ApiTicketList {
     final baseUrl = await Config.getApiUrl('getElementsByFamily');
     final url =
         '$baseUrl/$idFamily?page=$page&pageSize=$pageSize&search=$query';
+    log(url);
 
     final response = await http.get(
       Uri.parse(url),

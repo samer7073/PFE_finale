@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import '../core/constants/shared/config.dart';
 import '../models/commanitaireRoom/ResponeRoom.dart';
 import '../services/sharedPreference.dart';
 
@@ -20,12 +21,14 @@ class RommCommanitairePage extends StatefulWidget {
 class _RommCommanitairePageState extends State<RommCommanitairePage> {
   late Future<RoomResponse?> futureApiResponse;
   String? storedUuid;
+  late Future<String> imageUrlFuture;
 
   Future<RoomResponse?> fetchApiResponse(String id_room) async {
     final token = await SharedPrefernce.getToken("token");
+    final baseUrl = await Config.getApiUrl('chatRomm');
+    final url = "$baseUrl$id_room";
     final response = await http.get(
-      Uri.parse(
-          'https://spherechatbackdev.cmk.biz:4543/index.php/api/get-discussion-room/$id_room'),
+      Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -47,6 +50,7 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
     super.initState();
     if (widget.roomId != "null") {
       futureApiResponse = fetchApiResponse(widget.roomId);
+      imageUrlFuture = Config.getApiUrl("urlImage");
       _loadString();
     }
   }
@@ -62,7 +66,7 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
   Widget build(BuildContext context) {
     return widget.roomId == "null"
         ? Container(
-            child: Center(
+            child: const Center(
               child: Text("No Comment Room Available"),
             ),
           )
@@ -71,12 +75,12 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
               future: futureApiResponse,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text('Failed to load data: ${snapshot.error}'));
                 } else if (snapshot.data == null) {
-                  return Center(
+                  return const Center(
                       child: Text("You do not have access to this room"));
                 } else if (snapshot.hasData) {
                   List<Message> messages = snapshot.data!.data;
@@ -85,106 +89,130 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
                   messages.sort((a, b) => DateTime.parse(a.createdAt.toString())
                       .compareTo(DateTime.parse(b.createdAt.toString())));
 
-                  return ListView.builder(
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final message = messages[index];
-                      bool isCurrentUser = message.sender.uuid == storedUuid;
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Align(
-                          alignment: isCurrentUser
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (!isCurrentUser)
-                                CircleAvatar(
-                                  backgroundImage: message
-                                              .sender.image.length ==
-                                          1
-                                      ? null
-                                      : NetworkImage(
-                                          "https://spherebackdev.cmk.biz:4543/storage/uploads/${message.sender.image}"),
-                                  backgroundColor:
-                                      message.sender.image.length == 1
-                                          ? Colors.blue
-                                          : null,
-                                  radius: 25,
-                                  child: message.sender.image.length == 1
-                                      ? Text(
-                                          message.sender.image,
-                                          style: TextStyle(color: Colors.white),
-                                        )
-                                      : null,
-                                ),
-                              if (!isCurrentUser) SizedBox(width: 10),
-                              Flexible(
-                                child: Column(
+                  return FutureBuilder<String>(
+                    future: imageUrlFuture,
+                    builder: (context, imageUrlSnapshot) {
+                      if (imageUrlSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (imageUrlSnapshot.hasError) {
+                        return Center(
+                            child: Text(
+                                'Failed to load image URL: ${imageUrlSnapshot.error}'));
+                      } else if (imageUrlSnapshot.hasData) {
+                        String baseUrl = imageUrlSnapshot.data ?? "";
+
+                        return ListView.builder(
+                          itemCount: messages.length,
+                          itemBuilder: (context, index) {
+                            final message = messages[index];
+                            bool isCurrentUser =
+                                message.sender.uuid == storedUuid;
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: isCurrentUser
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     if (!isCurrentUser)
-                                      Text(
-                                        message.sender.name,
-                                        style: TextStyle(
-                                            color: Color.fromARGB(255, 84, 84, 84),
-                                            fontSize: 12),
+                                      CircleAvatar(
+                                        backgroundImage: message
+                                                    .sender.image.length ==
+                                                1
+                                            ? null
+                                            : NetworkImage(
+                                                "$baseUrl${message.sender.image}"),
+                                        backgroundColor:
+                                            message.sender.image.length == 1
+                                                ? Colors.blue
+                                                : null,
+                                        child: message.sender.image.length == 1
+                                            ? Text(
+                                                message.sender.image,
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              )
+                                            : null,
+                                        radius: 25,
                                       ),
-                                    if (!isCurrentUser) SizedBox(height: 5),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 14, vertical: 10),
-                                      decoration: BoxDecoration(
-                                        color: isCurrentUser
-                                            ? Color.fromARGB(255, 4, 160, 116)
-                                            : Color.fromARGB(255, 71, 70, 70),
-                                        borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10),
-                                          bottomRight: isCurrentUser
-                                              ? Radius.circular(0)
-                                              : Radius.circular(10),
-                                          bottomLeft: isCurrentUser
-                                              ? Radius.circular(10)
-                                              : Radius.circular(0),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
+                                    if (!isCurrentUser)
+                                      const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (!isCurrentUser)
                                           Text(
-                                            message.message,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            DateFormat('dd/MM/yyyy HH:mm')
-                                                .format(DateTime.parse(message
-                                                    .createdAt
-                                                    .toString())),
+                                            message.sender.name,
                                             style: TextStyle(
-                                                color: Colors.white70,
-                                                fontSize: 10),
+                                                color: Colors.grey[700],
+                                                fontSize: 12),
                                           ),
-                                        ],
-                                      ),
+                                        if (!isCurrentUser)
+                                          const SizedBox(height: 10),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 14, vertical: 10),
+                                          decoration: BoxDecoration(
+                                            color: isCurrentUser
+                                                ? Colors.green
+                                                : Colors.grey[400],
+                                            borderRadius: BorderRadius.only(
+                                              topRight:
+                                                  const Radius.circular(10),
+                                              topLeft:
+                                                  const Radius.circular(10),
+                                              bottomRight: isCurrentUser
+                                                  ? const Radius.circular(0)
+                                                  : const Radius.circular(10),
+                                              bottomLeft: isCurrentUser
+                                                  ? const Radius.circular(10)
+                                                  : const Radius.circular(0),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                message.message,
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                DateFormat('dd/MM/yyyy HH:mm')
+                                                    .format(DateTime.parse(
+                                                        message.createdAt
+                                                            .toString())),
+                                                style: const TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    if (isCurrentUser)
+                                      const SizedBox(width: 10),
                                   ],
                                 ),
                               ),
-                              if (isCurrentUser) SizedBox(width: 10),
-                            ],
-                          ),
-                        ),
-                      );
+                            );
+                          },
+                        );
+                      } else {
+                        return const Center(child: Text("No data available"));
+                      }
                     },
                   );
                 } else {
-                  return Center(child: Text("No data available"));
+                  return const Center(child: Text("No data available"));
                 }
               },
             ),
