@@ -1619,7 +1619,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     hint: Container(
                       width: 200,
                       child: Padding(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: Text(
                           "Select " + widget.dataFieldGroup.alias,
                           overflow: TextOverflow.fade,
@@ -1643,7 +1643,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                           borderRadius: BorderRadius.circular(5.5)),
                       border: OutlineInputBorder(),
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+                          EdgeInsets.symmetric(vertical: 2.0, horizontal: 2),
                     ),
                     onChanged: (value) {
                       setState(() {

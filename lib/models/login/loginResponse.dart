@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:flutter_application_stage_project/models/login/token.dart';
 import 'package:flutter_application_stage_project/models/login/user.dart';

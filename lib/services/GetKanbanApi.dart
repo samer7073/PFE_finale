@@ -15,6 +15,7 @@ class GetKanbanApi {
 
     final baseUrl = await Config.getApiUrl("kanban");
     final url = "$baseUrl/$idPipeline";
+    log(url);
 
     final response = await http.get(
       Uri.parse(url),

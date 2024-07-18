@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/KanbanModels/Element.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';

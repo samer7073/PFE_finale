@@ -24,6 +24,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../homeNavigate_page.dart';
+
 class CreateTaskScreen extends StatefulWidget {
   const CreateTaskScreen({super.key});
 
@@ -460,11 +462,20 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           const SnackBar(content: Text('Task created successfully!')),
         );
         if (!mounted) return;
+        /*
         await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    HomeScreen())); // Retourne la nouvelle tâche
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            */
+        // ignore: use_build_context_synchronously
+        await Navigator.pushAndRemoveUntil<dynamic>(
+          context,
+          MaterialPageRoute<dynamic>(
+            builder: (BuildContext context) => HomeNavigate(
+              id_page: 1,
+            ),
+          ),
+          (route) => false,
+        ); // Retourne la nouvelle tâche
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to create task: $e')),
