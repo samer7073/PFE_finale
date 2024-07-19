@@ -64,7 +64,9 @@ class _DealPageState extends State<DealPage> {
         actions: [
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: CustomSearchDelegate("3"));
+              showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(idFamily: "3"));
             },
             icon: Icon(
               Icons.search,

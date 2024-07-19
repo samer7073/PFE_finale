@@ -60,7 +60,7 @@ class _ProjectPageState extends State<ProjectPage> {
         actions: [
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: CustomSearchDelegate("7"));
+              showSearch(context: context, delegate: CustomSearchDelegate(idFamily: "7"));
             },
             icon: Icon(
               Icons.search,

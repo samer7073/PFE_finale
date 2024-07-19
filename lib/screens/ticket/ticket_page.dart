@@ -90,7 +90,9 @@ class _TicketState extends State<TicketPage> {
         actions: [
           IconButton(
             onPressed: () {
-              showSearch(context: context, delegate: CustomSearchDelegate("6"));
+              showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(idFamily: "6"));
             },
             icon: Icon(
               Icons.search,

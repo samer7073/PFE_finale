@@ -17,13 +17,11 @@ class ApiTicketList {
     List<TicketData> results = [];
     log("ticket api");
     final token = await SharedPrefernce.getToken("token");
-    log("$token");
 
     // Utilisation de Config pour obtenir l'URL
     final baseUrl = await Config.getApiUrl('getElementsByFamily');
-    final url =
-        '$baseUrl/$idFamily?page=$page&pageSize=$pageSize&search=$query';
-    log(url);
+    final url = '$baseUrl/$idFamily?page=$page&limit=$pageSize&search=$query';
+    log("4444444444444444444444444444" + url);
 
     final response = await http.get(
       Uri.parse(url),
