@@ -69,9 +69,10 @@ class _TaskListRowState extends State<TaskListRow> {
   }
 
   Widget _buildAvatar(String? avatar, String ownerLabel) {
-    if (avatar == null || avatar.length == 1) {
+    String initial = ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?';
+
+    if (avatar!.isEmpty || avatar.length == 1) {
       // Show the initial of the owner's name if avatar is null or empty
-      String initial = avatar!.isNotEmpty ? avatar[0].toUpperCase() : '?';
       return CircleAvatar(
         backgroundColor: Colors.blue,
         radius: 15,
@@ -97,7 +98,7 @@ class _TaskListRowState extends State<TaskListRow> {
               backgroundColor: Colors.blue,
               radius: 15,
               child: Text(
-                avatar.isNotEmpty ? avatar[0].toUpperCase() : '?',
+                initial,
                 style: const TextStyle(color: Colors.white),
               ),
             );
@@ -118,7 +119,7 @@ class _TaskListRowState extends State<TaskListRow> {
                     backgroundColor: Colors.blue,
                     radius: 15,
                     child: Text(
-                      avatar.isNotEmpty ? avatar[0].toUpperCase() : '?',
+                      initial,
                       style: const TextStyle(color: Colors.white),
                     ),
                   );
@@ -178,10 +179,13 @@ class _TaskListRowState extends State<TaskListRow> {
                     children: [
                       Icon(widget.taskIcon, color: Colors.teal.shade700),
                       const SizedBox(width: 10),
-                      Text(
-                        widget.taskLabel,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        overflow: TextOverflow.ellipsis,
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Text(
+                          widget.taskLabel,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

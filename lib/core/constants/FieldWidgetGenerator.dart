@@ -72,13 +72,17 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
       (index) => false,
     );
     // Pré-remplir la valeur sélectionnée pour le menu déroulant, si elle existe dans le formMap
+
+/*
     _selectedValue =
-        widget.formMap["field[${widget.dataFieldGroup.id.toString()}]"];
+        widget.formMap["field[${widget.dataFieldGroup.id.toString()}]"];*/
     // Utilisez un nouveau TextEditingController pour chaque champ de texte
     _textEditingController = TextEditingController();
     // Pré-remplissez le champ avec la valeur du formMap, si elle existe
+    /*
     _textEditingController!.text =
         widget.formMap["field[${widget.dataFieldGroup.id.toString()}]"] ?? '';
+        */
     if (widget.dataFieldGroup.field_type == "select") {
       fetchDropdownOptions(widget.dataFieldGroup.module);
     } else if (widget.dataFieldGroup.field_type == "country") {

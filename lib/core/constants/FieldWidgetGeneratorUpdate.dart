@@ -7,6 +7,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -76,9 +77,12 @@ class _FieldWidgetGeneratorUpdateState
   List<dynamic> _initialSelectedValues = [];
   String? image;
   double? rate;
+  late Future<String> imageUrlFuture;
+
   @override
   void initState() {
     super.initState();
+    imageUrlFuture = Config.getApiUrl("urlImage");
 
     // Pré-remplir la valeur sélectionnée pour le menu déroulant, si elle existe dans le formMap
     /*
@@ -88,8 +92,8 @@ class _FieldWidgetGeneratorUpdateState
     // Utilisez un nouveau TextEditingController pour chaque champ de texte
     _textEditingController = TextEditingController();
     // Pré-remplissez le champ avec la valeur du formMap, si elle existe
-    _textEditingController!.text =
-        widget.formMap["field[${widget.dataFieldGroup.id.toString()}]"] ?? '';
+    /*_textEditingController!.text =
+        widget.formMap["field[${widget.dataFieldGroup.id.toString()}]"] ?? '';*/
     if (widget.dataFieldGroup.field_type == "select") {
       fetchDropdownOptions(widget.dataFieldGroup.module);
       if (widget.dataFieldGroup.value.isNotEmpty) {
@@ -1103,9 +1107,30 @@ class _FieldWidgetGeneratorUpdateState
                             icon: Icon(Icons.delete_outline),
                             tooltip: 'Supprimer',
                           ),
-                          leading: Image.network(
-                            "https://spherebackdev.cmk.biz:4543/storage/uploads/$image",
-                            width: 50,
+                          leading: FutureBuilder<String>(
+                            future: imageUrlFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircleAvatar(
+                                  backgroundColor: Colors.grey,
+                                  radius: 15,
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+
+                              String baseUrl = snapshot.data ?? "";
+                              return CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                radius: 15,
+                                child: Image.network(
+                                  "$baseUrl$image",
+                                  fit: BoxFit.cover,
+                                  width: 30,
+                                  height: 30,
+                                ),
+                              );
+                            },
                           ),
                           title: Text(
                             image.toString(),
@@ -1186,9 +1211,30 @@ class _FieldWidgetGeneratorUpdateState
                               itemBuilder: (context, index) {
                                 final album = albumlist![index];
                                 return ListTile(
-                                  leading: Image.network(
-                                    "https://spherebackdev.cmk.biz:4543/storage/uploads/$album",
-                                    width: 50,
+                                  leading: FutureBuilder<String>(
+                                    future: imageUrlFuture,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CircleAvatar(
+                                          backgroundColor: Colors.grey,
+                                          radius: 15,
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+
+                                      String baseUrl = snapshot.data ?? "";
+                                      return CircleAvatar(
+                                        backgroundColor: Colors.transparent,
+                                        radius: 15,
+                                        child: Image.network(
+                                          "$baseUrl$album",
+                                          fit: BoxFit.cover,
+                                          width: 30,
+                                          height: 30,
+                                        ),
+                                      );
+                                    },
                                   ),
                                   trailing: IconButton(
                                     onPressed: () {

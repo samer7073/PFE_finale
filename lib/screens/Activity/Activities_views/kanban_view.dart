@@ -182,53 +182,63 @@ class _KanbanBoardState extends State<KanbanBoard> {
                       children: [
                         for (var stage in stages)
                           InkWell(
-                            splashColor: Colors.white,
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.white),
-                            onTap: () {
-                              setState(() {
-                                selectedStageId = stage.id;
-                                int pageIndex = stages.indexOf(stage);
-                                WidgetsBinding.instance
-                                    .addPostFrameCallback((_) {
-                                  if (_pageController.hasClients) {
-                                    _pageController.jumpToPage(pageIndex);
-                                  }
+                              splashColor: Colors.white,
+                              overlayColor:
+                                  MaterialStateProperty.all(Colors.white),
+                              onTap: () {
+                                setState(() {
+                                  selectedStageId = stage.id;
+                                  int pageIndex = stages.indexOf(stage);
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    if (_pageController.hasClients) {
+                                      _pageController.jumpToPage(pageIndex);
+                                    }
+                                  });
                                 });
-                              });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 10.0,
-                                horizontal: 15.0,
-                              ),
-                              margin: EdgeInsets.symmetric(horizontal: 5.0),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: selectedStageId == stage.id
-                                    ? Color.fromARGB(255, 82, 104, 250)
-                                    : Color.fromARGB(255, 242, 242, 242),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  stage.label,
-                                  style: TextStyle(
+                              },
+                              child: Container(
+                                height: 42,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 12.0,
+                                  horizontal: 15.0,
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: selectedStageId == stage.id
+                                      ? Color.fromARGB(255, 34, 63, 249)
+                                      : Colors.white,
+                                  border: Border.all(
                                     color: selectedStageId == stage.id
-                                        ? Colors.white
-                                        : isDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
+                                        ? Color.fromARGB(255, 34, 63, 249)
+                                        : Color.fromARGB(255, 200, 200,
+                                            200), // Couleur de la bordure non sélectionnée
+                                    width: 0.50,
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
+                                child: Center(
+                                  child: Text(
+                                    stage.label,
+                                    style: TextStyle(
+                                      color: selectedStageId == stage.id
+                                          ? Colors.white
+                                          : isDarkMode
+                                              ? Colors.white
+                                              : Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              )),
                       ],
                     ),
                   ),
                 ),
               ),
+            SizedBox(
+              height: 10,
+            ),
             isLoading
                 ? const CircularProgressIndicator()
                 : Expanded(

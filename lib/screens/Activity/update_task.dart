@@ -21,6 +21,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/constants/shared/config.dart';
 import '../../services/Activities/api_save_files.dart';
 
 class UpdateTaskScreen extends StatefulWidget {
@@ -103,9 +104,12 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     fetchStagesFromApi();
     fetchGuestsFromApi();
     fetchModulesFromApi();
+    imageUrlFuture = Config.getApiUrl("urlImage");
 
     fetchTaskDetails(widget.taskId);
   }
+
+  late Future<String> imageUrlFuture;
 
   void _validateForm() {
     final bool isTaskTypeValid = selectedTaskTypeId != null;
@@ -707,11 +711,15 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     });
   }
 
+  Future<String> _getImageUrl() async {
+    return await Config.getApiUrl("urlImage");
+  }
+
   Widget _buildAvatar(String? avatar, String ownerLabel) {
-    if (avatar == null || avatar.length == 1) {
+    String initial = ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?';
+
+    if (avatar!.isEmpty == 1 || avatar.length == 1) {
       // Show the initial of the owner's name if avatar is null or empty
-      String initial =
-          ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?';
       return CircleAvatar(
         backgroundColor: Colors.blue,
         radius: 15,
@@ -721,27 +729,52 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
         ),
       );
     } else {
-      return CircleAvatar(
-        backgroundColor: Colors.transparent,
-        radius: 20,
-        child: ClipOval(
-          child: Image.network(
-            "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatar",
-            fit: BoxFit.cover,
-            width: 30,
-            height: 30,
-            errorBuilder: (context, error, stackTrace) {
-              return CircleAvatar(
-                backgroundColor: Colors.blue,
-                radius: 20,
-                child: Text(
-                  ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              );
-            },
-          ),
-        ),
+      return FutureBuilder<String>(
+        future: imageUrlFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircleAvatar(
+              backgroundColor: Colors.grey,
+              radius: 15,
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return CircleAvatar(
+              backgroundColor: Colors.blue,
+              radius: 15,
+              child: Text(
+                initial,
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          }
+
+          String baseUrl = snapshot.data ?? "";
+          return CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: 15,
+            child: ClipOval(
+              child: Image.network(
+                "$baseUrl$avatar",
+                fit: BoxFit.cover,
+                width: 30,
+                height: 30,
+                errorBuilder: (context, error, stackTrace) {
+                  return CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    radius: 15,
+                    child: Text(
+                      initial,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
       );
     }
   }
@@ -1497,7 +1530,6 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         controlAffinity: ListTileControlAffinity.leading,
                         activeColor: Colors.blueGrey,
                       ),
-                      
                     ],
                   ),
                 ),

@@ -7,7 +7,7 @@ import '../../core/constants/shared/config.dart';
 Future<bool> deleteTasks(String taskId) async {
   try {
     final token = await SharedPrefernce.getToken("token");
-    //const url = 'https://spherebackdev.cmk.biz:4543/api/mobile/tasks/delete';
+    
     final basurl = await Config.getApiUrl("deleteTasks");
     final url = Uri.parse(basurl);
     final response = await http.post(

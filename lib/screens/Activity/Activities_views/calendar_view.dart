@@ -9,7 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class TaskListRow extends StatelessWidget {
+import '../../../core/constants/shared/config.dart';
+
+class TaskListRow extends StatefulWidget {
   final int tasksTypeId;
   final String title;
   final String owner;
@@ -42,9 +44,18 @@ class TaskListRow extends StatelessWidget {
   });
 
   @override
+  State<TaskListRow> createState() => _TaskListRowState();
+}
+
+class _TaskListRowState extends State<TaskListRow> {
+  Future<String> getBaseUrl() async {
+    return await Config.getApiUrl("baseUrl");
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -57,17 +68,17 @@ class TaskListRow extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      Icon(_getIconData(tasksTypeId)),
+                      Icon(_getIconData(widget.tasksTypeId)),
                       const SizedBox(width: 5),
                       Expanded(
                         child: Text(
-                          title,
+                          widget.title,
                           style: Theme.of(context).textTheme.bodyText1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 5),
-                      _buildPriorityFlag(priority),
+                      _buildPriorityFlag(widget.priority),
                     ],
                   ),
                 ),
@@ -76,7 +87,7 @@ class TaskListRow extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'Start: $startDate $startTime',
+                        'Start: ${widget.startDate} ${widget.startTime}',
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.normal,
@@ -84,11 +95,12 @@ class TaskListRow extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        'End: $endDate $endTime',
+                        'End: ${widget.endDate} ${widget.endTime}',
                         style: TextStyle(
-                          color: isOverdue ? Colors.red : Colors.black,
-                          fontWeight:
-                              isOverdue ? FontWeight.bold : FontWeight.normal,
+                          color: widget.isOverdue ? Colors.red : Colors.black,
+                          fontWeight: widget.isOverdue
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -103,25 +115,42 @@ class TaskListRow extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    owner,
+                    widget.owner,
                     style: Theme.of(context).textTheme.bodyLarge,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                ownerImage.length == 1
+                widget.ownerImage.length == 1
                     ? CircleAvatar(
                         backgroundColor: Colors.blue,
                         child: Text(
-                          ownerImage,
+                          widget.ownerImage,
                           style: const TextStyle(color: Colors.white),
                         ),
                         radius: 15,
                       )
-                    : CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: NetworkImage(
-                            "https://spherebackdev.cmk.biz:4543/storage/uploads/$ownerImage"),
-                        radius: 15,
+                    : FutureBuilder<String>(
+                        future: getBaseUrl(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+
+                          if (snapshot.hasError) {
+                            return Text('Error loading image URL');
+                          }
+
+                          String baseUrl = snapshot.data ?? "";
+
+                          return CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            backgroundImage: NetworkImage(
+                              "$baseUrl/storage/uploads/${widget.ownerImage}",
+                            ),
+                            radius: 15,
+                          );
+                        },
                       ),
               ],
             ),
@@ -163,19 +192,19 @@ class TaskListRow extends StatelessWidget {
   IconData _getIconData(int tasksTypeId) {
     switch (tasksTypeId) {
       case 1:
-        return iconMap['CalendarOutlined'] ?? Icons.help_outline;
+        return widget.iconMap['CalendarOutlined'] ?? Icons.help_outline;
       case 2:
-        return iconMap['MailOutlined'] ?? Icons.help_outline;
+        return widget.iconMap['MailOutlined'] ?? Icons.help_outline;
       case 3:
-        return iconMap['VideoCameraOutlined'] ?? Icons.help_outline;
+        return widget.iconMap['VideoCameraOutlined'] ?? Icons.help_outline;
       case 4:
-        return iconMap['PhoneOutlined'] ?? Icons.help_outline;
+        return widget.iconMap['PhoneOutlined'] ?? Icons.help_outline;
       case 11:
-        return iconMap['WrenchScrewdriverIcon'] ?? Icons.help_outline;
+        return widget.iconMap['WrenchScrewdriverIcon'] ?? Icons.help_outline;
       case 12:
-        return iconMap['BankOutlined'] ?? Icons.help_outline;
+        return widget.iconMap['BankOutlined'] ?? Icons.help_outline;
       case 16:
-        return iconMap['AtSymbolIcon'] ?? Icons.help_outline;
+        return widget.iconMap['AtSymbolIcon'] ?? Icons.help_outline;
       default:
         return Icons.help_outline;
     }

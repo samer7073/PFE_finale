@@ -24,6 +24,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../core/constants/shared/config.dart';
 import '../homeNavigate_page.dart';
 
 class CreateTaskScreen extends StatefulWidget {
@@ -88,10 +89,13 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   bool sendEmailToExternalMembers = false;
   bool isRange = false;
   bool showRelatedModulesList = false;
+  late Future<String> imageUrlFuture;
 
   @override
   void initState() {
     super.initState();
+    imageUrlFuture = Config.getApiUrl("urlImage");
+
     _startTimeController.text = DateFormat('HH:mm').format(_startTime);
     _endTimeController.text = DateFormat('HH:mm').format(_endTime);
     _reminderDurationController.text = selectedReminderDuration;
@@ -681,15 +685,46 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   }
 
   Widget _buildAvatar(Map<String, dynamic> user) {
-    log(user.toString());
+    log("-------------------------------------------" + user.toString());
     String avatarUrl = user['avatar'] ?? '';
     String initials = user['label'].split(' ').map((name) => name[0]).join();
-    log("123" + avatarUrl);
 
     return avatarUrl.isNotEmpty
-        ? CircleAvatar(
-            backgroundImage: NetworkImage(
-                "https://spherebackdev.cmk.biz:4543/storage/uploads/$avatarUrl"),
+        ? FutureBuilder<String>(
+            future: imageUrlFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  radius: 15,
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              String baseUrl = snapshot.data ?? "";
+              return CircleAvatar(
+                backgroundColor: Colors.transparent,
+                radius: 15,
+                child: ClipOval(
+                  child: Image.network(
+                    "$baseUrl$avatarUrl",
+                    fit: BoxFit.cover,
+                    width: 30,
+                    height: 30,
+                    errorBuilder: (context, error, stackTrace) {
+                      return CircleAvatar(
+                        backgroundColor: Colors.blue,
+                        radius: 15,
+                        child: Text(
+                          initials,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
           )
         : CircleAvatar(
             backgroundColor: Colors.blueGrey,

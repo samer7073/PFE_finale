@@ -1,3 +1,5 @@
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors
+
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/Activity/comments_room.dart';
@@ -6,6 +8,8 @@ import 'package:flutter_application_stage_project/services/Activities/api_task_t
 import 'package:intl/intl.dart';
 
 import '../../core/constants/shared/config.dart';
+
+import 'package:html/parser.dart' as html_parser;
 
 class TaskDetailPage extends StatefulWidget {
   final String taskId;
@@ -120,6 +124,7 @@ class TaskDetailTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("data" + data.toString());
     DateTime startDate = DateFormat('dd-MM-yyyy').parse(data['start_date']);
     DateTime endDate = DateFormat('dd-MM-yyyy').parse(data['end_date']);
     String startTime = data['start_time'];
@@ -151,11 +156,15 @@ class TaskDetailTab extends StatelessWidget {
                   color: _getColorFromHex(taskType.color),
                 ),
                 const SizedBox(width: 16.0),
-                Text(
-                  data['label'],
-                  style: const TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: Text(
+                    data['label'],
+                    style: const TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.fade,
                   ),
                 ),
               ],
@@ -165,7 +174,8 @@ class TaskDetailTab extends StatelessWidget {
           if (data['owner_id'] != null) ...[
             Row(
               children: [
-                _buildAvatar(data['owner_id']['avatar']),
+                _buildAvatar(
+                    data['owner_id']['avatar'], data['owner_id']['label']),
                 const SizedBox(width: 16.0),
                 Text(data['owner_id']['label'] ?? 'N/A'),
               ],
@@ -213,10 +223,11 @@ class TaskDetailTab extends StatelessWidget {
           const SizedBox(height: 16.0),
           if (data['description'] != null &&
               data['description'].isNotEmpty) ...[
-            _buildDetailRow('Description', data['description'].toString()),
+            _buildDetailRow(
+                'Description', _removeHtmlTags(data['description'].toString())),
           ],
           if (data['note'] != null && data['note'].isNotEmpty) ...[
-            _buildDetailRow('Note', data['note'].toString()),
+            _buildDetailRow('Note', _removeHtmlTags(data['note'].toString())),
           ],
           if (data['pipeline_label'] != null) ...[
             _buildDetailRow('Pipeline', data['pipeline_label'].toString()),
@@ -281,11 +292,15 @@ class TaskDetailTab extends StatelessWidget {
     List<Widget> avatarWidgets = [];
     for (int i = 0; i < people.length && i < 3; i++) {
       final person = people[i];
-      if (person is Map && person.containsKey('avatar')) {
+      if (person is Map &&
+          person.containsKey('avatar') &&
+          person.containsKey('label')) {
+        final avatar = person['avatar'];
+        final label = person['label'];
         avatarWidgets.add(
           Positioned(
             left: i * 20.0,
-            child: _buildAvatar(person['avatar'] ?? ""),
+            child: _buildAvatar(avatar ?? "", label ?? ""),
           ),
         );
       }
@@ -308,23 +323,25 @@ class TaskDetailTab extends StatelessWidget {
     );
   }
 
-  Widget _buildAvatar(String avatar) {
-    return avatar.length == 1
-        ? CircleAvatar(
-            backgroundColor:
-                Colors.blue, // Choisissez une couleur de fond appropriée
-            child: Text(
-              avatar,
-              style: TextStyle(
-                  color: Colors
-                      .white), // Choisissez une couleur de texte appropriée
-            ),
-            radius: 15,
-          )
-        : CircleAvatar(
-            backgroundImage: NetworkImage("$imageUrl/$avatar"),
-            radius: 15,
-          );
+  Widget _buildAvatar(String avatar, String label) {
+    String initial = label.isNotEmpty ? label[0].toUpperCase() : '?';
+
+    if (avatar.isEmpty || avatar.length == 1) {
+      // Show the initial of the owner's name if avatar is null or empty
+      return CircleAvatar(
+        backgroundColor: Colors.blue,
+        radius: 15,
+        child: Text(
+          initial,
+          style: const TextStyle(color: Colors.white),
+        ),
+      );
+    } else {
+      return CircleAvatar(
+        backgroundImage: NetworkImage("$imageUrl/$avatar"),
+        radius: 15,
+      );
+    }
   }
 
   IconData _getIconData(String iconName) {
@@ -369,6 +386,11 @@ class TaskDetailTab extends StatelessWidget {
       default:
         return Colors.transparent;
     }
+  }
+
+  String _removeHtmlTags(String htmlString) {
+    final document = html_parser.parse(htmlString);
+    return document.body?.text ?? htmlString;
   }
 }
 

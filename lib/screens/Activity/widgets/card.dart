@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_application_stage_project/services/Activities/api_task_t
 import 'package:flutter_application_stage_project/services/Activities/api_update_priority.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_update_stage_task.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../core/constants/shared/config.dart';
 
@@ -43,30 +46,17 @@ class _TaskCard1State extends State<TaskCard1> {
     23: 100,
     21: 0,
   };
+  late Future<String> imageUrlFuture;
 
   @override
   void initState() {
     super.initState();
+    imageUrlFuture = Config.getApiUrl("urlImage");
+
     _task = widget.task;
     _fetchTaskTypeIcons();
     _preloadStages();
-    _loadImageUrl();
-  }
-
-  Future<void> _loadImageUrl() async {
-    try {
-      _imageUrl = await Config.getApiUrl("urlImage");
-      log(_imageUrl + "---------------------------------------------------");
-      if (mounted) {
-        setState(() {});
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load image URL: $e')),
-        );
-      }
-    }
+    log("999999999999999999999999999999999999" + _task.toString());
   }
 
   Future<void> _preloadStages() async {
@@ -142,7 +132,7 @@ class _TaskCard1State extends State<TaskCard1> {
   }
 
   Widget _buildAvatar(String? avatar, String label) {
-    if (avatar == null || avatar.isEmpty || avatar.length == 1) {
+    if (avatar!.isEmpty || avatar.length == 1) {
       String initial = avatar != null && avatar.length == 1
           ? avatar
           : (label.isNotEmpty ? label[0].toUpperCase() : '?');
@@ -155,28 +145,37 @@ class _TaskCard1State extends State<TaskCard1> {
         ),
       );
     } else {
-      return CircleAvatar(
-        radius: 15,
-        backgroundColor: Colors.transparent, // Ensure background is transparent
-        child: ClipOval(
-          child: Image.network(
-            "$_imageUrl/$avatar",
-            fit: BoxFit.cover,
-            width: 30,
-            height: 30,
-            errorBuilder: (context, error, stackTrace) {
-              return CircleAvatar(
-                radius: 15,
-                backgroundColor:
-                    Colors.blueGrey, // Set a background color if needed
-                child: Text(
-                  label.isNotEmpty ? label[0].toUpperCase() : '?',
-                  style: TextStyle(color: Colors.white),
+      return FutureBuilder<String>(
+        future: imageUrlFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircleAvatar(
+              backgroundColor: Colors.grey,
+              radius: 15,
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          String baseUrl = snapshot.data ?? "";
+          return CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: 15,
+            child: CachedNetworkImage(
+              imageUrl: "$baseUrl$avatar",
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              );
-            },
-          ),
-        ),
+              ),
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+          );
+        },
       );
     }
   }
@@ -390,17 +389,28 @@ class _TaskCard1State extends State<TaskCard1> {
     IconData taskIcon = taskTypeIcons[_task.tasksTypeId] ?? Icons.help_outline;
 
     return Card(
-      color: Color.fromARGB(255, 245, 244, 244),
-      margin: const EdgeInsets.all(10.0),
+      borderOnForeground: false,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
+        side: BorderSide(
+          color: const Color.fromARGB(255, 225, 222,
+              222), // Changez cette couleur pour la couleur souhaitée
+          width:
+              1.0, // Changez cette valeur pour ajuster l'épaisseur de la bordure
+        ),
       ),
+      color: Colors.white,
+      margin: const EdgeInsets.all(10.0),
       elevation: 5,
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              _task.familyLabel,
+              style: TextStyle(color: Colors.amber),
+            ),
             // Level 1
             Row(
               children: [
