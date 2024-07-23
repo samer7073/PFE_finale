@@ -1629,7 +1629,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ),
                       const SizedBox(height: 16.0),
                       Text(
-                        AppLocalizations.of(context).selectRelatedModule,
+                        "Deselect",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1693,7 +1693,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           child: TextButton(
                             onPressed: _clearRelatedModuleSelection,
                             child: Text(
-                              AppLocalizations.of(context).clear,
+                              "Deselect",
                               style: TextStyle(color: Colors.red),
                             ),
                           ),

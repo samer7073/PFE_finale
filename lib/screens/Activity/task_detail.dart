@@ -1,6 +1,7 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors
 
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/Activity/comments_room.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_task.dart';
@@ -189,21 +190,26 @@ class TaskDetailTab extends StatelessWidget {
               color: _getPriorityFlagColor(data['priority']),
             ),
           ],
-          if (data['start_date'] != null && data['start_time'] != null) ...[
-            _buildDetailRow(
-              'Start',
-              '${DateFormat('dd-MM-yyyy').format(startDate)} $startTime',
-            ),
-          ],
-          if (data['end_date'] != null && data['end_time'] != null) ...[
-            _buildDetailRow(
-              'End',
-              '${DateFormat('dd-MM-yyyy').format(endDate)} $endTime',
-              valueStyle: TextStyle(
-                color: isOverdue ? Colors.red : Colors.black,
-              ),
-            ),
-          ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (data['start_date'] != null && data['start_time'] != null) ...[
+                _buildDetailRow(
+                  'Start',
+                  '${DateFormat('dd-MM-yyyy').format(startDate)} $startTime',
+                ),
+              ],
+              if (data['end_date'] != null && data['end_time'] != null) ...[
+                _buildDetailRow(
+                  'End',
+                  '${DateFormat('dd-MM-yyyy').format(endDate)} $endTime',
+                  valueStyle: TextStyle(
+                    color: isOverdue ? Colors.red : Colors.black,
+                  ),
+                ),
+              ],
+            ],
+          ),
           const SizedBox(height: 16.0),
           if (data['family_label'] != null &&
               data['family_label'].isNotEmpty) ...[
@@ -215,10 +221,10 @@ class TaskDetailTab extends StatelessWidget {
           ],
           const SizedBox(height: 16.0),
           if (data['guests'] != null && data['guests'].isNotEmpty) ...[
-            _buildAvatarsSection('Guests', data['guests']),
+            _buildAvatarsSection('Guests', data['guests'], context),
           ],
           if (data['followers'] != null && data['followers'].isNotEmpty) ...[
-            _buildAvatarsSection('Followers', data['followers']),
+            _buildAvatarsSection('Followers', data['followers'], context),
           ],
           const SizedBox(height: 16.0),
           if (data['description'] != null &&
@@ -274,7 +280,11 @@ class TaskDetailTab extends StatelessWidget {
     );
   }
 
-  Widget _buildAvatarsSection(String label, List<dynamic> people) {
+  Widget _buildAvatarsSection(
+    String label,
+    List<dynamic> people,
+    BuildContext context,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -283,14 +293,16 @@ class TaskDetailTab extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8.0),
-        _buildAvatars(people),
+        _buildAvatars(
+          people,
+        ),
       ],
     );
   }
 
   Widget _buildAvatars(List<dynamic> people) {
     List<Widget> avatarWidgets = [];
-    for (int i = 0; i < people.length && i < 3; i++) {
+    for (int i = 0; i < people.length; i++) {
       final person = people[i];
       if (person is Map &&
           person.containsKey('avatar') &&
@@ -298,28 +310,24 @@ class TaskDetailTab extends StatelessWidget {
         final avatar = person['avatar'];
         final label = person['label'];
         avatarWidgets.add(
-          Positioned(
-            left: i * 20.0,
-            child: _buildAvatar(avatar ?? "", label ?? ""),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            child: Tooltip(
+              verticalOffset: 48,
+              height: 50,
+              textStyle: TextStyle(color: Colors.white),
+              message: label,
+              child: _buildAvatar(avatar ?? "", label ?? ""),
+            ),
           ),
         );
       }
     }
-    if (people.length > 3) {
-      avatarWidgets.add(
-        Positioned(
-          left: 3 * 20.0,
-          child: CircleAvatar(
-            radius: 15,
-            child: Text('+${people.length - 3}'),
-          ),
-        ),
-      );
-    }
-    return Container(
-      width: 80,
-      height: 40,
-      child: Stack(children: avatarWidgets),
+
+    return Wrap(
+      spacing: 10.0, // Espacement horizontal entre les avatars
+      runSpacing: 10.0, // Espacement vertical entre les lignes d'avatars
+      children: avatarWidgets,
     );
   }
 
