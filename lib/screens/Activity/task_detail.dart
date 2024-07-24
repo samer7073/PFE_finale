@@ -7,7 +7,7 @@ import 'package:flutter_application_stage_project/screens/Activity/comments_room
 import 'package:flutter_application_stage_project/services/Activities/api_get_task.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_task_type.dart';
 import 'package:intl/intl.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../core/constants/shared/config.dart';
 
 import 'package:html/parser.dart' as html_parser;
@@ -125,7 +125,6 @@ class TaskDetailTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("data" + data.toString());
     DateTime startDate = DateFormat('dd-MM-yyyy').parse(data['start_date']);
     DateTime endDate = DateFormat('dd-MM-yyyy').parse(data['end_date']);
     String startTime = data['start_time'];
@@ -143,6 +142,7 @@ class TaskDetailTab extends StatelessWidget {
           .map((file) => (file as Map<String, dynamic>)['fileName'] as String)
           .toList();
     }
+    log("123456789" + taskType.icon);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
@@ -325,8 +325,8 @@ class TaskDetailTab extends StatelessWidget {
     }
 
     return Wrap(
-      spacing: 10.0, // Espacement horizontal entre les avatars
-      runSpacing: 10.0, // Espacement vertical entre les lignes d'avatars
+      spacing: 0.0, // Espacement horizontal entre les avatars
+      runSpacing: 0.0, // Espacement vertical entre les lignes d'avatars
       children: avatarWidgets,
     );
   }
@@ -354,6 +354,57 @@ class TaskDetailTab extends StatelessWidget {
 
   IconData _getIconData(String iconName) {
     switch (iconName) {
+      case 'WhatsAppOutlined':
+        return FontAwesomeIcons.whatsapp;
+      case 'WarningOutlined':
+        return Icons.warning;
+      case 'VideoCameraOutlined':
+        return Icons.video_call;
+      case 'UserOutlined':
+        return Icons.person_outline;
+      case 'UploadOutlined':
+        return Icons.upload;
+      case 'SettingOutlined':
+        return Icons.settings;
+      case 'ReadOutlined':
+        return Icons.read_more_outlined;
+      case 'PhoneOutlined':
+        return Icons.phone;
+      case 'MobileOutlined':
+        return Icons.phone_android;
+      case 'MessageOutlined':
+        return Icons.message;
+      case 'MailOutlined':
+        return Icons.mail_outline;
+      case 'InstagramOutlined':
+        return FontAwesomeIcons.instagram;
+
+      case 'InboxOutlined':
+        return Icons.inbox_outlined;
+      case 'GlobalOutlined':
+        return Icons.abc;
+      case 'FolderOutlined':
+        return Icons.folder_open_outlined;
+      case 'FieldTimeOutlined':
+        return Icons.access_time;
+      case 'FacebookOutlined':
+        return Icons.facebook;
+      case 'EditOutlined':
+        return Icons.edit;
+      case 'CreditCardOutlined':
+        return Icons.credit_card;
+      case 'CommentOutlined':
+        return Icons.comment_outlined;
+      case 'CheckCircleOutlined':
+        return Icons.check_circle_outline;
+      case 'CarOutlined':
+        return Icons.directions_car_outlined;
+      case 'CameraOutlined':
+        return Icons.camera_alt_outlined;
+      case 'BellOutlined':
+        return Icons.notifications_none;
+      case 'BankOutlined':
+        return Icons.account_balance;
       case 'CalendarOutlined':
         return Icons.calendar_today;
       case 'MailOutlined':

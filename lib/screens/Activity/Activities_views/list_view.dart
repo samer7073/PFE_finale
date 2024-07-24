@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_application_stage_project/screens/Activity/update_task.d
 import 'package:flutter_application_stage_project/screens/Activity/widgets/task_list_row.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_delete_task.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_tasks.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({Key? key}) : super(key: key);
@@ -25,13 +25,35 @@ class _TaskListPageState extends State<TaskListPage> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   Map<String, IconData> iconMap = {
-    'CalendarOutlined': Icons.calendar_today,
-    'MailOutlined': Icons.mail_outline,
-    'VideoCameraOutlined': Icons.videocam,
-    'WrenchScrewdriverIcon': Icons.build,
-    'PhoneOutlined': Icons.phone,
     'BankOutlined': Icons.account_balance,
-    'AtSymbolIcon': Icons.alternate_email,
+    'BellOutlined': Icons.notifications_outlined,
+    'CalendarOutlined': Icons.calendar_today,
+    'CameraOutlined': Icons.camera_alt_outlined,
+    'CarOutlined': Icons.directions_car_outlined,
+    'CheckCircleOutlined': Icons.check_circle_outline,
+    'CommentOutlined': Icons.comment_outlined,
+    'CreditCardOutlined': Icons.credit_card_outlined,
+    'EditOutlined': Icons.edit_outlined,
+    'FacebookOutlined': FontAwesomeIcons.facebook,
+    'FieldTimeOutlined': Icons.access_time,
+    'FolderOutlined': Icons.folder_outlined,
+    'GlobalOutlined': Icons.language,
+    'InboxOutlined': Icons.inbox_outlined,
+    'InstagramOutlined': FontAwesomeIcons.instagram,
+    'MailOutlined': Icons.mail_outline,
+    'MessageOutlined': Icons.message_outlined,
+    'MobileOutlined': Icons.smartphone_outlined,
+    'PhoneOutlined': Icons.phone_outlined,
+    'ReadOutlined': Icons.book_outlined,
+    'SettingOutlined': Icons.settings_outlined,
+    'UploadOutlined': Icons.cloud_upload_outlined,
+    'UserOutlined': Icons.person_outline,
+    'VideoCameraOutlined': Icons.videocam_outlined,
+    'WarningOutlined': Icons.warning_outlined,
+    'WhatsAppOutlined': FontAwesomeIcons.whatsapp,
+    'WrenchScrewdriverIcon':
+        FontAwesomeIcons.screwdriverWrench, // Icône pour WrenchScrewdriver
+    'AtSymbolIcon': Icons.alternate_email_outlined
   };
   bool isLoading = false;
   int currentPage = 1;
@@ -216,25 +238,8 @@ class _TaskListPageState extends State<TaskListPage> {
     }
   }
 
-  IconData _getIconData(int tasksTypeId) {
-    switch (tasksTypeId) {
-      case 1:
-        return iconMap['CalendarOutlined'] ?? Icons.help_outline;
-      case 2:
-        return iconMap['MailOutlined'] ?? Icons.help_outline;
-      case 3:
-        return iconMap['VideoCameraOutlined'] ?? Icons.help_outline;
-      case 4:
-        return iconMap['PhoneOutlined'] ?? Icons.help_outline;
-      case 11:
-        return iconMap['WrenchScrewdriverIcon'] ?? Icons.help_outline;
-      case 12:
-        return iconMap['BankOutlined'] ?? Icons.help_outline;
-      case 16:
-        return iconMap['AtSymbolIcon'] ?? Icons.help_outline;
-      default:
-        return Icons.help_outline;
-    }
+  IconData _getIconData(String taskTypeIcon) {
+    return iconMap[taskTypeIcon] ?? Icons.help_outline;
   }
 
   Color _getPriorityColor(String priority) {
@@ -331,7 +336,7 @@ class _TaskListPageState extends State<TaskListPage> {
                         }
                         final task = filteredTasks[index];
                         return TaskListRow(
-                          taskIcon: _getIconData(task.tasksTypeId),
+                          taskIcon: _getIconData(task.task_type_icon),
                           taskId: task.id,
                           taskLabel: task.label,
                           ownerLabel: task.ownerLabel,

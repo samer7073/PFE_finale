@@ -1,20 +1,18 @@
 // ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
-
 import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
-
 import 'package:flutter_application_stage_project/screens/contactPage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
-
 import 'package:flutter_application_stage_project/screens/home_page.dart';
 import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/NotificationProvider.dart';
 import '../services/MercureNotificationService.dart';
 import 'Activity/home_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeNavigate extends StatefulWidget {
   final int id_page;
@@ -59,96 +57,53 @@ class _HomeNavigateState extends State<HomeNavigate> {
     ProjectPage(),
     ContactPage()
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _pageOptions[selectedPage],
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              // backgroundColor: Color.fromARGB(255, 246, 214, 252),
-              icon: Icon(
-                Icons.pie_chart_outline_rounded,
-                //color: selectedIndex == 0 ? Colors.purple : Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.pie_chart,
-                //color: Colors.purple,
-              ),
-              label: AppLocalizations.of(context).overview,
-
-              // TextStyle for unselected
-              // TextStyle(color: selectedIndex == 0 ? Colors.purple : Colors.black),
-            ),
-            BottomNavigationBarItem(
-              //backgroundColor: Color.fromARGB(255, 246, 214, 252),
-              icon: Icon(
-                Icons.calendar_today_outlined,
-                //color: selectedIndex == 1 ? Colors.purple : Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.calendar_today_rounded,
-                //color: Colors.purple,
-              ),
-              label: AppLocalizations.of(context).activities,
-            ),
-            BottomNavigationBarItem(
-              // backgroundColor: Color.fromARGB(255, 246, 214, 252),
-              icon: Icon(
-                Icons.airplane_ticket_outlined,
-                //color: selectedIndex == 2 ? Colors.purple : Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.airplane_ticket_rounded,
-                // color: Colors.purple,
-              ),
-              label: AppLocalizations.of(context).tickets,
-            ),
-            BottomNavigationBarItem(
-              //backgroundColor: Color.fromARGB(255, 246, 214, 252),
-              icon: Icon(
-                Icons.handshake_outlined,
-                // color: selectedIndex == 3 ? Colors.purple : Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.handshake_rounded,
-                // color: Colors.purple,
-              ),
-              label: AppLocalizations.of(context).deals,
-            ),
-            BottomNavigationBarItem(
-              //backgroundColor: Color.fromARGB(255, 246, 214, 252),
-              icon: Icon(
-                Icons.event_note_outlined,
-                // color: selectedIndex == 3 ? Colors.purple : Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.event_note_rounded,
-                // color: Colors.purple,
-              ),
-              label: AppLocalizations.of(context).projects,
-            ),
-            BottomNavigationBarItem(
-              //backgroundColor: Color.fromARGB(255, 246, 214, 252),
-              icon: Icon(
-                Icons.person_2_outlined,
-                // color: selectedIndex == 3 ? Colors.purple : Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.person_2_rounded,
-                // color: Colors.purple,
-              ),
-              label: AppLocalizations.of(context).contacts,
-            ),
-          ],
-
-          currentIndex: selectedPage,
-          //backgroundColor: Colors.white,
-          onTap: (index) {
-            setState(() {
-              selectedPage = index;
-            });
-          },
-        ));
+      body: _pageOptions[selectedPage],
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pie_chart_outline_rounded),
+            activeIcon: Icon(Icons.pie_chart),
+            label: AppLocalizations.of(context).overview,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today_outlined),
+            activeIcon: Icon(Icons.calendar_today_rounded),
+            label: AppLocalizations.of(context).activities,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons
+                .airplane_ticket_outlined), // Utiliser ticketSimple pour l'icône outline
+            activeIcon: Icon(Icons
+                .airplane_ticket_rounded), // Utiliser ticket pour l'icône filled
+            label: AppLocalizations.of(context).tickets,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.handshake_outlined),
+            activeIcon: Icon(Icons.handshake_rounded),
+            label: AppLocalizations.of(context).deals,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.event_note_outlined),
+            activeIcon: Icon(Icons.event_note_rounded),
+            label: AppLocalizations.of(context).projects,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_2_outlined),
+            activeIcon: Icon(Icons.person_2_rounded),
+            label: AppLocalizations.of(context).contacts,
+          ),
+        ],
+        currentIndex: selectedPage,
+        onTap: (index) {
+          setState(() {
+            selectedPage = index;
+          });
+        },
+      ),
+    );
   }
 }

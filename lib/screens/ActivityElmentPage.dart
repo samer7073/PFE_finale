@@ -1,10 +1,12 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors
 
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../models/ActivityElment.dart/ActivityEementModel.dart';
-
 import '../services/ApiActivityElement.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
 class ActivityElmentPage extends StatefulWidget {
   final String idElment;
@@ -19,28 +21,27 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
   List<ActivityElment> _activityElements = [];
   List<ActivityElment> _activityElementUpcoming = [];
   List<ActivityElment> _activityElementHistory = [];
-  late Map<int, bool>
-      _expandedState; // Pour gérer l'état d'expansion des panels
+  late Map<int, bool> _expandedState;
+  late Future<String> imageUrlFuture;
 
   @override
   void initState() {
     super.initState();
+    imageUrlFuture = Config.getApiUrl("urlImage");
     fetchActivityUpcoming("2", widget.idElment);
     fetchActivityHistory("0", widget.idElment);
-    fetchActivityElements("1",
-        widget.idElment); // Charger les données pour "Aujourd'hui" initialement
+    fetchActivityElements("1", widget.idElment);
     _expandedState = {
       0: true,
       1: true,
       2: true,
-    }; // Initialiser l'état d'expansion à true pour ouvrir tous les panneaux
+    };
   }
 
   void fetchActivityElements(String type, String idElement) async {
     try {
       List<ActivityElment>? response =
           await ApiActivityElement.fetchMeeting(idElement, type);
-
       if (response != null) {
         setState(() {
           _activityElements = response;
@@ -58,7 +59,6 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
     try {
       List<ActivityElment>? response =
           await ApiActivityElement.fetchMeeting(idElement, type);
-
       if (response != null) {
         setState(() {
           _activityElementUpcoming = response;
@@ -76,7 +76,6 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
     try {
       List<ActivityElment>? response =
           await ApiActivityElement.fetchMeeting(idElement, type);
-
       if (response != null) {
         setState(() {
           _activityElementHistory = response;
@@ -91,33 +90,28 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
   }
 
   CircleAvatar getTaskIcon(int tasksTypeId) {
-    Map<int, Icon> taskIcons = {
-      1: Icon(
-        Icons.meeting_room,
-        color: Colors.white,
-      ), // Icône pour le meeting
-      2: Icon(Icons.email, color: Colors.white), // Icône pour le mail
-      3: Icon(Icons.videocam, color: Colors.white), // Icône pour la visio
-      4: Icon(Icons.call,
-          color: Colors.white), // Icône pour l'intervention et service
-      11: Icon(Icons.call, color: Colors.white), // Icône pour le call
-      12: Icon(Icons.event, color: Colors.white), // Icône pour l'activité test
-      16: Icon(Icons.event, color: Colors.white),
-      // Icône pour l'activité test
+    Map<int, FaIcon> taskIcons = {
+      1: FaIcon(FontAwesomeIcons.meetup, color: Colors.white),
+      2: FaIcon(FontAwesomeIcons.envelope, color: Colors.white),
+      3: FaIcon(FontAwesomeIcons.video, color: Colors.white),
+      4: FaIcon(FontAwesomeIcons.phone, color: Colors.white),
+      11: FaIcon(FontAwesomeIcons.phone, color: Colors.white),
+      12: FaIcon(FontAwesomeIcons.calendar, color: Colors.white),
+      16: FaIcon(FontAwesomeIcons.calendarCheck, color: Colors.white),
     };
 
     Map<int, Color> taskColors = {
-      1: Colors.blue, // Couleur pour le meeting
-      2: Colors.red, // Couleur pour le mail
-      3: Colors.green, // Couleur pour la visio
-      4: Colors.orange, // Couleur pour l'intervention et service
-      11: Colors.purple, // Couleur pour le call
-      12: Colors.pink, // Couleur pour l'activité test
-      16: Colors.teal, // Couleur pour l'activité test
+      1: Colors.blue,
+      2: Colors.red,
+      3: Colors.green,
+      4: Colors.orange,
+      11: Colors.purple,
+      12: Colors.pink,
+      16: Colors.teal,
     };
 
-    Icon icon = taskIcons[tasksTypeId] ?? Icon(Icons.help);
-    Color color = taskColors[tasksTypeId] ?? Colors.grey; // Couleur par défaut
+    FaIcon icon = taskIcons[tasksTypeId] ?? FaIcon(FontAwesomeIcons.question);
+    Color color = taskColors[tasksTypeId] ?? Colors.grey;
 
     return CircleAvatar(
       backgroundColor: color,
@@ -128,108 +122,294 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          ExpansionPanelList(
-            expansionCallback: (panelIndex, isExpanded) {
-              setState(() {
-                _expandedState[panelIndex] = !isExpanded;
-              });
-            },
+      body: FutureBuilder<String>(
+        future: imageUrlFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Error loading image URL'));
+          }
+
+          String baseUrl = snapshot.data ?? "";
+
+          return ListView(
             children: [
-              ExpansionPanel(
-                headerBuilder: (context, isExpanded) {
-                  return ListTile(
-                    title: Text(
-                      AppLocalizations.of(context).today,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  );
+              ExpansionPanelList(
+                expansionCallback: (panelIndex, isExpanded) {
+                  setState(() {
+                    _expandedState[panelIndex] = !isExpanded;
+                  });
                 },
-                body: _activityElements.isEmpty
-                    ? Center(
-                        child: Text(
-                          AppLocalizations.of(context).no_activities_today,
+                children: [
+                  ExpansionPanel(
+                    headerBuilder: (context, isExpanded) {
+                      return ListTile(
+                        title: Text(
+                          AppLocalizations.of(context).today,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      )
-                    : Column(
-                        children: _activityElements.map((activityElement) {
-                          return ListTile(
-                            leading: getTaskIcon(activityElement.tasksTypeId),
-                            title: Text(' ${activityElement.label}'),
-                            subtitle: Text(
-                                'Start Time: ${activityElement.startTime}'),
-                            // Ajoutez ici le contenu supplémentaire du panneau
-                          );
-                        }).toList(),
-                      ),
-                isExpanded:
-                    _expandedState.containsKey(0) ? _expandedState[0]! : false,
-              ),
-              ExpansionPanel(
-                headerBuilder: (context, isExpanded) {
-                  return ListTile(
-                    title: Text(
-                      AppLocalizations.of(context).upcoming,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  );
-                },
-                body: _activityElementUpcoming.isEmpty
-                    ? Center(
-                        child: Text(
-                          AppLocalizations.of(context).no_upcoming_activities,
+                      );
+                    },
+                    body: _activityElements.isEmpty
+                        ? Center(
+                            child: Text(
+                              AppLocalizations.of(context).no_activities_today,
+                            ),
+                          )
+                        : Column(
+                            children: _activityElements.map((activityElement) {
+                              return ListTile(
+                                leading:
+                                    getTaskIcon(activityElement.tasksTypeId),
+                                title: Text(activityElement.label),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            'Start Date: ${activityElement.startDate}'),
+                                        Text(
+                                            'End Date: ${activityElement.endDate}')
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            'Start Time: ${activityElement.startTime}'),
+                                        Text(
+                                            'End Time: ${activityElement.endTime}'),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(activityElement.owner.label),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        activityElement.owner.avatar.length == 1
+                                            ? CircleAvatar(
+                                                backgroundColor: Colors
+                                                    .blue, // Choisissez une couleur de fond appropriée
+                                                child: Text(
+                                                  activityElement.owner.avatar,
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .white), // Choisissez une couleur de texte appropriée
+                                                ),
+                                                radius: 15,
+                                              )
+                                            : CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    "$baseUrl${activityElement.owner.avatar}"),
+                                                radius: 15,
+                                              ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                    isExpanded: _expandedState.containsKey(0)
+                        ? _expandedState[0]!
+                        : false,
+                  ),
+                  ExpansionPanel(
+                    headerBuilder: (context, isExpanded) {
+                      return ListTile(
+                        title: Text(
+                          AppLocalizations.of(context).upcoming,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      )
-                    : Column(
-                        children:
-                            _activityElementUpcoming.map((activityElement) {
-                          return ListTile(
-                            leading: getTaskIcon(activityElement.tasksTypeId),
-                            title: Text('Start Date: ${activityElement.label}'),
-                            subtitle: Text(
-                                'Start Time: ${activityElement.startTime}'),
-                            // Ajoutez ici le contenu supplémentaire du panneau
-                          );
-                        }).toList(),
-                      ),
-                isExpanded:
-                    _expandedState.containsKey(1) ? _expandedState[1]! : false,
-              ),
-              ExpansionPanel(
-                headerBuilder: (context, isExpanded) {
-                  return ListTile(
-                    title: Text(
-                      AppLocalizations.of(context).history,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  );
-                },
-                body: _activityElementHistory.isEmpty
-                    ? Center(
-                        child: Text(
-                          AppLocalizations.of(context).no_past_activities,
+                      );
+                    },
+                    body: _activityElementUpcoming.isEmpty
+                        ? Center(
+                            child: Text(
+                              AppLocalizations.of(context)
+                                  .no_upcoming_activities,
+                            ),
+                          )
+                        : Column(
+                            children:
+                                _activityElementUpcoming.map((activityElement) {
+                              return ListTile(
+                                leading:
+                                    getTaskIcon(activityElement.tasksTypeId),
+                                title: Text(activityElement.label),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            'Start Date: ${activityElement.startDate}'),
+                                        Text(
+                                            'End Date: ${activityElement.endDate}')
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            'Start Time: ${activityElement.startTime}'),
+                                        Text(
+                                            'End Time: ${activityElement.endTime}'),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(activityElement.owner.label),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        activityElement.owner.avatar.length == 1
+                                            ? CircleAvatar(
+                                                backgroundColor: Colors
+                                                    .blue, // Choisissez une couleur de fond appropriée
+                                                child: Text(
+                                                  activityElement.owner.avatar,
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .white), // Choisissez une couleur de texte appropriée
+                                                ),
+                                                radius: 15,
+                                              )
+                                            : CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    "$baseUrl${activityElement.owner.avatar}"),
+                                                radius: 15,
+                                              ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                    isExpanded: _expandedState.containsKey(1)
+                        ? _expandedState[1]!
+                        : false,
+                  ),
+                  ExpansionPanel(
+                    headerBuilder: (context, isExpanded) {
+                      return ListTile(
+                        title: Text(
+                          AppLocalizations.of(context).history,
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      )
-                    : Column(
-                        children:
-                            _activityElementHistory.map((activityElement) {
-                          return ListTile(
-                            leading: getTaskIcon(activityElement.tasksTypeId),
-                            title: Text(activityElement.label),
-                            subtitle: Text(
-                                'Start Date: ${activityElement.startDate}' +
-                                    'Start Time: ${activityElement.startTime}'),
-                            // Ajoutez ici le contenu supplémentaire du panneau
-                          );
-                        }).toList(),
-                      ),
-                isExpanded:
-                    _expandedState.containsKey(2) ? _expandedState[2]! : false,
+                      );
+                    },
+                    body: _activityElementHistory.isEmpty
+                        ? Center(
+                            child: Text(
+                              AppLocalizations.of(context).no_past_activities,
+                            ),
+                          )
+                        : Column(
+                            children:
+                                _activityElementHistory.map((activityElement) {
+                              return ListTile(
+                                leading:
+                                    getTaskIcon(activityElement.tasksTypeId),
+                                title: Text(activityElement.label),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            'Start Date: ${activityElement.startDate}'),
+                                        Text(
+                                            'End Date: ${activityElement.endDate}')
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            'Start Time: ${activityElement.startTime}'),
+                                        Text(
+                                            'End Time: ${activityElement.endTime}'),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(activityElement.owner.label),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        activityElement.owner.avatar.length == 1
+                                            ? CircleAvatar(
+                                                backgroundColor: Colors
+                                                    .blue, // Choisissez une couleur de fond appropriée
+                                                child: Text(
+                                                  activityElement.owner.avatar,
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .white), // Choisissez une couleur de texte appropriée
+                                                ),
+                                                radius: 15,
+                                              )
+                                            : CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    "$baseUrl${activityElement.owner.avatar}"),
+                                                radius: 15,
+                                              ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                    isExpanded: _expandedState.containsKey(2)
+                        ? _expandedState[2]!
+                        : false,
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }

@@ -11,7 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/ApiGetJWT.dart';
 import '../services/sharedPreference.dart';
-import 'loading.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -320,10 +319,12 @@ class _LoginPageState extends State<LoginPage> {
                     _saveString('jwt', jwtResponse.jwtMercure);
                     log("Uuid: ${jwtResponse.uuid}");
                     _saveString("uuid", jwtResponse.uuid);
+                    /*
 
                     setState(() {
                       loading = false;
                     });
+                    */
 
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/homeNavigate', (route) => false);

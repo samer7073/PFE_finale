@@ -95,7 +95,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                 .phoneNumberNotAvailable
                             : AppLocalizations.of(context).phoneNumber +
                                 ' $cleanedPhoneNumber',
-                       // overflow: TextOverflow.ellipsis,
+                        // overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),
@@ -118,7 +118,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                 },
                                 title: Text(deal.label ??
                                     AppLocalizations.of(context).noLabel),
-                                leading: Icon(Icons.business),
+                                leading: Icon(Icons.handshake_outlined),
                               ))
                           .toList(),
                     ),
@@ -142,7 +142,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                 },
                                 title: Text(project.label ??
                                     AppLocalizations.of(context).noLabel),
-                                leading: Icon(Icons.work),
+                                leading: Icon(Icons.event_note_rounded),
                               ))
                           .toList(),
                     ),
@@ -166,7 +166,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                 },
                                 title: Text(helpdesk.label ??
                                     AppLocalizations.of(context).noLabel),
-                                leading: Icon(Icons.help),
+                                leading: Icon(Icons.airplane_ticket_outlined),
                               ))
                           .toList(),
                     ),

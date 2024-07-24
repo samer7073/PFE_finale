@@ -136,8 +136,6 @@ class _TaskListRowState extends State<TaskListRow> {
   void initState() {
     super.initState();
     imageUrlFuture = Config.getApiUrl("urlImage");
-
-    log("12345678" + widget.ownerAvatar!);
   }
 
   late Future<String> imageUrlFuture;

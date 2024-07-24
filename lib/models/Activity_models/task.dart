@@ -34,6 +34,7 @@ class Task {
   String stageColor;
   int stagePercent;
   final List<Upload> uploads;
+  String task_type_icon;
 
   Task({
     required this.id,
@@ -71,6 +72,7 @@ class Task {
     this.stageColor = '#000000', // Valeur par défaut
     this.stagePercent = 0,
     required this.uploads, // Valeur par défaut
+    required this.task_type_icon,
   });
 
   factory Task.fromJson(Map<String, dynamic> json,
@@ -129,6 +131,7 @@ class Task {
               ?.map((upload) => Upload.fromJson(upload))
               .toList() ??
           [],
+      task_type_icon: json['task_type_icon'] ?? "",
     );
   }
 
