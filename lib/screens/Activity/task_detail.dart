@@ -190,6 +190,9 @@ class TaskDetailTab extends StatelessWidget {
               color: _getPriorityFlagColor(data['priority']),
             ),
           ],
+          if (data['stage_label'] != null) ...[
+            _buildDetailRow('Stage', data['stage_label'].toString()),
+          ],
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -237,9 +240,6 @@ class TaskDetailTab extends StatelessWidget {
           ],
           if (data['pipeline_label'] != null) ...[
             _buildDetailRow('Pipeline', data['pipeline_label'].toString()),
-          ],
-          if (data['stage_label'] != null) ...[
-            _buildDetailRow('Stage', data['stage_label'].toString()),
           ],
           const SizedBox(height: 16.0),
           if (fileNames.isNotEmpty) ...[
@@ -313,6 +313,7 @@ class TaskDetailTab extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5.0),
             child: Tooltip(
+              triggerMode: TooltipTriggerMode.tap,
               verticalOffset: 48,
               height: 50,
               textStyle: TextStyle(color: Colors.white),

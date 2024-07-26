@@ -407,6 +407,10 @@ class _TaskCard1State extends State<TaskCard1> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            LinearProgressIndicator(
+              value: 100 / 100,
+              color: Colors.blue,
+            ),
             Text(
               _task.familyLabel,
               style: TextStyle(color: Colors.amber),

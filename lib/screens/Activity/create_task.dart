@@ -224,6 +224,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         selectedOwner = selected;
         _validateForm();
       });
+      log("88888888888888888888888888888" + selectedOwner.toString());
     }
   }
 
@@ -463,7 +464,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       try {
         final newTask = await createTask(taskData);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Task created successfully!')),
+          const SnackBar(
+            content: Text('Task created successfully!'),
+            backgroundColor: Colors.green,
+          ),
         );
         if (!mounted) return;
         /*
@@ -482,7 +486,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         ); // Retourne la nouvelle tâche
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create task: $e')),
+          SnackBar(
+            content: Text('Failed to create task: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } else {

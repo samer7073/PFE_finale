@@ -12,10 +12,11 @@ class ApiActivityElement {
   static Future<List<ActivityElment>?> fetchMeeting(
       String idElement, String time) async {
     final token = await SharedPrefernce.getToken("token");
+
     final url = await Config.getApiUrl(
       'getTasks360',
     ); // Utilisation de Config pour obtenir l'URL
-
+    log(url);
     try {
       Map<String, dynamic> data = {'id': idElement, 'time': time};
 

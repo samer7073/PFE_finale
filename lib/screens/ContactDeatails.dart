@@ -166,7 +166,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                 },
                                 title: Text(helpdesk.label ??
                                     AppLocalizations.of(context).noLabel),
-                                leading: Icon(Icons.airplane_ticket_outlined),
+                                leading:
+                                    Icon(Icons.confirmation_number_outlined),
                               ))
                           .toList(),
                     ),

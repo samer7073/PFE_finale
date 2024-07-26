@@ -183,11 +183,12 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                                     ),
                                     SizedBox(height: 10),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                             'Start Time: ${activityElement.startTime}'),
+                                        SizedBox(
+                                          width: 64,
+                                        ),
                                         Text(
                                             'End Time: ${activityElement.endTime}'),
                                       ],

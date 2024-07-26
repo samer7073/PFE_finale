@@ -76,9 +76,9 @@ class _HomeNavigateState extends State<HomeNavigate> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons
-                .airplane_ticket_outlined), // Utiliser ticketSimple pour l'icône outline
+                .confirmation_number_outlined), // Utiliser ticketSimple pour l'icône outline
             activeIcon: Icon(Icons
-                .airplane_ticket_rounded), // Utiliser ticket pour l'icône filled
+                .confirmation_number_rounded), // Utiliser ticket pour l'icône filled
             label: AppLocalizations.of(context).tickets,
           ),
           BottomNavigationBarItem(
