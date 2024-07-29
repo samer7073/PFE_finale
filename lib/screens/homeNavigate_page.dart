@@ -63,6 +63,8 @@ class _HomeNavigateState extends State<HomeNavigate> {
     return Scaffold(
       body: _pageOptions[selectedPage],
       bottomNavigationBar: BottomNavigationBar(
+        unselectedLabelStyle: TextStyle(color: Colors.grey),
+        unselectedIconTheme: IconThemeData(color: Colors.grey),
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.pie_chart_outline_rounded),
@@ -70,7 +72,10 @@ class _HomeNavigateState extends State<HomeNavigate> {
             label: AppLocalizations.of(context).overview,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
+            icon: Icon(
+              Icons.calendar_today_outlined,
+              color: Colors.grey,
+            ),
             activeIcon: Icon(Icons.calendar_today_rounded),
             label: AppLocalizations.of(context).activities,
           ),

@@ -541,12 +541,19 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
 
         await updateTask(widget.taskId, taskData);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Task updated successfully!')),
+          const SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              'Task updated successfully!',
+            ),
+          ),
         );
         Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update task: $e')),
+          SnackBar(
+              backgroundColor: Colors.red,
+              content: Text('Failed to update task: $e')),
         );
         print('Failed to update task: $e');
       }
@@ -718,7 +725,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
   Widget _buildAvatar(String? avatar, String ownerLabel) {
     String initial = ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?';
 
-    if (avatar!.isEmpty == 1 || avatar.length == 1) {
+    if (avatar == null || avatar.isEmpty || avatar.length == 1) {
       // Show the initial of the owner's name if avatar is null or empty
       return CircleAvatar(
         backgroundColor: Colors.blue,

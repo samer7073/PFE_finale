@@ -184,12 +184,21 @@ class _TaskCard1State extends State<TaskCard1> {
       {int maxAvatars = 3}) {
     List<Widget> avatarWidgets = [];
     for (int i = 0; i < avatarsAndLabels.length && i < maxAvatars; i++) {
+      final label = avatarsAndLabels[i]['label'];
       avatarWidgets.add(Positioned(
         left: i * 20.0,
-        child: _buildAvatar(
-            avatarsAndLabels[i]['avatar'], avatarsAndLabels[i]['label']!),
+        child: Tooltip(
+          triggerMode: TooltipTriggerMode.tap,
+          verticalOffset: 48,
+          height: 50,
+          textStyle: TextStyle(color: Colors.white),
+          message: "Guest: $label",
+          child: _buildAvatar(
+              avatarsAndLabels[i]['avatar'], avatarsAndLabels[i]['label']!),
+        ),
       ));
     }
+
     if (avatarsAndLabels.length > maxAvatars) {
       avatarWidgets.add(Positioned(
         left: maxAvatars * 20.0,
@@ -204,6 +213,49 @@ class _TaskCard1State extends State<TaskCard1> {
         ),
       ));
     }
+
+    return Container(
+      width: (maxAvatars + 1) * 30.0, // Adjust width to ensure full display
+      height: 40,
+      color: Colors.transparent, // Ensure background is transparent
+      child: Stack(children: avatarWidgets),
+    );
+  }
+
+  Widget _buildAvatarsFollowers(List<Map<String, String?>> avatarsAndLabels,
+      {int maxAvatars = 3}) {
+    List<Widget> avatarWidgets = [];
+    for (int i = 0; i < avatarsAndLabels.length && i < maxAvatars; i++) {
+      final label = avatarsAndLabels[i]['label'];
+      avatarWidgets.add(Positioned(
+        left: i * 20.0,
+        child: Tooltip(
+          triggerMode: TooltipTriggerMode.tap,
+          verticalOffset: 48,
+          height: 50,
+          textStyle: TextStyle(color: Colors.white),
+          message: "Follower: $label",
+          child: _buildAvatar(
+              avatarsAndLabels[i]['avatar'], avatarsAndLabels[i]['label']!),
+        ),
+      ));
+    }
+
+    if (avatarsAndLabels.length > maxAvatars) {
+      avatarWidgets.add(Positioned(
+        left: maxAvatars * 20.0,
+        child: CircleAvatar(
+          radius: 15,
+          backgroundColor: const Color.fromARGB(
+              255, 50, 63, 69), // Set a background color if needed
+          child: Text(
+            '+${avatarsAndLabels.length - maxAvatars}',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ));
+    }
+
     return Container(
       width: (maxAvatars + 1) * 30.0, // Adjust width to ensure full display
       height: 40,
@@ -364,19 +416,84 @@ class _TaskCard1State extends State<TaskCard1> {
 
   Widget _buildStageProgressIndicator(
       int stagePercent, String stageLabel, String stageColor) {
-    return Stack(
-      alignment: Alignment.center,
+    return Row(
       children: [
-        CircularProgressIndicator(
-          value: stagePercent / 100,
-          backgroundColor: Colors.grey[200],
-          valueColor: AlwaysStoppedAnimation<Color>(_parseColor(stageColor)),
+        SizedBox(
+          width: 200,
+          child: LinearProgressIndicator(
+            minHeight: 7,
+            value: stagePercent / 100,
+            color: Colors.blue,
+            backgroundColor: Colors.grey[200],
+            valueColor: AlwaysStoppedAnimation<Color>(_parseColor(stageColor)),
+          ),
+        ),
+        SizedBox(
+          width: 10,
         ),
         Text(
           '${stagePercent}%',
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, color: Colors.black),
         ),
       ],
+    );
+  }
+
+  void _onPopupMenuSelected(String value) {
+    switch (value) {
+      case 'edit':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UpdateTaskScreen(taskId: _task.id),
+          ),
+        );
+        break;
+      case 'delete':
+        _showDeleteDialog();
+        break;
+      case 'details':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TaskDetailPage(taskId: _task.id),
+          ),
+        );
+        break;
+    }
+  }
+
+  void _showDeleteDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete Task'),
+          content: const Text('Are you sure you want to delete this task?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                try {
+                  await deleteTasks(_task.id);
+                  widget.onDelete();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to delete task: $e')),
+                  );
+                }
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -388,124 +505,146 @@ class _TaskCard1State extends State<TaskCard1> {
 
     IconData taskIcon = taskTypeIcons[_task.tasksTypeId] ?? Icons.help_outline;
 
-    return Card(
-      borderOnForeground: false,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-        side: BorderSide(
-          color: const Color.fromARGB(255, 225, 222,
-              222), // Changez cette couleur pour la couleur souhaitée
-          width:
-              1.0, // Changez cette valeur pour ajuster l'épaisseur de la bordure
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: Colors.grey.shade300,
+            width: 1), // Bordure grise de 1 pixel de large
+        borderRadius: BorderRadius.circular(15), // Coins arrondis (facultatif)
       ),
-      color: Colors.white,
+      //borderOnForeground: false,
+      //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      //color: Colors.white,
       margin: const EdgeInsets.all(10.0),
-      elevation: 5,
+      //elevation: 5,
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            LinearProgressIndicator(
-              value: 100 / 100,
-              color: Colors.blue,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      widget.task.task_type_label,
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 59, 85, 251),
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    _buildPriorityFlag(_task.priority ?? 'None'),
+                  ],
+                ),
+                PopupMenuButton<String>(
+                  onSelected: _onPopupMenuSelected,
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      const PopupMenuItem<String>(
+                        value: 'details',
+                        child: ListTile(
+                          leading: Icon(Icons.info_outline),
+                          title: Text('Details'),
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'edit',
+                        child: ListTile(
+                          leading: Icon(Icons.edit_outlined),
+                          title: Text('Edit'),
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'delete',
+                        child: ListTile(
+                          leading: Icon(Icons.delete_outline),
+                          title: Text('Delete'),
+                        ),
+                      ),
+                    ];
+                  },
+                  icon: Icon(Icons.more_horiz_outlined, color: Colors.black),
+                ),
+              ],
             ),
-            Text(
-              _task.familyLabel,
-              style: TextStyle(color: Colors.amber),
-            ),
-            // Level 1
+
             Row(
               children: [
-                _buildAvatar(_task.ownerAvatar, _task.ownerLabel),
-                const SizedBox(width: 20.0),
-                Icon(taskIcon, color: _parseColor(_task.iconColor)),
-                const SizedBox(width: 8.0),
                 Expanded(
                   child: Text(
                     _task.label,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 25,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                _buildPriorityFlag(_task.priority ?? 'None'),
+                //_buildPriorityFlag(_task.priority ?? 'None'),
               ],
             ),
             const SizedBox(height: 10.0),
+            Text(
+              "Progress",
+              style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            // Stage Progress Indicator
+
+            GestureDetector(
+              onTap: _showStageDialog,
+              child: _buildStageProgressIndicator(
+                  _task.stagePercent, _task.stageLabel, _task.stageColor),
+            ),
+            SizedBox(
+              height: 10,
+            ),
 
             // Level 2
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.calendar_today, size: 16),
-                const SizedBox(width: 4.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
+                    Icon(Icons.calendar_today,
+                        color: Colors.blue), // Icône pour le début
+                    SizedBox(width: 4), // Espacement entre l'icône et le texte
+                    Text(" ${DateFormat('dd-MM-yyyy').format(startDate)}"),
+                    SizedBox(width: 16), // Espacement entre les deux paires
+                    Icon(Icons.event, color: Colors.red), // Icône pour la fin
+                    SizedBox(width: 4), // Espacement entre l'icône et le texte
                     Text(
-                        "Start: ${DateFormat('dd-MM-yyyy').format(startDate)}"),
-                    Text(
-                      "End: ${DateFormat('dd-MM-yyyy').format(endDate)}",
+                      " ${DateFormat('dd-MM-yyyy').format(endDate)}",
                       style: TextStyle(
-                          color: isOverdue ? Colors.red : Colors.black),
+                        color: isOverdue ? Colors.red : Colors.black,
+                      ),
                     ),
                   ],
                 ),
-                const Spacer(),
+                if (_task.guests.isNotEmpty)
+                  SizedBox(
+                    height: 10,
+                  ),
                 _buildAvatars(
-                    _task.guests
-                        .map((guest) => {
-                              'avatar': guest['avatar'] as String?,
-                              'label': guest['label'] as String
-                            })
-                        .toList(),
-                    maxAvatars: 4),
+                  _task.guests
+                      .map((guest) => {
+                            'avatar': guest['avatar'] as String?,
+                            'label': guest['label'] as String
+                          })
+                      .toList(),
+                  maxAvatars: 4,
+                ),
               ],
             ),
-            const SizedBox(height: 10.0),
-
-            // Level 3
-            if (_task.familyLabel != null && _task.familyLabel!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Row(
-                  children: [
-                    Text("Family: ${_task.familyLabel}"),
-                    const Spacer(),
-                  ],
-                ),
-              ),
-            if (_task.elementLabel != null && _task.elementLabel!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Row(
-                  children: [
-                    Text("Element: ${_task.elementLabel}"),
-                    const Spacer(),
-                  ],
-                ),
-              ),
-
-            // Stage Progress Indicator
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: Row(
-                children: [
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: _showStageDialog,
-                    child: _buildStageProgressIndicator(
-                        _task.stagePercent, _task.stageLabel, _task.stageColor),
-                  ),
-                ],
-              ),
-            ),
-
-            // Level 4
-            _buildAvatars(
+            if (_task.followers.isNotEmpty) SizedBox(height: 10.0),
+            _buildAvatarsFollowers(
                 _task.followers
                     .map((follower) => {
                           'avatar': follower['avatar'] as String?,
@@ -513,105 +652,8 @@ class _TaskCard1State extends State<TaskCard1> {
                         })
                     .toList(),
                 maxAvatars: 4),
-            const SizedBox(height: 10.0),
 
-            // Level 5
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.remove_red_eye,
-                    size: 20,
-                    color: Colors.blue,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TaskDetailPage(taskId: _task.id),
-                      ),
-                    );
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.edit,
-                    size: 20,
-                    color: Colors.blue,
-                  ),
-                  onPressed: () async {
-                    final updatedTask = await Navigator.push<Task>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            UpdateTaskScreen(taskId: _task.id),
-                      ),
-                    );
-
-                    if (updatedTask != null) {
-                      setState(() {
-                        _task = updatedTask;
-                      });
-                    }
-                  },
-                ),
-                IconButton(
-                    icon: const Icon(
-                      Icons.chat,
-                      size: 20,
-                      color: Colors.blue,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RommCommentairePage(
-                            roomId: _task.roomId ?? 'null',
-                          ),
-                        ),
-                      );
-                    }),
-                IconButton(
-                  icon: const Icon(
-                    Icons.delete,
-                    size: 20,
-                    color: Colors.red,
-                  ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Confirmation'),
-                          content: const Text(
-                              'Are you sure you want to delete this task?'),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                deleteTasks(_task.id).then((_) {
-                                  Navigator.of(context).pop();
-                                  widget
-                                      .onDelete(); // Notify parent of deletion
-                                });
-                              },
-                              child: const Text('Delete'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  tooltip: 'Delete',
-                ),
-              ],
-            ),
+            // Level 4
           ],
         ),
       ),

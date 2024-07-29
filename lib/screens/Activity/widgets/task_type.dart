@@ -75,7 +75,7 @@ class _TaskTypeSelectorState extends State<TaskTypeSelector> {
       child: Row(
         children: taskTypes!.map((taskType) {
           bool isSelected = _selectedTaskTypeId == taskType.id;
-          log("sssssssssssssssssssssssssssssss" + taskType.icon);
+
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Column(
@@ -87,8 +87,6 @@ class _TaskTypeSelectorState extends State<TaskTypeSelector> {
                       _selectedTaskTypeId = taskType.id;
                       widget.onSelected(taskType.id, taskType.label);
                     });
-                    log("sssssssssssssssssssssssssssssss" +
-                        " ${taskType.id}   ${taskType.label}");
                   },
                   child: CircleAvatar(
                     radius: 30,
