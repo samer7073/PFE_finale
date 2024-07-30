@@ -336,6 +336,9 @@ class _TaskListPageState extends State<TaskListPage> {
                         }
                         final task = filteredTasks[index];
                         return TaskListRow(
+                          start_date: task.startDate,
+                          start_time: task.startTime,
+                          task_type_color: task.task_type_color,
                           taskIcon: _getIconData(task.task_type_icon),
                           taskId: task.id,
                           taskLabel: task.label,

@@ -3,213 +3,15 @@ import 'package:flutter_application_stage_project/models/Activity_models/task.da
 import 'package:flutter_application_stage_project/screens/Activity/create_task.dart';
 import 'package:flutter_application_stage_project/screens/Activity/task_detail.dart';
 import 'package:flutter_application_stage_project/screens/Activity/update_task.dart';
+import 'package:flutter_application_stage_project/screens/Activity/widgets/task_list_row.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_calendar_view.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_delete_task.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../core/constants/shared/config.dart';
-
-class TaskListRow extends StatefulWidget {
-  final int tasksTypeId;
-  final String title;
-  final String owner;
-  final String ownerImage;
-  final String priority;
-  final String startDate;
-  final String startTime;
-  final String endDate;
-  final String endTime;
-  final bool isOverdue;
-  final Map<String, IconData> iconMap;
-  final VoidCallback onDeleteIconTap;
-  final VoidCallback onTap;
-
-  const TaskListRow({
-    super.key,
-    required this.tasksTypeId,
-    required this.title,
-    required this.owner,
-    required this.ownerImage,
-    required this.priority,
-    required this.startDate,
-    required this.startTime,
-    required this.endDate,
-    required this.endTime,
-    required this.isOverdue,
-    required this.iconMap,
-    required this.onDeleteIconTap,
-    required this.onTap,
-  });
-
-  @override
-  State<TaskListRow> createState() => _TaskListRowState();
-}
-
-class _TaskListRowState extends State<TaskListRow> {
-  Future<String> getBaseUrl() async {
-    return await Config.getApiUrl("baseUrl");
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Icon(_getIconData(widget.tasksTypeId)),
-                      const SizedBox(width: 5),
-                      Expanded(
-                        child: Text(
-                          widget.title,
-                          style: Theme.of(context).textTheme.bodyText1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      _buildPriorityFlag(widget.priority),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Start: ${widget.startDate} ${widget.startTime}',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        'End: ${widget.endDate} ${widget.endTime}',
-                        style: TextStyle(
-                          color: widget.isOverdue ? Colors.red : Colors.black,
-                          fontWeight: widget.isOverdue
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.owner,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                widget.ownerImage.length == 1
-                    ? CircleAvatar(
-                        backgroundColor: Colors.blue,
-                        child: Text(
-                          widget.ownerImage,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        radius: 15,
-                      )
-                    : FutureBuilder<String>(
-                        future: getBaseUrl(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          }
-
-                          if (snapshot.hasError) {
-                            return Text('Error loading image URL');
-                          }
-
-                          String baseUrl = snapshot.data ?? "";
-
-                          return CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: NetworkImage(
-                              "$baseUrl/storage/uploads/${widget.ownerImage}",
-                            ),
-                            radius: 15,
-                          );
-                        },
-                      ),
-              ],
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPriorityFlag(String? priority) {
-    Color flagColor;
-    switch (priority?.toLowerCase()) {
-      case 'low':
-        flagColor = Colors.green;
-        break;
-      case 'medium':
-        flagColor = Colors.blue;
-        break;
-      case 'high':
-        flagColor = Colors.orange;
-        break;
-      case 'urgent':
-        flagColor = Colors.red;
-        break;
-      default:
-        flagColor = Colors.transparent;
-        break;
-    }
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        const Icon(Icons.flag_outlined, color: Colors.black),
-        Icon(Icons.flag, color: flagColor),
-      ],
-    );
-  }
-
-  IconData _getIconData(int tasksTypeId) {
-    switch (tasksTypeId) {
-      case 1:
-        return widget.iconMap['CalendarOutlined'] ?? Icons.help_outline;
-      case 2:
-        return widget.iconMap['MailOutlined'] ?? Icons.help_outline;
-      case 3:
-        return widget.iconMap['VideoCameraOutlined'] ?? Icons.help_outline;
-      case 4:
-        return widget.iconMap['PhoneOutlined'] ?? Icons.help_outline;
-      case 11:
-        return widget.iconMap['WrenchScrewdriverIcon'] ?? Icons.help_outline;
-      case 12:
-        return widget.iconMap['BankOutlined'] ?? Icons.help_outline;
-      case 16:
-        return widget.iconMap['AtSymbolIcon'] ?? Icons.help_outline;
-      default:
-        return Icons.help_outline;
-    }
-  }
-}
 
 class Calendarviewpage extends StatefulWidget {
   const Calendarviewpage({super.key});
@@ -225,16 +27,6 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
   List<Task> _tasks = [];
   Map<DateTime, List<Task>> _taskEvents = {};
   String _noTasksMessage = '';
-
-  Map<String, IconData> iconMap = {
-    'CalendarOutlined': Icons.calendar_today,
-    'MailOutlined': Icons.mail_outline,
-    'VideoCameraOutlined': Icons.videocam,
-    'WrenchScrewdriverIcon': Icons.build,
-    'PhoneOutlined': Icons.phone,
-    'BankOutlined': Icons.account_balance,
-    'AtSymbolIcon': Icons.alternate_email,
-  };
 
   @override
   void initState() {
@@ -337,6 +129,116 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
     }
   }
 
+  Map<String, IconData> iconMap = {
+    'BankOutlined': Icons.account_balance,
+    'BellOutlined': Icons.notifications_outlined,
+    'CalendarOutlined': Icons.calendar_today,
+    'CameraOutlined': Icons.camera_alt_outlined,
+    'CarOutlined': Icons.directions_car_outlined,
+    'CheckCircleOutlined': Icons.check_circle_outline,
+    'CommentOutlined': Icons.comment_outlined,
+    'CreditCardOutlined': Icons.credit_card_outlined,
+    'EditOutlined': Icons.edit_outlined,
+    'FacebookOutlined': FontAwesomeIcons.facebook,
+    'FieldTimeOutlined': Icons.access_time,
+    'FolderOutlined': Icons.folder_outlined,
+    'GlobalOutlined': Icons.language,
+    'InboxOutlined': Icons.inbox_outlined,
+    'InstagramOutlined': FontAwesomeIcons.instagram,
+    'MailOutlined': Icons.mail_outline,
+    'MessageOutlined': Icons.message_outlined,
+    'MobileOutlined': Icons.smartphone_outlined,
+    'PhoneOutlined': Icons.phone_outlined,
+    'ReadOutlined': Icons.book_outlined,
+    'SettingOutlined': Icons.settings_outlined,
+    'UploadOutlined': Icons.cloud_upload_outlined,
+    'UserOutlined': Icons.person_outline,
+    'VideoCameraOutlined': Icons.videocam_outlined,
+    'WarningOutlined': Icons.warning_outlined,
+    'WhatsAppOutlined': FontAwesomeIcons.whatsapp,
+    'WrenchScrewdriverIcon':
+        FontAwesomeIcons.screwdriverWrench, // Icône pour WrenchScrewdriver
+    'AtSymbolIcon': Icons.alternate_email_outlined
+  };
+  IconData _getIconData(String taskTypeIcon) {
+    return iconMap[taskTypeIcon] ?? Icons.help_outline;
+  }
+
+  IconData _getPriorityIcon(String priority) {
+    switch (priority) {
+      case 'urgent':
+        return Icons.flag;
+      case 'high':
+        return Icons.outlined_flag;
+      case 'medium':
+        return Icons.flag_outlined;
+      case 'low':
+        return Icons.flag_outlined;
+      default:
+        return Icons.flag_outlined;
+    }
+  }
+
+  Color _getPriorityColor(String priority) {
+    switch (priority) {
+      case 'urgent':
+        return Colors.red;
+      case 'high':
+        return Colors.orange;
+      case 'medium':
+        return Colors.yellow;
+      case 'low':
+        return Colors.green;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  void _confirmDelete(Task task) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Delete'),
+          content: Text('Are you sure you want to delete this Task?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteTask(task.id);
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editTask(Task task) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UpdateTaskScreen(taskId: task.id),
+      ),
+    );
+  }
+
+  void _navigateToDetail(Task task) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TaskDetailPage(taskId: task.id),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -437,40 +339,26 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
                               ),
                             ],
                           ),
-                          child: Card(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 16.0),
-                            child: TaskListRow(
-                              tasksTypeId: task.tasksTypeId,
-                              title: task.label,
-                              owner: task.ownerLabel,
-                              ownerImage: task.ownerAvatar,
-                              priority: task.priority,
-                              startDate: task.startDate,
-                              startTime: task.startTime,
-                              endDate: task.endDate,
-                              endTime: task.endTime,
-                              isOverdue: task.isOverdue,
-                              iconMap: iconMap,
-                              onDeleteIconTap: () async {
-                                final bool? result =
-                                    await _showDeleteConfirmationDialog(
-                                        task.id);
-                                if (result == true) {
-                                  await _deleteTask(task.id);
-                                }
-                              },
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => TaskDetailPage(
-                                      taskId: task.id,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                          child: TaskListRow(
+                            start_date: task.startDate,
+                            start_time: task.startTime,
+                            task_type_color: task.task_type_color,
+                            taskIcon: _getIconData(task.task_type_icon),
+                            taskId: task.id,
+                            taskLabel: task.label,
+                            ownerLabel: task.ownerLabel,
+                            startDate: task.startDate,
+                            endDate: task.endDate,
+                            endTime: task.endTime,
+                            priority: task.priority,
+                            priorityIcon: _getPriorityIcon(task.priority),
+                            priorityColor: _getPriorityColor(task.priority),
+                            ownerAvatar: task.ownerAvatar,
+                            stageLabel: task.stageLabel ?? 'N/A',
+                            isOverdue: task.isOverdue,
+                            onDelete: () => _confirmDelete(task),
+                            onEdit: () => _editTask(task),
+                            onTap: () => _navigateToDetail(task),
                           ),
                         );
                       },

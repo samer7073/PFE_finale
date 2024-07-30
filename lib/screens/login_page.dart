@@ -444,7 +444,7 @@ class _LoginPageState extends State<LoginPage> {
 
     bool isProd = false;
 
-    if (url == "sphere.comunikcrm.info") {
+    if (url == "sphereback.cmk.biz") {
       log('isProd set to true');
       isProd = true;
     } else {

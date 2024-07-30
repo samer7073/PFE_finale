@@ -6,38 +6,31 @@ import '../../../services/sharedPreference.dart';
 
 class Config {
   //static const String prodUrl = "https://sphere.comunikcrm.info";
-  static const String prodUrl = "https://sphere-back.comunikcrm.info";
+  static const String prodUrl = "https://sphereback.cmk.biz";
 
-  static const String devUrl = "https://spherebackdev.cmk.biz";
+  static const String devUrl = "https://spherebackmongodb.cmk.biz";
 
   static const Map<String, String> apiProdUrls = {
     "chatRomm":
-        "https://sphere-chat-back.comunikcrm.info:4543/index.php/api/get-discussion-room/",
+        "https://spherechatback.cmk.biz:4543/index.php/api/get-discussion-room/",
     "kanban": "$prodUrl:4543/index.php/api/mobile/kanban-by-stage",
     "tasksKpi": "$prodUrl:4543/index.php/api/mobile/tasks/kpi",
-    "login":
-        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/mobile/login",
+    "login": "https://sphereauthback.cmk.biz:4543/index.php/api/mobile/login",
     "overview": "$prodUrl:4543/index.php/api/mobile/log-family-elements",
     "updateStageFamily":
         "$prodUrl:4543/index.php/api/mobile/update-stage-family",
     "otpGenerate":
-        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/generate-otp",
+        "https://sphereauthback.cmk.biz:4543/index.php/api/generate-otp",
     "loginOtp":
-        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/mobile/login-otp",
-    "logout":
-        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/mobile/logout",
+        "https://sphereauthback.cmk.biz:4543/index.php/api/mobile/login-otp",
+    "logout": "https://sphereauthback.cmk.biz:4543/index.php/api/logout",
     "kpiFamily": "$prodUrl:4543/index.php/api/mobile/kpi-family",
     "profile":
         "https://sphere-back.comunikcrm.info:4543/index.php/api/mobile/profile",
     "modifyProfile": "$prodUrl:4543/index.php/api/mobile/edit-profile",
     "pipelines": "$prodUrl:4543/index.php/api/mobile/pipelines-by-family",
-    "jwt": "https://sphere-chat-back.comunikcrm.info:4543/api/user",
-    "generateOtp":
-        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/generate-otp", // Added for ApiOtpGenrate
-    "loginOtpUrl":
-        "https://authentificationbackback.comunikcrm.info:4543/index.php/api/mobile/login-otp", // Added for ApiOtpGenrate
-    "logoutUrl":
-        "https://sphereauthbackdev.cmk.biz:4543/index.php/api/logout", // Added for ApiLogout
+    "jwt": "https://spherechatback.cmk.biz:4543/api/user",
+
     "kpiFamilyUrl":
         "$prodUrl:4543/index.php/api/mobile/kpi-family", // Added for ApiKpiFamily
     "profileUrl":
@@ -46,8 +39,7 @@ class Config {
         "$prodUrl:4543/index.php/api/mobile/edit-profile", // Added for ApiProfil
     "pipelinesUrl":
         "$prodUrl:4543/index.php/api/mobile/pipelines-by-family", // Added for GetPipelineApi
-    "jwtUrl":
-        "https://sphere-chat-back.comunikcrm.info:4543/api/user", // Added for ApiGetJwt
+
     "createElementUrl":
         "$prodUrl:4543/index.php/api/mobile/create-element", // Added for ApiFieldPost
     "updateElementUrl":
@@ -59,10 +51,8 @@ class Config {
     "fieldsByGroupUpdateUrl":
         "$prodUrl:4543/index.php/api/mobile/get-fields-by-group",
     "familyModuleData": "$prodUrl:4543/index.php/api/mobile/get-family-module",
-    "countries":
-        "https://sphere-back.comunikcrm.info:4543/index.php/api/mobile/get-countries",
-    "currencies":
-        "https://sphere-back.comunikcrm.info:4543/index.php/api/mobile/get-currencies",
+    "countries": "$prodUrl:4543/index.php/api/mobile/get-countries",
+    "currencies": "$prodUrl:4543/index.php/api/mobile/get-currencies",
     "getDetail": "$prodUrl:4543/index.php/api/mobile/get-element-by-id",
     "deleteElement": "$prodUrl:4543/index.php/api/mobile/delete-elements",
     "changePassword": "$prodUrl:4543/index.php/api/change-password",
@@ -97,10 +87,10 @@ class Config {
     "kanbanTask": "$prodUrl:4543/index.php/api/mobile",
     "tasksConfig": "$prodUrl:4543/api/mobile/tasks/config",
     "updatePriority": "$prodUrl:4543/api/mobile",
-    "mercure": "https://mercurecmk.comunikcrm.info:4443/.well-known/mercure",
+    "mercure": "https://spheremercure.cmk.biz:4443/.well-known/mercure",
     "notifTopic": "/notification/dev/user/",
     "chatTopic": "/chat/dev/user/232",
-    "urlImage": "https://sphere-back.comunikcrm.info:4543/storage/uploads/",
+    "urlImage": "$prodUrl:4543/storage/uploads/",
     "taskNotif": "$prodUrl:4543/api/mobile/tasks/",
     "pipeline": "$prodUrl:4543/index.php/api/mobile/get-element-by-id/",
     "StageKanban": "$prodUrl:4543/index.php/api/mobile/stages/",
@@ -111,30 +101,25 @@ class Config {
 
   static const Map<String, String> apiDevUrls = {
     "chatRomm":
-        "https://spherechatbackdev.cmk.biz:4543/index.php/api/get-discussion-room/",
+        "https:///spherechatbackmongodb.cmk.biz:4543/index.php/api/get-discussion-room/",
     "kanban": "$devUrl:4543/index.php/api/mobile/kanban-by-stage",
     "tasksKpi": "$devUrl:4543/index.php/api/mobile/tasks/kpi",
     "login":
-        "https://sphereauthbackdev.cmk.biz:4543/index.php/api/mobile/login",
+        "https://sphereauthbackmongodb.cmk.biz:4543/index.php/api/mobile/login",
     "overview": "$devUrl:4543/index.php/api/mobile/log-family-elements",
     "updateStageFamily":
         "$devUrl:4543/index.php/api/mobile/update-stage-family",
     "otpGenerate":
-        "https://sphereauthbackdev.cmk.biz:4543/index.php/api/generate-otp",
+        "https://sphereauthbackmongodb.cmk.biz:4543/index.php/api/generate-otp",
     "loginOtp":
-        "https://sphereauthbackdev.cmk.biz:4543/index.php/api/mobile/login-otp",
-    "logout": "https://sphereauthbackdev.cmk.biz:4543/index.php/api/logout",
+        "https://sphereauthbackmongodb.cmk.biz:4543/index.php/api/mobile/login-otp",
+    "logout": "https://sphereauthbackmongodb.cmk.biz:4543/index.php/api/logout",
     "kpiFamily": "$devUrl:4543/index.php/api/mobile/kpi-family",
     "profile": "$devUrl:4543/index.php/api/mobile/profile",
     "modifyProfile": "$devUrl:4543/index.php/api/mobile/edit-profile",
     "pipelines": "$devUrl:4543/index.php/api/mobile/pipelines-by-family",
-    "jwt": "https://spherechatbackdev.cmk.biz:4543/index.php/api/user",
-    "generateOtp":
-        "$devUrl:4543/index.php/api/mobile/generate-otp", // Added for ApiOtpGenrate
-    "loginOtpUrl":
-        "$devUrl:4543/index.php/api/mobile/login-otp", // Added for ApiOtpGenrate
-    "logoutUrl":
-        "https://sphereauthbackdev.cmk.biz:4543/index.php/api/logout", // Added for ApiLogout
+    "jwt": "https://spherechatbackmongodb.cmk.biz:4543/api/user",
+
     "kpiFamilyUrl":
         "$devUrl:4543/index.php/api/mobile/kpi-family", // Added for ApiKpiFamily
     "profileUrl":
@@ -143,8 +128,7 @@ class Config {
         "$devUrl:4543/index.php/api/mobile/edit-profile", // Added for ApiProfil
     "pipelinesUrl":
         "$devUrl:4543/index.php/api/mobile/pipelines-by-family", // Added for GetPipelineApi
-    "jwtUrl":
-        "https://spherechatbackdev.cmk.biz:4543/index.php/api/user", // Added for ApiGetJwt
+
     "createElementUrl":
         "$devUrl:4543/index.php/api/mobile/create-element", // Added for ApiFieldPost
     "updateElementUrl":
@@ -189,7 +173,7 @@ class Config {
     "kanbanTask": "$devUrl:4543/index.php/api/mobile",
     "tasksConfig": "$devUrl:4543/api/mobile/tasks/config",
     "updatePriority": "$devUrl:4543/api/mobile",
-    "mercure": "https://spheremercuredev.cmk.biz:4443/.well-known/mercure",
+    "mercure": "https://spheremercuremongodb.cmk.biz:4443/.well-known/mercure",
     "notifTopic": "/notification/dev/user/",
     "chatTopic": "/chat/dev/user/232",
     "urlImage": "$devUrl:4543/storage/uploads/",

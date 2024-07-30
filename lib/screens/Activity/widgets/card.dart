@@ -628,30 +628,37 @@ class _TaskCard1State extends State<TaskCard1> {
                     ),
                   ],
                 ),
-                if (_task.guests.isNotEmpty)
-                  SizedBox(
-                    height: 10,
+                if (_task.guests.isNotEmpty) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: _buildAvatars(
+                      _task.guests
+                          .map((guest) => {
+                                'avatar': guest['avatar'] as String?,
+                                'label': guest['label'] as String
+                              })
+                          .toList(),
+                      maxAvatars: 4,
+                    ),
                   ),
-                _buildAvatars(
-                  _task.guests
-                      .map((guest) => {
-                            'avatar': guest['avatar'] as String?,
-                            'label': guest['label'] as String
-                          })
-                      .toList(),
-                  maxAvatars: 4,
-                ),
+                  const SizedBox(height: 5),
+                ],
+                if (_task.followers.isNotEmpty) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: _buildAvatarsFollowers(
+                        _task.followers
+                            .map((follower) => {
+                                  'avatar': follower['avatar'] as String?,
+                                  'label': follower['label'] as String
+                                })
+                            .toList(),
+                        maxAvatars: 4),
+                  ),
+                  const SizedBox(height: 5),
+                ],
               ],
             ),
-            if (_task.followers.isNotEmpty) SizedBox(height: 10.0),
-            _buildAvatarsFollowers(
-                _task.followers
-                    .map((follower) => {
-                          'avatar': follower['avatar'] as String?,
-                          'label': follower['label'] as String
-                        })
-                    .toList(),
-                maxAvatars: 4),
 
             // Level 4
           ],

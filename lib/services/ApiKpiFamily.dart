@@ -14,6 +14,7 @@ class ApiKpiFamily {
 
     final baseUrl = await Config.getApiUrl("kpiFamily");
     final url = "$baseUrl/$idFamily";
+    log(url + "kkkkkkkkkkkkkkkkkkkkkkkkkk");
 
     final response = await http.get(
       Uri.parse(url),

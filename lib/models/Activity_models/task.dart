@@ -36,6 +36,7 @@ class Task {
   final List<Upload> uploads;
   String task_type_icon;
   String task_type_label;
+  String task_type_color;
 
   Task({
     required this.id,
@@ -75,6 +76,7 @@ class Task {
     required this.uploads, // Valeur par défaut
     required this.task_type_icon,
     required this.task_type_label,
+    required this.task_type_color,
   });
 
   factory Task.fromJson(Map<String, dynamic> json,
@@ -94,47 +96,49 @@ class Task {
       ownerAvatar = json['owner_avatar'] ?? '';
     }
     return Task(
-        id: json['id'] ?? '',
-        label: json['label'] ?? '',
-        priority: json['priority'] ?? '',
-        creatorLabel: json['creator_label'] ?? '',
-        creatorAvatar: json['creator_avatar'] ?? '',
-        ownerId: ownerId,
-        ownerLabel: ownerLabel,
-        ownerAvatar: ownerAvatar,
-        tasksTypeId: json['tasks_type_id'] ?? 0,
-        startDate: json['start_date'] ?? '',
-        endDate: json['end_date'] ?? '',
-        startTime: json['start_time'] ?? '',
-        endTime: json['end_time'] ?? '',
-        description: json['description'] ?? '',
-        note: json['note'] ?? '',
-        stageId: json['stage_id'],
-        stageLabel: json['stage_label'] ?? '',
-        pipelineLabel: json['pipeline_label'] ?? '',
-        familyId: json['family_id'],
-        familyLabel: json['family_label'] ?? '',
-        elementId: json['element_id'],
-        elementLabel: json['element_label'] ?? '',
-        createAt: json['created_at'] ?? '',
-        guests: List<Map<String, dynamic>>.from(json['guests'] ?? []),
-        followers: List<Map<String, dynamic>>.from(json['followers'] ?? []),
-        location: json['location'] ?? '',
-        reminder: json['Reminder'] ?? '',
-        iconColor: json['icon_color'] ?? '#000000',
-        reminderBeforeEnd: json['reminder_before_end'] == null
-            ? null
-            : json['reminder_before_end'] == 1,
-        isOverdue: json['is_overdue'] ?? false,
-        roomId: json['room_id']?.toString(),
-        stageColor: json['stage_color'] ?? stageColor,
-        stagePercent: json['stage_percent'] ?? stagePercent,
-        uploads: (json['upload'] as List<dynamic>?)
-                ?.map((upload) => Upload.fromJson(upload))
-                .toList() ??
-            [],
-        task_type_icon: json['task_type_icon'] ?? "",
-        task_type_label: json['task_type_label'] ?? "");
+      id: json['id'] ?? '',
+      label: json['label'] ?? '',
+      priority: json['priority'] ?? '',
+      creatorLabel: json['creator_label'] ?? '',
+      creatorAvatar: json['creator_avatar'] ?? '',
+      ownerId: ownerId,
+      ownerLabel: ownerLabel,
+      ownerAvatar: ownerAvatar,
+      tasksTypeId: json['tasks_type_id'] ?? 0,
+      startDate: json['start_date'] ?? '',
+      endDate: json['end_date'] ?? '',
+      startTime: json['start_time'] ?? '',
+      endTime: json['end_time'] ?? '',
+      description: json['description'] ?? '',
+      note: json['note'] ?? '',
+      stageId: json['stage_id'],
+      stageLabel: json['stage_label'] ?? '',
+      pipelineLabel: json['pipeline_label'] ?? '',
+      familyId: json['family_id'],
+      familyLabel: json['family_label'] ?? '',
+      elementId: json['element_id'],
+      elementLabel: json['element_label'] ?? '',
+      createAt: json['created_at'] ?? '',
+      guests: List<Map<String, dynamic>>.from(json['guests'] ?? []),
+      followers: List<Map<String, dynamic>>.from(json['followers'] ?? []),
+      location: json['location'] ?? '',
+      reminder: json['Reminder'] ?? '',
+      iconColor: json['icon_color'] ?? '#000000',
+      reminderBeforeEnd: json['reminder_before_end'] == null
+          ? null
+          : json['reminder_before_end'] == 1,
+      isOverdue: json['is_overdue'] ?? false,
+      roomId: json['room_id']?.toString(),
+      stageColor: json['stage_color'] ?? stageColor,
+      stagePercent: json['stage_percent'] ?? stagePercent,
+      uploads: (json['upload'] as List<dynamic>?)
+              ?.map((upload) => Upload.fromJson(upload))
+              .toList() ??
+          [],
+      task_type_icon: json['task_type_icon'] ?? "",
+      task_type_label: json['task_type_label'] ?? "",
+      task_type_color: json['task_type_color'] ?? "#000000",
+    );
   }
 
   Map<String, dynamic> toJson() {

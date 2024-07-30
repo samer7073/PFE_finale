@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 // Importer le fichier de configuration
@@ -11,6 +12,8 @@ Future<List<Task>> fetchTasks(String start, String end) async {
     'getTasksCalendar',
   ); // Utiliser Config pour obtenir l'URL
   final url = Uri.parse(baseUrl);
+  log("ttttttttttttttttttttttttttttttttttttttttttttttt" + url.toString());
+  log("tttttttttttttttttttttttttttttttttt" + start + end);
 
   final token = await SharedPrefernce.getToken("token");
 

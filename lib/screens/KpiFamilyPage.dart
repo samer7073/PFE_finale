@@ -18,6 +18,7 @@ class KpiFamilyPage extends StatefulWidget {
 class _KpiFamilyPageState extends State<KpiFamilyPage> {
   late Future<KpiResponseModel> _futureKpiResponse;
   late ThemeProvider themeProvider;
+
   @override
   void initState() {
     super.initState();
@@ -50,21 +51,23 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
       itemCount: data.data.length,
       itemBuilder: (context, index) {
         return Card(
-          elevation: 4,
+          elevation: 2,
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  data.data[index].pipeline,
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: themeProvider.isDarkMode == true
-                          ? Colors.white
-                          : Colors.black),
+                Center(
+                  child: Text(
+                    data.data[index].pipeline,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: themeProvider.isDarkMode == true
+                            ? Colors.white
+                            : Colors.black),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 _buildBarChart(data.data[index].stages),
@@ -96,7 +99,7 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
                   themeProvider.isDarkMode == true ? Colors.blue : Colors.blue,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
-                  rod.y.toString(),
+                  stages[groupIndex].stageLabel + ":   " + rod.y.toString(),
                   TextStyle(
                       color: themeProvider.isDarkMode == true
                           ? Colors.white
@@ -114,7 +117,7 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
           ),
           borderData: FlBorderData(show: false),
           barGroups: _buildBarGroups(stages),
-          gridData: FlGridData(show: true, horizontalInterval: interval),
+          gridData: FlGridData(show: false, horizontalInterval: interval),
         ),
       ),
     );
@@ -124,18 +127,28 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
     return SideTitles(
       showTitles: true,
       getTextStyles: (value) => TextStyle(
-          color: themeProvider.isDarkMode == true ? Colors.white : Colors.black,
-          fontSize: 12),
-      margin: 20,
-      rotateAngle: 30,
+        color: themeProvider.isDarkMode == true ? Colors.white : Colors.grey,
+        fontSize: 10, // Réduire la taille de la police
+        overflow: TextOverflow.fade,
+      ),
+      margin: 10, // Réduire la marge
+      rotateAngle: 15, // Augmenter l'angle de rotation
       getTitles: (value) {
         if (value.toInt() >= 0 && value.toInt() < stages.length) {
-          return stages[value.toInt()].stageLabel;
+          return _truncateText(stages[value.toInt()].stageLabel);
         } else {
           return '';
         }
       },
     );
+  }
+
+  String _truncateText(String text, {int maxLength = 8}) {
+    if (text.length > maxLength) {
+      return '${text.substring(0, maxLength)}...';
+    } else {
+      return text;
+    }
   }
 
   SideTitles _buildLeftTitles(double maxValue) {
@@ -169,6 +182,13 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
         .toDouble();
   }
 
+  Color hexToColor(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
   List<BarChartGroupData> _buildBarGroups(List<StageKpiModel> stages) {
     return stages.asMap().entries.map((entry) {
       final index = entry.key;
@@ -177,8 +197,9 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
         x: index,
         barRods: [
           BarChartRodData(
+            width: 18,
             y: stage.stageCount.toDouble(),
-            colors: [Colors.blue],
+            colors: [hexToColor(stage.stage_color)],
           ),
         ],
       );
