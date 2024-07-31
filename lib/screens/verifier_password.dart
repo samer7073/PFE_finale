@@ -199,7 +199,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
 
     bool isProd = false;
 
-    if (url == "sphereback.cmk.biz") {
+    if (url == "sphere.cmk.biz") {
       log('isProd set to true');
       isProd = true;
     } else {

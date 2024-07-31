@@ -25,9 +25,9 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   late ThemeProvider themeProvider;
   String? savedToken;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     _loadUrl();
@@ -78,17 +78,28 @@ class _LoginPageState extends State<LoginPage> {
             ),
           )
         : Scaffold(
-            body: Container(
-              margin: const EdgeInsets.all(24),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _header(context),
-                    Form(key: _formKey, child: _inputField(context)),
-                  ],
+            body: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Image de fond
+                Image.asset(
+                  'assets/loginBackgroundd.png', // Remplacez par le chemin de votre image
+                  fit: BoxFit.cover,
                 ),
-              ),
+                // Contenu de la page
+                Container(
+                  margin: const EdgeInsets.all(24),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _header(context),
+                        Form(key: _formKey, child: _inputField(context)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
   }
@@ -96,20 +107,22 @@ class _LoginPageState extends State<LoginPage> {
   _header(context) {
     return Column(
       children: [
-        SizedBox(
-          height: 50,
+        SizedBox(height: 50),
+        Image.asset(
+          'assets/logo-cmk.png', // Remplacez par le chemin de votre image
+          fit: BoxFit.cover,
         ),
+        SizedBox(height: 10),
         Text(
-          AppLocalizations.of(context).headerLogin,
-          style: Theme.of(context).textTheme.headline1,
+          "Comunik Sphere",
+          style: TextStyle(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            fontSize: 20.55,
+
+            fontFamily: 'ProstoOne', // Use the "Prosto One" font
+          ),
         ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(AppLocalizations.of(context).textLogin),
-        SizedBox(
-          height: 50,
-        )
+        SizedBox(height: 50),
       ],
     );
   }
@@ -123,7 +136,10 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Text(
               url,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600),
             ),
             ElevatedButton(
               onPressed: () {
@@ -218,12 +234,12 @@ class _LoginPageState extends State<LoginPage> {
               style: ElevatedButton.styleFrom(
                   shape: StadiumBorder(),
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-                  backgroundColor: Colors.white),
+                  backgroundColor: Color(0xFF5B67CA)),
               child: Text(
                 "modify",
                 style: TextStyle(
                     fontSize: 14,
-                    color: Colors.blue,
+                    color: Colors.white,
                     fontWeight: FontWeight.w900),
               ),
             )
@@ -249,15 +265,23 @@ class _LoginPageState extends State<LoginPage> {
           },
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors
+                        .white), // Color of the underline when the field is enabled
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: Colors
+                        .white), // Color of the underline when the field is focused
+              ),
+              hintStyle: TextStyle(color: Colors.white),
               hintText: AppLocalizations.of(context).email,
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none),
-              fillColor: Color.fromARGB(255, 15, 65, 245).withOpacity(0.1),
-              filled: true,
               prefixIcon: const Icon(
                 Icons.email,
+                color: Colors.white,
               )),
+          style: TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 10),
         TextFormField(
@@ -276,25 +300,34 @@ class _LoginPageState extends State<LoginPage> {
                   securePassword = !securePassword;
                 });
               },
-              icon: Icon(securePassword == true
-                  ? Icons.visibility
-                  : Icons.visibility_off),
+              icon: Icon(
+                securePassword == true
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+                color: Colors.white,
+              ),
             ),
             hintText: AppLocalizations.of(context).password,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(18),
-                borderSide: BorderSide.none),
-            fillColor: Color.fromARGB(255, 15, 65, 245).withOpacity(0.1),
-            filled: true,
+            hintStyle: TextStyle(color: Colors.white),
             prefixIcon: const Icon(
               Icons.password,
+              color: Colors.white,
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors
+                      .white), // Color of the underline when the field is enabled
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white), // C
             ),
           ),
           obscureText: securePassword,
+          style: TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 50),
         Container(
-          padding: EdgeInsets.fromLTRB(60, 0, 60, 0),
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
           width: 50,
           height: 50,
           child: ElevatedButton(
@@ -319,12 +352,6 @@ class _LoginPageState extends State<LoginPage> {
                     _saveString('jwt', jwtResponse.jwtMercure);
                     log("Uuid: ${jwtResponse.uuid}");
                     _saveString("uuid", jwtResponse.uuid);
-                    /*
-
-                    setState(() {
-                      loading = false;
-                    });
-                    */
 
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/homeNavigate', (route) => false);
@@ -382,14 +409,14 @@ class _LoginPageState extends State<LoginPage> {
             },
             style: ElevatedButton.styleFrom(
               shape: StadiumBorder(),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-              backgroundColor: Color.fromARGB(255, 181, 218, 240),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+              backgroundColor: Color(0xFF5B67CA),
             ),
             child: Text(
               AppLocalizations.of(context).login,
               style: TextStyle(
                   fontSize: 14,
-                  color: Colors.blue,
+                  color: Colors.white,
                   fontWeight: FontWeight.w900),
             ),
           ),
@@ -426,7 +453,7 @@ class _LoginPageState extends State<LoginPage> {
           },
           child: Text(
             "Send me a code !",
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ],
@@ -444,7 +471,7 @@ class _LoginPageState extends State<LoginPage> {
 
     bool isProd = false;
 
-    if (url == "sphereback.cmk.biz") {
+    if (url == "sphere.cmk.biz") {
       log('isProd set to true');
       isProd = true;
     } else {

@@ -68,6 +68,13 @@ class _TaskTypeSelectorState extends State<TaskTypeSelector> {
     });
   }
 
+  Color hexToColor(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -88,14 +95,18 @@ class _TaskTypeSelectorState extends State<TaskTypeSelector> {
                       widget.onSelected(taskType.id, taskType.label);
                     });
                   },
-                  child: CircleAvatar(
-                    radius: 30,
-                    backgroundColor:
-                        isSelected ? Colors.purple[100] : Colors.grey[200],
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: hexToColor(taskType.color).withOpacity(0.8),
+                      borderRadius:
+                          BorderRadius.circular(10), // Circular border radius
+                    ),
                     child: Icon(
                       iconMap[taskType.icon] ?? Icons.help_outline,
-                      color: Color(int.parse('FF${taskType.color.substring(1)}',
-                          radix: 16)),
+                      color: Colors.white,
+                      size: 30,
                     ),
                   ),
                 ),

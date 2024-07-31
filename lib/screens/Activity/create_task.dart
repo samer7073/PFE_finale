@@ -879,7 +879,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       const SizedBox(height: 16.0),
                       Container(
-                        height: 70,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 240, 241, 241),
+                            borderRadius: BorderRadius.circular(5)),
+                        // Définir la couleur de fond ici
                         child: TextFormField(
                           controller: _taskNameController,
                           decoration: InputDecoration(
@@ -889,16 +892,23 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                                 color: Colors.blueGrey),
+                            /*
                             enabledBorder: OutlineInputBorder(
                               borderSide:
                                   const BorderSide(color: Colors.blueGrey),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
+                            
                             focusedBorder: OutlineInputBorder(
                               borderSide:
                                   const BorderSide(color: Colors.blueGrey),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
+                            */
+                            enabledBorder: InputBorder
+                                .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                            focusedBorder: InputBorder
+                                .none, // Enlever la bordure lorsque le TextFormField est sélectionné
                             contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 16.0, vertical: 12.0),
                           ),
@@ -920,54 +930,65 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             color: Colors.blueGrey),
                       ),
                       const SizedBox(height: 18.0),
-                      InputDecorator(
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context).selectOwner,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 12.0),
-                        ),
-                        child: Row(
-                          children: [
-                            if (selectedOwner != null)
-                              _buildAvatar(selectedOwner!),
-                            const SizedBox(width: 8.0),
-                            if (selectedOwner != null)
-                              Text(
-                                selectedOwner!['label'],
-                                style: const TextStyle(
-                                    fontSize: 16.0, color: Colors.blueGrey),
-                              ),
-                            const SizedBox(width: 8.0),
-                            Expanded(
-                              child: TextFormField(
-                                readOnly: true,
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                ),
-                                onTap: () => _selectOwner(context),
-                              ),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 240, 241, 241),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context).selectOwner,
+                            /*
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  const BorderSide(color: Colors.blueGrey),
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                            if (selectedOwner != null)
-                              IconButton(
-                                icon: const Icon(Icons.close),
-                                onPressed: () {
-                                  setState(() {
-                                    selectedOwner = null;
-                                    _validateForm();
-                                  });
-                                },
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  const BorderSide(color: Colors.blueGrey),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            */
+                            enabledBorder: InputBorder
+                                .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                            focusedBorder: InputBorder
+                                .none, // Enlever la bordure lorsque le TextFormField est sélect
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                          ),
+                          child: Row(
+                            children: [
+                              if (selectedOwner != null)
+                                _buildAvatar(selectedOwner!),
+                              const SizedBox(width: 8.0),
+                              if (selectedOwner != null)
+                                Text(
+                                  selectedOwner!['label'],
+                                  style: const TextStyle(
+                                      fontSize: 16.0, color: Colors.blueGrey),
+                                ),
+                              const SizedBox(width: 8.0),
+                              Expanded(
+                                child: TextFormField(
+                                  readOnly: true,
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  onTap: () => _selectOwner(context),
+                                ),
                               ),
-                          ],
+                              if (selectedOwner != null)
+                                IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedOwner = null;
+                                      _validateForm();
+                                    });
+                                  },
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                       if (!isOwnerValid)
@@ -987,42 +1008,49 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             color: Colors.blueGrey),
                       ),
                       const SizedBox(height: 16.0),
-                      Row(
-                        children: [
-                          Radio(
-                            value: false,
-                            groupValue: isRange,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                isRange = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            AppLocalizations.of(context).singleDay,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.blueGrey),
-                          ),
-                          const SizedBox(width: 25.0),
-                          Radio(
-                            value: true,
-                            groupValue: isRange,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                isRange = value!;
-                              });
-                            },
-                          ),
-                          Text(
-                            AppLocalizations.of(context).rangeOfDays,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Colors.blueGrey),
-                          ),
-                        ],
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 240, 241, 241),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Row(
+                          children: [
+                            Radio(
+                              value: false,
+                              groupValue: isRange,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  isRange = value!;
+                                });
+                              },
+                              activeColor: Color.fromARGB(255, 52, 7, 255),
+                            ),
+                            Text(
+                              AppLocalizations.of(context).singleDay,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.blueGrey),
+                            ),
+                            const SizedBox(width: 25.0),
+                            Radio(
+                              value: true,
+                              groupValue: isRange,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  isRange = value!;
+                                });
+                              },
+                              activeColor: Color.fromARGB(255, 52, 7, 255),
+                            ),
+                            Text(
+                              AppLocalizations.of(context).rangeOfDays,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.blueGrey),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 16.0),
                       Row(
@@ -1041,35 +1069,39 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                TextFormField(
-                                  controller: _startDateController,
-                                  decoration: InputDecoration(
-                                    hintText: AppLocalizations.of(context)
-                                        .selectStartDate,
-                                    hintStyle: const TextStyle(
-                                        fontSize: 15, color: Colors.blueGrey),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blueGrey),
-                                      borderRadius: BorderRadius.circular(8.0),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 240, 241, 241),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: TextFormField(
+                                    controller: _startDateController,
+                                    decoration: InputDecoration(
+                                      suffixIcon: Icon(
+                                        Icons.calendar_month,
+                                        color:
+                                            Color.fromARGB(255, 158, 160, 160),
+                                      ),
+                                      enabledBorder: InputBorder
+                                          .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                                      focusedBorder: InputBorder.none,
+                                      hintText: AppLocalizations.of(context)
+                                          .selectStartDate,
+                                      hintStyle: const TextStyle(
+                                          fontSize: 15, color: Colors.blueGrey),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16.0, vertical: 12.0),
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blueGrey),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 12.0),
+                                    readOnly: true,
+                                    onTap: _handleStartDateSelection,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return AppLocalizations.of(context)
+                                            .pleaseSelectStartDate;
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  readOnly: true,
-                                  onTap: _handleStartDateSelection,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return AppLocalizations.of(context)
-                                          .pleaseSelectStartDate;
-                                    }
-                                    return null;
-                                  },
                                 ),
                                 if (!isStartDateValid)
                                   Padding(
@@ -1099,35 +1131,39 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                TextFormField(
-                                  controller: _endDateController,
-                                  decoration: InputDecoration(
-                                    hintText: AppLocalizations.of(context)
-                                        .selectEndDate,
-                                    hintStyle: const TextStyle(
-                                        fontSize: 15, color: Colors.blueGrey),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blueGrey),
-                                      borderRadius: BorderRadius.circular(8.0),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 240, 241, 241),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: TextFormField(
+                                    controller: _endDateController,
+                                    decoration: InputDecoration(
+                                      suffixIcon: Icon(
+                                        Icons.calendar_month,
+                                        color:
+                                            Color.fromARGB(255, 158, 160, 160),
+                                      ),
+                                      enabledBorder: InputBorder
+                                          .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                                      focusedBorder: InputBorder.none,
+                                      hintText: AppLocalizations.of(context)
+                                          .selectEndDate,
+                                      hintStyle: const TextStyle(
+                                          fontSize: 15, color: Colors.blueGrey),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16.0, vertical: 12.0),
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blueGrey),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 12.0),
+                                    readOnly: true,
+                                    onTap: _handleStartDateSelection,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return AppLocalizations.of(context)
+                                            .pleaseSelectEndDate;
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  readOnly: true,
-                                  onTap: _handleStartDateSelection,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return AppLocalizations.of(context)
-                                          .pleaseSelectEndDate;
-                                    }
-                                    return null;
-                                  },
                                 ),
                                 if (!isEndDateValid)
                                   Padding(
@@ -1153,34 +1189,36 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             color: Colors.blueGrey),
                       ),
                       const SizedBox(height: 16.0),
-                      InputDecorator(
-                        decoration: InputDecoration(
-                          hintText:
-                              AppLocalizations.of(context).selectActivityStage,
-                          hintStyle: const TextStyle(
-                              fontSize: 15, color: Colors.blueGrey),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                      Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 240, 241, 241),
+                            borderRadius: BorderRadius.circular(5)),
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            enabledBorder: InputBorder
+                                .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                            focusedBorder: InputBorder.none,
+                            hintText: AppLocalizations.of(context)
+                                .selectActivityStage,
+                            hintStyle: const TextStyle(
+                                fontSize: 15, color: Colors.blueGrey),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: Container(
-                          height: 20,
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<int>(
-                              value: selectedStageId,
-                              isExpanded: true,
-                              icon: const Icon(Icons.arrow_drop_down),
-                              onChanged: (int? newValue) {
-                                setState(() {
-                                  selectedStageId = newValue;
-                                });
-                              },
-                              items: _buildDropdownMenuItems(stages),
+                          child: Padding(
+                            //height: 20,
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<int>(
+                                value: selectedStageId,
+                                isExpanded: true,
+                                icon: const Icon(Icons.arrow_drop_down),
+                                onChanged: (int? newValue) {
+                                  setState(() {
+                                    selectedStageId = newValue;
+                                  });
+                                },
+                                items: _buildDropdownMenuItems(stages),
+                              ),
                             ),
                           ),
                         ),
@@ -1202,38 +1240,37 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                TextFormField(
-                                  controller: _startTimeController,
-                                  decoration: InputDecoration(
-                                    hintText: AppLocalizations.of(context)
-                                        .selectStartTime,
-                                    hintStyle: const TextStyle(
-                                        fontSize: 15, color: Colors.blueGrey),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blueGrey),
-                                      borderRadius: BorderRadius.circular(8.0),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 240, 241, 241),
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: TextFormField(
+                                    controller: _startTimeController,
+                                    decoration: InputDecoration(
+                                      enabledBorder: InputBorder
+                                          .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                                      focusedBorder: InputBorder.none,
+                                      hintText: AppLocalizations.of(context)
+                                          .selectStartTime,
+                                      hintStyle: const TextStyle(
+                                          fontSize: 15, color: Colors.blueGrey),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16.0, vertical: 12.0),
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blueGrey),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 12.0),
+                                    readOnly: true,
+                                    onTap: () => _selectTime(context, true),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return AppLocalizations.of(context)
+                                            .pleaseSelectStartTime;
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value) {
+                                      _validateTimes();
+                                    },
                                   ),
-                                  readOnly: true,
-                                  onTap: () => _selectTime(context, true),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return AppLocalizations.of(context)
-                                          .pleaseSelectStartTime;
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    _validateTimes();
-                                  },
                                 ),
                                 if (!isStartTimeValid)
                                   Padding(
@@ -1263,38 +1300,36 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 const SizedBox(
                                   height: 8,
                                 ),
-                                TextFormField(
-                                  controller: _endTimeController,
-                                  decoration: InputDecoration(
-                                    hintText: AppLocalizations.of(context)
-                                        .selectEndTime,
-                                    hintStyle: const TextStyle(
-                                        fontSize: 15, color: Colors.blueGrey),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blueGrey),
-                                      borderRadius: BorderRadius.circular(8.0),
+                                Container(
+                                  decoration: boxdecoration(),
+                                  child: TextFormField(
+                                    controller: _endTimeController,
+                                    decoration: InputDecoration(
+                                      enabledBorder: InputBorder
+                                          .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                                      focusedBorder: InputBorder.none,
+                                      hintText: AppLocalizations.of(context)
+                                          .selectEndTime,
+                                      hintStyle: const TextStyle(
+                                          fontSize: 15, color: Colors.blueGrey),
+
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16.0, vertical: 12.0),
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blueGrey),
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0, vertical: 12.0),
+                                    readOnly: true,
+                                    onTap: () => _selectTime(context, false),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return AppLocalizations.of(context)
+                                            .pleaseSelectEndTime;
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value) {
+                                      _validateTimes();
+                                    },
                                   ),
-                                  readOnly: true,
-                                  onTap: () => _selectTime(context, false),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return AppLocalizations.of(context)
-                                          .pleaseSelectEndTime;
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    _validateTimes();
-                                  },
                                 ),
                                 if (!isEndTimeValid)
                                   Padding(
@@ -1312,8 +1347,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ],
                       ),
                       const SizedBox(height: 18.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             AppLocalizations.of(context).guests,
@@ -1322,18 +1357,28 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 fontSize: 16,
                                 color: Colors.blueGrey),
                           ),
-                          TextButton.icon(
-                            onPressed: () => _selectGuests(context),
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.blueGrey,
-                            ),
-                            label: Text(
-                              AppLocalizations.of(context).add,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.blueGrey),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 240, 241, 241),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TextButton.icon(
+                                  onPressed: () => _selectGuests(context),
+                                  icon: const Icon(
+                                    Icons.add,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  label: Text(
+                                    AppLocalizations.of(context).add,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.blueGrey),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -1395,8 +1440,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           ),
                         ),
                       const SizedBox(height: 18.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             AppLocalizations.of(context).followers,
@@ -1405,18 +1450,28 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 fontSize: 16,
                                 color: Colors.blueGrey),
                           ),
-                          TextButton.icon(
-                            onPressed: () => _selectFollowers(context),
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.blueGrey,
-                            ),
-                            label: Text(
-                              AppLocalizations.of(context).add,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.blueGrey),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 240, 241, 241),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TextButton.icon(
+                                  onPressed: () => _selectFollowers(context),
+                                  icon: const Icon(
+                                    Icons.add,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  label: Text(
+                                    AppLocalizations.of(context).add,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.blueGrey),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -1473,69 +1528,64 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         children: [
                           Flexible(
                             flex: 1,
-                            child: TextField(
-                              controller: _reminderDurationController,
-                              decoration: InputDecoration(
-                                hintText: AppLocalizations.of(context).duration,
-                                hintStyle: const TextStyle(
-                                    fontSize: 15, color: Colors.blueGrey),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      const BorderSide(color: Colors.blueGrey),
-                                  borderRadius: BorderRadius.circular(8.0),
+                            child: Container(
+                              decoration: boxdecoration(),
+                              child: TextField(
+                                controller: _reminderDurationController,
+                                decoration: InputDecoration(
+                                  enabledBorder: InputBorder
+                                      .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                                  focusedBorder: InputBorder.none,
+                                  hintText:
+                                      AppLocalizations.of(context).duration,
+                                  hintStyle: const TextStyle(
+                                      fontSize: 15, color: Colors.blueGrey),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 12.0),
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      const BorderSide(color: Colors.blueGrey),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 12.0),
+                                keyboardType: TextInputType.number,
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedReminderDuration = value;
+                                  });
+                                },
+                                style: const TextStyle(color: Colors.blueGrey),
                               ),
-                              keyboardType: TextInputType.number,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedReminderDuration = value;
-                                });
-                              },
-                              style: const TextStyle(color: Colors.blueGrey),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Flexible(
                             flex: 2,
-                            child: DropdownButtonFormField<String>(
-                              style: const TextStyle(color: Colors.blueGrey),
-                              decoration: InputDecoration(
-                                hintText: AppLocalizations.of(context).timeUnit,
-                                hintStyle: const TextStyle(
-                                    fontSize: 15, color: Colors.blueGrey),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      const BorderSide(color: Colors.blueGrey),
-                                  borderRadius: BorderRadius.circular(8.0),
+                            child: Container(
+                              decoration: boxdecoration(),
+                              child: DropdownButtonFormField<String>(
+                                style: const TextStyle(color: Colors.blueGrey),
+                                decoration: InputDecoration(
+                                  enabledBorder: InputBorder
+                                      .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                                  focusedBorder: InputBorder.none,
+                                  hintText:
+                                      AppLocalizations.of(context).timeUnit,
+                                  hintStyle: const TextStyle(
+                                      fontSize: 15, color: Colors.blueGrey),
+
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 12.0),
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      const BorderSide(color: Colors.blueGrey),
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 12.0),
+                                value: selectedTimeUnit,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedTimeUnit = newValue!;
+                                  });
+                                },
+                                items: <String>['minutes', 'hours', 'days']
+                                    .map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
                               ),
-                              value: selectedTimeUnit,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedTimeUnit = newValue!;
-                                });
-                              },
-                              items: <String>['minutes', 'hours', 'days']
-                                  .map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
                             ),
                           ),
                         ],
@@ -1597,29 +1647,34 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      DropdownButtonFormField<int>(
-                        value: selectedModuleId,
-                        items: modules.map((module) {
-                          return DropdownMenuItem<int>(
-                            value: module['id'],
-                            child: Text(module['label']),
-                          );
-                        }).toList(),
-                        onChanged: (int? newValue) {
-                          setState(() {
-                            selectedModuleId = newValue;
-                            fetchRelatedModulesFromApi(selectedModuleId!);
-                          });
-                        },
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context).selectModule,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(10.0),
+                      Container(
+                        decoration: boxdecoration(),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: DropdownButtonFormField<int>(
+                            value: selectedModuleId,
+                            items: modules.map((module) {
+                              return DropdownMenuItem<int>(
+                                value: module['id'],
+                                child: Text(module['label']),
+                              );
+                            }).toList(),
+                            onChanged: (int? newValue) {
+                              setState(() {
+                                selectedModuleId = newValue;
+                                fetchRelatedModulesFromApi(selectedModuleId!);
+                              });
+                            },
+                            decoration: InputDecoration(
+                              hintText:
+                                  AppLocalizations.of(context).selectModule,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: InputBorder
+                                  .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                              focusedBorder: InputBorder.none,
+                            ),
                           ),
                         ),
                       ),
@@ -1629,7 +1684,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           child: TextButton(
                             onPressed: _clearModuleSelection,
                             child: Text(
-                              AppLocalizations.of(context).clear,
+                              "Deselect",
                               style: TextStyle(color: Colors.red),
                             ),
                           ),
@@ -1645,30 +1700,31 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      TextField(
-                        controller: _relatedModuleSearchController,
-                        decoration: InputDecoration(
-                          hintText:
-                              AppLocalizations.of(context).searchRelatedModule,
-                          hintStyle: const TextStyle(
-                              fontSize: 15, color: Colors.blueGrey),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(10.0),
+                      Container(
+                        decoration: boxdecoration(),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: TextField(
+                            controller: _relatedModuleSearchController,
+                            decoration: InputDecoration(
+                              hintText: AppLocalizations.of(context)
+                                  .searchRelatedModule,
+                              hintStyle: const TextStyle(
+                                  fontSize: 15, color: Colors.blueGrey),
+                              enabledBorder: InputBorder
+                                  .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                              focusedBorder: InputBorder.none,
+                            ),
+                            onChanged: (value) {
+                              _filterRelatedModules(value);
+                            },
+                            onTap: () {
+                              setState(() {
+                                showRelatedModulesList = true;
+                              });
+                            },
                           ),
                         ),
-                        onChanged: (value) {
-                          _filterRelatedModules(value);
-                        },
-                        onTap: () {
-                          setState(() {
-                            showRelatedModulesList = true;
-                          });
-                        },
                       ),
                       if (showRelatedModulesList)
                         Container(
@@ -1725,35 +1781,38 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      InputDecorator(
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context).selectPriority,
-                          hintStyle: const TextStyle(
-                              fontSize: 15, color: Colors.blueGrey),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Colors.blueGrey),
-                            value: selectedPriority,
-                            isExpanded: false, // Set isExpanded to false
-                            icon: const Icon(Icons.arrow_drop_down),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedPriority = newValue;
-                              });
-                            },
-                            items: _buildPriorityDropdownMenuItems(),
+                      Container(
+                        decoration: boxdecoration(),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: InputDecorator(
+                            decoration: InputDecoration(
+                              hintText:
+                                  AppLocalizations.of(context).selectPriority,
+                              hintStyle: const TextStyle(
+                                  fontSize: 15, color: Colors.blueGrey),
+
+                              enabledBorder: InputBorder
+                                  .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                              focusedBorder: InputBorder.none,
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Colors.blueGrey),
+                                value: selectedPriority,
+                                isExpanded: false, // Set isExpanded to false
+                                icon: const Icon(Icons.arrow_drop_down),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedPriority = newValue;
+                                  });
+                                },
+                                items: _buildPriorityDropdownMenuItems(),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -1768,29 +1827,25 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      TextFormField(
-                        controller: _descriptionController,
-                        decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)
-                              .enterActivityDescription,
-                          hintStyle: const TextStyle(
-                              fontSize: 15, color: Colors.blueGrey),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(8.0),
+                      Container(
+                        decoration: boxdecoration(),
+                        child: TextFormField(
+                          controller: _descriptionController,
+                          decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)
+                                .enterActivityDescription,
+                            hintStyle: const TextStyle(
+                                fontSize: 15, color: Colors.blueGrey),
+                            enabledBorder: InputBorder
+                                .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                            focusedBorder: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                            suffixIcon: const Icon(Icons.description,
+                                color: Colors.blueGrey),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 12.0),
-                          suffixIcon: const Icon(Icons.description,
-                              color: Colors.blueGrey),
+                          maxLines: 4,
                         ),
-                        maxLines: 4,
                       ),
                       const SizedBox(height: 18.0),
                       Text(
@@ -1803,29 +1858,25 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      TextFormField(
-                        controller: _noteController,
-                        decoration: InputDecoration(
-                          hintText:
-                              AppLocalizations.of(context).enterActivityNote,
-                          hintStyle: const TextStyle(
-                              fontSize: 15, color: Colors.blueGrey),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(8.0),
+                      Container(
+                        decoration: boxdecoration(),
+                        child: TextFormField(
+                          controller: _noteController,
+                          decoration: InputDecoration(
+                            hintText:
+                                AppLocalizations.of(context).enterActivityNote,
+                            hintStyle: const TextStyle(
+                                fontSize: 15, color: Colors.blueGrey),
+                            enabledBorder: InputBorder
+                                .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                            focusedBorder: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 12.0),
+                            suffixIcon: const Icon(Icons.note_add_rounded,
+                                color: Colors.blueGrey),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(color: Colors.blueGrey),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 12.0),
-                          suffixIcon: const Icon(Icons.note_add_rounded,
-                              color: Colors.blueGrey),
+                          maxLines: 4,
                         ),
-                        maxLines: 4,
                       ),
                       const SizedBox(height: 18.0),
                       Text(
@@ -1860,5 +1911,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         ),
       ),
     );
+  }
+
+  BoxDecoration boxdecoration() {
+    return BoxDecoration(
+        color: Color.fromARGB(255, 240, 241, 241),
+        borderRadius: BorderRadius.circular(5));
   }
 }

@@ -54,7 +54,6 @@ dependencies:
   html: ^0.15.4
   cached_network_image: ^3.3.1
   font_awesome_flutter: ^10.7.0
-  
 
 dev_dependencies:
   flutter_test:
@@ -73,3 +72,9 @@ flutter:
 
   assets:
     - assets/
+
+  fonts:
+    - family: ProstoOne
+      fonts:
+        - asset: assets/fonts/ProstoOne/ProstoOne-Regular.ttf
+        # Add other font weights/styles if available

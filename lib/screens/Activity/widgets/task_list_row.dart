@@ -256,10 +256,16 @@ class _TaskListRowState extends State<TaskListRow> {
                       ],
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(widget.ownerLabel,
-                            style: TextStyle(
-                                color: hexToColor(widget.task_type_color))),
+                        Container(
+                          alignment: Alignment.centerRight,
+                          width: 130,
+                          child: Text(widget.ownerLabel,
+                              style: TextStyle(
+                                  color: hexToColor(widget.task_type_color)),
+                              overflow: TextOverflow.ellipsis),
+                        ),
                         const SizedBox(width: 10),
                         _buildAvatar(widget.ownerAvatar, widget.ownerLabel,
                             hexToColor(widget.task_type_color)),

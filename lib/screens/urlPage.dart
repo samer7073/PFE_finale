@@ -18,9 +18,9 @@ class UrlPage extends StatefulWidget {
 class _UrlPageState extends State<UrlPage> {
   final _formKey = GlobalKey<FormState>();
   String? url;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadUrl();
   }
@@ -42,102 +42,125 @@ class _UrlPageState extends State<UrlPage> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-// Store theme for efficiency
-
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/serveurImage.jpg',
-              width: 200,
+      body: Stack(
+        children: [
+          // Image de fond
+          Positioned.fill(
+            child: Image.asset(
+              'assets/loginBackgroundd.png',
+              fit: BoxFit.cover,
             ),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "Connection to a host server",
-                    style: textTheme?.bodyText1, // Use null-safe access
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                      "What is the address of your server?"), // Corrected French spelling
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
-                    child: TextFormField(
-                      onChanged: (value) {
-                        _saveUrl('url', value);
-                      },
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your URL'; // Improved French message
-                        }
-                        return null;
-                      },
-                      keyboardType:
-                          TextInputType.url, // Use TextInputType.url for URLs
-                      decoration: InputDecoration(
-                        hintText: "Host server URL",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(18),
-                          borderSide: BorderSide.none,
-                        ),
-                        fillColor:
-                            Color.fromARGB(255, 39, 149, 176).withOpacity(0.1),
-                        filled: true,
-                        prefixIcon: const Icon(
-                          Icons.link,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        // Handle form submission logic here (e.g., save URL)
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  LoginPage()), // Replace with your main screen
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: StadiumBorder(),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 16),
-                      backgroundColor: Color.fromARGB(255, 228, 244, 250),
-                    ),
-                    child: Text(
-                      "Save",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                  ),
-                ],
+          ),
+          // Contenu principal
+          Column(
+            children: [
+              SizedBox(height: 50),
+              Image.asset(
+                'assets/logo-cmk.png', // Remplacez par le chemin de votre image
+                fit: BoxFit.cover,
               ),
-            ),
-          ],
-        ),
+              SizedBox(height: 10),
+              Text(
+                "Comunik Sphere",
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  fontSize: 20.55,
+
+                  fontFamily: 'ProstoOne', // Use the "Prosto One" font
+                ),
+              ),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 70,
+                    ),
+                    Text(
+                      "Connection to a host server",
+                      style: textTheme?.bodyText1
+                          ?.copyWith(color: Colors.white), // Texte en blanc
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "What is the address of your server?",
+                      style: TextStyle(color: Colors.white), // Texte en blanc
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      child: TextFormField(
+                        onChanged: (value) {
+                          _saveUrl('url', value);
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your URL';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.url,
+                        decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .white), // Color of the underline when the field is enabled
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white), // C
+                          ),
+                          hintText: "Host server URL",
+                          hintStyle: TextStyle(
+                              color: Colors.white), // Texte d'indice en blanc
+
+                          prefixIcon: const Icon(
+                            Icons.link,
+                            color: Colors.white, // Icône en blanc
+                          ),
+                        ),
+                        style: TextStyle(
+                            color: Colors.white), // Texte saisi en blanc
+                      ),
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          shape: StadiumBorder(),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 100, vertical: 16),
+                          backgroundColor: Color(0xFF5B67CA)),
+                      child: Text(
+                        "Save",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
