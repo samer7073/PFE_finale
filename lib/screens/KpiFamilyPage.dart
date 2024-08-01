@@ -103,7 +103,7 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
                   TextStyle(
                       color: themeProvider.isDarkMode == true
                           ? Colors.white
-                          : Colors.black),
+                          : Colors.white),
                 );
               },
             ),

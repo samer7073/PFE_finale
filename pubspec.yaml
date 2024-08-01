@@ -78,3 +78,11 @@ flutter:
       fonts:
         - asset: assets/fonts/ProstoOne/ProstoOne-Regular.ttf
         # Add other font weights/styles if available
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf
+          style: italic
+        # Add other font weights/styles if available

@@ -527,6 +527,10 @@ class _TaskCard1State extends State<TaskCard1> {
               children: [
                 Row(
                   children: [
+                    _buildPriorityFlag(_task.priority ?? 'None'),
+                    SizedBox(
+                      width: 10,
+                    ),
                     Text(
                       widget.task.task_type_label,
                       style: TextStyle(
@@ -534,10 +538,6 @@ class _TaskCard1State extends State<TaskCard1> {
                           color: Color.fromARGB(255, 59, 85, 251),
                           fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    _buildPriorityFlag(_task.priority ?? 'None'),
                   ],
                 ),
                 PopupMenuButton<String>(
