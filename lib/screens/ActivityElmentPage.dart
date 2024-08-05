@@ -38,6 +38,49 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
     };
   }
 
+  Map<String, IconData> iconMap = {
+    'BankOutlined': Icons.account_balance,
+    'BellOutlined': Icons.notifications_outlined,
+    'CalendarOutlined': Icons.calendar_today,
+    'CameraOutlined': Icons.camera_alt_outlined,
+    'CarOutlined': Icons.directions_car_outlined,
+    'CheckCircleOutlined': Icons.check_circle_outline,
+    'CommentOutlined': Icons.comment_outlined,
+    'CreditCardOutlined': Icons.credit_card_outlined,
+    'EditOutlined': Icons.edit_outlined,
+    'FacebookOutlined': FontAwesomeIcons.facebook,
+    'FieldTimeOutlined': Icons.access_time,
+    'FolderOutlined': Icons.folder_outlined,
+    'GlobalOutlined': Icons.language,
+    'InboxOutlined': Icons.inbox_outlined,
+    'InstagramOutlined': FontAwesomeIcons.instagram,
+    'MailOutlined': Icons.mail_outline,
+    'MessageOutlined': Icons.message_outlined,
+    'MobileOutlined': Icons.smartphone_outlined,
+    'PhoneOutlined': Icons.phone_outlined,
+    'ReadOutlined': Icons.book_outlined,
+    'SettingOutlined': Icons.settings_outlined,
+    'UploadOutlined': Icons.cloud_upload_outlined,
+    'UserOutlined': Icons.person_outline,
+    'VideoCameraOutlined': Icons.videocam_outlined,
+    'WarningOutlined': Icons.warning_outlined,
+    'WhatsAppOutlined': FontAwesomeIcons.whatsapp,
+    'WrenchScrewdriverIcon':
+        FontAwesomeIcons.screwdriverWrench, // Icône pour WrenchScrewdriver
+    'AtSymbolIcon': Icons.alternate_email_outlined
+  };
+
+  IconData _getIconData(String taskTypeIcon) {
+    return iconMap[taskTypeIcon] ?? Icons.help_outline;
+  }
+
+  Color hexToColor(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
   void fetchActivityElements(String type, String idElement) async {
     try {
       List<ActivityElment>? response =
@@ -162,8 +205,15 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                         : Column(
                             children: _activityElements.map((activityElement) {
                               return ListTile(
-                                leading:
-                                    getTaskIcon(activityElement.tasksTypeId),
+                                leading: CircleAvatar(
+                                  backgroundColor: hexToColor(
+                                      activityElement.task_type_color),
+                                  child: Icon(
+                                    _getIconData(
+                                        activityElement.task_type_icon),
+                                    color: Colors.white,
+                                  ),
+                                ),
                                 title: Text(activityElement.label),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,8 +301,17 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                             children:
                                 _activityElementUpcoming.map((activityElement) {
                               return ListTile(
-                                leading:
-                                    getTaskIcon(activityElement.tasksTypeId),
+                                leading: CircleAvatar(
+                                  backgroundColor: hexToColor(
+                                      activityElement.task_type_color),
+                                  child: Icon(
+                                    _getIconData(
+                                        activityElement.task_type_icon),
+                                    color: Colors.white,
+
+                                    
+                                  ),
+                                ),
                                 title: Text(activityElement.label),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,8 +397,15 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                             children:
                                 _activityElementHistory.map((activityElement) {
                               return ListTile(
-                                leading:
-                                    getTaskIcon(activityElement.tasksTypeId),
+                                leading: CircleAvatar(
+                                  backgroundColor: hexToColor(
+                                      activityElement.task_type_color),
+                                  child: Icon(
+                                    _getIconData(
+                                        activityElement.task_type_icon),
+                                    color: Colors.white,
+                                  ),
+                                ),
                                 title: Text(activityElement.label),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

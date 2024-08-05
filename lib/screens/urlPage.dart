@@ -64,6 +64,7 @@ class _UrlPageState extends State<UrlPage> {
               Text(
                 "Comunik Sphere",
                 style: TextStyle(
+                  
                   color: const Color.fromARGB(255, 255, 255, 255),
                   fontSize: 20.55,
 
@@ -79,15 +80,20 @@ class _UrlPageState extends State<UrlPage> {
                     ),
                     Text(
                       "Connection to a host server",
-                      style: textTheme?.bodyText1
-                          ?.copyWith(color: Colors.white), // Texte en blanc
+                      style: textTheme?.bodyText1?.copyWith(
+                        color: Colors.white,
+                        fontFamily: 'ProstoOne',
+                      ), // Texte en blanc
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
                       "What is the address of your server?",
-                      style: TextStyle(color: Colors.white), // Texte en blanc
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'ProstoOne',
+                      ), // Texte en blanc
                     ),
                     SizedBox(
                       height: 20,
@@ -116,6 +122,7 @@ class _UrlPageState extends State<UrlPage> {
                           ),
                           hintText: "Host server URL",
                           hintStyle: TextStyle(
+                              fontFamily: 'ProstoOne',
                               color: Colors.white), // Texte d'indice en blanc
 
                           prefixIcon: const Icon(
@@ -152,6 +159,7 @@ class _UrlPageState extends State<UrlPage> {
                           fontSize: 14,
                           color: Colors.white,
                           fontWeight: FontWeight.w900,
+                          fontFamily: 'ProstoOne',
                         ),
                       ),
                     ),

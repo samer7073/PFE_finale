@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:flutter_application_stage_project/services/ApiDetailElment.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_application_stage_project/services/ApiUpdateStageFamily.
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:convert';
-
 import '../models/detailModel.dart';
 import '../providers/theme_provider.dart';
 import '../services/sharedPreference.dart';
@@ -17,7 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DetailPage extends StatefulWidget {
   final String elementId;
-  final int pipeline_id;
+  final int? pipeline_id; // pipeline_id peut être null
 
   const DetailPage(
       {super.key, required this.elementId, required this.pipeline_id});
@@ -35,18 +33,22 @@ class _DetailPageState extends State<DetailPage> {
   @override
   void initState() {
     super.initState();
-    fetchData();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    fetchData();
   }
 
-  late int pipelineID; // Ajout d'une variable pour stocker pipeline_label
+  late int? pipelineID; // pipelineID peut être null
+
   void fetchData() async {
     futureApiResponse = ApiDetailElment.getDetail(widget.elementId);
-    // Attendre que futureApiResponse soit résolu pour extraire pipeline_label
     final response = await futureApiResponse;
-    pipelineID = response.data['pipeline_id'];
-    futureStages = fetchStages(pipelineID);
-    futurePipelineName = fetchPipelineName();
+    setState(() {
+      pipelineID = response.data['pipeline_id'];
+    });
+    if (pipelineID != null) {
+      futureStages = fetchStages(pipelineID!);
+      futurePipelineName = fetchPipelineName();
+    }
   }
 
   Future<List<Stage>> fetchStages(int pipelineId) async {
@@ -97,7 +99,6 @@ class _DetailPageState extends State<DetailPage> {
     final responseCode =
         await ApiUpdateStageFamily.fieldPost(elementId, newStageId.toString());
     if (responseCode == 200) {
-      // Mise à jour réussie, recharge les données
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Stage updated successfully',
@@ -109,7 +110,6 @@ class _DetailPageState extends State<DetailPage> {
         fetchData();
       });
     } else {
-      // Échec de la mise à jour
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
           'Failed to update stage',
@@ -120,7 +120,6 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  // Utility method to remove square brackets from strings
   String removeBrackets(String value) {
     return value.replaceAll('[', '').replaceAll(']', '');
   }
@@ -141,7 +140,7 @@ class _DetailPageState extends State<DetailPage> {
             return Center(child: Text('No details found'));
           } else {
             var detailData = snapshot.data!;
-            int selectedStageId = detailData.data['stage_id'];
+            int? selectedStageId = detailData.data['stage_id'];
 
             return SingleChildScrollView(
               child: Padding(
@@ -149,112 +148,174 @@ class _DetailPageState extends State<DetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    FutureBuilder<String>(
-                      future: futurePipelineName,
-                      builder: (context, pipelineSnapshot) {
-                        if (pipelineSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (pipelineSnapshot.hasError) {
-                          return Center(
-                              child: Text('Error: ${pipelineSnapshot.error}'));
-                        } else if (!pipelineSnapshot.hasData) {
-                          return Center(child: Text('No pipeline name found'));
-                        } else {
-                          String pipelineName = pipelineSnapshot.data!;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Row(
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context).pipeline + " ",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  '$pipelineName',
-                                  style: Theme.of(context).textTheme.bodyLarge,
+                    if (pipelineID == null || selectedStageId == null) ...[
+                      Column(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(
+                                16.0), // Add padding around the content
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200], // Background color
+                              borderRadius:
+                                  BorderRadius.circular(8.0), // Rounded corners
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black
+                                      .withOpacity(0.1), // Shadow color
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 3), // Shadow position
                                 ),
                               ],
                             ),
-                          );
-                        }
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    FutureBuilder<List<Stage>>(
-                      future: futureStages,
-                      builder: (context, stagesSnapshot) {
-                        if (stagesSnapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (stagesSnapshot.hasError) {
-                          return Center(
-                              child: Text('Error: ${stagesSnapshot.error}'));
-                        } else if (!stagesSnapshot.hasData ||
-                            stagesSnapshot.data!.isEmpty) {
-                          return Center(child: Text('No stages found'));
-                        } else {
-                          List<Stage> stages = stagesSnapshot.data!;
-                          return Container(
-                            alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            decoration: BoxDecoration(
-                              color: themeProvider.isDarkMode
-                                  ? Colors.black
-                                  : Colors.grey[200],
-                              borderRadius: BorderRadius.circular(8.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize
+                                  .min, // Ensure the column takes up minimum space
+                              children: [
+                                Icon(
+                                  Icons.warning, // Warning icon
+                                  size: 50,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                    height: 20), // Space between icon and text
+                                Center(
+                                  child: Text(
+                                    'There is no pipeline or stage associated with this item.',
+                                    textAlign:
+                                        TextAlign.center, // Center the text
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.red,
+                                      fontWeight:
+                                          FontWeight.bold, // Make the text bold
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                    height:
+                                        20), // Space between text and bottom
+                              ],
                             ),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          )
+                        ],
+                      )
+                    ] else ...[
+                      FutureBuilder<String>(
+                        future: futurePipelineName,
+                        builder: (context, pipelineSnapshot) {
+                          if (pipelineSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (pipelineSnapshot.hasError) {
+                            return Center(
+                                child:
+                                    Text('Error: ${pipelineSnapshot.error}'));
+                          } else if (!pipelineSnapshot.hasData) {
+                            return Center(
+                                child: Text('No pipeline name found'));
+                          } else {
+                            String pipelineName = pipelineSnapshot.data!;
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
                               child: Row(
-                                children: stages.map((stage) {
-                                  bool isSelected = stage.id == selectedStageId;
-                                  return GestureDetector(
-                                    onTap: () {
-                                      updateStage(widget.elementId, stage.id);
-                                    },
-                                    child: AnimatedContainer(
-                                      duration: Duration(milliseconds: 300),
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 10.0, horizontal: 15.0),
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 5.0),
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? Colors.blue
-                                            : Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        border: Border.all(
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context).pipeline + " ",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Text(
+                                    '$pipelineName',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      FutureBuilder<List<Stage>>(
+                        future: futureStages,
+                        builder: (context, stagesSnapshot) {
+                          if (stagesSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (stagesSnapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${stagesSnapshot.error}'));
+                          } else if (!stagesSnapshot.hasData ||
+                              stagesSnapshot.data!.isEmpty) {
+                            return Center(child: Text('No stages found'));
+                          } else {
+                            List<Stage> stages = stagesSnapshot.data!;
+                            return Container(
+                              alignment: Alignment.center,
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: themeProvider.isDarkMode
+                                    ? Colors.black
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: stages.map((stage) {
+                                    bool isSelected =
+                                        stage.id == selectedStageId;
+                                    return GestureDetector(
+                                      onTap: () {
+                                        updateStage(widget.elementId, stage.id);
+                                      },
+                                      child: AnimatedContainer(
+                                        duration: Duration(milliseconds: 300),
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 15.0),
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 5.0),
+                                        decoration: BoxDecoration(
                                           color: isSelected
                                               ? Colors.blue
                                               : Colors.white,
-                                          width: 2.0,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                          border: Border.all(
+                                            color: isSelected
+                                                ? Colors.blue
+                                                : Colors.white,
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          stage.label,
+                                          style: TextStyle(
+                                            color: isSelected
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontWeight: isSelected
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                          ),
                                         ),
                                       ),
-                                      child: Text(
-                                        stage.label,
-                                        style: TextStyle(
-                                          color: isSelected
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontWeight: isSelected
-                                              ? FontWeight.bold
-                                              : FontWeight.normal,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    SizedBox(height: 20),
+                            );
+                          }
+                        },
+                      ),
+                      SizedBox(height: 20),
+                    ],
                     Text(
                       AppLocalizations.of(context).details,
                       style: TextStyle(

@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class IntroPage1 extends StatefulWidget {
   const IntroPage1({super.key});
@@ -13,36 +12,60 @@ class IntroPage1 extends StatefulWidget {
 class _IntroPage1State extends State<IntroPage1> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Image.asset(
-        'assets/undraw_Mobile_application_re_13u3.png',
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Image en arrière-plan
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                    'assets/onbording1.png'), // Remplacez par le chemin de votre image
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Contenu de l'écran
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 320,
+                ),
+                const Text(
+                  "Welcome to Sphere Comunik!",
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 20.55,
+
+                    fontFamily: 'ProstoOne', // Use the "Prosto One" font
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Manage all your activities",
+                    style: TextStyle(
+                        fontFamily: 'ProstoOne',
+                        color: Color.fromARGB(255, 216, 208, 208))),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Simplify your projects, deals and tickets",
+                  style: TextStyle(
+                      fontFamily: 'ProstoOne',
+                      color: Color.fromARGB(255, 216, 208, 208)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      /*
-      Lottie.network(
-          "https://lottie.host/3760c715-3788-43ff-bbd1-32b6dd1bb796/9H8xECNCPh.json"),
-          */
-      Text(
-        "Welcome to  Sphere Comunik!",
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
-      SizedBox(
-        height: 10,
-      ),
-      Text(
-        "Manage all your activities",
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      SizedBox(
-        height: 10,
-      ),
-      Text(
-        "Simplify your projects,deals and and tickets",
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      SizedBox(
-        height: 10,
-      ),
-    ]));
+    );
   }
 }

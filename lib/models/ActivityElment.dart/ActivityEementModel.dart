@@ -21,6 +21,8 @@ class ActivityElment {
   String familyLabel;
   String elementLabel;
   String createdAt;
+  String task_type_color;
+  String task_type_icon;
 
   ActivityElment({
     required this.id,
@@ -42,29 +44,33 @@ class ActivityElment {
     required this.familyLabel,
     required this.elementLabel,
     required this.createdAt,
+    required this.task_type_color,
+    required this.task_type_icon,
   });
 
   factory ActivityElment.fromJson(Map<String, dynamic> json) {
     return ActivityElment(
-      id: json['id'],
-      label: json['label'],
-      startDate: json['start_date'],
-      startTime: json['start_time'],
-      endDate: json['end_date'],
-      endTime: json['end_time'],
-      tasksTypeId: json['tasks_type_id'],
-      owner: OwnerActivityModel.fromJson(json['owner_id']), // Parse owner data
-      priority: json['priority'] ?? '', // Provide default value if null
-      stageId: json['stage_id'], // Nullable field
-      stageLabel: json['stage_label'], // Nullable field
-      pipelineLabel: json['pipeline_label'], // Nullable field
-      isOverdue: json['is_overdue'],
-      guests: json['guests'],
-      followers: json['followers'],
-      creator: CreatorActivityModel.fromJson(json['creator']),
-      familyLabel: json['family_label'],
-      elementLabel: json['element_label'],
-      createdAt: json['created_at'],
-    );
+        id: json['id'],
+        label: json['label'],
+        startDate: json['start_date'],
+        startTime: json['start_time'],
+        endDate: json['end_date'],
+        endTime: json['end_time'],
+        tasksTypeId: json['tasks_type_id'],
+        owner:
+            OwnerActivityModel.fromJson(json['owner_id']), // Parse owner data
+        priority: json['priority'] ?? '', // Provide default value if null
+        stageId: json['stage_id'], // Nullable field
+        stageLabel: json['stage_label'], // Nullable field
+        pipelineLabel: json['pipeline_label'], // Nullable field
+        isOverdue: json['is_overdue'],
+        guests: json['guests'],
+        followers: json['followers'],
+        creator: CreatorActivityModel.fromJson(json['creator']),
+        familyLabel: json['family_label'],
+        elementLabel: json['element_label'],
+        createdAt: json['created_at'],
+        task_type_color: json['task_type_color'] ?? "",
+        task_type_icon: json['task_type_icon'] ?? "");
   }
 }

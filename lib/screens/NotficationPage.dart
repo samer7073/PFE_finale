@@ -207,7 +207,13 @@ class _NotificationPageState extends State<NotificationPage> {
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(task.user),
+                          Container(
+                            width: 160,
+                            child: Text(
+                              task.user,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
                           Text(
                             '$formattedDateTime',
                             style: TextStyle(fontSize: 14),

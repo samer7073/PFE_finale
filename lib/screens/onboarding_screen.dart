@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -77,15 +75,26 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   child: Text(
                     AppLocalizations.of(context).skip,
                     style: TextStyle(
+                      fontFamily: 'ProstoOne',
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       color: themeProvider.isDarkMode == true
                           ? Colors.white
-                          : Colors.blue,
+                          : Colors.white,
                     ),
                   ),
                 ),
-                SmoothPageIndicator(controller: _controller, count: 3),
+                SmoothPageIndicator(
+                  controller: _controller,
+                  count: 3,
+                  effect: SlideEffect(
+                    activeDotColor:
+                        Colors.white, // Couleur de l'indicateur actif
+                    dotColor: Colors.grey, // Couleur des indicateurs inactifs
+                    dotHeight: 8,
+                    dotWidth: 8,
+                  ),
+                ),
                 onLastPage
                     ? GestureDetector(
                         onTap: () async {
@@ -99,29 +108,31 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         child: Text(
                           AppLocalizations.of(context).done,
                           style: TextStyle(
+                            fontFamily: 'ProstoOne',
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: themeProvider.isDarkMode == true
                                 ? Colors.white
-                                : Colors.blue,
+                                : Colors.white,
                           ),
                         ),
                       )
                     : GestureDetector(
                         onTap: () {
                           _controller.nextPage(
-                            duration: Duration(microseconds: 500),
+                            duration: Duration(milliseconds: 500),
                             curve: Curves.bounceIn,
                           );
                         },
                         child: Text(
                           AppLocalizations.of(context).next,
                           style: TextStyle(
+                            fontFamily: 'ProstoOne',
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: themeProvider.isDarkMode == true
                                 ? Colors.white
-                                : Colors.blue,
+                                : Colors.white,
                           ),
                         ),
                       ),

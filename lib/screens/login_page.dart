@@ -217,6 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Text(
                                         "Modify",
                                         style: TextStyle(
+                                            fontFamily: 'ProstoOne',
                                             fontSize: 14,
                                             color: Colors.blue,
                                             fontWeight: FontWeight.w900),
@@ -236,8 +237,9 @@ class _LoginPageState extends State<LoginPage> {
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
                   backgroundColor: Color(0xFF5B67CA)),
               child: Text(
-                "modify",
+                "Modify",
                 style: TextStyle(
+                    fontFamily: 'ProstoOne',
                     fontSize: 14,
                     color: Colors.white,
                     fontWeight: FontWeight.w900),
@@ -415,6 +417,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               AppLocalizations.of(context).login,
               style: TextStyle(
+                  fontFamily: 'ProstoOne',
                   fontSize: 14,
                   color: Colors.white,
                   fontWeight: FontWeight.w900),
@@ -453,7 +456,10 @@ class _LoginPageState extends State<LoginPage> {
           },
           child: Text(
             "Send me a code !",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'ProstoOne',
+            ),
           ),
         ),
       ],

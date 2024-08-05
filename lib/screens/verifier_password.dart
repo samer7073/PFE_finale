@@ -131,7 +131,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                       Text(
                         "VERIFY ACCOUNT!",
                         style: TextStyle(
-                            fontFamily: 'Montserrat',
+                            fontFamily: 'ProstoOne',
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 30),
@@ -140,6 +140,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                       Text(
                         "Enter 6-digit Code code we have sent to at your email",
                         style: TextStyle(
+                            fontFamily: 'ProstoOne',
                             fontSize: 16,
                             color: Color.fromRGBO(255, 255, 255, 0.8)),
                         textAlign: TextAlign.center,
@@ -185,7 +186,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                             child: const Text(
                               "NEXT",
                               style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'ProstoOne',
                                 fontSize: 16,
                                 color: Colors.white,
                               ),

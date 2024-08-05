@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_const_constructors
-import 'package:lottie/lottie.dart';
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 
@@ -13,39 +12,56 @@ class IntroPage3 extends StatefulWidget {
 class _IntroPage3State extends State<IntroPage3> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
       children: [
-        Image.asset(
-          'assets/undraw_New_ideas_re_asn4.png',
+        // Image de fond
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/ActivityComunikSphere.png'), // Chemin vers votre image de fond
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
-        /*
-        LottieBuilder.network(
-            "https://lottie.host/8155de52-c265-44a3-bcee-ee95423b844d/It5G3sUaxe.json"),
-            */
-        Text(
-          "Ready to get started?",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          "Explore our features.",
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Text(
-          "Sign up today!",
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        SizedBox(
-          height: 10,
+        // Contenu de la page
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 400,
+              ),
+              Text(
+                "Ready to get started?",
+                style: TextStyle(
+                  color: const Color.fromARGB(255, 255, 255, 255),
+                  fontSize: 20.55,
+
+                  fontFamily: 'ProstoOne', // Use the "Prosto One" font
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text("Explore our features.",
+                  style: TextStyle(
+                      fontFamily: 'ProstoOne',
+                      color: Color.fromARGB(255, 216, 208, 208))),
+              SizedBox(
+                height: 10,
+              ),
+              Text("Sign up today!",
+                  style: TextStyle(
+                      fontFamily: 'ProstoOne',
+                      color: Color.fromARGB(255, 216, 208, 208))),
+              SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
         ),
       ],
-    ));
+    );
   }
 }
