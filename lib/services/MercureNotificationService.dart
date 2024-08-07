@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -31,7 +33,7 @@ class MercureNotificationService {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_stat_logo_cmk');
     const iOSSettings = DarwinInitializationSettings();
     const initializationSettings = InitializationSettings(
       android: androidSettings,
@@ -71,11 +73,11 @@ class MercureNotificationService {
 
   Future<void> _initializeMercure() async {
     try {
-      print('Initializing Mercure...');
+      log('Initializing Mercure...');
       final jwt = await SharedPrefernce.getToken("jwt");
-      print('Retrieved token: $jwt');
+      log('Retrieved token jwt : $jwt');
       final uuid = await SharedPrefernce.getToken("uuid");
-      print('Retrieved uuid: $uuid');
+      log('Retrieved uuid: $uuid');
 
       if (jwt == null) {
         print('Token is null, cannot initialize Mercure');
@@ -87,12 +89,14 @@ class MercureNotificationService {
       }
       if (uuid != null && jwt != null) {
         final topic = await Config.getApiUrl("notifTopic");
+        log("topic" + topic);
         _mercure = Mercure(
           url: await Config.getApiUrl(
               "mercure"), //'https://spheremercuredev.cmk.biz:4443/.well-known/mercure',
           token: jwt,
           topics: ['$topic$uuid'],
         );
+        log(_mercure.isBroadcast.toString() + "gggggggggggggggggggggggg");
 
         _subscription = _mercure.listen((event) {
           var eventData = jsonDecode(event.data);
@@ -104,7 +108,7 @@ class MercureNotificationService {
             'update_task',
             'delete_task'
           ].contains(eventData['type_event'])) {
-            print('Received relevant event: ${event.data}');
+            log('Received relevant event: ${event.data}');
 
             if (eventData['type_event'] == "new_task") {
               String title = eventData['type_event'].replaceAll('_', ' ');
@@ -154,6 +158,7 @@ class MercureNotificationService {
       importance: Importance.max,
       priority: Priority.high,
       showWhen: false,
+      largeIcon: DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
     );
     const iOSDetails = DarwinNotificationDetails();
     const notificationDetails = NotificationDetails(

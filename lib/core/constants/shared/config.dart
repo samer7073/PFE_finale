@@ -25,8 +25,7 @@ class Config {
         "https://sphereauthback.cmk.biz:4543/index.php/api/mobile/login-otp",
     "logout": "https://sphereauthback.cmk.biz:4543/index.php/api/logout",
     "kpiFamily": "$prodUrl:4543/index.php/api/mobile/kpi-family",
-    "profile":
-        "https://sphere-back.comunikcrm.info:4543/index.php/api/mobile/profile",
+    "profile": "$prodUrl:4543/index.php/api/mobile/profile",
     "modifyProfile": "$prodUrl:4543/index.php/api/mobile/edit-profile",
     "pipelines": "$prodUrl:4543/index.php/api/mobile/pipelines-by-family",
     "jwt": "https://spherechatback.cmk.biz:4543/api/user",
@@ -88,7 +87,7 @@ class Config {
     "tasksConfig": "$prodUrl:4543/api/mobile/tasks/config",
     "updatePriority": "$prodUrl:4543/api/mobile",
     "mercure": "https://spheremercure.cmk.biz:4443/.well-known/mercure",
-    "notifTopic": "/notification/dev/user/",
+    "notifTopic": "/notification/prod/user/",
     "chatTopic": "/chat/dev/user/232",
     "urlImage": "$prodUrl:4543/storage/uploads/",
     "taskNotif": "$prodUrl:4543/api/mobile/tasks/",

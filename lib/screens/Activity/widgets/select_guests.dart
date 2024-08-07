@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
@@ -18,7 +20,7 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
   late List<dynamic> _selectedGuests;
   List<dynamic> _filteredGuests = [];
   final TextEditingController _searchController = TextEditingController();
-  late String _imageUrl;
+  late Future<String> _imageUrlFuture;
 
   @override
   void initState() {
@@ -26,21 +28,21 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
     _selectedGuests = List.from(widget.selectedGuests);
     _filteredGuests = widget.guests;
     _searchController.addListener(_filterGuests);
-    _loadImageUrl();
+    _imageUrlFuture = _loadImageUrl();
   }
 
-  Future<void> _loadImageUrl() async {
+  Future<String> _loadImageUrl() async {
     try {
-      _imageUrl = await Config.getApiUrl("imageUrl");
-      if (mounted) {
-        setState(() {});
-      }
+      final url = await Config.getApiUrl("urlImage");
+
+      return url;
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to load image URL: $e')),
         );
       }
+      return ''; // Retourner une chaîne vide en cas d'échec
     }
   }
 
@@ -63,72 +65,91 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search Guests',
-              hintStyle: TextStyle(color: Colors.grey, fontSize: 15),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8.0),
+    return FutureBuilder<String>(
+      future: _imageUrlFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final imageUrl = snapshot.data ?? '';
+
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search Guests',
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: _filteredGuests.length,
-            itemBuilder: (context, index) {
-              final guest = _filteredGuests[index];
-              final isSelected = _selectedGuests.contains(guest);
-              return CheckboxListTile(
-                activeColor: Colors.blue,
-                secondary: _buildAvatar(guest),
-                title: Text(guest['label']),
-                value: isSelected,
-                onChanged: (bool? value) {
-                  setState(() {
-                    if (value == true) {
-                      _selectedGuests.add(guest);
-                    } else {
-                      _selectedGuests.remove(guest);
-                    }
-                  });
+            Expanded(
+              child: ListView.builder(
+                itemCount: _filteredGuests.length,
+                itemBuilder: (context, index) {
+                  final guest = _filteredGuests[index];
+                  final isSelected = _selectedGuests.contains(guest);
+                  return CheckboxListTile(
+                    activeColor: Colors.blue,
+                    secondary: _buildAvatar(guest, imageUrl),
+                    title: Text(guest['label']),
+                    subtitle: Text(guest['family_name'] ?? ""),
+                    value: isSelected,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        if (value == true) {
+                          _selectedGuests.add(guest);
+                        } else {
+                          _selectedGuests.remove(guest);
+                        }
+                      });
+                    },
+                  );
                 },
-              );
-            },
-          ),
-        ),
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-              const Color.fromARGB(255, 58, 119, 216),
+              ),
             ),
-          ),
-          onPressed: () {
-            Navigator.pop(context, _selectedGuests);
-          },
-          child: Text('Done', style: TextStyle(color: Colors.white)),
-        ),
-      ],
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  const Color.fromARGB(255, 58, 119, 216),
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context, _selectedGuests);
+              },
+              child: Text(AppLocalizations.of(context).save,
+                  style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
     );
   }
 
-  Widget _buildAvatar(Map<String, dynamic> user) {
+  Widget _buildAvatar(Map<String, dynamic> user, String baseUrl) {
     String avatarUrl = user['avatar'] ?? '';
-    String initials = user['label'].split(' ').map((name) => name[0]).join();
 
-    return avatarUrl.isNotEmpty
+    // Check if avatarUrl is a single character, indicating no image
+    bool hasImage = avatarUrl.length > 1;
+
+    return hasImage
         ? CircleAvatar(
-            backgroundImage: NetworkImage("$_imageUrl/$avatarUrl"),
+            backgroundImage: NetworkImage("$baseUrl$avatarUrl"),
           )
         : CircleAvatar(
             backgroundColor: Colors.blue,
             child: Text(
-              initials,
+              avatarUrl.toUpperCase(), // Use the single letter as initial
               style: const TextStyle(color: Colors.white),
             ),
           );

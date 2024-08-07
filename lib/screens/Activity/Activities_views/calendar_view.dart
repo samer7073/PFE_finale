@@ -186,11 +186,11 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
       case 'high':
         return Colors.orange;
       case 'medium':
-        return Colors.yellow;
+        return Colors.blue;
       case 'low':
-        return Colors.green;
-      default:
         return Colors.grey;
+      default:
+        return Colors.transparent;
     }
   }
 

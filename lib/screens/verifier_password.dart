@@ -1,11 +1,8 @@
-// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors
 
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_application_stage_project/models/login/loginResponse.dart';
-import 'package:flutter_application_stage_project/screens/home_page.dart';
-import 'package:flutter_application_stage_project/screens/login_page.dart';
+
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
 import 'package:flutter_application_stage_project/services/ApiOtpGenerate.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -13,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/sharedPreference.dart';
-import 'loading.dart';
 
 class VerfierPassword extends StatefulWidget {
   final String email;
@@ -61,13 +57,18 @@ class _VerfierPasswordState extends State<VerfierPassword> {
       setState(() {
         errorMessage = "Le code de vérification ne peut pas être vide.";
       });
+    } else if (otp.length < 6) {
+      setState(() {
+        errorMessage =
+            "Le code de vérification doit contenir au moins 6 chiffres.";
+      });
     } else {
       setState(() {
         loading = true;
         errorMessage = "";
         otpData['otp'] = otp;
       });
-      print(otpData.toString());
+
       try {
         final postOtp = await ApiOtpGenrate.LoginOtp(otpData);
         if (postOtp!.success == true) {
@@ -164,12 +165,17 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                             confirmUser();
                           }
                         },
+                        onCodeChanged: (value) {
+                          setState(() {
+                            otp = value;
+                          });
+                        },
                       ),
                       SizedBox(height: 30),
                       if (errorMessage.isNotEmpty)
                         Text(
                           errorMessage,
-                          style: TextStyle(color: Colors.red),
+                          style: TextStyle(color: Colors.white),
                         ),
                       SizedBox(height: 20),
                       Row(

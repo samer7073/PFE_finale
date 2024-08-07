@@ -696,7 +696,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     String avatarUrl = user['avatar'] ?? '';
     String initials = user['label'].split(' ').map((name) => name[0]).join();
 
-    return avatarUrl.isNotEmpty
+    return avatarUrl.length > 1
         ? FutureBuilder<String>(
             future: imageUrlFuture,
             builder: (context, snapshot) {
@@ -733,11 +733,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               );
             },
           )
-        : CircleAvatar(
-            backgroundColor: Colors.blueGrey,
-            child: Text(
-              initials,
-              style: const TextStyle(color: Colors.white),
+        : ClipOval(
+            child: CircleAvatar(
+              radius: 15,
+              backgroundColor: Colors.blueGrey,
+              child: Text(
+                user['avatar'],
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
           );
   }
@@ -1691,7 +1694,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ),
                       const SizedBox(height: 16.0),
                       Text(
-                        "Deselect",
+                        AppLocalizations.of(context).relatedElement,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,

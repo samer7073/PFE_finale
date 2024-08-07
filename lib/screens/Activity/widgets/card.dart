@@ -273,7 +273,7 @@ class _TaskCard1State extends State<TaskCard1> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildPriorityOption('Low', Colors.green),
+              _buildPriorityOption('Low', Colors.grey),
               _buildPriorityOption('Medium', Colors.blue),
               _buildPriorityOption('High', Colors.orange),
               _buildPriorityOption('Urgent', Colors.red),
@@ -378,7 +378,7 @@ class _TaskCard1State extends State<TaskCard1> {
     Color flagColor;
     switch (priority.toLowerCase()) {
       case 'low':
-        flagColor = Colors.green;
+        flagColor = Colors.grey;
         break;
       case 'medium':
         flagColor = Colors.blue;

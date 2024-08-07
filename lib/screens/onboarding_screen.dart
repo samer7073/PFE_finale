@@ -1,5 +1,6 @@
-import 'dart:developer';
+// ignore_for_file: prefer_const_constructors
 
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_stage_project/intro_screens/intro_page_1.dart';
@@ -11,8 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../main.dart';
+import '../../main.dart';
 import 'login_page.dart';
 import '../../models/ticket/ticket.dart';
 import '../../models/ticket/ticketData.dart';
@@ -27,16 +27,20 @@ class OnBoardingScreen extends StatefulWidget {
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late ThemeProvider themeProvider;
-  PageController _controller = PageController();
+  final PageController _controller = PageController();
   bool onLastPage = false;
-  bool isSystemThemeDark = false; // Initialize here
-  bool isFirstBuild = true;
-  List<TicketData> tickets = [];
 
   @override
   void initState() {
     super.initState();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    _controller.addListener(() {
+      final pageIndex = _controller.page ?? 0;
+      setState(() {
+        onLastPage =
+            pageIndex >= 2.0; // Checking if the page index is on the last page
+      });
+    });
   }
 
   Future<void> markOnboardingComplete() async {
@@ -46,7 +50,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log('la  valeur de isdark dans build onBordingScrren  ==== ${themeProvider.isDarkMode}');
+    log('la valeur de isdark dans build onBordingScrren  ==== ${themeProvider.isDarkMode}');
     return Scaffold(
       body: Stack(
         children: [
@@ -78,7 +82,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       fontFamily: 'ProstoOne',
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
-                      color: themeProvider.isDarkMode == true
+                      color: themeProvider.isDarkMode
                           ? Colors.white
                           : Colors.white,
                     ),
@@ -111,7 +115,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             fontFamily: 'ProstoOne',
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
-                            color: themeProvider.isDarkMode == true
+                            color: themeProvider.isDarkMode
                                 ? Colors.white
                                 : Colors.white,
                           ),
@@ -121,7 +125,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         onTap: () {
                           _controller.nextPage(
                             duration: Duration(milliseconds: 500),
-                            curve: Curves.bounceIn,
+                            curve: Curves.easeInOut,
                           );
                         },
                         child: Text(
@@ -130,7 +134,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             fontFamily: 'ProstoOne',
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
-                            color: themeProvider.isDarkMode == true
+                            color: themeProvider.isDarkMode
                                 ? Colors.white
                                 : Colors.white,
                           ),

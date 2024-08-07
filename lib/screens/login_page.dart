@@ -267,6 +267,21 @@ class _LoginPageState extends State<LoginPage> {
           },
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
+              errorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors
+                      .white, // Color of the underline when there is an error
+                ),
+              ),
+              focusedErrorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors
+                      .white, // Color of the underline when there is an error and the field is focused
+                ),
+              ),
+              errorStyle: TextStyle(
+                color: Colors.white, // Color of the error message
+              ),
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
                     color: Colors
@@ -287,6 +302,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         const SizedBox(height: 10),
         TextFormField(
+          onFieldSubmitted: _onFieldSubmitted,
           onChanged: (value) {
             setState(() => password = value);
           },
@@ -323,6 +339,21 @@ class _LoginPageState extends State<LoginPage> {
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white), // C
             ),
+            errorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors
+                    .white, // Color of the underline when there is an error
+              ),
+            ),
+            focusedErrorBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors
+                    .white, // Color of the underline when there is an error and the field is focused
+              ),
+            ),
+            errorStyle: TextStyle(
+              color: Colors.white, // Color of the error message
+            ),
           ),
           obscureText: securePassword,
           style: TextStyle(color: Colors.white),
@@ -333,82 +364,7 @@ class _LoginPageState extends State<LoginPage> {
           width: 50,
           height: 50,
           child: ElevatedButton(
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                log(password + "," + email);
-                setState(() {
-                  loading = true;
-                });
-
-                try {
-                  final isProd = await checkIsProd();
-                  final loginResponse =
-                      await loginAPI.loginUser(email, password, isProd);
-
-                  if (loginResponse.success) {
-                    _saveString('token', loginResponse.token.access_token);
-                    log("token: ${loginResponse.token.access_token}");
-                    final jwtResponse = await ApiGetJwt.getJwt();
-                    log("jwt: ${jwtResponse.jwtMercure}");
-                    _saveString('jwt', jwtResponse.jwtMercure);
-                    log("Uuid: ${jwtResponse.uuid}");
-                    _saveString("uuid", jwtResponse.uuid);
-
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/homeNavigate', (route) => false);
-                  }
-                } on LoginException catch (e) {
-                  log("LoginException: $e");
-                  setState(() {
-                    loading = false;
-                  });
-
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text("Problème d'authentification"),
-                      contentPadding: EdgeInsets.all(20),
-                      content: Text(
-                        "Merci de vérifier vos informations ou bien contacter l'administrateur.\n$e",
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("Ok"),
-                        ),
-                      ],
-                    ),
-                  );
-                } catch (e) {
-                  log("Error: $e");
-                  setState(() {
-                    loading = false;
-                  });
-
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text("Problème d'authentification"),
-                      contentPadding: EdgeInsets.all(20),
-                      content: Text(
-                        "Merci de vérifier vos informations ou bien contacter l'administrateur.\n$e",
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("Ok"),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              }
-            },
+            onPressed: _handleLogin,
             style: ElevatedButton.styleFrom(
               shape: StadiumBorder(),
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
@@ -498,5 +454,85 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> setIsProdInSharedPreferences(bool isProd) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isProd', isProd);
+  }
+
+  Future<void> _handleLogin() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      log(password + "," + email);
+      setState(() {
+        loading = true;
+      });
+
+      try {
+        final isProd = await checkIsProd();
+        final loginResponse = await loginAPI.loginUser(email, password, isProd);
+
+        if (loginResponse.success) {
+          _saveString('token', loginResponse.token.access_token);
+          log("token: ${loginResponse.token.access_token}");
+          final jwtResponse = await ApiGetJwt.getJwt();
+          log("jwt: ${jwtResponse.jwtMercure}");
+          _saveString('jwt', jwtResponse.jwtMercure);
+          log("Uuid: ${jwtResponse.uuid}");
+          _saveString("uuid", jwtResponse.uuid);
+
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/homeNavigate', (route) => false);
+        }
+      } on LoginException catch (e) {
+        log("LoginException: $e");
+        setState(() {
+          loading = false;
+        });
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Problème d'authentification"),
+            contentPadding: EdgeInsets.all(20),
+            content: Text(
+              "Merci de vérifier vos informations ou bien contacter l'administrateur.\n$e",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Ok"),
+              ),
+            ],
+          ),
+        );
+      } catch (e) {
+        log("Error: $e");
+        setState(() {
+          loading = false;
+        });
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Problème d'authentification"),
+            contentPadding: EdgeInsets.all(20),
+            content: Text(
+              "Merci de vérifier vos informations ou bien contacter l'administrateur.\n$e",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Ok"),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  void _onFieldSubmitted(String value) async {
+    await _handleLogin();
   }
 }

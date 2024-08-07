@@ -147,5 +147,6 @@
   "note": "ملاحظة",
   "enterActivityNote": "أدخل ملاحظة النشاط",
   "uploadFiles": "تحميل الملفات",
-  "upload": "تحميل"
+  "upload": "تحميل",
+  "relatedElement":"العنصر ذو الصلة"
 }

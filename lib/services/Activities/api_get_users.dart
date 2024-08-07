@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,6 +11,7 @@ Future<List<dynamic>> fetchUsers() async {
         'fetchUsers',
       ) +
       '/get-users'; // Utilisation de l'URL définie dans Config.dart
+  log(url + "9999999999999999999999999999999999999");
   final token = await SharedPrefernce.getToken("token");
 
   try {

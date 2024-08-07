@@ -131,7 +131,7 @@
   "guests": "Invités",
   "add": "Ajouter",
   "sendEmailToExternalMembers": "Envoyer un e-mail aux membres externes sélectionnés",
-  "followers": "Abonnés",
+  "followers": "Suiveur",
   "reminderBefore": "Rappel avant",
   "duration": "Durée",
   "timeUnit": "Unité de temps",
@@ -147,5 +147,6 @@
   "note": "Note",
   "enterActivityNote": "Entrez une note pour l'activité",
   "uploadFiles": "Télécharger des fichiers",
-  "upload": "Télécharger"
+  "upload": "Télécharger",
+  "relatedElement":"Élément associé"
 }

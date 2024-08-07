@@ -147,5 +147,6 @@
   "note": "Note",
   "enterActivityNote": "Enter Activity note",
   "uploadFiles": "Upload Files",
-  "upload": "Upload"
+  "upload": "Upload",
+  "relatedElement":"Related Element"
 }
