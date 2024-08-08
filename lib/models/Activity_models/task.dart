@@ -1,4 +1,5 @@
 class Task {
+  final int send_email;
   final String id;
   final String label;
   String priority;
@@ -38,46 +39,46 @@ class Task {
   String task_type_label;
   String task_type_color;
 
-  Task({
-    required this.id,
-    required this.label,
-    required this.priority,
-    required this.creatorLabel,
-    required this.creatorAvatar,
-    required this.ownerId,
-    required this.ownerLabel,
-    required this.tasksTypeId,
-    required this.ownerAvatar,
-    required this.startDate,
-    required this.endDate,
-    required this.startTime,
-    required this.endTime,
-    required this.description,
-    required this.note,
-    required this.stageId,
-    required this.stageLabel,
-    required this.pipelineLabel,
-    required this.familyId,
-    required this.familyLabel,
-    required this.elementId,
-    required this.elementLabel,
-    required this.createAt,
-    required this.guests,
-    required this.followers,
-    required this.reminderBeforeEnd,
-    required this.location,
-    required this.reminder,
-    required this.iconColor,
-    this.isChecked = false,
-    required this.isOverdue,
-    this.roomId,
-    this.stageColor = '#000000', // Valeur par défaut
-    this.stagePercent = 0,
-    required this.uploads, // Valeur par défaut
-    required this.task_type_icon,
-    required this.task_type_label,
-    required this.task_type_color,
-  });
+  Task(
+      {required this.id,
+      required this.label,
+      required this.priority,
+      required this.creatorLabel,
+      required this.creatorAvatar,
+      required this.ownerId,
+      required this.ownerLabel,
+      required this.tasksTypeId,
+      required this.ownerAvatar,
+      required this.startDate,
+      required this.endDate,
+      required this.startTime,
+      required this.endTime,
+      required this.description,
+      required this.note,
+      required this.stageId,
+      required this.stageLabel,
+      required this.pipelineLabel,
+      required this.familyId,
+      required this.familyLabel,
+      required this.elementId,
+      required this.elementLabel,
+      required this.createAt,
+      required this.guests,
+      required this.followers,
+      required this.reminderBeforeEnd,
+      required this.location,
+      required this.reminder,
+      required this.iconColor,
+      this.isChecked = false,
+      required this.isOverdue,
+      this.roomId,
+      this.stageColor = '#000000', // Valeur par défaut
+      this.stagePercent = 0,
+      required this.uploads, // Valeur par défaut
+      required this.task_type_icon,
+      required this.task_type_label,
+      required this.task_type_color,
+      required this.send_email});
 
   factory Task.fromJson(Map<String, dynamic> json,
       {int stagePercent = 0, String stageColor = '#000000'}) {
@@ -138,6 +139,7 @@ class Task {
       task_type_icon: json['task_type_icon'] ?? "",
       task_type_label: json['task_type_label'] ?? "",
       task_type_color: json['task_type_color'] ?? "#000000",
+      send_email: json["send_email"] ?? 0,
     );
   }
 

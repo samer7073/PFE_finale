@@ -452,7 +452,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         'family_id': selectedModuleId,
         'element_id': selectedRelatedModuleId,
         'description': _descriptionController.text,
-        'notes': _noteController.text,
+        'note': _noteController.text,
         'reminder_before_end': reminderBeforeEnd,
         'upload': files,
         'priority': selectedPriority,

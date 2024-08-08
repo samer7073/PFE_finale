@@ -137,12 +137,14 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
   Future<void> fetchTaskDetails(String taskId) async {
     try {
       final response = await getTaskDetails(taskId);
-      print('API Response: $response');
+      log('API Response: $response');
 
       final task = Task.fromJson(response['data']);
       print('Reminder :${task.reminder}');
+      reminderBeforeEnd = task.reminderBeforeEnd!;
 
       _taskNameController.text = task.label;
+      sendEmailToExternalMembers = task.send_email == 1 ? true : false;
       _startDateController.text = task.startDate;
       _endDateController.text = task.endDate;
       _startTimeController.text = task.startTime;
@@ -530,7 +532,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
           'family_id': selectedModuleId,
           'element_id': selectedRelatedModuleId,
           'description': _descriptionController.text,
-          'notes': _noteController.text,
+          'note': _noteController.text,
           'reminder_before_end': reminderBeforeEnd,
           'upload': files,
           'priority': selectedPriority,
