@@ -98,11 +98,17 @@ class _ticketListRowState extends State<ticketListRow> {
                         AppLocalizations.of(context).label + " ",
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
-                      Text(widget.title,
+                      Container(
+                        width: 200,
+                        child: Text(
+                          widget.title,
                           style: TextStyle(
                               color: Color.fromARGB(255, 5, 104, 225),
                               fontSize: 16,
-                              fontWeight: FontWeight.bold)),
+                              fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -137,8 +143,14 @@ class _ticketListRowState extends State<ticketListRow> {
                         AppLocalizations.of(context).pipeline + " ",
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
-                      Text(widget.Pipeline,
-                          style: Theme.of(context).textTheme.bodyLarge),
+                      Container(
+                        width: 150,
+                        child: Text(
+                          widget.Pipeline,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                   Row(

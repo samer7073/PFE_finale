@@ -62,9 +62,13 @@ class _ProjectListRowState extends State<ProjectListRow> {
                       AppLocalizations.of(context).ref + " ",
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
-                    Text(
-                      widget.reference,
-                      style: Theme.of(context).textTheme.bodyText1,
+                    Container(
+                      width: 150,
+                      child: Text(
+                        widget.reference,
+                        style: Theme.of(context).textTheme.bodyText1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     )
                   ],
                 ),
@@ -83,11 +87,17 @@ class _ProjectListRowState extends State<ProjectListRow> {
                   AppLocalizations.of(context).label + " ",
                   style: Theme.of(context).textTheme.subtitle2,
                 ),
-                Text(widget.title,
+                Container(
+                  width: 270,
+                  child: Text(
+                    widget.title,
                     style: TextStyle(
                         color: Color.fromARGB(255, 5, 104, 225),
                         fontSize: 16,
-                        fontWeight: FontWeight.bold)),
+                        fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
             SizedBox(
@@ -102,9 +112,13 @@ class _ProjectListRowState extends State<ProjectListRow> {
                       AppLocalizations.of(context).pipeline + " ",
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
-                    Text(
-                      widget.pipline,
-                      style: Theme.of(context).textTheme.bodyText1,
+                    Container(
+                      width: 100,
+                      child: Text(
+                        widget.pipline,
+                        style: Theme.of(context).textTheme.bodyText1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),

@@ -287,19 +287,23 @@ class _TaskListPageState extends State<TaskListPage> {
                     child: TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        suffix: IconButton(
-                          onPressed: () {
-                            _searchController
-                                .clear(); // Efface la valeur du contrôleur
-                          },
-                          icon: Center(
-                            child: Icon(
-                              Icons.cancel,
-                              size: 20,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ),
+                        suffix: _searchController.text.isEmpty
+                            ? null
+                            : IconButton(
+                                onPressed: () {
+                                  _searchController
+                                      .clear(); // Clear the text in the controller
+                                  setState(
+                                      () {}); // Trigger UI update to hide the icon
+                                },
+                                icon: Center(
+                                  child: Icon(
+                                    Icons.cancel,
+                                    size: 20,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
                         hintText: 'Search tasks...',
                         hintStyle: TextStyle(
                           fontSize: 14, // Adjust font size as needed
@@ -321,6 +325,10 @@ class _TaskListPageState extends State<TaskListPage> {
                       style: TextStyle(
                         fontSize: 14, // Adjust font size as needed
                       ),
+                      onChanged: (text) {
+                        setState(
+                            () {}); // Trigger UI update to show/hide the icon
+                      },
                     ),
                   ),
                 ),

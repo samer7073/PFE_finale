@@ -63,10 +63,12 @@ class _DealListRowState extends State<DealListRow> {
                     Text(
                       AppLocalizations.of(context).ref + " ",
                       style: Theme.of(context).textTheme.subtitle2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       widget.reference,
                       style: Theme.of(context).textTheme.bodyText1,
+                      overflow: TextOverflow.ellipsis,
                     )
                   ],
                 ),
@@ -88,9 +90,13 @@ class _DealListRowState extends State<DealListRow> {
                       AppLocalizations.of(context).organisation + " ",
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
-                    Text(
-                      widget.organisation,
-                      style: Theme.of(context).textTheme.bodyText1,
+                    Container(
+                      width: 270,
+                      child: Text(
+                        widget.organisation,
+                        style: Theme.of(context).textTheme.bodyText1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     )
                   ],
                 ),
@@ -108,11 +114,17 @@ class _DealListRowState extends State<DealListRow> {
                 SizedBox(
                   width: 10,
                 ),
-                Text(widget.title,
+                Container(
+                  width: 300,
+                  child: Text(
+                    widget.title,
                     style: TextStyle(
                         color: Color.fromARGB(255, 5, 104, 225),
                         fontSize: 16,
-                        fontWeight: FontWeight.bold)),
+                        fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
             SizedBox(
@@ -130,9 +142,13 @@ class _DealListRowState extends State<DealListRow> {
                     SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      widget.piepline,
-                      style: Theme.of(context).textTheme.bodyText1,
+                    Container(
+                      width: 100,
+                      child: Text(
+                        widget.piepline,
+                        style: Theme.of(context).textTheme.bodyText1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
