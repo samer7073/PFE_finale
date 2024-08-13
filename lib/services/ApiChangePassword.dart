@@ -11,6 +11,7 @@ class ApiChangePassword {
     final token = await SharedPrefernce.getToken("token");
     final url = await Config.getApiUrl(
         'changePassword'); // Utilisation de Config pour obtenir l'URL
+    log(url);
 
     try {
       final baseOptions = BaseOptions(

@@ -26,7 +26,7 @@ class Config {
     "logout": "https://sphereauthback.cmk.biz:4543/index.php/api/logout",
     "kpiFamily": "$prodUrl:4543/index.php/api/mobile/kpi-family",
     "profile": "$prodUrl:4543/index.php/api/mobile/profile",
-    "modifyProfile": "$prodUrl:4543/index.php/api/mobile/edit-profile",
+    "modifyProfile": "$prodUrl:4543/index.php/api/edit-profile",
     "pipelines": "$prodUrl:4543/index.php/api/mobile/pipelines-by-family",
     "jwt": "https://spherechatback.cmk.biz:4543/api/user",
 
@@ -35,7 +35,7 @@ class Config {
     "profileUrl":
         "$prodUrl:4543/index.php/api/mobile/profile", // Added for ApiProfil
     "editProfileUrl":
-        "$prodUrl:4543/index.php/api/mobile/edit-profile", // Added for ApiProfil
+        "$prodUrl:4543/index.php/api/edit-profile", // Added for ApiProfil
     "pipelinesUrl":
         "$prodUrl:4543/index.php/api/mobile/pipelines-by-family", // Added for GetPipelineApi
 
@@ -115,7 +115,7 @@ class Config {
     "logout": "https://sphereauthbackmongodb.cmk.biz:4543/index.php/api/logout",
     "kpiFamily": "$devUrl:4543/index.php/api/mobile/kpi-family",
     "profile": "$devUrl:4543/index.php/api/mobile/profile",
-    "modifyProfile": "$devUrl:4543/index.php/api/mobile/edit-profile",
+    "modifyProfile": "$devUrl:4543/index.php/api/edit-profile",
     "pipelines": "$devUrl:4543/index.php/api/mobile/pipelines-by-family",
     "jwt": "https://spherechatbackmongodb.cmk.biz:4543/api/user",
 
@@ -124,7 +124,7 @@ class Config {
     "profileUrl":
         "$devUrl:4543/index.php/api/mobile/profile", // Added for ApiProfil
     "editProfileUrl":
-        "$devUrl:4543/index.php/api/mobile/edit-profile", // Added for ApiProfil
+        "$devUrl:4543/index.php/api/edit-profile", // Added for ApiProfil
     "pipelinesUrl":
         "$devUrl:4543/index.php/api/mobile/pipelines-by-family", // Added for GetPipelineApi
 

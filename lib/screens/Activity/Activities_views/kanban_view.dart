@@ -143,25 +143,41 @@ class _KanbanBoardState extends State<KanbanBoard> {
               future: pipelines,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return DropdownButton<Pipeline>(
-                    style: const TextStyle(color: Colors.grey),
-                    hint: const Text('Select Pipeline'),
-                    value: selectedPipeline,
-                    onChanged: (Pipeline? newValue) {
-                      if (newValue != null) {
-                        _clearTasks();
-                        _initializeDefaultPipelineAndStage(newValue);
-                        setState(() {
-                          _pageController = PageController(initialPage: 0);
-                        });
-                      }
-                    },
-                    items: snapshot.data!.map((Pipeline pipeline) {
-                      return DropdownMenuItem<Pipeline>(
-                        value: pipeline,
-                        child: Text(pipeline.label),
-                      );
-                    }).toList(),
+                  return Container(
+                    width: 200,
+                    child: InputDecorator(
+                      expands: false,
+                      decoration: InputDecoration(
+                        labelText: 'Pipeline', // Adding the label
+                        border: OutlineInputBorder(), // Adding the border
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<Pipeline>(
+                          isExpanded: true,
+                          style: const TextStyle(color: Colors.grey),
+                          hint: const Text('Select Pipeline'),
+                          value: selectedPipeline,
+                          onChanged: (Pipeline? newValue) {
+                            if (newValue != null) {
+                              _clearTasks();
+                              _initializeDefaultPipelineAndStage(newValue);
+                              setState(() {
+                                _pageController =
+                                    PageController(initialPage: 0);
+                              });
+                            }
+                          },
+                          items: snapshot.data!.map((Pipeline pipeline) {
+                            return DropdownMenuItem<Pipeline>(
+                              value: pipeline,
+                              child: Text(pipeline.label),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                   );
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
@@ -174,64 +190,66 @@ class _KanbanBoardState extends State<KanbanBoard> {
             if (selectedPipeline != null && stages.isNotEmpty)
               PreferredSize(
                 preferredSize: const Size.fromHeight(70),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (var stage in stages)
-                          InkWell(
-                              splashColor: Colors.white,
-                              overlayColor:
-                                  MaterialStateProperty.all(Colors.white),
-                              onTap: () {
-                                setState(() {
-                                  selectedStageId = stage.id;
-                                  int pageIndex = stages.indexOf(stage);
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    if (_pageController.hasClients) {
-                                      _pageController.jumpToPage(pageIndex);
-                                    }
+                child: Center(
+                  child: SizedBox(
+                    //width: MediaQuery.of(context).size.width,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          for (var stage in stages)
+                            InkWell(
+                                splashColor: Colors.white,
+                                overlayColor:
+                                    MaterialStateProperty.all(Colors.white),
+                                onTap: () {
+                                  setState(() {
+                                    selectedStageId = stage.id;
+                                    int pageIndex = stages.indexOf(stage);
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      if (_pageController.hasClients) {
+                                        _pageController.jumpToPage(pageIndex);
+                                      }
+                                    });
                                   });
-                                });
-                              },
-                              child: Container(
-                                height: 42,
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 12.0,
-                                  horizontal: 15.0,
-                                ),
-                                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: selectedStageId == stage.id
-                                      ? Color.fromARGB(255, 34, 63, 249)
-                                      : Colors.white,
-                                  border: Border.all(
+                                },
+                                child: Container(
+                                  height: 42,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 12.0,
+                                    horizontal: 15.0,
+                                  ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
                                     color: selectedStageId == stage.id
                                         ? Color.fromARGB(255, 34, 63, 249)
-                                        : Color.fromARGB(255, 200, 200,
-                                            200), // Couleur de la bordure non sélectionnée
-                                    width: 0.50,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    stage.label,
-                                    style: TextStyle(
+                                        : Colors.white,
+                                    border: Border.all(
                                       color: selectedStageId == stage.id
-                                          ? Colors.white
-                                          : isDarkMode
-                                              ? Colors.white
-                                              : Colors.grey,
+                                          ? Color.fromARGB(255, 34, 63, 249)
+                                          : Color.fromARGB(255, 200, 200,
+                                              200), // Couleur de la bordure non sélectionnée
+                                      width: 0.50,
                                     ),
                                   ),
-                                ),
-                              )),
-                      ],
+                                  child: Center(
+                                    child: Text(
+                                      stage.label,
+                                      style: TextStyle(
+                                        color: selectedStageId == stage.id
+                                            ? Colors.white
+                                            : isDarkMode
+                                                ? Colors.white
+                                                : Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -42,12 +42,12 @@ class ApiProfil {
   static Future<int?> modifyProfile(Map<String, dynamic> data) async {
     final token = await SharedPrefernce.getToken("token");
 
-    final baseUrl =await Config.getApiUrl("modifyProfile");
-    final url = "$baseUrl";
+    final baseUrl = await Config.getApiUrl("modifyProfile");
+    log("baseurl" + baseUrl);
 
     try {
       final baseOptions = BaseOptions(
-        baseUrl: url,
+        baseUrl: baseUrl,
         contentType: Headers.jsonContentType,
         validateStatus: (int? status) {
           return status != null;
@@ -60,7 +60,7 @@ class ApiProfil {
       var formData = FormData.fromMap(data);
 
       Response response = await dio.post(
-        url,
+        baseUrl,
         data: formData,
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
