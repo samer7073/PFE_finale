@@ -26,7 +26,7 @@ class _HomeNavigateState extends State<HomeNavigate> {
   @override
   void initState() {
     super.initState();
-    log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+    
 
     // Obtenez le fournisseur de notifications
     final notificationProvider =

@@ -1,11 +1,6 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/dataOuverveiwModel.dart';
 import 'package:flutter_application_stage_project/services/ApiOverView.dart';
-
 import '../components/my_time_line_tiel.dart';
 import '../models/ouverviewModel.dart';
 
@@ -29,6 +24,11 @@ class _OverviewPageState extends State<OverviewPage> {
         ApiOverVeiw.getOverview(widget.elementId, widget.familyId);
   }
 
+  String removeHtmlTags(String htmlText) {
+    final regex = RegExp(r'<[^>]*>', multiLine: true, caseSensitive: false);
+    return htmlText.replaceAll(regex, '');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,15 +45,16 @@ class _OverviewPageState extends State<OverviewPage> {
                 final item = data[index];
                 final isPast =
                     DateTime.parse(item.date).isBefore(DateTime.now());
-                log(isPast.toString());
+
+                final cleanedAction = removeHtmlTags(item.action);
 
                 return MyTimelineTile(
                   name: item.user,
                   isFirst: isFirst,
                   isLast: isLast,
-                  isPast: true,
+                  isPast: isPast,
                   time: item.date,
-                  title: item.action,
+                  title: cleanedAction,
                 );
               },
             );

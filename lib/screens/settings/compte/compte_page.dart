@@ -86,7 +86,7 @@ class _ComptePageState extends State<ComptePage> {
         _profile = profileResponse;
         loading = false;
       });
-      print(_profile);
+      log(_profile.toString());
       if (_profile!.avatar.label.length > 1) {
         fieldValues["field[39]"] = _profile!.avatar.label;
       }
@@ -105,7 +105,7 @@ class _ComptePageState extends State<ComptePage> {
             break;
           }
         }
-        log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+
         log("phone ====" + phone.text);
 
         _convertPhoneCode();
