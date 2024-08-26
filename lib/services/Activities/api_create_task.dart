@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 
 import '../../core/constants/shared/config.dart';
 
-Future<Task> createTask(Map<String, dynamic> taskData) async {
+Future<int> createTask(Map<String, dynamic> taskData) async {
+  log("9999999999999999999999999999999 create task");
   // Fetch token from shared preferences
   final token = await SharedPrefernce.getToken("token");
 
@@ -21,6 +22,7 @@ Future<Task> createTask(Map<String, dynamic> taskData) async {
     'Accept': 'application/json',
     'Authorization': 'Bearer $token',
   };
+  log("9999999999999999999999999999999 before jason.encode");
 
   // Convert the task data to JSON
   final body = json.encode(taskData);
@@ -28,7 +30,11 @@ Future<Task> createTask(Map<String, dynamic> taskData) async {
 
   try {
     // Send the HTTP POST request
+    log("9999999999999999999999999999999 before Post");
     final response = await http.post(url, headers: headers, body: body);
+    log("9999999999999999999999999999999 After Post");
+    log("9999999999999999999999999999999 response.statusCode ${response.statusCode}");
+    log("9999999999999999999999999999999 response.bo ${response.body}");
 
     // Check if the request was successful
     if (response.statusCode == 200) {
@@ -36,7 +42,7 @@ Future<Task> createTask(Map<String, dynamic> taskData) async {
       final jsonResponse = json.decode(response.body);
 
       // Create and return a Task object from the JSON response
-      return Task.fromJson(jsonResponse);
+      return response.statusCode;
     } else {
       // Throw an exception if the request failed
       throw Exception('Failed to create task: ${response.body}');

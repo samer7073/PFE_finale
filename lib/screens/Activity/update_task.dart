@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, avoid_unnecessary_containers, deprecated_member_use
 
 import 'dart:developer';
 import 'dart:io';
@@ -8,11 +8,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
+import 'package:flutter_application_stage_project/screens/Activity/home_view.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/owner_select.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_followers.dart';
 
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_guests.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/task_type.dart';
+import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_families.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_stage.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_task.dart';
@@ -63,6 +65,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
   bool isStartTimeValid = true;
   bool isEndTimeValid = true;
   bool isRelatedModuleValid = true;
+  bool labelTest = true;
 
   List<Map<String, dynamic>> users = [];
   List<Map<String, dynamic>> followers = [];
@@ -76,6 +79,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
   List<dynamic> modules = [];
   List<dynamic> relatedModules = [];
   List<Map<String, dynamic>> uploadedFiles = [];
+  late int is_follower;
+  late int can_update_task;
 
   DateTime _startTime = DateTime.now();
   DateTime _endTime = DateTime.now().add(Duration(hours: 1));
@@ -113,12 +118,6 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
 
   late Future<String> imageUrlFuture;
 
-  void _validateForm() {
-    final bool isTaskTypeValid = selectedTaskTypeId != null;
-    final bool isOwnerValid = selectedOwner != null;
-    final bool isTaskNameValid = _taskNameController.text.isNotEmpty;
-  }
-
   @override
   void dispose() {
     _taskNameController.dispose();
@@ -138,6 +137,10 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     try {
       final response = await getTaskDetails(taskId);
       log('API Response: $response');
+      can_update_task = response['data']['can_update_task'];
+      is_follower = response['data']['is_follower'];
+
+      log("can_update_task 111111111111111111111 $can_update_task   $is_follower");
 
       final task = Task.fromJson(response['data']);
       print('Reminder :${task.reminder}');
@@ -481,9 +484,10 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
   }
 
   void _updateTask() async {
+    log("test 11111111111111");
     if (_formKey.currentState!.validate() &&
         selectedTaskTypeId != null &&
-        (selectedOwner != null || widget.taskId.isNotEmpty) &&
+        selectedOwner != null &&
         isStartDateValid &&
         isEndDateValid &&
         isStartTimeValid &&
@@ -552,20 +556,32 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
             ),
           ),
         );
-        Navigator.pop(context);
+
+        Navigator.pushAndRemoveUntil<dynamic>(
+          context,
+          MaterialPageRoute<dynamic>(
+            builder: (BuildContext context) => HomeNavigate(
+              id_page: 1,
+            ),
+          ),
+          (route) => false,
+        );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               backgroundColor: Colors.red,
               content: Text('Failed to update task: $e')),
         );
-        print('Failed to update task: $e');
+        log('Failed to update task: $e');
       }
     } else {
-      if (selectedOwner == null && widget.taskId.isEmpty) {
+      log("test 22222222222222222");
+      log("test selectedowner $selectedOwner");
+      if (selectedOwner == null) {
         setState(() {
           isOwnerValid = false;
         });
+        log("test is overvalild $isOwnerValid");
       }
       if (selectedTaskTypeId == null) {
         setState(() {
@@ -592,15 +608,21 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
           isRelatedModuleValid = false;
         });
       }
+      if (_taskNameController.text.isEmpty) {
+        setState(() {
+          labelTest = false;
+        });
+      }
     }
   }
 
   void onTaskTypeSelected(int id, String label) {
-    setState(() {
-      selectedTaskTypeId = id;
-      _taskNameController.text = label; // Mettre à jour le champ de label
-      _validateForm();
-    });
+    if (can_update_task == 1) {
+      setState(() {
+        selectedTaskTypeId = id;
+        _taskNameController.text = label; // Mettre à jour le champ de label
+      });
+    }
   }
 
   List<DropdownMenuItem<int>> _buildDropdownMenuItems(List<dynamic> modules) {
@@ -828,7 +850,11 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
               child: ElevatedButton(
-                  onPressed: _updateTask,
+                  onPressed: () {
+                    log("test" + selectedOwner.toString());
+
+                    _updateTask();
+                  },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
                       (Set<MaterialState> states) {
@@ -908,6 +934,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         child: Container(
                           decoration: boxdecoration(),
                           child: TextFormField(
+                            readOnly: can_update_task == 0,
                             controller: _taskNameController,
                             decoration: InputDecoration(
                               hintText: 'Enter Activity label',
@@ -922,14 +949,21 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   horizontal: 16.0, vertical: 12.0),
                             ),
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a label';
-                              }
+                              if (value == null || value.isEmpty) {}
                               return null;
                             },
                           ),
                         ),
                       ),
+                      if (!labelTest)
+                        Padding(
+                          padding: EdgeInsets.only(top: 8),
+                          child: Text(
+                            "Please enter a label !",
+                            style:
+                                TextStyle(color: Theme.of(context).errorColor),
+                          ),
+                        ),
                       const SizedBox(height: 16.0),
                       const Text(
                         'Owner *',
@@ -969,16 +1003,17 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   decoration: const InputDecoration(
                                     border: InputBorder.none,
                                   ),
-                                  onTap: () => _selectOwner(context),
+                                  onTap: () => can_update_task == 0
+                                      ? null
+                                      : _selectOwner(context),
                                 ),
                               ),
-                              if (selectedOwner != null)
+                              if (selectedOwner != null && can_update_task == 1)
                                 IconButton(
                                   icon: const Icon(Icons.close),
                                   onPressed: () {
                                     setState(() {
                                       selectedOwner = null;
-                                      _validateForm();
                                     });
                                   },
                                 ),
@@ -987,11 +1022,13 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         ),
                       ),
                       if (!isOwnerValid)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Please select an owner',
-                            style: TextStyle(color: Colors.red, fontSize: 12.0),
+                            'Please select an owner !',
+                            style: TextStyle(
+                                color: Theme.of(context).errorColor,
+                                fontSize: 14.0),
                           ),
                         ),
                       const SizedBox(height: 18.0),
@@ -1364,8 +1401,14 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                         top: -18,
                                         right: -18,
                                         child: IconButton(
-                                          icon:
-                                              const Icon(Icons.close, size: 16),
+                                          icon: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100)),
+                                              child: const Icon(Icons.close,
+                                                  size: 16)),
                                           onPressed: () {
                                             setState(() {
                                               selectedGuests.remove(guest);
@@ -1454,8 +1497,14 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                         top: -18,
                                         right: -18,
                                         child: IconButton(
-                                          icon:
-                                              const Icon(Icons.close, size: 16),
+                                          icon: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100)),
+                                              child: const Icon(Icons.close,
+                                                  size: 16)),
                                           onPressed: () {
                                             setState(() {
                                               selectedFollowers

@@ -348,6 +348,10 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                 ),
                                 actions: [
                                   ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors
+                                          .blue, // Changer la couleur de fond ici
+                                    ),
                                     onPressed: () {
                                       Navigator.of(context).pop(true);
                                       // User confirmed deletion
@@ -356,6 +360,10 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                         .returnlabel),
                                   ),
                                   ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors
+                                          .blue, // Changer la couleur de fond ici
+                                    ),
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         if (newPassword.text ==
@@ -573,8 +581,20 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                           onChanged: (value) {
                             if (value == true) {
                               MercureNotificationService().initialize();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    duration: Duration(milliseconds:1000 ),
+                                    backgroundColor: Colors.green,
+                                    content: Text('Notification activated')),
+                              );
                             } else {
                               MercureNotificationService().dispose();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    duration: Duration(seconds: 1),
+                                    backgroundColor: Colors.red,
+                                    content: Text('Notification stopped')),
+                              );
                             }
                             notifier.notification = value;
                             log(value.toString());
@@ -697,6 +717,10 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                             content: Text("Do you really want to disconnect?"),
                             actions: [
                               ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors
+                                      .blue, // Changer la couleur de fond ici
+                                ),
                                 onPressed: () {
                                   Navigator.of(context)
                                       .pop(false); // User cancelled deletion
@@ -704,6 +728,10 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                 child: Text("No"),
                               ),
                               ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors
+                                      .blue, // Changer la couleur de fond ici
+                                ),
                                 onPressed: () async {
                                   try {
                                     log("logout");

@@ -1,5 +1,7 @@
 // lib/services/api_service.dart
 
+import 'dart:developer';
+
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,6 +13,8 @@ Future<List<dynamic>> fetchStages() async {
   final apiUrl = await Config.getApiUrl(
       "fetchStages"); // Utilisation de l'URL de production
   // ou Config.getApiUrl("fetchStages", false) pour l'URL de développement
+
+  log("8888888888888888888888 $apiUrl");
 
   final url = '$apiUrl';
 
@@ -34,3 +38,4 @@ Future<List<dynamic>> fetchStages() async {
     throw Exception('Error occurred while loading stages: $e');
   }
 }
+

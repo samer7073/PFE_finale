@@ -24,7 +24,7 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
   Future<RoomResponse?> fetchApiResponse(String id_room) async {
     final token = await SharedPrefernce.getToken("token");
     final baseUrl = await Config.getApiUrl('chatRomm');
-    final url = "$baseUrl$id_room";
+    final url = "$baseUrl$id_room?type=task";
     final response = await http.get(
       Uri.parse(url),
       headers: {

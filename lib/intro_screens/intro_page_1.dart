@@ -20,7 +20,7 @@ class _IntroPage1State extends State<IntroPage1> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
-                    'assets/onbording1.png'), // Remplacez par le chemin de votre image
+                    'assets/Frame 1618868070.png'), // Remplacez par le chemin de votre image
                 fit: BoxFit.cover,
               ),
             ),

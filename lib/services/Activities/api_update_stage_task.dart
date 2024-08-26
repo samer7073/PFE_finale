@@ -30,7 +30,7 @@ Future<bool> updateTaskStage(String taskId, int newStageId) async {
 }
 */
 Future<bool> updateTaskStage(String taskId, int newStageId) async {
-  final baseUrl = await Config.getApiUrl('updateStageFamily');
+  final baseUrl = await Config.getApiUrl('updateStageFamilyTask');
   final url =
       Uri.parse(baseUrl); // Utilisation de l'URL définie dans Config.dart
   final token = await SharedPrefernce.getToken("token");

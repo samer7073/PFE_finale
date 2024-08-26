@@ -38,6 +38,8 @@ class Task {
   String task_type_icon;
   String task_type_label;
   String task_type_color;
+  int can_update_task;
+  int is_follower;
 
   Task(
       {required this.id,
@@ -78,7 +80,9 @@ class Task {
       required this.task_type_icon,
       required this.task_type_label,
       required this.task_type_color,
-      required this.send_email});
+      required this.send_email,
+      required this.can_update_task,
+      required this.is_follower});
 
   factory Task.fromJson(Map<String, dynamic> json,
       {int stagePercent = 0, String stageColor = '#000000'}) {
@@ -140,6 +144,8 @@ class Task {
       task_type_label: json['task_type_label'] ?? "",
       task_type_color: json['task_type_color'] ?? "#000000",
       send_email: json["send_email"] ?? 0,
+      can_update_task: json["can_update_task"],
+      is_follower: json["is_follower"],
     );
   }
 

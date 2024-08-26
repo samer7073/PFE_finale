@@ -155,9 +155,13 @@ class _ticketListRowState extends State<ticketListRow> {
                   ),
                   Row(
                     children: [
-                      Text(
-                        widget.owner,
-                        style: Theme.of(context).textTheme.subtitle1,
+                      Container(
+                        width: 100,
+                        child: Text(
+                          widget.owner,
+                          style: Theme.of(context).textTheme.subtitle1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       SizedBox(
                         width: 10,

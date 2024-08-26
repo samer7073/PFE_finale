@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_interpolation_to_compose_strings
 
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,6 +11,7 @@ Future<Map<String, dynamic>> getTaskDetails(String taskId) async {
   final baseUrl = await Config.getApiUrl('getTaskDetails');
   final url = Uri.parse(baseUrl +
       '/$taskId/get'); // Utilisation de l'URL définie dans Config.dart
+  log(url.toString() + "88888888888888888888888888888888888888888");
   final token = await SharedPrefernce.getToken("token");
 
   final response = await http.get(

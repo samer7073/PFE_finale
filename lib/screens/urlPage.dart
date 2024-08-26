@@ -48,7 +48,7 @@ class _UrlPageState extends State<UrlPage> {
           // Image de fond
           Positioned.fill(
             child: Image.asset(
-              'assets/loginBackgroundd.png',
+              'assets/bg.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -64,7 +64,6 @@ class _UrlPageState extends State<UrlPage> {
               Text(
                 "Comunik Sphere",
                 style: TextStyle(
-                  
                   color: const Color.fromARGB(255, 255, 255, 255),
                   fontSize: 20.55,
 
@@ -151,13 +150,13 @@ class _UrlPageState extends State<UrlPage> {
                       style: ElevatedButton.styleFrom(
                           shape: StadiumBorder(),
                           padding: EdgeInsets.symmetric(
-                              horizontal: 100, vertical: 16),
-                          backgroundColor: Color(0xFF5B67CA)),
+                              horizontal: 130, vertical: 16),
+                          backgroundColor: Colors.white),
                       child: Text(
                         "Save",
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.white,
+                          color: Color.fromARGB(255, 22, 105, 161),
                           fontWeight: FontWeight.w900,
                           fontFamily: 'ProstoOne',
                         ),

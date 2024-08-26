@@ -340,6 +340,8 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
                             ],
                           ),
                           child: TaskListRow(
+                            can_update_task: task.can_update_task,
+                            is_follower: task.is_follower,
                             start_date: task.startDate,
                             start_time: task.startTime,
                             task_type_color: task.task_type_color,

@@ -273,7 +273,7 @@ class _DetailPageState extends State<DetailPage> {
                                         stage.id == selectedStageId;
                                     return GestureDetector(
                                       onTap: () {
-                                        //updateStage(widget.elementId, stage.id);
+                                        updateStage(widget.elementId, stage.id);
                                       },
                                       child: AnimatedContainer(
                                         duration: Duration(milliseconds: 300),

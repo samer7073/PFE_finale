@@ -43,7 +43,7 @@ class _DealPageState extends State<DealPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () async {
           Navigator.push(
             context,
@@ -59,7 +59,6 @@ class _DealPageState extends State<DealPage> {
           color: Colors.white,
         ),
       ),
-      */
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).deals),
         actions: [

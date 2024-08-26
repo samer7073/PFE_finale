@@ -9,6 +9,7 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/ApiGetJWT.dart';
 import '../services/sharedPreference.dart';
 
 class VerfierPassword extends StatefulWidget {
@@ -73,6 +74,11 @@ class _VerfierPasswordState extends State<VerfierPassword> {
         final postOtp = await ApiOtpGenrate.LoginOtp(otpData);
         if (postOtp!.success == true) {
           _saveString('token', postOtp!.token.access_token);
+          final jwtResponse = await ApiGetJwt.getJwt();
+          log("jwt: ${jwtResponse.jwtMercure}");
+          _saveString('jwt', jwtResponse.jwtMercure);
+          log("Uuid: ${jwtResponse.uuid}");
+          _saveString("uuid", jwtResponse.uuid);
           Navigator.pushNamedAndRemoveUntil(
               context, '/homeNavigate', (route) => false);
           setState(() {
@@ -121,7 +127,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
               children: [
                 Positioned.fill(
                   child: Image.asset(
-                    'assets/bgotp.png', // Replace with your image asset path
+                    'assets/bg.png', // Replace with your image asset path
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -188,13 +194,13 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                                 minimumSize: Size(150, 50),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 150, vertical: 16),
-                                backgroundColor: Color(0xFF5909B1)),
+                                backgroundColor: Colors.white),
                             child: const Text(
                               "NEXT",
                               style: TextStyle(
                                 fontFamily: 'ProstoOne',
                                 fontSize: 16,
-                                color: Colors.white,
+                                color: Color.fromARGB(255, 22, 105, 161),
                               ),
                             ),
                           ),

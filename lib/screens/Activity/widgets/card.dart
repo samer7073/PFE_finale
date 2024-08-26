@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:developer';
 
@@ -17,6 +17,8 @@ import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../../core/constants/shared/config.dart';
+import '../../../services/Activities/api_get_stage.dart';
+import '../../homeNavigate_page.dart';
 
 class TaskCard1 extends StatefulWidget {
   final Task task;
@@ -36,17 +38,13 @@ class TaskCard1 extends StatefulWidget {
 
 class _TaskCard1State extends State<TaskCard1> {
   late Task _task;
-  late String _imageUrl = "";
+
   late Map<int, IconData> taskTypeIcons = {};
   Map<int, Stage> _stages = {};
-  final Map<int, int> _stagePercents = {
-    20: 25,
-    22: 50,
-    241: 90,
-    23: 100,
-    21: 0,
-  };
+
   late Future<String> imageUrlFuture;
+  List<dynamic> stages = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -54,24 +52,10 @@ class _TaskCard1State extends State<TaskCard1> {
     imageUrlFuture = Config.getApiUrl("urlImage");
 
     _task = widget.task;
-    _fetchTaskTypeIcons();
-    _preloadStages();
-    log("999999999999999999999999999999999999" + _task.toString());
-  }
 
-  Future<void> _preloadStages() async {
-    try {
-      _stages = await _fetchStages();
-      if (mounted) {
-        setState(() {});
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to preload stages: $e')),
-        );
-      }
-    }
+    _fetchTaskTypeIcons();
+
+    fetchStagesFromApi();
   }
 
   Future<void> _fetchTaskTypeIcons() async {
@@ -333,11 +317,6 @@ class _TaskCard1State extends State<TaskCard1> {
                     await updateTaskStage(_task.id, stage.id);
                     widget.onStageChanged(stage.id);
                     if (mounted) {
-                      setState(() {
-                        _task.stageLabel = stage.label;
-                        _task.stagePercent = _stagePercents[stage.id] ?? 0;
-                        _task.stageColor = stage.color;
-                      });
                       _showUpdateDialog('Stage updated to ${stage.label}');
                     }
                   } catch (e) {
@@ -402,17 +381,7 @@ class _TaskCard1State extends State<TaskCard1> {
     );
   }
 
-  Future<Map<int, Stage>> _fetchStages() async {
-    // Replace with your API call to fetch stages
-    await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
-    return {
-      20: Stage(id: 20, label: 'To Do', color: '#10b981'),
-      22: Stage(id: 22, label: 'In Progress', color: '#ec4899'),
-      241: Stage(id: 241, label: 'Review', color: '#7c3aed'),
-      23: Stage(id: 23, label: 'Done', color: '#2563eb'),
-      21: Stage(id: 21, label: 'Blocked', color: '#f59e0b'),
-    };
-  }
+  
 
   Widget _buildStageProgressIndicator(
       int stagePercent, String stageLabel, String stageColor) {
@@ -497,13 +466,145 @@ class _TaskCard1State extends State<TaskCard1> {
     );
   }
 
+  void _showStageDialogKanban(String? stageLabel, String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Text('Selected Stage '),
+              Text(
+                stageLabel ?? "No pipeline available",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: hexToColor(_task.stageColor),
+                ),
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width:
+                double.maxFinite, // Ensure the dialog takes up the full width
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const SizedBox(height: 16),
+                  if (stages.isNotEmpty) ...MenuItems(stages, id),
+                  if (stages.isEmpty)
+                    Text(
+                      "No stages available",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  List<Widget> MenuItems(List<dynamic> modules, String id) {
+    List<Widget> items = [];
+    for (var module in modules) {
+      String moduleName = module['label'];
+
+      items.add(Text(
+        moduleName,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
+        ),
+      ));
+
+      List<dynamic> stages = module['stages'];
+      for (var stage in stages) {
+        Color stageColor =
+            Color(int.parse(stage['color'].replaceFirst('#', '0xff')));
+        items.add(GestureDetector(
+          onTap: () async {
+            try {
+              // Attempt to update the task stage
+              await updateTaskStage(id, stage['id']);
+              Navigator.of(context).pop();
+
+              widget.onStageChanged(stage['id']);
+              if (mounted) {
+                setState(() {
+                  _task.stageLabel = stage["label"];
+                  _task.stagePercent = _task.stagePercent;
+                  _task.stageColor = stage["color"];
+                });
+                _showUpdateDialog('Stage updated to ${stage['label']}');
+              }
+            } catch (e) {
+              if (mounted) {
+                _showUpdateDialog('Failed to update stage: $e');
+              }
+            }
+          },
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.brightness_1, color: stageColor, size: 12),
+              const SizedBox(width: 10),
+              SizedBox(
+                height: 50,
+              ),
+              Expanded(
+                child: Text(stage['label']),
+              ),
+            ],
+          ),
+        ));
+      }
+      items.add(const SizedBox(height: 20));
+    }
+    return items;
+  }
+
+  Color hexToColor(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
+  Future<void> fetchStagesFromApi() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final fetchedStages = await fetchStages();
+      setState(() {
+        stages = fetchedStages;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Failed to load stages: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime startDate = _parseDate(_task.startDate);
     DateTime endDate = _parseDate(_task.endDate);
     bool isOverdue = endDate.isBefore(DateTime.now());
-
-    IconData taskIcon = taskTypeIcons[_task.tasksTypeId] ?? Icons.help_outline;
 
     return Container(
       decoration: BoxDecoration(
@@ -599,7 +700,9 @@ class _TaskCard1State extends State<TaskCard1> {
             // Stage Progress Indicator
 
             GestureDetector(
-              onTap: _showStageDialog,
+              onTap: () {
+                _showStageDialogKanban(_task.stageLabel, _task.id);
+              },
               child: _buildStageProgressIndicator(
                   _task.stagePercent, _task.stageLabel, _task.stageColor),
             ),

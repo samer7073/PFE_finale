@@ -156,8 +156,8 @@ class _DealsPageState extends State<DealsPage> {
                   if (index < deals.length) {
                     final deal = deals[index];
                     return Slidable(
-                      /* endActionPane:
-                        ActionPane(motion: DrawerMotion(), children: [
+                      endActionPane:
+                          ActionPane(motion: DrawerMotion(), children: [
                         SlidableAction(
                           icon: Icons.delete,
                           backgroundColor: Colors.red,
@@ -208,7 +208,6 @@ class _DealsPageState extends State<DealsPage> {
                           backgroundColor: Colors.green,
                         )
                       ]),
-                      */
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: InkWell(

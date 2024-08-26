@@ -11,6 +11,7 @@ class Config {
   static const String devUrl = "https://spherebackmongodb.cmk.biz";
 
   static const Map<String, String> apiProdUrls = {
+    "taskStagesElements": "$prodUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
         "https://spherechatback.cmk.biz:4543/index.php/api/get-discussion-room/",
     "kanban": "$prodUrl:4543/index.php/api/mobile/kanban-by-stage",
@@ -99,6 +100,7 @@ class Config {
   };
 
   static const Map<String, String> apiDevUrls = {
+    "taskStagesElements": "$devUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
         "https:///spherechatbackmongodb.cmk.biz:4543/index.php/api/get-discussion-room/",
     "kanban": "$devUrl:4543/index.php/api/mobile/kanban-by-stage",

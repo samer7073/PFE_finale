@@ -47,10 +47,10 @@ class MyThemes {
     primaryColor: Colors.white,
     colorScheme: ColorScheme.light(),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      selectedIconTheme: IconThemeData(color: Color.fromARGB(255, 58, 52, 232)),
+      selectedIconTheme: IconThemeData(color: Colors.blue),
       unselectedIconTheme: IconThemeData(color: Colors.black),
       unselectedItemColor: Colors.black,
-      selectedItemColor: Color.fromARGB(255, 38, 55, 245),
+      selectedItemColor: Colors.blue,
       showSelectedLabels: true,
       showUnselectedLabels: true,
     ),

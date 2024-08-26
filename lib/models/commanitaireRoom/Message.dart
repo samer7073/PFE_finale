@@ -4,7 +4,7 @@ class Message {
   final int id;
   final String type;
   final int? parentId;
-  final int senderId;
+  final String senderId;
   final UserRoom sender;
   final String message;
   final int? fileId;
@@ -12,7 +12,7 @@ class Message {
   final dynamic poll;
   final dynamic voice;
   final dynamic private;
-  final int roomId;
+  final String roomId;
   final String room;
   final int adminId;
   final dynamic bot;
@@ -26,7 +26,7 @@ class Message {
   final List<dynamic> reactions;
   final List<dynamic> replies;
   final List<dynamic> favoris;
-  final int important;
+  final String important;
   final dynamic tags;
   final int mobile;
   final DateTime createdAt;
@@ -72,7 +72,7 @@ class Message {
       id: json['id'] ?? 0,
       type: json['type'] ?? '',
       parentId: json['parent_id'],
-      senderId: json['sender_id'] ?? 0,
+      senderId: json['sender_id'] ?? "",
       sender: UserRoom.fromJson(json['sender'] ?? {}),
       message: _stripHtmlTags(json['message']) ??
           "", // Utilisez la méthode pour supprimer les balises HTML
@@ -81,7 +81,7 @@ class Message {
       poll: json['poll'],
       voice: json['voice'],
       private: json['private'],
-      roomId: json['room_id'] ?? 0,
+      roomId: json['room_id'] ?? "",
       room: json['room'] ?? '',
       adminId: json['admin_id'] ?? 0,
       bot: json['bot'],
@@ -95,7 +95,7 @@ class Message {
       reactions: json['reactions'] ?? [],
       replies: json['replies'] ?? [],
       favoris: json['favoris'] ?? [],
-      important: json['important'] ?? 0,
+      important: json['important'] ?? "",
       tags: json['tags'],
       mobile: json['mobile'] ?? 0,
       createdAt: DateTime.parse(

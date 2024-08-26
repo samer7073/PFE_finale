@@ -1,10 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/KanbanModels/Element.dart';
 import 'package:flutter_application_stage_project/models/KanbanModels/KanbanResponse.dart';
-import 'package:flutter_application_stage_project/screens/loading.dart';
+
 import 'package:flutter_application_stage_project/services/GetKanbanApi.dart';
 import 'package:provider/provider.dart';
 import '../models/pipelines/pipelineModel.dart';
@@ -14,7 +13,6 @@ import '../services/ApiDeleteElment.dart';
 import '../services/ApiGetPiplineAllFamilies.dart';
 import 'Card.dart';
 import 'detailElment.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PipelineScreen extends StatefulWidget {
   final String idFamily;

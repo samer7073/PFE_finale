@@ -1,11 +1,12 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'dart:developer';
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:intl/intl.dart';
+import '../../../services/Activities/api_get_stage.dart';
+import '../../../services/Activities/api_update_stage_task.dart';
+import '../../homeNavigate_page.dart';
 
 class TaskListRow extends StatefulWidget {
   final IconData taskIcon;
@@ -22,42 +23,53 @@ class TaskListRow extends StatefulWidget {
   final String? stageLabel;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
-  final VoidCallback onTap; // Add onTap callback
+  final VoidCallback onTap;
   final bool isOverdue;
   final String task_type_color;
   final String start_date;
   final String start_time;
+  final int is_follower;
+  final int can_update_task;
 
-  const TaskListRow({
-    Key? key,
-    required this.taskIcon,
-    required this.taskId,
-    required this.taskLabel,
-    required this.ownerLabel,
-    required this.startDate,
-    required this.endDate,
-    required this.endTime,
-    required this.priority,
-    required this.priorityIcon,
-    required this.priorityColor,
-    required this.ownerAvatar,
-    required this.stageLabel,
-    required this.onDelete,
-    required this.onEdit,
-    required this.onTap, // Add onTap callback
-    required this.isOverdue,
-    required this.task_type_color,
-    required this.start_date,
-    required this.start_time,
-  }) : super(key: key);
+  const TaskListRow(
+      {Key? key,
+      required this.taskIcon,
+      required this.taskId,
+      required this.taskLabel,
+      required this.ownerLabel,
+      required this.startDate,
+      required this.endDate,
+      required this.endTime,
+      required this.priority,
+      required this.priorityIcon,
+      required this.priorityColor,
+      required this.ownerAvatar,
+      required this.stageLabel,
+      required this.onDelete,
+      required this.onEdit,
+      required this.onTap,
+      required this.isOverdue,
+      required this.task_type_color,
+      required this.start_date,
+      required this.start_time,
+      required this.can_update_task,
+      required this.is_follower})
+      : super(key: key);
 
   @override
   State<TaskListRow> createState() => _TaskListRowState();
 }
 
 class _TaskListRowState extends State<TaskListRow> {
-  Future<String> _getImageUrl() async {
-    return await Config.getApiUrl("urlImage");
+  late Future<String> imageUrlFuture;
+  List<dynamic> stages = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    imageUrlFuture = Config.getApiUrl("urlImage");
+    fetchStagesFromApi(); // Fetch stages when the widget initializes
   }
 
   Color _getPriorityColor(String priority) {
@@ -79,7 +91,6 @@ class _TaskListRowState extends State<TaskListRow> {
     String initial = ownerLabel.isNotEmpty ? ownerLabel[0].toUpperCase() : '?';
 
     if (avatar!.isEmpty || avatar.length == 1) {
-      // Show the initial of the owner's name if avatar is null or empty
       return CircleAvatar(
         backgroundColor: color,
         radius: 15,
@@ -139,13 +150,6 @@ class _TaskListRowState extends State<TaskListRow> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    imageUrlFuture = Config.getApiUrl("urlImage");
-  }
-
-  late Future<String> imageUrlFuture;
   Color hexToColor(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
@@ -158,13 +162,13 @@ class _TaskListRowState extends State<TaskListRow> {
     Locale currentLocale = Localizations.localeOf(context);
 
     return Container(
-      margin: const EdgeInsets.all(8.0), // Add margin
+      margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: hexToColor(widget.task_type_color).withOpacity(0.07),
-        borderRadius: BorderRadius.circular(10), // Circular border radius
+        borderRadius: BorderRadius.circular(10),
       ),
       child: GestureDetector(
-        onTap: widget.onTap, // Call onTap when the row is tapped
+        onTap: widget.onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           child: Slidable(
@@ -172,20 +176,23 @@ class _TaskListRowState extends State<TaskListRow> {
             endActionPane: ActionPane(
               motion: const ScrollMotion(),
               children: [
-                SlidableAction(
-                  onPressed: (context) => widget.onEdit(),
-                  backgroundColor: Colors.green.withOpacity(0.1),
-                  foregroundColor: Colors.green,
-                  icon: Icons.edit,
-                  label: 'Edit',
-                ),
-                SlidableAction(
-                  onPressed: (context) => widget.onDelete(),
-                  backgroundColor: Colors.red.withOpacity(0.1),
-                  foregroundColor: Colors.red,
-                  icon: Icons.delete,
-                  label: 'Delete',
-                ),
+                if (widget.can_update_task == 1 && widget.is_follower == 0)
+                  SlidableAction(
+                    onPressed: (context) => widget.onEdit(),
+                    backgroundColor:
+                        hexToColor(widget.task_type_color).withOpacity(0.01),
+                    foregroundColor: Colors.green,
+                    icon: Icons.edit,
+                    label: 'Edit',
+                  ),
+                if (widget.can_update_task == 1)
+                  SlidableAction(
+                    onPressed: (context) => widget.onDelete(),
+                    backgroundColor: Colors.red.withOpacity(0.01),
+                    foregroundColor: Colors.red,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  ),
               ],
             ),
             child: Column(
@@ -246,13 +253,20 @@ class _TaskListRowState extends State<TaskListRow> {
                             style: TextStyle(
                                 color: hexToColor(widget.task_type_color),
                                 fontWeight: FontWeight.w600)),
-                        Text(
-                            widget.stageLabel?.isNotEmpty == true
-                                ? widget.stageLabel!
-                                : "No stage available",
-                            style: TextStyle(
-                                color: hexToColor(widget.task_type_color),
-                                fontWeight: FontWeight.w600)),
+                        GestureDetector(
+                          onTap: () {
+                            if (widget.is_follower == 0)
+                              _showStageDialog(
+                                  widget.stageLabel, widget.taskId);
+                          },
+                          child: Text(
+                              widget.stageLabel?.isNotEmpty == true
+                                  ? widget.stageLabel!
+                                  : "No stage available",
+                              style: TextStyle(
+                                  color: hexToColor(widget.task_type_color),
+                                  fontWeight: FontWeight.w600)),
+                        ),
                       ],
                     ),
                     Row(
@@ -282,12 +296,150 @@ class _TaskListRowState extends State<TaskListRow> {
   }
 
   String formatDate(String dateString, Locale locale) {
-    // Parse the input date string
     DateTime date = DateFormat('dd-MM-yyyy').parse(dateString);
-
-    // Format the date according to the locale
     String formattedDate = DateFormat.yMMMMd(locale.languageCode).format(date);
-
     return formattedDate;
+  }
+
+  void _showStageDialog(String? stageLabel, String id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Text('Selected Stage '),
+              Text(
+                stageLabel ?? "No pipeline available",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: hexToColor(widget.task_type_color),
+                ),
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width:
+                double.maxFinite, // Ensure the dialog takes up the full width
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const SizedBox(height: 16),
+                  if (stages.isNotEmpty) ...MenuItems(stages, id),
+                  if (stages.isEmpty)
+                    Text(
+                      "No stages available",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  List<Widget> MenuItems(List<dynamic> modules, String id) {
+    List<Widget> items = [];
+    for (var module in modules) {
+      String moduleName = module['label'];
+
+      items.add(Text(
+        moduleName,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
+        ),
+      ));
+
+      List<dynamic> stages = module['stages'];
+      for (var stage in stages) {
+        Color stageColor =
+            Color(int.parse(stage['color'].replaceFirst('#', '0xff')));
+        items.add(GestureDetector(
+          onTap: () async {
+            try {
+              // Attempt to update the task stage
+              await updateTaskStage(id, stage['id']);
+              Navigator.of(context).pop();
+
+              // If successful, show a success Snackbar
+
+              // Close the dialog after a successful update
+
+              // Refresh the page
+              Navigator.pushAndRemoveUntil<dynamic>(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (BuildContext context) => HomeNavigate(
+                    id_page: 1,
+                  ),
+                ),
+                (route) => false,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Stage changed successfully'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } catch (e) {
+              // If there is an error, show an error Snackbar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Problem when updating stage'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.brightness_1, color: stageColor, size: 12),
+              const SizedBox(width: 10),
+              SizedBox(
+                height: 50,
+              ),
+              Expanded(
+                child: Text(stage['label']),
+              ),
+            ],
+          ),
+        ));
+      }
+      items.add(const SizedBox(height: 20));
+    }
+    return items;
+  }
+
+  Future<void> fetchStagesFromApi() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final fetchedStages = await fetchStages();
+      setState(() {
+        stages = fetchedStages;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Failed to load stages: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

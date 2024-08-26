@@ -419,11 +419,17 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           content: const Text('Are you sure you want to create this task?'),
           actions: [
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.blue),
+              ),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
-              child: const Text('Confirm'),
+              child: const Text(
+                'Confirm',
+                style: TextStyle(color: Colors.blue),
+              ),
               onPressed: () => Navigator.of(context).pop(true),
             ),
           ],
@@ -485,6 +491,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           (route) => false,
         ); // Retourne la nouvelle tâche
       } catch (e) {
+        log("99999999999999999999999999999999     " + e.toString());
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to create task: $e'),
@@ -1407,8 +1414,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                         top: -18,
                                         right: -18,
                                         child: IconButton(
-                                          icon:
-                                              const Icon(Icons.close, size: 16),
+                                          icon: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(100)),
+                                            child: const Icon(Icons.close,
+                                                size: 16),
+                                          ),
                                           onPressed: () {
                                             setState(() {
                                               selectedGuests.remove(guest);
@@ -1499,8 +1512,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                         top: -18,
                                         right: -18,
                                         child: IconButton(
-                                          icon:
-                                              const Icon(Icons.close, size: 16),
+                                          icon: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100)),
+                                              child: const Icon(Icons.close,
+                                                  size: 16)),
                                           onPressed: () {
                                             setState(() {
                                               selectedFollowers

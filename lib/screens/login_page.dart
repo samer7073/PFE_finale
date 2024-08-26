@@ -25,12 +25,27 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
   late ThemeProvider themeProvider;
   String? savedToken;
+  final FocusNode _focusNodeEmail = FocusNode();
+  final FocusNode _focusNodePassword = FocusNode();
 
   @override
   void initState() {
     super.initState();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     _loadUrl();
+    _focusNodeEmail.addListener(() {
+      setState(() {}); // Rebuild the widget to update hintText
+    });
+    _focusNodePassword.addListener(() {
+      setState(() {}); // Rebuild the widget to update hintText
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNodeEmail.dispose();
+    _focusNodePassword.dispose();
+    super.dispose();
   }
 
   void _loadUrl() async {
@@ -79,11 +94,12 @@ class _LoginPageState extends State<LoginPage> {
           )
         : Scaffold(
             body: Stack(
+              clipBehavior: Clip.hardEdge,
               fit: StackFit.expand,
               children: [
                 // Image de fond
                 Image.asset(
-                  'assets/loginBackgroundd.png', // Remplacez par le chemin de votre image
+                  'assets/bg.png', // Remplacez par le chemin de votre image
                   fit: BoxFit.cover,
                 ),
                 // Contenu de la page
@@ -235,13 +251,13 @@ class _LoginPageState extends State<LoginPage> {
               style: ElevatedButton.styleFrom(
                   shape: StadiumBorder(),
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-                  backgroundColor: Color(0xFF5B67CA)),
+                  backgroundColor: Colors.white),
               child: Text(
                 "Modify",
                 style: TextStyle(
                     fontFamily: 'ProstoOne',
                     fontSize: 14,
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 22, 105, 161),
                     fontWeight: FontWeight.w900),
               ),
             )
@@ -252,7 +268,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
         const SizedBox(height: 10),
         TextFormField(
+          cursorColor: Colors.white,
           controller: emailController,
+          focusNode: _focusNodeEmail,
           onChanged: (value) {
             setState(() => email = value);
           },
@@ -293,7 +311,10 @@ class _LoginPageState extends State<LoginPage> {
                         .white), // Color of the underline when the field is focused
               ),
               hintStyle: TextStyle(color: Colors.white),
-              hintText: AppLocalizations.of(context).email,
+              hintText: _focusNodeEmail.hasFocus || email.isNotEmpty
+                  ? ''
+                  : AppLocalizations.of(context)
+                      .email, // Masquer le texte de l'indicateur en cas de focus
               prefixIcon: const Icon(
                 Icons.email,
                 color: Colors.white,
@@ -303,6 +324,9 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(height: 10),
         TextFormField(
           onFieldSubmitted: _onFieldSubmitted,
+          cursorColor: Colors.white,
+          controller: passwordController,
+          focusNode: _focusNodePassword,
           onChanged: (value) {
             setState(() => password = value);
           },
@@ -310,7 +334,9 @@ class _LoginPageState extends State<LoginPage> {
             if (value!.isEmpty) {
               return AppLocalizations.of(context)!.fieldRequired;
             }
+            return null;
           },
+          obscureText: securePassword,
           decoration: InputDecoration(
             suffixIcon: IconButton(
               onPressed: () {
@@ -319,25 +345,18 @@ class _LoginPageState extends State<LoginPage> {
                 });
               },
               icon: Icon(
-                securePassword == true
-                    ? Icons.visibility
-                    : Icons.visibility_off,
+                securePassword ? Icons.visibility : Icons.visibility_off,
                 color: Colors.white,
               ),
             ),
-            hintText: AppLocalizations.of(context).password,
+            hintText: _focusNodePassword.hasFocus || password.isNotEmpty
+                ? ''
+                : AppLocalizations.of(context)
+                    .password, // Masquer le texte de l'indicateur en cas de focus
             hintStyle: TextStyle(color: Colors.white),
             prefixIcon: const Icon(
               Icons.password,
               color: Colors.white,
-            ),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: Colors
-                      .white), // Color of the underline when the field is enabled
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.white), // C
             ),
             errorBorder: UnderlineInputBorder(
               borderSide: BorderSide(
@@ -354,8 +373,17 @@ class _LoginPageState extends State<LoginPage> {
             errorStyle: TextStyle(
               color: Colors.white, // Color of the error message
             ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors
+                      .white), // Color of the underline when the field is enabled
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                  color: Colors
+                      .white), // Color of the underline when the field is focused
+            ),
           ),
-          obscureText: securePassword,
           style: TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 50),
@@ -368,14 +396,14 @@ class _LoginPageState extends State<LoginPage> {
             style: ElevatedButton.styleFrom(
               shape: StadiumBorder(),
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-              backgroundColor: Color(0xFF5B67CA),
+              backgroundColor: Colors.white,
             ),
             child: Text(
               AppLocalizations.of(context).login,
               style: TextStyle(
                   fontFamily: 'ProstoOne',
                   fontSize: 14,
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 22, 105, 161),
                   fontWeight: FontWeight.w900),
             ),
           ),

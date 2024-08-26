@@ -24,6 +24,7 @@ class _TaskListPageState extends State<TaskListPage> {
   List<Task> filteredTasks = [];
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+
   Map<String, IconData> iconMap = {
     'BankOutlined': Icons.account_balance,
     'BellOutlined': Icons.notifications_outlined,
@@ -83,6 +84,7 @@ class _TaskListPageState extends State<TaskListPage> {
     try {
       final response = await TaskService.fetchTasks(currentPage);
       final List<Task> loadedTasks = response['tasks'];
+
       final int lastPage = response['meta']['last_page'];
 
       if (!mounted) return;
@@ -200,14 +202,20 @@ class _TaskListPageState extends State<TaskListPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.blue),
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 _deleteTask(task.id);
               },
-              child: Text('Delete'),
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.blue),
+              ),
             ),
           ],
         );
@@ -345,6 +353,8 @@ class _TaskListPageState extends State<TaskListPage> {
                         }
                         final task = filteredTasks[index];
                         return TaskListRow(
+                          can_update_task: task.can_update_task,
+                          is_follower: task.is_follower,
                           start_date: task.startDate,
                           start_time: task.startTime,
                           task_type_color: task.task_type_color,

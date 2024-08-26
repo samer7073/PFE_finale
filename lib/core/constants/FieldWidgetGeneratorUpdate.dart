@@ -2531,6 +2531,29 @@ class _FieldWidgetGeneratorUpdateState
             maxLines: null,
           ),
         );
+      case "ip address":
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: TextFormField(
+            controller: _textEditingController,
+            keyboardType: TextInputType.text,
+            decoration: DecorationTextFormField(),
+            onChanged: (value) {
+              // Cette partie peut être retirée car les mises à jour sont gérées par le contrôleur
+              // widget.formMap["field[${widget.dataFieldGroup.id.toString()}]"] = value;
+              // log(widget.formMap.toString());
+            },
+            validator: widget.dataFieldGroup.required == true
+                ? (value) {
+                    if (value!.isEmpty) {
+                      return 'Ce champ est obligatoire';
+                    } else {
+                      return null;
+                    }
+                  }
+                : null,
+          ),
+        );
 
       default:
         return Text(

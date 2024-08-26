@@ -19,7 +19,7 @@ class _IntroPage3State extends State<IntroPage3> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(
-                  'assets/ActivityComunikSphere.png'), // Chemin vers votre image de fond
+                  'assets/Onbordingscreen3.png'), // Chemin vers votre image de fond
               fit: BoxFit.cover,
             ),
           ),
