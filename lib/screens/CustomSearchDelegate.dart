@@ -173,7 +173,7 @@ class CustomSearchDelegate extends SearchDelegate {
           Text(ticket.reference),
           Text(
             ticket.created_at,
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ],
       ),
@@ -186,7 +186,7 @@ class CustomSearchDelegate extends SearchDelegate {
             children: [
               Text(
                 ticket.owner,
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
               FutureBuilder<String>(
                 future: Config.getApiUrl("urlImage"),

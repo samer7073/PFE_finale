@@ -191,7 +191,7 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                     headerBuilder: (context, isExpanded) {
                       return ListTile(
                         title: Text(
-                          AppLocalizations.of(context).today,
+                          AppLocalizations.of(context)!.today,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       );
@@ -199,7 +199,7 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                     body: _activityElements.isEmpty
                         ? Center(
                             child: Text(
-                              AppLocalizations.of(context).no_activities_today,
+                              AppLocalizations.of(context)!.no_activities_today,
                             ),
                           )
                         : Column(
@@ -285,7 +285,7 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                     headerBuilder: (context, isExpanded) {
                       return ListTile(
                         title: Text(
-                          AppLocalizations.of(context).upcoming,
+                          AppLocalizations.of(context)!.upcoming,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       );
@@ -293,7 +293,7 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                     body: _activityElementUpcoming.isEmpty
                         ? Center(
                             child: Text(
-                              AppLocalizations.of(context)
+                              AppLocalizations.of(context)!
                                   .no_upcoming_activities,
                             ),
                           )
@@ -382,7 +382,7 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                     headerBuilder: (context, isExpanded) {
                       return ListTile(
                         title: Text(
-                          AppLocalizations.of(context).history,
+                          AppLocalizations.of(context)!.history,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       );
@@ -390,7 +390,7 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                     body: _activityElementHistory.isEmpty
                         ? Center(
                             child: Text(
-                              AppLocalizations.of(context).no_past_activities,
+                              AppLocalizations.of(context)!.no_past_activities,
                             ),
                           )
                         : Column(

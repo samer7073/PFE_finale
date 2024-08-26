@@ -57,7 +57,7 @@ class _LanguageState extends State<Language> {
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).language)),
+          title: Text(AppLocalizations.of(context)!.language)),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -66,8 +66,8 @@ class _LanguageState extends State<Language> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    AppLocalizations.of(context).applicationlanguage,
-                    style: Theme.of(context).textTheme.bodyText1,
+                    AppLocalizations.of(context)!.applicationlanguage,
+                    style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   Row(
                     children: [
@@ -94,7 +94,7 @@ class _LanguageState extends State<Language> {
           SizedBox(
             height: 10,
           ),
-          Text(AppLocalizations.of(context)
+          Text(AppLocalizations.of(context)!
               .selectyourdefaultapplicationlanguage),
         ]),
       ),

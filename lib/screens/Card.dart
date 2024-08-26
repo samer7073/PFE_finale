@@ -69,7 +69,7 @@ class _CardwidgetState extends State<Cardwidget> {
               children: <Widget>[
                 Row(
                   children: [
-                    Text(AppLocalizations.of(context).ref + " ",
+                    Text(AppLocalizations.of(context)!.ref + " ",
                         style: TextStyle(color: Colors.black)),
                     SizedBox(
                       width: 5,

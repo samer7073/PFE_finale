@@ -60,7 +60,7 @@ class _DealPageState extends State<DealPage> {
         ),
       ),
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).deals),
+        title: Text(AppLocalizations.of(context)!.deals),
         actions: [
           IconButton(
             onPressed: () {

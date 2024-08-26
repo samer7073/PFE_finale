@@ -131,7 +131,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
           },
           icon: Icon(Icons.arrow_back_ios_new),
         ),
-        title: Text(AppLocalizations.of(context).settings),
+        title: Text(AppLocalizations.of(context)!.settings),
         centerTitle: true,
         actions: [
           IconButton(
@@ -157,10 +157,10 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
             Container(
               padding: EdgeInsets.all(15),
               child: Text(
-                AppLocalizations.of(context).account,
-                style: Theme.of(context).textTheme.subtitle2,
+                AppLocalizations.of(context)!.account,
+                style: Theme.of(context).textTheme.displaySmall,
               ),
-            ), //Text(AppLocalizations.of(context).account)),
+            ), //Text(AppLocalizations.of(context)!.account)),
             Container(
               padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
               color: themeProvider.isDarkMode == true
@@ -195,8 +195,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                               width: 10,
                             ),
                             Text(
-                              AppLocalizations.of(context).account,
-                              style: Theme.of(context).textTheme.subtitle1,
+                              AppLocalizations.of(context)!.account,
+                              style: Theme.of(context).textTheme.headlineSmall,
                             )
                           ],
                         ),
@@ -230,7 +230,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                 (BuildContext context, StateSetter setState) {
                               return AlertDialog(
                                 scrollable: true,
-                                title: Text(AppLocalizations.of(context)
+                                title: Text(AppLocalizations.of(context)!
                                     .changeYourPassword),
                                 content: Form(
                                   key: _formKey,
@@ -252,12 +252,12 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                                 : Icons.visibility),
                                           ),
                                           labelText:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                   .currentPassword,
                                         ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return AppLocalizations.of(context)
+                                            return AppLocalizations.of(context)!
                                                 .pleaseEnterYourCurrentPassword;
                                           }
                                           return null;
@@ -280,12 +280,12 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                                 : Icons.visibility),
                                           ),
                                           labelText:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                   .newPassword,
                                         ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return AppLocalizations.of(context)
+                                            return AppLocalizations.of(context)!
                                                 .pleaseEnterYourNewPassword;
                                           }
                                           // Password validation regex
@@ -294,7 +294,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                           RegExp regex = RegExp(pattern);
 
                                           if (!regex.hasMatch(value)) {
-                                            return AppLocalizations.of(context)
+                                            return AppLocalizations.of(context)!
                                                 .passwordRequirements;
                                           }
 
@@ -318,16 +318,16 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                                 : Icons.visibility),
                                           ),
                                           labelText:
-                                              AppLocalizations.of(context)
+                                              AppLocalizations.of(context)!
                                                   .passwordConfirmation,
                                         ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
-                                            return AppLocalizations.of(context)
+                                            return AppLocalizations.of(context)!
                                                 .pleaseConfirmYourNewPassword;
                                           }
                                           if (value != newPassword.text) {
-                                            return AppLocalizations.of(context)
+                                            return AppLocalizations.of(context)!
                                                 .passwordConfirmationDoesNotMatch;
                                           }
                                           // Password validation regex
@@ -336,7 +336,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                           RegExp regex = RegExp(pattern);
 
                                           if (!regex.hasMatch(value)) {
-                                            return AppLocalizations.of(context)
+                                            return AppLocalizations.of(context)!
                                                 .passwordRequirements;
                                           }
 
@@ -356,7 +356,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                       Navigator.of(context).pop(true);
                                       // User confirmed deletion
                                     },
-                                    child: Text(AppLocalizations.of(context)
+                                    child: Text(AppLocalizations.of(context)!
                                         .returnlabel),
                                   ),
                                   ElevatedButton(
@@ -397,7 +397,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                                   return AlertDialog(
                                                     title: Text("Error"),
                                                     content: Text(AppLocalizations
-                                                            .of(context)
+                                                            .of(context)!
                                                         .failedToChangePassword),
                                                     actions: [
                                                       TextButton(
@@ -441,7 +441,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                               return AlertDialog(
                                                 title: Text("Error"),
                                                 content: Text(AppLocalizations
-                                                        .of(context)
+                                                        .of(context)!
                                                     .pleaseConfirmYourNewPassword),
                                                 actions: [
                                                   TextButton(
@@ -459,7 +459,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                       }
                                     },
                                     child:
-                                        Text(AppLocalizations.of(context).save),
+                                        Text(AppLocalizations.of(context)!.save),
                                   ),
                                 ],
                               );
@@ -483,8 +483,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                               width: 10,
                             ),
                             Text(
-                              AppLocalizations.of(context).changeYourPassword,
-                              style: Theme.of(context).textTheme.subtitle1,
+                              AppLocalizations.of(context)!.changeYourPassword,
+                              style: Theme.of(context).textTheme.headlineSmall,
                             )
                           ],
                         ),
@@ -518,8 +518,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                               width: 10,
                             ),
                             Text(
-                              AppLocalizations.of(context).confidentiality,
-                              style: Theme.of(context).textTheme.subtitle1,
+                              AppLocalizations.of(context)!.confidentiality,
+                              style: Theme.of(context).textTheme.headlineSmall,
                             )
                           ],
                         ),
@@ -540,7 +540,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
             Container(
               padding: EdgeInsets.all(15),
               child: Text(
-                AppLocalizations.of(context).contentanddisplay,
+                AppLocalizations.of(context)!.contentanddisplay,
               ),
             ),
             Container(
@@ -569,8 +569,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                             width: 10,
                           ),
                           Text(
-                            AppLocalizations.of(context).notifications,
-                            style: Theme.of(context).textTheme.subtitle1,
+                            AppLocalizations.of(context)!.notifications,
+                            style: Theme.of(context).textTheme.headlineSmall,
                           )
                         ],
                       ),
@@ -629,8 +629,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                               width: 10,
                             ),
                             Text(
-                              AppLocalizations.of(context).languages,
-                              style: Theme.of(context).textTheme.subtitle1,
+                              AppLocalizations.of(context)!.languages,
+                              style: Theme.of(context).textTheme.headlineSmall,
                             )
                           ],
                         ),
@@ -668,8 +668,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                             width: 10,
                           ),
                           Text(
-                            AppLocalizations.of(context).display,
-                            style: Theme.of(context).textTheme.subtitle1,
+                            AppLocalizations.of(context)!.display,
+                            style: Theme.of(context).textTheme.headlineSmall,
                           )
                         ],
                       ),
@@ -693,7 +693,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
             Container(
               padding: EdgeInsets.all(15),
               child: Text(
-                AppLocalizations.of(context).connection,
+                AppLocalizations.of(context)!.connection,
               ),
             ),
             Container(
@@ -785,8 +785,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                               width: 10,
                             ),
                             Text(
-                              AppLocalizations.of(context).disconnect,
-                              style: Theme.of(context).textTheme.subtitle1,
+                              AppLocalizations.of(context)!.disconnect,
+                              style: Theme.of(context).textTheme.headlineSmall,
                             )
                           ],
                         ),

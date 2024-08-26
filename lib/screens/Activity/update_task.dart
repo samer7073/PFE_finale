@@ -961,7 +961,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           child: Text(
                             "Please enter a label !",
                             style:
-                                TextStyle(color: Theme.of(context).errorColor),
+                                TextStyle(color: Theme.of(context).colorScheme.error),
                           ),
                         ),
                       const SizedBox(height: 16.0),
@@ -1027,7 +1027,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           child: Text(
                             'Please select an owner !',
                             style: TextStyle(
-                                color: Theme.of(context).errorColor,
+                                color: Theme.of(context).colorScheme.error,
                                 fontSize: 14.0),
                           ),
                         ),

@@ -70,8 +70,8 @@ class _ticketListRowState extends State<ticketListRow> {
                   Row(
                     children: [
                       Text(
-                        AppLocalizations.of(context).ref + " ",
-                        style: Theme.of(context).textTheme.subtitle2,
+                        AppLocalizations.of(context)!.ref + " ",
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
                       SizedBox(
                         width: 10,
@@ -82,7 +82,7 @@ class _ticketListRowState extends State<ticketListRow> {
                   ),
                   Text(
                     widget.createTime,
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   )
                 ],
               ),
@@ -95,8 +95,8 @@ class _ticketListRowState extends State<ticketListRow> {
                   Row(
                     children: [
                       Text(
-                        AppLocalizations.of(context).label + " ",
-                        style: Theme.of(context).textTheme.subtitle2,
+                        AppLocalizations.of(context)!.label + " ",
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
                       Container(
                         width: 200,
@@ -140,8 +140,8 @@ class _ticketListRowState extends State<ticketListRow> {
                   Row(
                     children: [
                       Text(
-                        AppLocalizations.of(context).pipeline + " ",
-                        style: Theme.of(context).textTheme.subtitle2,
+                        AppLocalizations.of(context)!.pipeline + " ",
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
                       Container(
                         width: 150,
@@ -159,7 +159,7 @@ class _ticketListRowState extends State<ticketListRow> {
                         width: 100,
                         child: Text(
                           widget.owner,
-                          style: Theme.of(context).textTheme.subtitle1,
+                          style: Theme.of(context).textTheme.headlineSmall,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

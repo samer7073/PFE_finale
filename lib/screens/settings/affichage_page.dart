@@ -33,7 +33,7 @@ class _AffichageState extends State<Affichage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).display),
+        title: Text(AppLocalizations.of(context)!.display),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -41,14 +41,14 @@ class _AffichageState extends State<Affichage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppLocalizations.of(context).theme,
+              AppLocalizations.of(context)!.theme,
               style: TextStyle(color: Colors.grey[600]),
             ),
             SizedBox(height: 10),
             Container(
               height: 50,
               child: customSwitch(
-                AppLocalizations.of(context).darkMode,
+                AppLocalizations.of(context)!.darkMode,
                 themeProvider.isDarkMode,
                 (value) {
                   themeProvider.toggleTheme();
@@ -76,7 +76,7 @@ Widget customSwitch(
       children: [
         Text(
           text,
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.headlineLarge,
         ),
         Spacer(),
         CupertinoSwitch(

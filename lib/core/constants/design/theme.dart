@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class MyThemes {
   static final lightTheme = ThemeData(
+    
     tabBarTheme: TabBarTheme(
       labelColor: Colors.black,
       unselectedLabelColor: Colors.black,
@@ -32,20 +33,27 @@ class MyThemes {
           suffixIconColor: const Color.fromARGB(255, 62, 39, 176)),
     ),
     textTheme: TextTheme(
-      headline1: TextStyle(
-          fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
-      headline2: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      bodyText1: TextStyle(
-          fontSize: 16, color: Colors.black), // Your custom body text style
-      bodyText2: TextStyle(fontSize: 14, color: Colors.grey),
-      subtitle1: TextStyle(fontSize: 16, color: Colors.black),
-      subtitle2: TextStyle(fontSize: 14, color: Colors.grey),
-      button: TextStyle(fontSize: 16, color: Colors.white),
-      caption: TextStyle(fontSize: 12, color: Colors.grey),
-      overline: TextStyle(fontSize: 10, color: Colors.grey),
+      
+       displayMedium:TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+       displaySmall: TextStyle(fontSize: 14, color: Colors.grey),
+       headlineSmall:TextStyle(fontSize: 16, color: Colors.white), 
+       headlineLarge: TextStyle(
+          fontSize: 16, color: Colors.black),
+        headlineMedium:TextStyle(fontSize: 14, color: Colors.grey)
+        
+       
+   
+      
+    
+   
+      
+     
+     
     ),
     primaryColor: Colors.white,
-    colorScheme: ColorScheme.light(),
+    colorScheme: ColorScheme.light(
+      error: Colors.red
+    ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       selectedIconTheme: IconThemeData(color: Colors.blue),
       unselectedIconTheme: IconThemeData(color: Colors.black),
@@ -87,18 +95,21 @@ class MyThemes {
           suffixIconColor: Colors.blue),
     ),
     textTheme: TextTheme(
-      headline1: TextStyle(
-          fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white),
-      headline2: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      headline3: TextStyle(fontSize: 16, color: Colors.black),
-      bodyText1: TextStyle(
-          fontSize: 16, color: Colors.white), // Your custom body text style
-      bodyText2: TextStyle(fontSize: 14, color: Colors.grey),
-      subtitle1: TextStyle(fontSize: 16, color: Colors.white),
-      subtitle2: TextStyle(fontSize: 14, color: Colors.grey),
-      button: TextStyle(fontSize: 16, color: Colors.white),
-      caption: TextStyle(fontSize: 12, color: Colors.grey),
-      overline: TextStyle(fontSize: 10, color: Colors.grey),
+      headlineSmall:TextStyle(fontSize: 16, color: Colors.white), 
+      headlineLarge: TextStyle(
+          fontSize: 16, color: Colors.white),
+      headlineMedium:TextStyle(fontSize: 14, color: Colors.grey), 
+      displayMedium:TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      displaySmall: TextStyle(fontSize: 14, color: Colors.grey),
+     
+      
+    
+     
+    
+     
+      
+      
+      
     ),
     primaryColor: Colors.black,
     colorScheme: ColorScheme.dark(),

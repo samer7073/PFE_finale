@@ -13,7 +13,7 @@ class _IndisponibilitePageState extends State<IndisponibilitePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).unavailability),
+        title: Text(AppLocalizations.of(context)!.unavailability),
         centerTitle: true,
       ),
     );

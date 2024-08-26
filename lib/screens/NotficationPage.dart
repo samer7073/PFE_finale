@@ -167,7 +167,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(AppLocalizations.of(context).notifications),
+            title: Text(AppLocalizations.of(context)!.notifications),
           ),
           body: _tasks.isEmpty
               ? Center(

@@ -25,7 +25,7 @@ class NotificationsPage extends StatelessWidget {
             children: [
               Text(
                 "New",
-                style: Theme.of(context).textTheme.headline2,
+                style: Theme.of(context).textTheme.displayMedium,
               ),
               const SizedBox(
                 height: 10,
@@ -51,7 +51,7 @@ class NotificationsPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Text(
                   "Today",
-                  style: Theme.of(context).textTheme.headline2,
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
               ),
               ListView.builder(
@@ -75,7 +75,7 @@ class NotificationsPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: Text(
                   "Oldest",
-                  style: Theme.of(context).textTheme.headline2,
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
               ),
               ListView.builder(

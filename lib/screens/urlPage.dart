@@ -79,7 +79,7 @@ class _UrlPageState extends State<UrlPage> {
                     ),
                     Text(
                       "Connection to a host server",
-                      style: textTheme?.bodyText1?.copyWith(
+                      style: textTheme?.headlineLarge?.copyWith(
                         color: Colors.white,
                         fontFamily: 'ProstoOne',
                       ), // Texte en blanc

@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).profile),
+        title: Text(AppLocalizations.of(context)!.profile),
       ),
       body: Center(
         child: Tooltip(

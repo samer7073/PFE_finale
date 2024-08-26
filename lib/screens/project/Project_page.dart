@@ -56,7 +56,7 @@ class _ProjectPageState extends State<ProjectPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).projects),
+        title: Text(AppLocalizations.of(context)!.projects),
         actions: [
           IconButton(
             onPressed: () {

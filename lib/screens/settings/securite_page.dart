@@ -13,7 +13,7 @@ class _SecuritePageState extends State<SecuritePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).securityandpermissions),
+        title: Text(AppLocalizations.of(context)!.securityandpermissions),
         centerTitle: true,
       ),
     );

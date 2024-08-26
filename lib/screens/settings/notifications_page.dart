@@ -13,7 +13,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).notifications),
+        title: Text(AppLocalizations.of(context)!.notifications),
         centerTitle: true,
       ),
     );

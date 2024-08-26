@@ -65,11 +65,11 @@ class CustomLikedNotifcation extends StatelessWidget {
                 maxLines: 2,
                 text: TextSpan(
                     text: name1,
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.headlineLarge,
                     children: [
                       TextSpan(
                           text: " and \n",
-                          style: Theme.of(context).textTheme.bodyText2),
+                          style: Theme.of(context).textTheme.headlineMedium),
                       TextSpan(text: name2)
                     ]),
               ),

@@ -447,7 +447,7 @@ class _ComptePageState extends State<ComptePage> {
           )
         : Scaffold(
             appBar: AppBar(
-              title: Text(AppLocalizations.of(context).myaccount),
+              title: Text(AppLocalizations.of(context)!.myaccount),
               centerTitle: true,
             ),
             body: SingleChildScrollView(
@@ -660,7 +660,7 @@ class _ComptePageState extends State<ComptePage> {
                                   Color.fromARGB(255, 228, 246, 250),
                             ),
                             child: Text(
-                              AppLocalizations.of(context).save,
+                              AppLocalizations.of(context)!.save,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Color.fromARGB(255, 40, 5, 243),

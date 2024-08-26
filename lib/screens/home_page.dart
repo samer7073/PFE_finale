@@ -155,11 +155,11 @@ class _HomePageState extends State<HomePage>
               controller: _tabController,
               tabs: [
                 Tab(
-                  text: AppLocalizations.of(context).activities,
+                  text: AppLocalizations.of(context)!.activities,
                 ),
-                Tab(text: AppLocalizations.of(context).ticket),
-                Tab(text: AppLocalizations.of(context).deal),
-                Tab(text: AppLocalizations.of(context).project)
+                Tab(text: AppLocalizations.of(context)!.ticket),
+                Tab(text: AppLocalizations.of(context)!.deal),
+                Tab(text: AppLocalizations.of(context)!.project)
               ],
             ),
             actions: [

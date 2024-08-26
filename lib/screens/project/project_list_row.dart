@@ -59,14 +59,14 @@ class _ProjectListRowState extends State<ProjectListRow> {
                 Row(
                   children: [
                     Text(
-                      AppLocalizations.of(context).ref + " ",
-                      style: Theme.of(context).textTheme.subtitle2,
+                      AppLocalizations.of(context)!.ref + " ",
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
                     Container(
                       width: 150,
                       child: Text(
                         widget.reference,
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.headlineLarge,
                         overflow: TextOverflow.ellipsis,
                       ),
                     )
@@ -74,7 +74,7 @@ class _ProjectListRowState extends State<ProjectListRow> {
                 ),
                 Text(
                   widget.createTime,
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 )
               ],
             ),
@@ -84,8 +84,8 @@ class _ProjectListRowState extends State<ProjectListRow> {
             Row(
               children: [
                 Text(
-                  AppLocalizations.of(context).label + " ",
-                  style: Theme.of(context).textTheme.subtitle2,
+                  AppLocalizations.of(context)!.label + " ",
+                  style: Theme.of(context).textTheme.displaySmall,
                 ),
                 Container(
                   width: 270,
@@ -109,14 +109,14 @@ class _ProjectListRowState extends State<ProjectListRow> {
                 Row(
                   children: [
                     Text(
-                      AppLocalizations.of(context).pipeline + " ",
-                      style: Theme.of(context).textTheme.subtitle2,
+                      AppLocalizations.of(context)!.pipeline + " ",
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
                     Container(
                       width: 100,
                       child: Text(
                         widget.pipline,
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.headlineLarge,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -127,7 +127,7 @@ class _ProjectListRowState extends State<ProjectListRow> {
                   children: [
                     Text(
                       widget.owner,
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     SizedBox(
                       width: 10,

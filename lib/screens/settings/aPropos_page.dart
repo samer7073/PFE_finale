@@ -13,7 +13,7 @@ class _AproposState extends State<Apropos> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).about),
+        title: Text(AppLocalizations.of(context)!.about),
         centerTitle: true,
       ),
     );

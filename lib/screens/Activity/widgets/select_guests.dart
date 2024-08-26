@@ -127,7 +127,7 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
               onPressed: () {
                 Navigator.pop(context, _selectedGuests);
               },
-              child: Text(AppLocalizations.of(context).save,
+              child: Text(AppLocalizations.of(context)!.save,
                   style: TextStyle(color: Colors.white)),
             ),
           ],

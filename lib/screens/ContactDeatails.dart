@@ -25,7 +25,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).contactDetails),
+        title: Text(AppLocalizations.of(context)!.contactDetails),
       ),
       body: FutureBuilder<ApiResponseContactDetails>(
         future: _futureContactDetails,
@@ -67,7 +67,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ListTile(
                       title: Text(
-                          AppLocalizations.of(context).label +
+                          AppLocalizations.of(context)!.label +
                               ' ${contactDetails!.info.label}',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     ),
@@ -78,8 +78,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                       title: Text(
                         contactDetails.info.email == "null" ||
                                 contactDetails.info.email!.isEmpty
-                            ? AppLocalizations.of(context).emailNotAvailable
-                            : AppLocalizations.of(context).email +
+                            ? AppLocalizations.of(context)!.emailNotAvailable
+                            : AppLocalizations.of(context)!.email +
                                 ' ${contactDetails.info.email}',
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -91,9 +91,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                       title: Text(
                         contactDetails.info.phoneNumber == "null" ||
                                 contactDetails.info.phoneNumber!.isEmpty
-                            ? AppLocalizations.of(context)
+                            ? AppLocalizations.of(context)!
                                 .phoneNumberNotAvailable
-                            : AppLocalizations.of(context).phoneNumber +
+                            : AppLocalizations.of(context)!.phoneNumber +
                                 ' $cleanedPhoneNumber',
                         // overflow: TextOverflow.ellipsis,
                       ),
@@ -102,7 +102,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ExpansionTile(
                       title: Text(
-                          AppLocalizations.of(context).deals +
+                          AppLocalizations.of(context)!.deals +
                               '(${contactDetails.relations.deal!.length})',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       children: contactDetails.relations.deal!
@@ -117,7 +117,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                   ));
                                 },
                                 title: Text(deal.label ??
-                                    AppLocalizations.of(context).noLabel),
+                                    AppLocalizations.of(context)!.noLabel),
                                 leading: Icon(Icons.handshake_outlined),
                               ))
                           .toList(),
@@ -126,7 +126,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ExpansionTile(
                       title: Text(
-                          AppLocalizations.of(context).projects +
+                          AppLocalizations.of(context)!.projects +
                               ' (${contactDetails.relations.project!.length})',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       children: contactDetails.relations.project!
@@ -141,7 +141,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                   ));
                                 },
                                 title: Text(project.label ??
-                                    AppLocalizations.of(context).noLabel),
+                                    AppLocalizations.of(context)!.noLabel),
                                 leading: Icon(Icons.event_note_rounded),
                               ))
                           .toList(),
@@ -150,7 +150,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ExpansionTile(
                       title: Text(
-                          AppLocalizations.of(context).tickets +
+                          AppLocalizations.of(context)!.tickets +
                               ' (${contactDetails.relations.helpdesk!.length})',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       children: contactDetails.relations.helpdesk!
@@ -165,7 +165,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                                   ));
                                 },
                                 title: Text(helpdesk.label ??
-                                    AppLocalizations.of(context).noLabel),
+                                    AppLocalizations.of(context)!.noLabel),
                                 leading:
                                     Icon(Icons.confirmation_number_outlined),
                               ))

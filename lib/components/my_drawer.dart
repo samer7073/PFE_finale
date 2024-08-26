@@ -36,22 +36,22 @@ class MyDrawer extends StatelessWidget {
           ),
           MyListTile(
             icon: Icons.home,
-            text: AppLocalizations.of(context).drawerHome,
+            text: AppLocalizations.of(context)!.drawerHome,
             onTap: () => Navigator.pop(context),
           ),
           MyListTile(
             icon: Icons.person,
-            text: AppLocalizations.of(context).drawerProfile,
+            text: AppLocalizations.of(context)!.drawerProfile,
             onTap: onProfileTap,
           ),
           MyListTile(
             icon: Icons.settings,
-            text: AppLocalizations.of(context).drawerSettings,
+            text: AppLocalizations.of(context)!.drawerSettings,
             onTap: onSettingsTap,
           ),
           MyListTile(
             icon: Icons.logout,
-            text: AppLocalizations.of(context).drawerLogout,
+            text: AppLocalizations.of(context)!.drawerLogout,
             onTap: onLogoutTap,
           ),
         ],

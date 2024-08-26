@@ -68,7 +68,7 @@ class _ContactDetailsElmentState extends State<ContactDetailsElment> {
                       return ListTile(
                         title: Text(
                           entry.key.toUpperCase(),
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         subtitle: Text(
                           removeBrackets(entry.value.toString()),

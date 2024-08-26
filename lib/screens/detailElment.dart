@@ -57,10 +57,10 @@ class _DetailElmentState extends State<DetailElment>
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            Tab(text: AppLocalizations.of(context).details),
-            Tab(text: AppLocalizations.of(context).overview),
-            Tab(text: AppLocalizations.of(context).comment),
-            Tab(text: AppLocalizations.of(context).activity),
+            Tab(text: AppLocalizations.of(context)!.details),
+            Tab(text: AppLocalizations.of(context)!.overview),
+            Tab(text: AppLocalizations.of(context)!.comment),
+            Tab(text: AppLocalizations.of(context)!.activity),
           ],
         ),
       ),

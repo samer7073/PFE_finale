@@ -51,7 +51,7 @@ class _ChangeLangugePageState extends State<ChangeLangugePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).choosealanguage),
+        title: Text(AppLocalizations.of(context)!.choosealanguage),
         centerTitle: true,
       ),
       body: Column(

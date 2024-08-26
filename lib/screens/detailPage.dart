@@ -225,7 +225,7 @@ class _DetailPageState extends State<DetailPage> {
                               child: Row(
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context).pipeline + " ",
+                                    AppLocalizations.of(context)!.pipeline + " ",
                                     style: TextStyle(
                                       fontSize: 20,
                                     ),
@@ -317,7 +317,7 @@ class _DetailPageState extends State<DetailPage> {
                       SizedBox(height: 20),
                     ],
                     Text(
-                      AppLocalizations.of(context).details,
+                      AppLocalizations.of(context)!.details,
                       style: TextStyle(
                         fontSize: 20,
                       ),
@@ -350,7 +350,7 @@ class _DetailPageState extends State<DetailPage> {
                           return ListTile(
                             title: Text(
                               entry.key.toUpperCase(),
-                              style: Theme.of(context).textTheme.bodyText2,
+                              style: Theme.of(context).textTheme.headlineMedium,
                             ),
                             subtitle: Text(
                               removeBrackets(entry.value.toString()),

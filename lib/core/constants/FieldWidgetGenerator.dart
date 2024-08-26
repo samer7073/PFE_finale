@@ -15,7 +15,7 @@ import '../../models/fields/datafieldgroup.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../services/ApiFamilyModuleData.dart';
-import 'package:flutter_multiselect/flutter_multiselect.dart';
+
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class FieldWidgetGenerator extends StatefulWidget {
@@ -446,7 +446,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                   Text(
                     state.errorText ?? "",
                     style: TextStyle(
-                      color: Theme.of(context).errorColor,
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   ),
                 ],
@@ -839,7 +839,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     children: [
                       Text(
                         "${widget.dataFieldGroup.alias}",
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       ElevatedButton.icon(
                         icon: Icon(Icons.image_outlined),
@@ -873,7 +873,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     state.errorText ??
                         "", // Affiche l'erreur seulement si aucune image n'est sélectionnée et que le champ est obligatoire
                     style: TextStyle(
-                      color: Theme.of(context).errorColor,
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   )
                 ],
@@ -904,7 +904,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                       children: [
                         Text(
                           "${widget.dataFieldGroup.alias}",
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         ElevatedButton.icon(
                             icon: Icon(Icons.photo_album_outlined),
@@ -946,7 +946,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     Text(
                       state.errorText ?? "",
                       style: TextStyle(
-                        color: Theme.of(context).errorColor,
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     )
                   ],
@@ -977,7 +977,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                       children: [
                         Text(
                           "${widget.dataFieldGroup.alias}",
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         ElevatedButton.icon(
                             icon: Icon(Icons.upload_file_outlined),
@@ -990,7 +990,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     Text(
                       state.errorText ?? "",
                       style: TextStyle(
-                        color: Theme.of(context).errorColor,
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     ),
                     Container(
@@ -1069,7 +1069,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                   children: [
                     Text(
                       widget.dataFieldGroup.alias,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     SizedBox(
                       height: 10,
@@ -1098,7 +1098,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     Text(
                       state.errorText ?? "",
                       style: TextStyle(
-                        color: Theme.of(context).errorColor,
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     )
                   ],
@@ -1126,7 +1126,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               padding: const EdgeInsets.all(10.0),
               child: Text(
                 widget.dataFieldGroup.alias,
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
             ),
             SizedBox(
@@ -1388,7 +1388,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               children: [
                 Text(
                   "${widget.dataFieldGroup.alias}",
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 DropdownButtonFormField(
                     hint: Container(
@@ -1490,6 +1490,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
         );
 
       case "multiselect":
+      /*
         if (widget.dataFieldGroup.listfieldsview.isEmpty) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -1511,8 +1512,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(5)),
-              itemsTextStyle: Theme.of(context).textTheme.bodyText1,
-              selectedItemsTextStyle: Theme.of(context).textTheme.bodyText1,
+              itemsTextStyle: Theme.of(context).textTheme.headlineLarge,
+              selectedItemsTextStyle: Theme.of(context).textTheme.headlineLarge,
               selectedColor: Colors.blue,
               items: _dropdownItems
                   .map((item) => MultiSelectItem(item['id'], item['label']))
@@ -1565,8 +1566,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(5)),
-              itemsTextStyle: Theme.of(context).textTheme.bodyText1,
-              selectedItemsTextStyle: Theme.of(context).textTheme.bodyText1,
+              itemsTextStyle: Theme.of(context).textTheme.headlineLarge,
+              selectedItemsTextStyle: Theme.of(context).textTheme.headlineLarge,
               selectedColor: Colors.blue,
               items: widget.dataFieldGroup.listfieldsview
                   .map((item) => MultiSelectItem(item.id, item.label))
@@ -1598,7 +1599,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               },
             ),
           );
-        }
+        }*/
+        return Text("data");
 
       case "select":
 
@@ -1612,7 +1614,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               children: [
                 Text(
                   "${widget.dataFieldGroup.alias}",
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 SizedBox(
                   height: 10,
@@ -1732,7 +1734,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               children: [
                 Text(
                   "${widget.dataFieldGroup.alias}",
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 SizedBox(
                   height: 10,
@@ -1890,7 +1892,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               children: [
                 Text(
                   "${widget.dataFieldGroup.alias}",
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 FormField(
                   builder: (state) {
@@ -1928,7 +1930,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         Text(
                           state.errorText ?? "",
                           style: TextStyle(
-                            color: Theme.of(context).errorColor,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         ),
                       ],
@@ -1977,7 +1979,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
             children: [
               Text(
                 "${widget.dataFieldGroup.alias}",
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.headlineLarge,
               ),
               FormField(
                   validator: widget.dataFieldGroup.required == true
@@ -2022,7 +2024,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         Text(
                           state.errorText ?? "",
                           style: TextStyle(
-                            color: Theme.of(context).errorColor,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         )
                       ],
@@ -2066,7 +2068,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               children: [
                 Text(
                   "${widget.dataFieldGroup.alias}",
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 FormField(
                   builder: (state) {
@@ -2106,7 +2108,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         Text(
                           state.errorText ?? "",
                           style: TextStyle(
-                            color: Theme.of(context).errorColor,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         ),
                       ],
@@ -2133,7 +2135,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               children: [
                 Text(
                   "${widget.dataFieldGroup.alias}",
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 FormField(
                   validator: widget.dataFieldGroup.required == true
@@ -2180,7 +2182,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         Text(
                           field.errorText ?? "",
                           style: TextStyle(
-                            color: Theme.of(context).errorColor,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                         )
                       ],

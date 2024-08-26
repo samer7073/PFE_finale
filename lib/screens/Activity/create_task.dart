@@ -761,7 +761,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context).createActivity,
+            AppLocalizations.of(context)!.createActivity,
             style: TextStyle(color: Colors.blue, fontSize: 25),
           ),
           bottom: TabBar(
@@ -770,9 +770,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
             indicatorColor: Colors.blue,
             tabs: [
               Tab(
-                text: AppLocalizations.of(context).activity,
+                text: AppLocalizations.of(context)!.activity,
               ),
-              Tab(text: AppLocalizations.of(context).details),
+              Tab(text: AppLocalizations.of(context)!.details),
             ],
           ),
           actions: [
@@ -860,7 +860,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView(
                     children: [
-                      Text(AppLocalizations.of(context).activityTypeRequired,
+                      Text(AppLocalizations.of(context)!.activityTypeRequired,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -874,14 +874,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            AppLocalizations.of(context)
+                            AppLocalizations.of(context)!
                                 .pleaseSelectActivityType,
                             style: TextStyle(color: Colors.red, fontSize: 12.0),
                           ),
                         ),
                       const SizedBox(height: 18.0),
                       Text(
-                        AppLocalizations.of(context).labelRequired,
+                        AppLocalizations.of(context)!.labelRequired,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -897,7 +897,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           controller: _taskNameController,
                           decoration: InputDecoration(
                             hintText:
-                                AppLocalizations.of(context).enterActivityLabel,
+                                AppLocalizations.of(context)!.enterActivityLabel,
                             hintStyle: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
@@ -924,7 +924,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return AppLocalizations.of(context)
+                              return AppLocalizations.of(context)!
                                   .pleaseEnterLabel;
                             }
                             return null;
@@ -933,7 +933,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       const SizedBox(height: 16.0),
                       Text(
-                        AppLocalizations.of(context).ownerRequired,
+                        AppLocalizations.of(context)!.ownerRequired,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -946,7 +946,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             borderRadius: BorderRadius.circular(5)),
                         child: InputDecorator(
                           decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context).selectOwner,
+                            hintText: AppLocalizations.of(context)!.selectOwner,
                             /*
                             enabledBorder: OutlineInputBorder(
                               borderSide:
@@ -1005,13 +1005,13 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            AppLocalizations.of(context).pleaseSelectOwner,
+                            AppLocalizations.of(context)!.pleaseSelectOwner,
                             style: TextStyle(color: Colors.red, fontSize: 12.0),
                           ),
                         ),
                       const SizedBox(height: 18.0),
                       Text(
-                        AppLocalizations.of(context).selectDateType,
+                        AppLocalizations.of(context)!.selectDateType,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1035,7 +1035,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               activeColor: Color.fromARGB(255, 52, 7, 255),
                             ),
                             Text(
-                              AppLocalizations.of(context).singleDay,
+                              AppLocalizations.of(context)!.singleDay,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -1053,7 +1053,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               activeColor: Color.fromARGB(255, 52, 7, 255),
                             ),
                             Text(
-                              AppLocalizations.of(context).rangeOfDays,
+                              AppLocalizations.of(context)!.rangeOfDays,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -1070,7 +1070,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context).startDate,
+                                  AppLocalizations.of(context)!.startDate,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1094,7 +1094,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       enabledBorder: InputBorder
                                           .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
                                       focusedBorder: InputBorder.none,
-                                      hintText: AppLocalizations.of(context)
+                                      hintText: AppLocalizations.of(context)!
                                           .selectStartDate,
                                       hintStyle: const TextStyle(
                                           fontSize: 15, color: Colors.blueGrey),
@@ -1106,7 +1106,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                     onTap: _handleStartDateSelection,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return AppLocalizations.of(context)
+                                        return AppLocalizations.of(context)!
                                             .pleaseSelectStartDate;
                                       }
                                       return null;
@@ -1117,7 +1117,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                           .startDateAfterEndDate,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
@@ -1132,7 +1132,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context).endDate,
+                                  AppLocalizations.of(context)!.endDate,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1156,7 +1156,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       enabledBorder: InputBorder
                                           .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
                                       focusedBorder: InputBorder.none,
-                                      hintText: AppLocalizations.of(context)
+                                      hintText: AppLocalizations.of(context)!
                                           .selectEndDate,
                                       hintStyle: const TextStyle(
                                           fontSize: 15, color: Colors.blueGrey),
@@ -1168,7 +1168,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                     onTap: _handleStartDateSelection,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return AppLocalizations.of(context)
+                                        return AppLocalizations.of(context)!
                                             .pleaseSelectEndDate;
                                       }
                                       return null;
@@ -1179,7 +1179,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                           .endDateBeforeStartDate,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
@@ -1192,7 +1192,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       const SizedBox(height: 18.0),
                       Text(
-                        AppLocalizations.of(context).correspondingStage,
+                        AppLocalizations.of(context)!.correspondingStage,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1209,7 +1209,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             enabledBorder: InputBorder
                                 .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
                             focusedBorder: InputBorder.none,
-                            hintText: AppLocalizations.of(context)
+                            hintText: AppLocalizations.of(context)!
                                 .selectActivityStage,
                             hintStyle: const TextStyle(
                                 fontSize: 15, color: Colors.blueGrey),
@@ -1241,7 +1241,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context).startTime,
+                                  AppLocalizations.of(context)!.startTime,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1260,7 +1260,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       enabledBorder: InputBorder
                                           .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
                                       focusedBorder: InputBorder.none,
-                                      hintText: AppLocalizations.of(context)
+                                      hintText: AppLocalizations.of(context)!
                                           .selectStartTime,
                                       hintStyle: const TextStyle(
                                           fontSize: 15, color: Colors.blueGrey),
@@ -1272,7 +1272,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                     onTap: () => _selectTime(context, true),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return AppLocalizations.of(context)
+                                        return AppLocalizations.of(context)!
                                             .pleaseSelectStartTime;
                                       }
                                       return null;
@@ -1286,7 +1286,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                           .startTimeAfterEndTime,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
@@ -1301,7 +1301,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context).endTime,
+                                  AppLocalizations.of(context)!.endTime,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1318,7 +1318,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       enabledBorder: InputBorder
                                           .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
                                       focusedBorder: InputBorder.none,
-                                      hintText: AppLocalizations.of(context)
+                                      hintText: AppLocalizations.of(context)!
                                           .selectEndTime,
                                       hintStyle: const TextStyle(
                                           fontSize: 15, color: Colors.blueGrey),
@@ -1331,7 +1331,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                     onTap: () => _selectTime(context, false),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return AppLocalizations.of(context)
+                                        return AppLocalizations.of(context)!
                                             .pleaseSelectEndTime;
                                       }
                                       return null;
@@ -1345,7 +1345,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                   Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      AppLocalizations.of(context)
+                                      AppLocalizations.of(context)!
                                           .endTimeBeforeStartTime,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
@@ -1361,7 +1361,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppLocalizations.of(context).guests,
+                            AppLocalizations.of(context)!.guests,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -1381,7 +1381,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                     color: Colors.blueGrey,
                                   ),
                                   label: Text(
-                                    AppLocalizations.of(context).add,
+                                    AppLocalizations.of(context)!.add,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -1443,7 +1443,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           child: CheckboxListTile(
                             activeColor: Colors.blueGrey,
                             title: Text(
-                              AppLocalizations.of(context)
+                              AppLocalizations.of(context)!
                                   .sendEmailToExternalMembers,
                               style: TextStyle(color: Colors.blueGrey),
                             ),
@@ -1460,7 +1460,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppLocalizations.of(context).followers,
+                            AppLocalizations.of(context)!.followers,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -1480,7 +1480,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                     color: Colors.blueGrey,
                                   ),
                                   label: Text(
-                                    AppLocalizations.of(context).add,
+                                    AppLocalizations.of(context)!.add,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -1537,7 +1537,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ),
                       const SizedBox(height: 18.0),
                       Text(
-                        AppLocalizations.of(context).reminderBefore,
+                        AppLocalizations.of(context)!.reminderBefore,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1559,7 +1559,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
                                   focusedBorder: InputBorder.none,
                                   hintText:
-                                      AppLocalizations.of(context).duration,
+                                      AppLocalizations.of(context)!.duration,
                                   hintStyle: const TextStyle(
                                       fontSize: 15, color: Colors.blueGrey),
                                   contentPadding: const EdgeInsets.symmetric(
@@ -1587,7 +1587,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
                                   focusedBorder: InputBorder.none,
                                   hintText:
-                                      AppLocalizations.of(context).timeUnit,
+                                      AppLocalizations.of(context)!.timeUnit,
                                   hintStyle: const TextStyle(
                                       fontSize: 15, color: Colors.blueGrey),
 
@@ -1615,7 +1615,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(height: 16.0),
                       CheckboxListTile(
                         title: Text(
-                          AppLocalizations.of(context).reminderBeforeDueDate,
+                          AppLocalizations.of(context)!.reminderBeforeDueDate,
                           style:
                               TextStyle(color: Colors.blueGrey, fontSize: 15),
                         ),
@@ -1660,7 +1660,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   child: ListView(
                     children: [
                       Text(
-                        AppLocalizations.of(context).selectModule,
+                        AppLocalizations.of(context)!.selectModule,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1689,7 +1689,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             },
                             decoration: InputDecoration(
                               hintText:
-                                  AppLocalizations.of(context).selectModule,
+                                  AppLocalizations.of(context)!.selectModule,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
@@ -1713,7 +1713,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ),
                       const SizedBox(height: 16.0),
                       Text(
-                        AppLocalizations.of(context).relatedElement,
+                        AppLocalizations.of(context)!.relatedElement,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1729,7 +1729,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           child: TextField(
                             controller: _relatedModuleSearchController,
                             decoration: InputDecoration(
-                              hintText: AppLocalizations.of(context)
+                              hintText: AppLocalizations.of(context)!
                                   .searchRelatedModule,
                               hintStyle: const TextStyle(
                                   fontSize: 15, color: Colors.blueGrey),
@@ -1787,14 +1787,14 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            AppLocalizations.of(context)
+                            AppLocalizations.of(context)!
                                 .pleaseSelectRelatedModule,
                             style: TextStyle(color: Colors.red, fontSize: 12.0),
                           ),
                         ),
                       const SizedBox(height: 18.0),
                       Text(
-                        AppLocalizations.of(context).selectPriority,
+                        AppLocalizations.of(context)!.selectPriority,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1810,7 +1810,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           child: InputDecorator(
                             decoration: InputDecoration(
                               hintText:
-                                  AppLocalizations.of(context).selectPriority,
+                                  AppLocalizations.of(context)!.selectPriority,
                               hintStyle: const TextStyle(
                                   fontSize: 15, color: Colors.blueGrey),
 
@@ -1840,7 +1840,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       const SizedBox(height: 18.0),
                       Text(
-                        AppLocalizations.of(context).description,
+                        AppLocalizations.of(context)!.description,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1854,7 +1854,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         child: TextFormField(
                           controller: _descriptionController,
                           decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)
+                            hintText: AppLocalizations.of(context)!
                                 .enterActivityDescription,
                             hintStyle: const TextStyle(
                                 fontSize: 15, color: Colors.blueGrey),
@@ -1871,7 +1871,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       const SizedBox(height: 18.0),
                       Text(
-                        AppLocalizations.of(context).note,
+                        AppLocalizations.of(context)!.note,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1886,7 +1886,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           controller: _noteController,
                           decoration: InputDecoration(
                             hintText:
-                                AppLocalizations.of(context).enterActivityNote,
+                                AppLocalizations.of(context)!.enterActivityNote,
                             hintStyle: const TextStyle(
                                 fontSize: 15, color: Colors.blueGrey),
                             enabledBorder: InputBorder
@@ -1902,7 +1902,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       const SizedBox(height: 18.0),
                       Text(
-                        AppLocalizations.of(context).uploadFiles,
+                        AppLocalizations.of(context)!.uploadFiles,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1918,7 +1918,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ),
                         onPressed: selectFiles,
                         child: Text(
-                          AppLocalizations.of(context).upload,
+                          AppLocalizations.of(context)!.upload,
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

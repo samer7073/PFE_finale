@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _viewMode = AppLocalizations.of(context).listView;
+    _viewMode = AppLocalizations.of(context)!.listView;
   }
 
   // List of widgets for different views
@@ -44,9 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
       _viewMode = viewMode;
     });
     int newIndex = [
-      AppLocalizations.of(context).listView,
-      AppLocalizations.of(context).kanban,
-      AppLocalizations.of(context).calendar
+      AppLocalizations.of(context)!.listView,
+      AppLocalizations.of(context)!.kanban,
+      AppLocalizations.of(context)!.calendar
     ].indexOf(viewMode);
     _onItemTapped(newIndex);
   }
@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).activity),
+        title: Text(AppLocalizations.of(context)!.activity),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_none_sharp,size: 30,),
@@ -73,9 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             itemBuilder: (BuildContext context) {
               return <String>[
-                AppLocalizations.of(context).listView,
-                AppLocalizations.of(context).kanban,
-                AppLocalizations.of(context).calendar
+                AppLocalizations.of(context)!.listView,
+                AppLocalizations.of(context)!.kanban,
+                AppLocalizations.of(context)!.calendar
               ].map<PopupMenuItem<String>>((String value) {
                 return PopupMenuItem<String>(
                   value: value,

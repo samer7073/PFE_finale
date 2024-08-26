@@ -61,20 +61,20 @@ class _DealListRowState extends State<DealListRow> {
                 Row(
                   children: [
                     Text(
-                      AppLocalizations.of(context).ref + " ",
-                      style: Theme.of(context).textTheme.subtitle2,
+                      AppLocalizations.of(context)!.ref + " ",
+                      style: Theme.of(context).textTheme.displaySmall,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       widget.reference,
-                      style: Theme.of(context).textTheme.bodyText1,
+                      style: Theme.of(context).textTheme.headlineLarge,
                       overflow: TextOverflow.ellipsis,
                     )
                   ],
                 ),
                 Text(
                   widget.createTime,
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 )
               ],
             ),
@@ -87,14 +87,14 @@ class _DealListRowState extends State<DealListRow> {
                 Row(
                   children: [
                     Text(
-                      AppLocalizations.of(context).organisation + " ",
-                      style: Theme.of(context).textTheme.subtitle2,
+                      AppLocalizations.of(context)!.organisation + " ",
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
                     Container(
                       width: 270,
                       child: Text(
                         widget.organisation,
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.headlineLarge,
                         overflow: TextOverflow.ellipsis,
                       ),
                     )
@@ -108,8 +108,8 @@ class _DealListRowState extends State<DealListRow> {
             Row(
               children: [
                 Text(
-                  AppLocalizations.of(context).label,
-                  style: Theme.of(context).textTheme.subtitle2,
+                  AppLocalizations.of(context)!.label,
+                  style: Theme.of(context).textTheme.displaySmall,
                 ),
                 SizedBox(
                   width: 10,
@@ -136,8 +136,8 @@ class _DealListRowState extends State<DealListRow> {
                 Row(
                   children: [
                     Text(
-                      AppLocalizations.of(context).pipeline + " ",
-                      style: Theme.of(context).textTheme.subtitle2,
+                      AppLocalizations.of(context)!.pipeline + " ",
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
                     SizedBox(
                       width: 10,
@@ -146,7 +146,7 @@ class _DealListRowState extends State<DealListRow> {
                       width: 100,
                       child: Text(
                         widget.piepline,
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.headlineLarge,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -157,7 +157,7 @@ class _DealListRowState extends State<DealListRow> {
                   children: [
                     Text(
                       widget.owner,
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     SizedBox(
                       width: 10,

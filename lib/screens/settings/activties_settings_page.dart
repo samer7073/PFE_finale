@@ -17,7 +17,7 @@ class _ActiviteSettingsPageState extends State<ActiviteSettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).activities),
+        title: Text(AppLocalizations.of(context)!.activities),
         centerTitle: true,
       ),
       body: Padding(

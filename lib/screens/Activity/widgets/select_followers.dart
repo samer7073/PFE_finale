@@ -127,7 +127,7 @@ class _FollowersSelectionSheetState extends State<FollowersSelectionSheet> {
               onPressed: () {
                 Navigator.pop(context, _selectedFollowers);
               },
-              child: Text(AppLocalizations.of(context).save,
+              child: Text(AppLocalizations.of(context)!.save,
                   style: TextStyle(color: Colors.white)),
             ),
           ],

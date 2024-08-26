@@ -174,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 Text(
                                   "Connexion à un serveur d'accueil",
-                                  style: Theme.of(context).textTheme.bodyText1,
+                                  style: Theme.of(context).textTheme.headlineLarge,
                                 ),
                                 SizedBox(
                                   height: 15,
@@ -279,7 +279,7 @@ class _LoginPageState extends State<LoginPage> {
               return 'Please enter your email';
             }
             if (!isValidEmail(value)) {
-              return AppLocalizations.of(context).enterValidEmail;
+              return AppLocalizations.of(context)!.enterValidEmail;
             }
             return null;
           },
@@ -313,7 +313,7 @@ class _LoginPageState extends State<LoginPage> {
               hintStyle: TextStyle(color: Colors.white),
               hintText: _focusNodeEmail.hasFocus || email.isNotEmpty
                   ? ''
-                  : AppLocalizations.of(context)
+                  : AppLocalizations.of(context)!
                       .email, // Masquer le texte de l'indicateur en cas de focus
               prefixIcon: const Icon(
                 Icons.email,
@@ -351,7 +351,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             hintText: _focusNodePassword.hasFocus || password.isNotEmpty
                 ? ''
-                : AppLocalizations.of(context)
+                : AppLocalizations.of(context)!
                     .password, // Masquer le texte de l'indicateur en cas de focus
             hintStyle: TextStyle(color: Colors.white),
             prefixIcon: const Icon(
@@ -399,7 +399,7 @@ class _LoginPageState extends State<LoginPage> {
               backgroundColor: Colors.white,
             ),
             child: Text(
-              AppLocalizations.of(context).login,
+              AppLocalizations.of(context)!.login,
               style: TextStyle(
                   fontFamily: 'ProstoOne',
                   fontSize: 14,

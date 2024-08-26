@@ -69,7 +69,7 @@ class _HomeNavigateState extends State<HomeNavigate> {
           BottomNavigationBarItem(
             icon: Icon(Icons.pie_chart_outline_rounded),
             activeIcon: Icon(Icons.pie_chart),
-            label: AppLocalizations.of(context).overview,
+            label: AppLocalizations.of(context)!.overview,
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -77,29 +77,29 @@ class _HomeNavigateState extends State<HomeNavigate> {
               color: Colors.grey,
             ),
             activeIcon: Icon(Icons.calendar_today_rounded),
-            label: AppLocalizations.of(context).activities,
+            label: AppLocalizations.of(context)!.activities,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons
                 .confirmation_number_outlined), // Utiliser ticketSimple pour l'icône outline
             activeIcon: Icon(Icons
                 .confirmation_number_rounded), // Utiliser ticket pour l'icône filled
-            label: AppLocalizations.of(context).tickets,
+            label: AppLocalizations.of(context)!.tickets,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.handshake_outlined),
             activeIcon: Icon(Icons.handshake_rounded),
-            label: AppLocalizations.of(context).deals,
+            label: AppLocalizations.of(context)!.deals,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.event_note_outlined),
             activeIcon: Icon(Icons.event_note_rounded),
-            label: AppLocalizations.of(context).projects,
+            label: AppLocalizations.of(context)!.projects,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_2_outlined),
             activeIcon: Icon(Icons.person_2_rounded),
-            label: AppLocalizations.of(context).contacts,
+            label: AppLocalizations.of(context)!.contacts,
           ),
         ],
         currentIndex: selectedPage,

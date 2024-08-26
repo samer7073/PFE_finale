@@ -54,7 +54,7 @@ class CustomFollowNotifcation extends StatelessWidget {
           children: [
             Text(
               name,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
             SizedBox(
               height: 5,

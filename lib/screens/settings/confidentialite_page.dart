@@ -13,7 +13,7 @@ class _ConfidentialitePageState extends State<ConfidentialitePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).confidentiality),
+        title: Text(AppLocalizations.of(context)!.confidentiality),
         centerTitle: true,
       ),
     );

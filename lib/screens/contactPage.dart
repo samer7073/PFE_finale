@@ -95,7 +95,7 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).contacts),
+        title: Text(AppLocalizations.of(context)!.contacts),
         centerTitle: true,
       ),
       body: Column(

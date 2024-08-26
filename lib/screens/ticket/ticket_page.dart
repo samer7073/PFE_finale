@@ -38,7 +38,7 @@ class _TicketState extends State<TicketPage> {
     super.didChangeDependencies();
     themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     log("valeur isdark dans initstate ${themeProvider.isDarkMode}");
-    _viewMode = AppLocalizations.of(context).listView;
+    _viewMode = AppLocalizations.of(context)!.listView;
   }
 
   int _selectedIndex = 0;
@@ -59,8 +59,8 @@ class _TicketState extends State<TicketPage> {
       _viewMode = viewMode;
     });
     int newIndex = [
-      AppLocalizations.of(context).listView,
-      AppLocalizations.of(context).kanban
+      AppLocalizations.of(context)!.listView,
+      AppLocalizations.of(context)!.kanban
     ].indexOf(viewMode);
     _onItemTapped(newIndex);
   }
@@ -86,7 +86,7 @@ class _TicketState extends State<TicketPage> {
         ),
       ),
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).tickets),
+        title: Text(AppLocalizations.of(context)!.tickets),
         actions: [
           IconButton(
             onPressed: () {
@@ -117,8 +117,8 @@ class _TicketState extends State<TicketPage> {
             onSelected: _changeViewMode,
             itemBuilder: (BuildContext context) {
               return [
-                AppLocalizations.of(context).listView,
-                AppLocalizations.of(context).kanban
+                AppLocalizations.of(context)!.listView,
+                AppLocalizations.of(context)!.kanban
               ]
                   .map((mode) => PopupMenuItem(
                         value: mode,

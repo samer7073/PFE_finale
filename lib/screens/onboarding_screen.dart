@@ -77,7 +77,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     _controller.jumpToPage(2);
                   },
                   child: Text(
-                    AppLocalizations.of(context).skip,
+                    AppLocalizations.of(context)!.skip,
                     style: TextStyle(
                       fontFamily: 'ProstoOne',
                       fontSize: 16,
@@ -110,7 +110,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           );
                         },
                         child: Text(
-                          AppLocalizations.of(context).done,
+                          AppLocalizations.of(context)!.done,
                           style: TextStyle(
                             fontFamily: 'ProstoOne',
                             fontSize: 16,
@@ -129,7 +129,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           );
                         },
                         child: Text(
-                          AppLocalizations.of(context).next,
+                          AppLocalizations.of(context)!.next,
                           style: TextStyle(
                             fontFamily: 'ProstoOne',
                             fontSize: 16,
