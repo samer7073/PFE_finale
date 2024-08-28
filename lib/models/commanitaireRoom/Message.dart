@@ -1,66 +1,62 @@
-import 'package:flutter_application_stage_project/models/commanitaireRoom/UserRoom.dart';
-
 class Message {
-  final int id;
+  final String id;
   final String type;
-  final int? parentId;
+  final String? parentId;
+  final String senderUuid;
   final String senderId;
-  final UserRoom sender;
   final String message;
-  final int? fileId;
+  final String? fileId;
   final List<dynamic> file;
   final dynamic poll;
   final dynamic voice;
-  final dynamic private;
-  final String roomId;
-  final String room;
-  final int adminId;
   final dynamic bot;
+  final int private;
+  final String roomId;
   final int unread;
   final List<dynamic> unreadRoom;
   final int edit;
   final dynamic forward;
   final dynamic forwarded;
-  final UserRoom user;
   final dynamic mainMessage;
   final List<dynamic> reactions;
   final List<dynamic> replies;
-  final List<dynamic> favoris;
-  final String important;
+  final dynamic favoris;
+  final String? important;
   final dynamic tags;
+  final dynamic code;
+  final dynamic voiceSize;
   final int mobile;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String createdAt;
+  final String updatedAt;
   final dynamic deletedAt;
 
   Message({
     required this.id,
     required this.type,
     this.parentId,
+    required this.senderUuid,
     required this.senderId,
-    required this.sender,
     required this.message,
     this.fileId,
     required this.file,
     this.poll,
     this.voice,
-    this.private,
-    required this.roomId,
-    required this.room,
-    required this.adminId,
     this.bot,
+    required this.private,
+    required this.roomId,
     required this.unread,
     required this.unreadRoom,
     required this.edit,
     this.forward,
     this.forwarded,
-    required this.user,
     this.mainMessage,
     required this.reactions,
     required this.replies,
-    required this.favoris,
-    required this.important,
+    this.favoris,
+    this.important,
     this.tags,
+    this.code,
+    this.voiceSize,
     required this.mobile,
     required this.createdAt,
     required this.updatedAt,
@@ -69,79 +65,38 @@ class Message {
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
-      id: json['id'] ?? 0,
+      id: json['_id'] ?? '',
       type: json['type'] ?? '',
       parentId: json['parent_id'],
-      senderId: json['sender_id'] ?? "",
-      sender: UserRoom.fromJson(json['sender'] ?? {}),
+      senderUuid: json['sender_uuid'] ?? '',
+      senderId: json['sender_id'] ?? '',
       message: _stripHtmlTags(json['message']) ??
           "", // Utilisez la méthode pour supprimer les balises HTML
       fileId: json['file_id'],
-      file: json['file'] ?? [],
+      file: json['file'] as List<dynamic>? ?? [],
       poll: json['poll'],
       voice: json['voice'],
-      private: json['private'],
-      roomId: json['room_id'] ?? "",
-      room: json['room'] ?? '',
-      adminId: json['admin_id'] ?? 0,
       bot: json['bot'],
+      private: json['private'] ?? 0,
+      roomId: json['room_id'] ?? '',
       unread: json['unread'] ?? 0,
-      unreadRoom: json['unread_room'] ?? [],
+      unreadRoom: json['unread_room'] as List<dynamic>? ?? [],
       edit: json['edit'] ?? 0,
       forward: json['forward'],
       forwarded: json['forwarded'],
-      user: UserRoom.fromJson(json['user'] ?? {}),
       mainMessage: json['main_message'],
-      reactions: json['reactions'] ?? [],
-      replies: json['replies'] ?? [],
-      favoris: json['favoris'] ?? [],
-      important: json['important'] ?? "",
+      reactions: json['reactions'] as List<dynamic>? ?? [],
+      replies: json['replies'] as List<dynamic>? ?? [],
+      favoris: json['favoris'],
+      important: json['important'],
       tags: json['tags'],
+      code: json['code'],
+      voiceSize: json['voice_size'],
       mobile: json['mobile'] ?? 0,
-      createdAt: DateTime.parse(
-          json['created_at'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(
-          json['updated_at'] ?? DateTime.now().toIso8601String()),
-      deletedAt: json['deleted_at'] != null
-          ? DateTime.parse(json['deleted_at'])
-          : null,
+      createdAt: json['created_at'] ?? '',
+      updatedAt: json['updated_at'] ?? '',
+      deletedAt: json['deleted_at'],
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'type': type,
-      'parent_id': parentId,
-      'sender_id': senderId,
-      'sender': sender.toJson(),
-      'message': message,
-      'file_id': fileId,
-      'file': file,
-      'poll': poll,
-      'voice': voice,
-      'private': private,
-      'room_id': roomId,
-      'room': room,
-      'admin_id': adminId,
-      'bot': bot,
-      'unread': unread,
-      'unread_room': unreadRoom,
-      'edit': edit,
-      'forward': forward,
-      'forwarded': forwarded,
-      'user': user.toJson(),
-      'main_message': mainMessage,
-      'reactions': reactions,
-      'replies': replies,
-      'favoris': favoris,
-      'important': important,
-      'tags': tags,
-      'mobile': mobile,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
-    };
   }
 
   static String _stripHtmlTags(String htmlString) {

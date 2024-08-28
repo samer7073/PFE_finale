@@ -77,6 +77,7 @@ class _DetailPageState extends State<DetailPage> {
   Future<String> fetchPipelineName() async {
     final token = await SharedPrefernce.getToken("token");
     final baseUrl = await Config.getApiUrl("pipeline");
+    log("5555555555555"+baseUrl + widget.elementId);
 
     final response = await http.get(
       Uri.parse(baseUrl + widget.elementId),
@@ -133,7 +134,9 @@ class _DetailPageState extends State<DetailPage> {
         future: futureApiResponse,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
@@ -209,7 +212,9 @@ class _DetailPageState extends State<DetailPage> {
                         builder: (context, pipelineSnapshot) {
                           if (pipelineSnapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
+                            return Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
                           } else if (pipelineSnapshot.hasError) {
                             return Center(
                                 child:
@@ -247,7 +252,9 @@ class _DetailPageState extends State<DetailPage> {
                         builder: (context, stagesSnapshot) {
                           if (stagesSnapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
+                            return Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
                           } else if (stagesSnapshot.hasError) {
                             return Center(
                                 child: Text('Error: ${stagesSnapshot.error}'));

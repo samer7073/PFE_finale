@@ -44,6 +44,7 @@ class _DealPageState extends State<DealPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
         onPressed: () async {
           Navigator.push(
             context,

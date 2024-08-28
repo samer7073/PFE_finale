@@ -80,7 +80,7 @@ Widget customSwitch(
         ),
         Spacer(),
         CupertinoSwitch(
-          activeColor: Colors.purple,
+          activeColor: Colors.blue,
           value: val,
           onChanged: onChangeMethod,
         ),

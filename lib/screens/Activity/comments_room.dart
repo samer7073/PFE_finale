@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/models/chatUserModel/chatUserModel.dart';
 import 'package:flutter_application_stage_project/models/commanitaireRoom/Message.dart';
 import 'package:flutter_application_stage_project/models/commanitaireRoom/ResponeRoom.dart';
+import 'package:flutter_application_stage_project/services/chat/chat.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -17,14 +21,17 @@ class RommCommentairePage extends StatefulWidget {
 }
 
 class _RommCommentairePageState extends State<RommCommentairePage> {
-  late Future<RoomResponse?> futureApiResponse;
+  late List<ChatUser> Users= [];
+  late Future<ApiResponseRoom?> futureApiResponse;
   String? storedUuid;
   late Future<String> imageUrlFuture;
 
-  Future<RoomResponse?> fetchApiResponse(String id_room) async {
+  Future<ApiResponseRoom?> fetchApiResponse(String id_room) async {
+    log("999999999999  dans fetch romm ");
     final token = await SharedPrefernce.getToken("token");
     final baseUrl = await Config.getApiUrl('chatRomm');
-    final url = "$baseUrl$id_room?type=task";
+    final url='$baseUrl$id_room?type=task';
+   
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -33,9 +40,12 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
         'Authorization': 'Bearer $token',
       },
     );
+    log("999999999999 chat room status code ${response.statusCode}");
 
     if (response.statusCode == 200) {
-      return RoomResponse.fromJson(json.decode(response.body));
+      
+      return ApiResponseRoom.fromJson(json.decode(response.body));
+      
     } else if (response.statusCode == 404) {
       return null; // Retourner null pour indiquer que l'accès est refusé
     } else {
@@ -50,6 +60,22 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
       futureApiResponse = fetchApiResponse(widget.roomId);
       imageUrlFuture = Config.getApiUrl("urlImage");
       _loadString();
+      fetchUsers();
+    }
+  }
+  Future<void> fetchUsers() async {
+    
+    try {
+      final userResponse = await ChatRomm.fetchAllUsers();
+      setState(() {
+        Users=userResponse;
+        log("users ${Users.length}");
+       
+       
+      });
+    } catch (e) {
+      log('Failed to fetch Users: $e');
+      
     }
   }
 
@@ -69,11 +95,13 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
             ),
           )
         : Scaffold(
-            body: FutureBuilder<RoomResponse?>(
+            body: FutureBuilder<ApiResponseRoom?>(
               future: futureApiResponse,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text('Failed to load data: ${snapshot.error}'));
@@ -92,7 +120,9 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
                     builder: (context, imageUrlSnapshot) {
                       if (imageUrlSnapshot.connectionState ==
                           ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
                       } else if (imageUrlSnapshot.hasError) {
                         return Center(
                             child: Text(
@@ -104,8 +134,13 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
                             final message = messages[index];
+                            ChatUser user=
+                            Users.firstWhere(
+    (user) => user.uuid == message.senderUuid,
+    orElse: () => ChatUser(id: "id", name: "name", email: "email", status:0),
+  );
                             bool isCurrentUser =
-                                message.sender.uuid == storedUuid;
+                                message.senderUuid == storedUuid;
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Align(
@@ -117,26 +152,28 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     if (!isCurrentUser)
+                                    
                                       CircleAvatar(
-                                        backgroundImage: message
-                                                    .sender.image.length ==
+                                        backgroundImage: user
+                                                    .image!.length ==
                                                 1
                                             ? null
                                             : NetworkImage(
-                                                "$baseUrl${message.sender.image}"),
+                                                "$baseUrl${user.image}"),
                                         backgroundColor:
-                                            message.sender.image.length == 1
+                                            user.image!.length == 1
                                                 ? Colors.blue
                                                 : null,
-                                        child: message.sender.image.length == 1
+                                        child: user.image!.length == 1
                                             ? Text(
-                                                message.sender.image,
+                                                user.image!,
                                                 style: const TextStyle(
                                                     color: Colors.white),
                                               )
                                             : null,
                                         radius: 25,
                                       ),
+                                      
                                     if (!isCurrentUser)
                                       const SizedBox(width: 10),
                                     Column(
@@ -144,12 +181,14 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         if (!isCurrentUser)
+                                        
                                           Text(
-                                            message.sender.name,
+                                            user.name,
                                             style: TextStyle(
                                                 color: Colors.grey[700],
                                                 fontSize: 12),
                                           ),
+                                          
                                         if (!isCurrentUser)
                                           const SizedBox(height: 10),
                                         Container(
@@ -157,7 +196,7 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
                                               horizontal: 14, vertical: 10),
                                           decoration: BoxDecoration(
                                             color: isCurrentUser
-                                                ? Colors.green
+                                                ? const Color.fromARGB(255, 83, 196, 222)
                                                 : Colors.grey[400],
                                             borderRadius: BorderRadius.only(
                                               topRight:
@@ -176,6 +215,7 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
+                                              
                                               Text(
                                                 message.message,
                                                 style: const TextStyle(

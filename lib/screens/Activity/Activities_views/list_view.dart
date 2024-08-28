@@ -285,7 +285,9 @@ class _TaskListPageState extends State<TaskListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading && tasks.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ))
           : Column(
               children: [
                 Padding(
@@ -295,41 +297,39 @@ class _TaskListPageState extends State<TaskListPage> {
                     child: TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        suffix: _searchController.text.isEmpty
-                            ? null
-                            : IconButton(
-                                onPressed: () {
-                                  _searchController
-                                      .clear(); // Clear the text in the controller
-                                  setState(
-                                      () {}); // Trigger UI update to hide the icon
-                                },
-                                icon: Center(
-                                  child: Icon(
-                                    Icons.cancel,
-                                    size: 20,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ),
-                        hintText: 'Search tasks...',
-                        hintStyle: TextStyle(
-                          fontSize: 14, // Adjust font size as needed
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 20.0,
-                            horizontal: 12.0), // Adjust padding as needed
-                        filled: true,
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          color: Colors.blue,
-                          size: 20, // Adjust icon size as needed
-                        ),
-                      ),
+  suffix: _searchController.text.isEmpty
+      ? null
+      : IconButton(
+          onPressed: () {
+            _searchController.clear(); // Clear the text in the controller
+            setState(() {}); // Trigger UI update to hide the icon
+          },
+          icon: Center(
+            child: Icon(
+              Icons.cancel,
+              size: 20,
+              color: Colors.blue,
+            ),
+          ),
+        ),
+  hintText: 'Search tasks...',
+  hintStyle: TextStyle(
+    fontSize: 14, // Adjust font size as needed
+  ),
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(16.0),
+    borderSide: BorderSide.none,
+  ),
+  contentPadding:
+      EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0), // Adjust padding as needed
+  filled: true,
+  fillColor:  Colors.grey.shade100, // Set the background color to grey
+  prefixIcon: const Icon(
+    Icons.search,
+    color: Colors.blue,
+    size: 20, // Adjust icon size as needed
+  ),
+),
                       style: TextStyle(
                         fontSize: 14, // Adjust font size as needed
                       ),
@@ -349,7 +349,9 @@ class _TaskListPageState extends State<TaskListPage> {
                       itemBuilder: (context, index) {
                         if (index == filteredTasks.length) {
                           return const Center(
-                              child: CircularProgressIndicator());
+                              child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
                         }
                         final task = filteredTasks[index];
                         return TaskListRow(

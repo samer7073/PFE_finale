@@ -153,7 +153,9 @@ class _NotificationPageState extends State<NotificationPage> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
           );
         }
 
@@ -179,7 +181,9 @@ class _NotificationPageState extends State<NotificationPage> {
                   itemBuilder: (context, index) {
                     if (index == _tasks.length) {
                       return Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
                       );
                     }
                     final task = _tasks[index];

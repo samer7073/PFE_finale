@@ -1,4 +1,4 @@
-import 'MetaLink.dart';
+import 'package:flutter_application_stage_project/models/commanitaireRoom/MetaLink.dart';
 
 class Meta {
   final int currentPage;
@@ -22,32 +22,15 @@ class Meta {
   });
 
   factory Meta.fromJson(Map<String, dynamic> json) {
-    var linksFromJson = json['links'] as List;
-    List<MetaLink> linksList =
-        linksFromJson.map((link) => MetaLink.fromJson(link)).toList();
-
     return Meta(
-      currentPage: json['current_page'] ?? 1,
-      from: json['from'] ?? 1,
-      lastPage: json['last_page'] ?? 1,
-      links: linksList,
+      currentPage: json['current_page'] ?? 0,
+      from: json['from'] ?? 0,
+      lastPage: json['last_page'] ?? 0,
+      links: (json['links'] as List? ?? []).map((item) => MetaLink.fromJson(item)).toList(),
       path: json['path'] ?? '',
-      perPage: json['per_page'] ?? 15,
-      to: json['to'] ?? 1,
+      perPage: json['per_page'] ?? 0,
+      to: json['to'] ?? 0,
       total: json['total'] ?? 0,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'current_page': currentPage,
-      'from': from,
-      'last_page': lastPage,
-      'links': links.map((link) => link.toJson()).toList(),
-      'path': path,
-      'per_page': perPage,
-      'to': to,
-      'total': total,
-    };
   }
 }

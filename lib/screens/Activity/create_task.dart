@@ -711,7 +711,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 return CircleAvatar(
                   backgroundColor: Colors.grey,
                   radius: 15,
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
                 );
               }
 

@@ -3,49 +3,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
+import 'package:intl/intl.dart';
 
-class ticketListRow extends StatefulWidget {
+class BookingsListRow extends StatefulWidget {
   final IconData SourceIcon;
   final String id;
   final String title;
   final String owner;
   final String createTime;
-  final IconData stateIcon;
-  final String stateMessage;
-  final Color colorContainer;
-  final String messageContainer;
+ 
   final String ownerImage;
   final String Pipeline;
 
-  const ticketListRow(
+  const BookingsListRow(
       {super.key,
       required this.SourceIcon,
       required this.id,
       required this.title,
       required this.owner,
       required this.createTime,
-      required this.stateIcon,
-      required this.stateMessage,
-      required this.colorContainer,
-      required this.messageContainer,
+  
       required this.ownerImage,
       required this.Pipeline});
 
   @override
-  State<ticketListRow> createState() => _ticketListRowState();
+  State<BookingsListRow> createState() => _BookingsListRowState();
 }
 
-class _ticketListRowState extends State<ticketListRow> {
+class _BookingsListRowState extends State<BookingsListRow> {
   @override
   void initState() {
     super.initState();
     imageUrlFuture = Config.getApiUrl("urlImage");
   }
+String formatDate(String dateString, Locale locale) {
+  try {
+    // Parse le format de date avec l'heure
+    DateTime date = DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateString);
+    // Formate la date en utilisant le format complet pour le locale donné
+    String formattedDate = DateFormat.yMMMMd(locale.languageCode).format(date);
+    return formattedDate;
+  } catch (e) {
+    try {
+      // Si l'analyse échoue, essaye un autre format sans l'heure
+      DateTime date = DateFormat('dd-MM-yyyy').parse(dateString);
+      String formattedDate = DateFormat.yMMMMd(locale.languageCode).format(date);
+      return formattedDate;
+    } catch (e) {
+      // Retourne le format original si aucun format n'est compatible
+      return dateString;
+    }
+  }
+}
 
   late Future<String> imageUrlFuture;
 
   @override
   Widget build(BuildContext context) {
+    Locale currentLocale = Localizations.localeOf(context);
     return FutureBuilder<String>(
       future: imageUrlFuture,
       builder: (context, snapshot) {
@@ -82,8 +97,8 @@ class _ticketListRowState extends State<ticketListRow> {
                           style: Theme.of(context).textTheme.bodyLarge)
                     ],
                   ),
-                  Text(
-                    widget.createTime,
+                  Text(widget.createTime,
+                    ///formatDate(widget.createTime, currentLocale),
                     style: Theme.of(context).textTheme.headlineMedium,
                   )
                 ],
@@ -116,21 +131,7 @@ class _ticketListRowState extends State<ticketListRow> {
                   SizedBox(
                     width: 10,
                   ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        widget.messageContainer,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        color: widget.colorContainer,
-                        borderRadius: BorderRadius.horizontal(
-                            left: Radius.circular(20),
-                            right: Radius.circular(20))),
-                  ),
+                
                 ],
               ),
               SizedBox(

@@ -348,7 +348,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
             if (isLoading)
               Padding(
                 padding: const EdgeInsets.only(top: 250.0),
-                child: const Center(child: CircularProgressIndicator()),
+                child: const Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  )),
               )
             else if (selectedStageId != null)
               tasks.length > 0
@@ -361,7 +363,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
                                 : 0), // Add an extra item if loading more
                         itemBuilder: (context, taskIndex) {
                           if (taskIndex == tasks.length) {
-                            return Center(child: CircularProgressIndicator());
+                            return Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
                           }
                           final task = tasks[taskIndex];
 
@@ -755,7 +759,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
             return CircleAvatar(
               backgroundColor: Colors.grey,
               radius: 15,
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
             );
           }
 
@@ -774,7 +780,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
                   ),
                 ),
               ),
-              placeholder: (context, url) => CircularProgressIndicator(),
+              placeholder: (context, url) => CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
               errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           );

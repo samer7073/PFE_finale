@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
+import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
 import 'package:flutter_application_stage_project/screens/contactPage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,8 @@ class _HomeNavigateState extends State<HomeNavigate> {
     TicketPage(),
     DealPage(), // KanbanPage1(),
     ProjectPage(),
-    ContactPage()
+    ContactPage(),
+    BookingsPage(),
   ];
 
   @override
@@ -100,6 +102,11 @@ class _HomeNavigateState extends State<HomeNavigate> {
             icon: Icon(Icons.person_2_outlined),
             activeIcon: Icon(Icons.person_2_rounded),
             label: AppLocalizations.of(context)!.contacts,
+          ),
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.tree),
+            activeIcon: FaIcon(FontAwesomeIcons.tree, color: Colors.blue),
+            label: "Bookings",
           ),
         ],
         currentIndex: selectedPage,

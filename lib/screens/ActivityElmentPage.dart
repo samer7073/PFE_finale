@@ -169,7 +169,9 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
         future: imageUrlFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
           }
 
           if (snapshot.hasError) {

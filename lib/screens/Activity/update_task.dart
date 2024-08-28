@@ -769,7 +769,9 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
             return CircleAvatar(
               backgroundColor: Colors.grey,
               radius: 15,
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
             );
           }
 
@@ -822,7 +824,9 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
             style: TextStyle(color: Colors.blue, fontSize: 25),
           ),
         ),
-        body: const Center(child: CircularProgressIndicator()),
+        body: const Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  )),
       );
     }
 

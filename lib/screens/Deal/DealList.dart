@@ -160,7 +160,8 @@ class _DealsPageState extends State<DealsPage> {
                           ActionPane(motion: DrawerMotion(), children: [
                         SlidableAction(
                           icon: Icons.delete,
-                          backgroundColor: Colors.red,
+                         foregroundColor: Colors.red,
+                      backgroundColor: Colors.transparent,
                           onPressed: (context) {
                             log("delete");
                             showDialog(
@@ -205,7 +206,8 @@ class _DealsPageState extends State<DealsPage> {
                             );
                           },
                           icon: Icons.edit,
-                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.green,
+                          backgroundColor: Colors.transparent,
                         )
                       ]),
                       child: Padding(
@@ -247,7 +249,9 @@ class _DealsPageState extends State<DealsPage> {
           if (isLoading) ...[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
             ),
           ],
         ],

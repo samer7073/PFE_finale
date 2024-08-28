@@ -110,7 +110,9 @@ class _HomePageState extends State<HomePage>
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
           );
         }
 
@@ -146,7 +148,9 @@ class _HomePageState extends State<HomePage>
                                 "$imageUrl${_profile!.avatar.label}"),
                             radius: 15,
                           )
-                        : CircularProgressIndicator(),
+                        : CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
               ),
             ),
             centerTitle: true,

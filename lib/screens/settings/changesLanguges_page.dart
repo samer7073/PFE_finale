@@ -57,6 +57,7 @@ class _ChangeLangugePageState extends State<ChangeLangugePage> {
       body: Column(
         children: [
           RadioListTile(
+            activeColor: Colors.blue,
             title: Text("Francais"),
             value: "Francais",
             groupValue: valueSelected,
@@ -69,6 +70,7 @@ class _ChangeLangugePageState extends State<ChangeLangugePage> {
             },
           ),
           RadioListTile(
+            activeColor: Colors.blue,
             title: Text("English"),
             value: "English",
             groupValue: valueSelected,
@@ -81,6 +83,7 @@ class _ChangeLangugePageState extends State<ChangeLangugePage> {
             },
           ),
           RadioListTile(
+            activeColor: Colors.blue,
             title: Text("العربية"),
             value: "العربية",
             groupValue: valueSelected,

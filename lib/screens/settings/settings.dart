@@ -158,7 +158,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
               padding: EdgeInsets.all(15),
               child: Text(
                 AppLocalizations.of(context)!.account,
-                style: Theme.of(context).textTheme.displaySmall,
+                
               ),
             ), //Text(AppLocalizations.of(context)!.account)),
             Container(

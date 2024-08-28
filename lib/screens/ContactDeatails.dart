@@ -31,7 +31,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
         future: _futureContactDetails,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
           } else if (snapshot.hasError) {
             return Center(
               child: Column(

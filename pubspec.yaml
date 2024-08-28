@@ -32,7 +32,7 @@ dependencies:
   drag_and_drop_lists: ^0.4.1
   floating_action_bubble: ^1.1.4
   flutter_localization: ^0.2.0
-  fl_chart: ^0.68.0
+  fl_chart: ^0.35.0
   http: ^1.2.2 # Rétrogradé pour être compatible avec mercure_client
   omni_datetime_picker: ^1.0.9
   flutter_rating_bar: ^4.0.1

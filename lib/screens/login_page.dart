@@ -88,7 +88,9 @@ class _LoginPageState extends State<LoginPage> {
         ? Scaffold(
             body: Container(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
               ),
             ),
           )

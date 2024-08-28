@@ -126,6 +126,17 @@ class _EditElmentState extends State<EditElment> {
                   (route) =>
                       false, //if you want to disable back feature set to false
                 );
+              }else if (widget.family_id == "8") {
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (BuildContext context) => HomeNavigate(
+                      id_page: 6,
+                    ),
+                  ),
+                  (route) =>
+                      false, //if you want to disable back feature set to false
+                );
               }
             },
             icon: Icon(Icons.arrow_back)),
@@ -133,7 +144,9 @@ class _EditElmentState extends State<EditElment> {
       body: loading
           ? Container(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
               ),
             )
           : SingleChildScrollView(
@@ -169,7 +182,9 @@ class _EditElmentState extends State<EditElment> {
                           body: dataGroupMap[item.id.toString()]?.isEmpty ??
                                   true
                               ? Center(
-                                  child: CircularProgressIndicator(),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
                                 )
                               : Column(
                                   children: dataGroupMap[item.id.toString()]!

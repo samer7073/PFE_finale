@@ -13,6 +13,7 @@ class GetPipelineApi {
 
     final baseUrl = await Config.getApiUrl("pipelines");
     final url = "$baseUrl/$idFamily";
+    log("***********************$url");
 
     final response = await http.get(
       Uri.parse(url),

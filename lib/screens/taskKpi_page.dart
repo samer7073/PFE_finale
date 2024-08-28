@@ -33,7 +33,9 @@ class _TaskKpiPageState extends State<TaskKpiPage> {
           future: futureApiResponse,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
             } else if (snapshot.hasError) {
               return Center(
                   child: Text('An error occurred: ${snapshot.error}'));

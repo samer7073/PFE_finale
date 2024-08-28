@@ -107,7 +107,9 @@ class _TaskListRowState extends State<TaskListRow> {
             return CircleAvatar(
               backgroundColor: Colors.grey,
               radius: 15,
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
             );
           }
 

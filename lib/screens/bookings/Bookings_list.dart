@@ -1,23 +1,28 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/models/bookings_models/BookingsApiRespose.dart';
+import 'package:flutter_application_stage_project/models/bookings_models/bookingsData.dart';
+import 'package:flutter_application_stage_project/screens/bookings/BookingListRow.dart';
+
+import 'package:flutter_application_stage_project/services/bookingsService/BookingsService.dart';
+
 import 'package:flutter_slidable/flutter_slidable.dart';
-import '../../models/ticket/ticket.dart';
-import '../../models/ticket/ticketData.dart';
+
 import '../../services/ApiDeleteElment.dart';
-import '../../services/tickets/getTicketApi.dart';
+
 import '../EditElment.dart';
 import '../detailElment.dart';
-import 'ticketListRow.dart';
 
-class TicketList extends StatefulWidget {
-  const TicketList({Key? key}) : super(key: key);
+
+class BookingsList extends StatefulWidget {
+  const BookingsList({Key? key}) : super(key: key);
 
   @override
-  State<TicketList> createState() => _TicketListState();
+  State<BookingsList> createState() => _BookingsListState();
 }
 
-class _TicketListState extends State<TicketList> {
-  List<TicketData> tickets = [];
+class _BookingsListState extends State<BookingsList> {
+  List<Bookingsdata> bookings = [];
   bool isLoading = false;
   int page = 1;
   ScrollController _scrollController = ScrollController();
@@ -25,7 +30,7 @@ class _TicketListState extends State<TicketList> {
   @override
   void initState() {
     super.initState();
-    fetchTickets();
+    fetchBookings();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -34,15 +39,15 @@ class _TicketListState extends State<TicketList> {
     });
   }
 
-  Future<void> fetchTickets() async {
+  Future<void> fetchBookings() async {
     setState(() {
       isLoading = true;
     });
 
     try {
-      Ticket ticketResponse = await GetTicketApi.getAllTickets("6", page: page);
+      BookingsApiResponse Bookings = await Bookingsservice.getAllBookings(page: page);
       setState(() {
-        tickets.addAll(ticketResponse.data);
+        bookings.addAll(Bookings.data);
         isLoading = false;
       });
     } catch (e) {
@@ -56,13 +61,13 @@ class _TicketListState extends State<TicketList> {
   Future<void> fetchMoreTickets() async {
     if (!isLoading) {
       page++;
-      fetchTickets();
+      fetchBookings();
     }
   }
 
-  void deleteTicket(TicketData ticket) async {
+  void deleteTicket(Bookingsdata ticket) async {
     setState(() {
-      tickets.removeWhere((element) => element.id == ticket.id);
+      bookings.removeWhere((element) => element.id == ticket.id);
     });
 
     try {
@@ -102,14 +107,15 @@ class _TicketListState extends State<TicketList> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: tickets.length,
+              itemCount: bookings.length,
               itemBuilder: (context, index) {
-                final ticket = tickets[index];
+                final booking = bookings[index];
                 return Slidable(
                   endActionPane: ActionPane(motion: DrawerMotion(), children: [
                     SlidableAction(
                       icon: Icons.delete,
                       foregroundColor: Colors.red,
+                      
                       backgroundColor: Colors.transparent,
                       onPressed: (context) {
                         showDialog(
@@ -123,7 +129,7 @@ class _TicketListState extends State<TicketList> {
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(true);
-                                    deleteTicket(ticket);
+                                    deleteTicket(booking);
                                   },
                                   child: Text("Yes"),
                                 ),
@@ -145,15 +151,15 @@ class _TicketListState extends State<TicketList> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => EditElment(
-                              Element_id: ticket.id,
-                              family_id: "6",
-                              title: "Ticket",
+                              Element_id: booking.id,
+                              family_id: "8",
+                              title: "Bookings",
                             ),
                           ),
                         );
                       },
                       icon: Icons.edit,
-                     foregroundColor: Colors.green,
+                      foregroundColor: Colors.green,
                       backgroundColor: Colors.transparent,
                     )
                   ]),
@@ -162,36 +168,25 @@ class _TicketListState extends State<TicketList> {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
                           return DetailElment(
-                            idElment: ticket.id,
+                            idElment: booking.id,
                             idFamily: "6",
-                            roomId: ticket.room_id!,
-                            label: ticket.label,
-                            refenrce: ticket.reference,
-                            pipeline_id: ticket.pipeline_id,
+                            roomId: booking.id!,
+                            label: booking.label,
+                            refenrce: booking.reference,
+                            pipeline_id: booking.pipelineId,
                           );
                         },
                       ));
                     },
-                    child: ticketListRow(
-                      Pipeline: ticket.pipeline,
+                    child: BookingsListRow(
+                      Pipeline: booking.Pipeline,
                       SourceIcon: Icons.abc,
-                      id: ticket.reference,
-                      title: ticket.type_ticket,
-                      owner: ticket.owner,
-                      createTime: ticket.created_at,
-                      stateIcon: Icons.abc,
-                      stateMessage: "Open",
-                      colorContainer: ticket.severity == "High"
-                          ? Colors.red
-                          : ticket.severity == "Medium"
-                              ? Colors.amber
-                              : ticket.severity == "Normal"
-                                  ? Colors.green
-                                  : ticket.severity == "Low"
-                                      ? Colors.blue
-                                      : Colors.blue,
-                      messageContainer: ticket.severity,
-                      ownerImage: ticket.owner_avatar,
+                      id: booking.reference,
+                      title: booking.label,
+                      owner: booking.owner,
+                      createTime: booking.createdAt,
+                     
+                      ownerImage: booking.ownerAvatar,
                     ),
                   ),
                 );

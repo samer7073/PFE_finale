@@ -336,14 +336,16 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
         colorScheme: ColorScheme.light(
           primary: Colors.blue, // Couleur de fond de l'en-tête
           onPrimary: Colors.white, // Couleur du texte de l'en-tête
-          surface: Colors.pink, // Couleur de fond du calendrier
+          surface: Colors.white, // Couleur de fond du calendrier
           onSurface: Colors.black, // Couleur du texte
         ),
         dialogBackgroundColor:
-            Colors.white, // Couleur de fond de la boîte de dialogue
+            Colors.transparent, // Couleur de fond de la boîte de dialogue
       ),
       child: child!,
     );
+
+    
   }
 
   @override
@@ -710,7 +712,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         colorScheme: ColorScheme.light(
                           primary: Colors.blue,
                           onPrimary: Colors.white,
-                          surface: Colors.pink,
+                          surface: Colors.white,
                           onSurface: Colors.black,
                         ),
                         dialogBackgroundColor: Colors.white,
@@ -791,6 +793,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                 color: Colors.blue,
                 onPressed: () async {
                   DateTime? picked = await showDatePicker(
+                    barrierColor: Colors.white,
                     context: context,
                     initialDate: DateTime.now(),
                     firstDate: DateTime(2000),
@@ -810,6 +813,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                             "field[${widget.dataFieldGroup.id.toString()}]"] =
                         formattedDate;
                     log(widget.formMap.toString());
+                   
                   }
                 },
                 icon: Icon(Icons.date_range),
@@ -1490,7 +1494,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
         );
 
       case "multiselect":
-      /*
+      
         if (widget.dataFieldGroup.listfieldsview.isEmpty) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -1599,8 +1603,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
               },
             ),
           );
-        }*/
-        return Text("data");
+        }
+       // return Text("data");
 
       case "select":
 
@@ -1620,7 +1624,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                   height: 10,
                 ),
                 Container(
-                  width: 350,
+                  width: 400,
                   child: DropdownButtonFormField<String>(
                     hint: Container(
                       width: 200,
@@ -1742,9 +1746,12 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                 DropdownButtonFormField<String>(
                   hint: Padding(
                     padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                      "Select " + widget.dataFieldGroup.alias,
-                      overflow: TextOverflow.ellipsis,
+                    child: Container(
+                      width: 200,
+                      child: Text(
+                        "Select " + widget.dataFieldGroup.alias,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
                   icon: Icon(

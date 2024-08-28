@@ -136,7 +136,9 @@ class _TaskCard1State extends State<TaskCard1> {
             return CircleAvatar(
               backgroundColor: Colors.grey,
               radius: 15,
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
             );
           }
 
@@ -155,7 +157,9 @@ class _TaskCard1State extends State<TaskCard1> {
                   ),
                 ),
               ),
-              placeholder: (context, url) => CircularProgressIndicator(),
+              placeholder: (context, url) => CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
               errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           );

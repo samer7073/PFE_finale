@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
 
 import 'package:flutter_application_stage_project/screens/PipelineScreen.dart';
+import 'package:flutter_application_stage_project/screens/bookings/Bookings_list.dart';
 import 'package:flutter_application_stage_project/screens/ticket/addTicket.dart';
 import 'package:flutter_application_stage_project/screens/ticket/ticket_list.dart';
 import 'package:provider/provider.dart';
@@ -16,14 +17,14 @@ import '../NotficationPage.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class TicketPage extends StatefulWidget {
-  const TicketPage({Key? key}) : super(key: key);
+class BookingsPage extends StatefulWidget {
+  const BookingsPage({Key? key}) : super(key: key);
 
   @override
-  State<TicketPage> createState() => _TicketState();
+  State<BookingsPage> createState() => _TicketState();
 }
 
-class _TicketState extends State<TicketPage> {
+class _TicketState extends State<BookingsPage> {
   late ThemeProvider themeProvider;
   late String _viewMode;
 
@@ -44,8 +45,8 @@ class _TicketState extends State<TicketPage> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    TicketList(),
-    PipelineScreen(idFamily: "6"),
+   BookingsList(),
+    PipelineScreen(idFamily: "8"),
   ];
 
   void _onItemTapped(int index) {
@@ -75,8 +76,8 @@ class _TicketState extends State<TicketPage> {
             context,
             MaterialPageRoute(
               builder: (context) => AddElement(
-                family_id: "6",
-                titel: "Ticket",
+                family_id: "8",
+                titel: "Bookings",
               ),
             ),
           );
@@ -87,13 +88,13 @@ class _TicketState extends State<TicketPage> {
         ),
       ),
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.tickets),
+        title: Text("Bookings"),
         actions: [
           IconButton(
             onPressed: () {
               showSearch(
                   context: context,
-                  delegate: CustomSearchDelegate(idFamily: "6"));
+                  delegate: CustomSearchDelegate(idFamily: "8"));
             },
             icon: Icon(
               Icons.search,

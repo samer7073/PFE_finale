@@ -101,7 +101,9 @@ class _PipelineScreenState extends State<PipelineScreen> {
         ? Scaffold(
             body: Container(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
               ),
             ),
           )
@@ -237,7 +239,9 @@ class _PipelineScreenState extends State<PipelineScreen> {
                             ? Container(
                                 child: Center(
                                     child:
-                                        CircularProgressIndicator())) // Show loading indicator for stage data
+                                        CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ))) // Show loading indicator for stage data
                             : kanbanData == null || kanbanData!.isEmpty
                                 ? Center(
                                     child: Text(

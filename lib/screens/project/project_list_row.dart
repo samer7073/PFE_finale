@@ -41,7 +41,9 @@ class _ProjectListRowState extends State<ProjectListRow> {
       future: imageUrlFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  );
         }
 
         if (snapshot.hasError) {
@@ -150,7 +152,7 @@ class _ProjectListRowState extends State<ProjectListRow> {
                 ),
               ],
             ),
-            Divider()
+            Divider(color: const Color.fromARGB(255, 229, 228, 228),)
           ],
         );
       },

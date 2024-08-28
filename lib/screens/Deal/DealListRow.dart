@@ -43,7 +43,9 @@ class _DealListRowState extends State<DealListRow> {
       future: imageUrlFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  );
         }
 
         if (snapshot.hasError) {
@@ -180,7 +182,7 @@ class _DealListRowState extends State<DealListRow> {
                 ),
               ],
             ),
-            Divider()
+         Divider(color: const Color.fromARGB(255, 229, 228, 228),)
           ],
         );
       },

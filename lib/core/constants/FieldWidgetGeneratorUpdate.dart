@@ -1115,7 +1115,9 @@ class _FieldWidgetGeneratorUpdateState
                                 return CircleAvatar(
                                   backgroundColor: Colors.grey,
                                   radius: 15,
-                                  child: CircularProgressIndicator(),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
                                 );
                               }
 
@@ -1219,7 +1221,9 @@ class _FieldWidgetGeneratorUpdateState
                                         return CircleAvatar(
                                           backgroundColor: Colors.grey,
                                           radius: 15,
-                                          child: CircularProgressIndicator(),
+                                          child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
                                         );
                                       }
 

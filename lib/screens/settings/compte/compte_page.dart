@@ -441,7 +441,9 @@ class _ComptePageState extends State<ComptePage> {
         ? Scaffold(
             body: Container(
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
               ),
             ),
           )

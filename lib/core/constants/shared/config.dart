@@ -11,9 +11,10 @@ class Config {
   static const String devUrl = "https://spherebackmongodb.cmk.biz";
 
   static const Map<String, String> apiProdUrls = {
+    "allUsers":"https://spherechatback.cmk.biz:4543/api/all-users",
     "taskStagesElements": "$prodUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
-        "https://spherechatback.cmk.biz:4543/index.php/api/get-discussion-room/",
+        "https://spherechatbackmongodb.cmk.biz:4543/index.php/api/get-discussion-room/",
     "kanban": "$prodUrl:4543/index.php/api/mobile/kanban-by-stage",
     "tasksKpi": "$prodUrl:4543/index.php/api/mobile/tasks/kpi",
     "login": "https://sphereauthback.cmk.biz:4543/index.php/api/mobile/login",
@@ -100,9 +101,10 @@ class Config {
   };
 
   static const Map<String, String> apiDevUrls = {
+    "allUsers":"https://spherechatbackmongodb.cmk.biz:4543/api/all-users",
     "taskStagesElements": "$devUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
-        "https:///spherechatbackmongodb.cmk.biz:4543/index.php/api/get-discussion-room/",
+        "https://spherechatbackmongodb.cmk.biz:4543/index.php/api/get-discussion-room/",
     "kanban": "$devUrl:4543/index.php/api/mobile/kanban-by-stage",
     "tasksKpi": "$devUrl:4543/index.php/api/mobile/tasks/kpi",
     "login":

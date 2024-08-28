@@ -92,7 +92,9 @@ class _AddElementState extends State<AddElement> {
   Widget build(BuildContext context) {
     return loading
         ? Scaffold(
-            body: Container(child: Center(child: CircularProgressIndicator())))
+            body: Container(child: Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ))))
         : Scaffold(
             appBar: AppBar(
               leading: IconButton(
@@ -125,6 +127,17 @@ class _AddElementState extends State<AddElement> {
                         MaterialPageRoute<dynamic>(
                           builder: (BuildContext context) => HomeNavigate(
                             id_page: 3,
+                          ),
+                        ),
+                        (route) =>
+                            false, //if you want to disable back feature set to false
+                      );
+                    }else if (widget.family_id == "8") {
+                      Navigator.pushAndRemoveUntil<dynamic>(
+                        context,
+                        MaterialPageRoute<dynamic>(
+                          builder: (BuildContext context) => HomeNavigate(
+                            id_page: 6,
                           ),
                         ),
                         (route) =>
@@ -168,7 +181,9 @@ class _AddElementState extends State<AddElement> {
                           body: dataGroupMap[item.id.toString()]?.isEmpty ??
                                   true
                               ? Center(
-                                  child: CircularProgressIndicator(),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
                                 )
                               : Column(
                                   children: dataGroupMap[item.id.toString()]!
@@ -190,6 +205,10 @@ class _AddElementState extends State<AddElement> {
                       }).toList(),
                     ),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors
+                                          .blue, // Changer la couleur de fond ici
+                                    ),
                       onPressed: () async {
                         print(fieldValues.toString());
                         if (_formKey.currentState!.validate()) {
@@ -249,6 +268,17 @@ class _AddElementState extends State<AddElement> {
                                     builder: (BuildContext context) =>
                                         HomeNavigate(
                                       id_page: 3,
+                                    ),
+                                  ),
+                                  (route) => false,
+                                );
+                              }else if (widget.family_id == "8") {
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (BuildContext context) =>
+                                        HomeNavigate(
+                                      id_page: 6,
                                     ),
                                   ),
                                   (route) => false,

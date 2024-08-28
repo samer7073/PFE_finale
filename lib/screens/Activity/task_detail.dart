@@ -67,7 +67,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           future: taskDetails,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
             } else if (snapshot.hasError) {
               return Center(
                   child:
@@ -81,7 +83,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 builder: (context, taskTypeSnapshot) {
                   if (taskTypeSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
                   } else if (taskTypeSnapshot.hasError) {
                     return Center(
                         child: Text(

@@ -68,7 +68,9 @@ class CustomSearchDelegate extends SearchDelegate {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
           );
         }
         List<TicketData>? data = snapshot.data;
@@ -117,7 +119,9 @@ class CustomSearchDelegate extends SearchDelegate {
       stream: _suggestionsController.stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
         }
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(child: Text('No suggestions available.'));
@@ -208,7 +212,9 @@ class CustomSearchDelegate extends SearchDelegate {
                           );
                   } else {
                     return CircleAvatar(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
                       radius: 15,
                     );
                   }

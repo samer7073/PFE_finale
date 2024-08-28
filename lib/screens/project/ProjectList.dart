@@ -104,6 +104,7 @@ class _ProjectListState extends State<ProjectList> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
         onPressed: () async {
           Navigator.push(
             context,
@@ -131,7 +132,8 @@ class _ProjectListState extends State<ProjectList> {
                   endActionPane: ActionPane(motion: DrawerMotion(), children: [
                     SlidableAction(
                       icon: Icons.delete,
-                      backgroundColor: Colors.red,
+                     foregroundColor: Colors.red,
+                      backgroundColor: Colors.transparent,
                       onPressed: (context) {
                         log("hello");
                         showDialog(
@@ -176,7 +178,8 @@ class _ProjectListState extends State<ProjectList> {
                         );
                       },
                       icon: Icons.edit,
-                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.green,
+                      backgroundColor: Colors.transparent,
                     )
                   ]),
                   child: Padding(
@@ -213,7 +216,9 @@ class _ProjectListState extends State<ProjectList> {
           if (isLoading)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
             ),
         ],
       ),

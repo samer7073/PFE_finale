@@ -26,6 +26,8 @@ class _ContactPageState extends State<ContactPage> {
   String searchQuery = '';
   Timer? _debounce;
 
+  bool _showExtraButtons = false; // Variable d'état pour les boutons supplémentaires
+
   @override
   void initState() {
     super.initState();
@@ -91,6 +93,12 @@ class _ContactPageState extends State<ContactPage> {
     }
   }
 
+  void _toggleExtraButtons() {
+    setState(() {
+      _showExtraButtons = !_showExtraButtons;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,13 +113,14 @@ class _ContactPageState extends State<ContactPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
+                fillColor: Colors.grey.shade100,
                 hintText: 'Search Organisation...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16.0),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search, color: Colors.blue),
               ),
             ),
           ),
@@ -134,13 +143,52 @@ class _ContactPageState extends State<ContactPage> {
                     return ContactTile(contact: contact);
                   } else {
                     return Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        color: Colors.blue,
+                      ),
                     );
                   }
                 },
               ),
             ),
           ),
+        ],
+      ),
+      floatingActionButton: Stack(
+        children: [
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton(
+              onPressed: _toggleExtraButtons,
+              child: Icon(_showExtraButtons ? Icons.close : Icons.add,color: Colors.white,),
+              backgroundColor: Colors.blue,
+            ),
+          ),
+          if (_showExtraButtons) ...[
+            Positioned(
+              bottom: 80,
+              right: 16,
+              child: FloatingActionButton(
+                onPressed: () {
+                  // Action à exécuter lorsque ce bouton est pressé
+                },
+                child: Icon(Icons.business,color: Colors.white,),
+                backgroundColor: Colors.blue,
+              ),
+            ),
+            Positioned(
+              bottom: 144,
+              right: 16,
+              child: FloatingActionButton(
+                onPressed: () {
+                  // Action à exécuter lorsque ce bouton est pressé
+                },
+                child: Icon(Icons.person,color: Colors.white,),
+                backgroundColor: Colors.blue,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -174,7 +222,9 @@ class ContactTile extends StatelessWidget {
                 future: Config.getApiUrl('urlImage'),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return CircularProgressIndicator(
+                      color: Colors.blue,
+                    );
                   }
                   if (snapshot.hasError) {
                     return Icon(Icons.error);
@@ -192,7 +242,24 @@ class ContactTile extends StatelessWidget {
               ),
       ),
       title: Text(contact.label),
-      subtitle: Text(contact.familyLabel),
+      subtitle: Row(
+        children: [
+          if (contact.familyLabel == "Organisation")
+            Icon(
+              Icons.business,
+              color: Colors.grey,
+              size: 16,
+            )
+          else
+            Icon(
+              Icons.person,
+              color: Colors.grey,
+              size: 16,
+            ),
+          SizedBox(width: 8),
+          Text(contact.familyLabel),
+        ],
+      ),
     );
   }
 }

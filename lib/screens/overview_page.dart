@@ -62,7 +62,9 @@ class _OverviewPageState extends State<OverviewPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ));
         },
       ),
     );
