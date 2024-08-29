@@ -137,10 +137,13 @@ class _ticketListRowState extends State<ticketListRow> {
                 height: 10,
               ),
               Row(
+                
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  
                   Row(
                     children: [
+                      
                       Text(
                         AppLocalizations.of(context)!.pipeline + " ",
                         style: Theme.of(context).textTheme.displaySmall,

@@ -343,7 +343,7 @@ class _TaskListRowState extends State<TaskListRow> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Close'),
+              child: Text('Close',style: TextStyle(color: Colors.blue),),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
@@ -428,20 +428,25 @@ class _TaskListRowState extends State<TaskListRow> {
   }
 
   Future<void> fetchStagesFromApi() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      final fetchedStages = await fetchStages();
+  setState(() {
+    isLoading = true;
+  });
+  try {
+    final fetchedStages = await fetchStages();
+    if (mounted) { // Vérifie si le widget est toujours monté
       setState(() {
         stages = fetchedStages;
         isLoading = false;
       });
-    } catch (e) {
-      print('Failed to load stages: $e');
+    }
+  } catch (e) {
+    print('Failed to load stages: $e');
+    if (mounted) { // Vérifie si le widget est toujours monté
       setState(() {
         isLoading = false;
       });
     }
   }
+}
+
 }

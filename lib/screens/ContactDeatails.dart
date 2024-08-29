@@ -103,6 +103,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   ),
                   Card(
                     child: ExpansionTile(
+                      collapsedTextColor:Colors.black,
+                      textColor:Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.deals +
                               '(${contactDetails.relations.deal!.length})',
@@ -127,6 +129,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   ),
                   Card(
                     child: ExpansionTile(
+                      collapsedTextColor:Colors.black,
+                      textColor:Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.projects +
                               ' (${contactDetails.relations.project!.length})',
@@ -151,10 +155,12 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   ),
                   Card(
                     child: ExpansionTile(
+                      collapsedTextColor:Colors.black,
+                      textColor:Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.tickets +
                               ' (${contactDetails.relations.helpdesk!.length})',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                          style: TextStyle(fontWeight: FontWeight.bold,)),
                       children: contactDetails.relations.helpdesk!
                           .map((helpdesk) => ListTile(
                                 onTap: () {

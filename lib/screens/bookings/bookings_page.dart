@@ -77,7 +77,7 @@ class _TicketState extends State<BookingsPage> {
             MaterialPageRoute(
               builder: (context) => AddElement(
                 family_id: "8",
-                titel: "Bookings",
+                titel: "Booking",
               ),
             ),
           );

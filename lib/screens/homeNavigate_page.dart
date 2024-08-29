@@ -104,8 +104,8 @@ class _HomeNavigateState extends State<HomeNavigate> {
             label: AppLocalizations.of(context)!.contacts,
           ),
           BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.tree),
-            activeIcon: FaIcon(FontAwesomeIcons.tree, color: Colors.blue),
+            icon: FaIcon(FontAwesomeIcons.plane),
+            activeIcon: FaIcon(FontAwesomeIcons.plane, color: Colors.blue),
             label: "Bookings",
           ),
         ],
