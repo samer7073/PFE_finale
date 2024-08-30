@@ -147,89 +147,97 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: imageUrlFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
-          );
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('Error loading image URL'),
-          );
-        }
-
-        String baseUrll = snapshot.data ?? "";
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(AppLocalizations.of(context)!.notifications),
+Widget build(BuildContext context) {
+  return FutureBuilder<String>(
+    future: imageUrlFuture,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(
+          child: CircularProgressIndicator(
+            color: Colors.blue,
           ),
-          body: _tasks.isEmpty
-              ? Center(
-                  child: Text('There are no notifications'),
-                )
-              : ListView.builder(
-                  controller: _scrollController,
-                  itemCount: _tasks.length + (_hasMoreData ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index == _tasks.length) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
-                      );
-                    }
-                    final task = _tasks[index];
-                    final timeAgo = DateTime.parse(task.createdAt);
-                    final formattedDateTime =
-                        DateFormat('yyyy-MM-dd HH:mm:ss').format(timeAgo);
-                    final notificationText =
-                        _generateNotificationText(task.action);
-
-                    return ListTile(
-                      leading: task.userImageUrl.length == 1
-                          ? CircleAvatar(
-                              backgroundColor: Colors.blue,
-                              child: Text(
-                                task.userImageUrl,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              radius: 20,
-                            )
-                          : CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage("$baseUrll${task.userImageUrl}"),
-                              radius: 20,
-                            ),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            width: 160,
-                            child: Text(
-                              task.user,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Text(
-                            '$formattedDateTime',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ],
-                      ),
-                      subtitle: Text(notificationText),
-                    );
-                  },
-                ),
         );
-      },
-    );
-  }
+      }
+
+      if (snapshot.hasError) {
+        return Center(
+          child: Text('Error loading image URL'),
+        );
+      }
+
+      String baseUrll = snapshot.data ?? "";
+
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.notifications),
+        ),
+        body: _isLoading && _tasks.isEmpty
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue,
+                ),
+              )
+            : _tasks.isEmpty
+                ? Center(
+                    child: Text('There are no notifications'),
+                  )
+                : ListView.builder(
+                    controller: _scrollController,
+                    itemCount: _tasks.length + (_hasMoreData ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == _tasks.length) {
+                        // Affichez l'indicateur de chargement à la fin de la liste
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.blue,
+                          ),
+                        );
+                      }
+                      final task = _tasks[index];
+                      final timeAgo = DateTime.parse(task.createdAt);
+                      final formattedDateTime =
+                          DateFormat('yyyy-MM-dd HH:mm:ss').format(timeAgo);
+                      final notificationText =
+                          _generateNotificationText(task.action);
+
+                      return ListTile(
+                        leading: task.userImageUrl.length == 1
+                            ? CircleAvatar(
+                                backgroundColor: Colors.blue,
+                                child: Text(
+                                  task.userImageUrl,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                radius: 20,
+                              )
+                            : CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage("$baseUrll${task.userImageUrl}"),
+                                radius: 20,
+                              ),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 160,
+                              child: Text(
+                                task.user,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Text(
+                              '$formattedDateTime',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                        subtitle: Text(notificationText),
+                      );
+                    },
+                  ),
+      );
+    },
+  );
+}
+
 }

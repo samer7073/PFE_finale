@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import '../../../core/constants/shared/config.dart';
+
 
 class Calendarviewpage extends StatefulWidget {
   const Calendarviewpage({super.key});
@@ -33,6 +33,15 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
     super.initState();
     _fetchTasksForSelectedDay();
   }
+void _onCalendarTapped(DateTime date) {
+  setState(() {
+    if (_calendarFormat == CalendarFormat.month) {
+      _calendarFormat = CalendarFormat.week;
+    } else {
+      _calendarFormat = CalendarFormat.month;
+    }
+  });
+}
 
   void _fetchTasksForSelectedDay() async {
     final start = DateFormat('yyyy-MM-dd').format(_selectedDay);
@@ -242,14 +251,16 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 240, 204, 247),
+      
       body: Container(
         decoration: const BoxDecoration(
-          color: Colors.white,
+          
         ),
         child: Column(
           children: [
+            
             TableCalendar(
+              onHeaderTapped: _onCalendarTapped,
               firstDay: DateTime.utc(2020, 1, 1),
               lastDay: DateTime.utc(2030, 12, 31),
               focusedDay: _focusedDay,
@@ -275,13 +286,35 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
                   _calendarFormat = format;
                 });
               },
+              headerStyle: HeaderStyle(
+    titleCentered: true,
+    formatButtonVisible: false,
+    titleTextStyle: TextStyle(
+      color: Colors.blue, // Color for the month title
+      fontSize: 18.0,
+      fontWeight: FontWeight.bold,
+    ),
+    leftChevronIcon: Icon(
+      Icons.chevron_left,
+      color: Colors.blue, // Color for the left button
+    ),
+    rightChevronIcon: Icon(
+      Icons.chevron_right,
+      color: Colors.blue, // Color for the right button
+    ),
+  ),
               calendarStyle: const CalendarStyle(
+                  weekendTextStyle: TextStyle(color: Colors.blue), // Color for weekends
+                    weekendDecoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                   ),
+                
                 selectedDecoration: BoxDecoration(
                   color: Colors.blue,
                   shape: BoxShape.circle,
                 ),
                 todayDecoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Colors.green,
                   shape: BoxShape.circle,
                 ),
                 markerDecoration: BoxDecoration(

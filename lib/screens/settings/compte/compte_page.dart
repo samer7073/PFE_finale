@@ -665,7 +665,7 @@ class _ComptePageState extends State<ComptePage> {
                               AppLocalizations.of(context)!.save,
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Color.fromARGB(255, 40, 5, 243),
+                                color: Colors.blue,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),

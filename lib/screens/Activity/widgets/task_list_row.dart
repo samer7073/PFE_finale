@@ -67,6 +67,7 @@ class _TaskListRowState extends State<TaskListRow> {
 
   @override
   void initState() {
+    
     super.initState();
     imageUrlFuture = Config.getApiUrl("urlImage");
     fetchStagesFromApi(); // Fetch stages when the widget initializes
@@ -162,7 +163,7 @@ class _TaskListRowState extends State<TaskListRow> {
   @override
   Widget build(BuildContext context) {
     Locale currentLocale = Localizations.localeOf(context);
-
+final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -241,7 +242,7 @@ class _TaskListRowState extends State<TaskListRow> {
                       formatDate(widget.start_date, currentLocale) +
                           " " +
                           widget.start_time,
-                      style: TextStyle(color: Color.fromARGB(255, 9, 1, 71)),
+                      style: TextStyle(color:isDarkMode==true? Colors.white:Color.fromARGB(255, 9, 1, 71)),
                     ),
                   ],
                 ),

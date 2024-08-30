@@ -67,6 +67,17 @@ class MyThemes {
   );
 
   static final darkTheme = ThemeData(
+     tabBarTheme: TabBarTheme(
+      labelColor: Colors.white,
+      unselectedLabelColor: Colors.white,
+      indicator: UnderlineTabIndicator(
+        borderSide: BorderSide(
+          width: 4.0,
+          color: Color.fromARGB(255, 41, 93, 235), // Couleur de la sous-ligne du Tab
+        ),
+      ),
+      dividerColor: Colors.transparent, // Supprimer la ligne grise sous le TabBar
+    ),
     useMaterial3: false,
     cardTheme: CardTheme(
       color: Colors.black,
@@ -84,11 +95,13 @@ class MyThemes {
       ),
     ),
     textTheme: TextTheme(
+        
+    
       headlineSmall: TextStyle(fontSize: 16, color: Colors.white),
       headlineLarge: TextStyle(fontSize: 16, color: Colors.white),
       headlineMedium: TextStyle(fontSize: 14, color: Colors.grey),
       displayMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      displaySmall: TextStyle(fontSize: 14, color: Colors.black),
+      displaySmall: TextStyle(fontSize: 14, color: Colors.grey),
     ),
     primaryColor: Colors.black,
     colorScheme: ColorScheme.dark(),

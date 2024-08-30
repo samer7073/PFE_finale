@@ -323,7 +323,7 @@ class _TaskListPageState extends State<TaskListPage> {
   contentPadding:
       EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0), // Adjust padding as needed
   filled: true,
-  fillColor:  Colors.grey.shade100, // Set the background color to grey
+ 
   prefixIcon: const Icon(
     Icons.search,
     color: Colors.blue,

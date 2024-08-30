@@ -277,7 +277,7 @@ class TaskDetailTab extends StatelessWidget {
           ),
           Text(
             value,
-            style: valueStyle ?? TextStyle(color: color ?? Colors.black),
+            style: valueStyle ?? TextStyle(color: color ),
           ),
         ],
       ),

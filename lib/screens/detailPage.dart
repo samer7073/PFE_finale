@@ -158,7 +158,7 @@ class _DetailPageState extends State<DetailPage> {
                             padding: EdgeInsets.all(
                                 16.0), // Add padding around the content
                             decoration: BoxDecoration(
-                              color: Colors.grey[200], // Background color
+                              color:isDarkMode?Colors.black: Colors.grey[200], // Background color
                               borderRadius:
                                   BorderRadius.circular(8.0), // Rounded corners
                               boxShadow: [
