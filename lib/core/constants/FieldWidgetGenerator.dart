@@ -846,6 +846,9 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+  ),
                         icon: Icon(Icons.image_outlined),
                         onPressed: () async {
                           _pickImage();
@@ -911,6 +914,9 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+  ),
                             icon: Icon(Icons.photo_album_outlined),
                             onPressed: () {
                               selectedImages();
@@ -984,6 +990,9 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+  ),
                             icon: Icon(Icons.upload_file_outlined),
                             onPressed: () {
                               selectFiles();

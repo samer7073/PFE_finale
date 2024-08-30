@@ -145,6 +145,9 @@ class _ProjectListState extends State<ProjectList> {
                                   "Are you sure you want to delete this ticket ?"),
                               actions: [
                                 ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+                                    ),
                                   onPressed: () {
                                     Navigator.of(context).pop(true);
                                     deleteTicket(project);
@@ -152,6 +155,9 @@ class _ProjectListState extends State<ProjectList> {
                                   child: Text("Yes"),
                                 ),
                                 ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+  ),
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },

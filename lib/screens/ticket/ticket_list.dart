@@ -121,6 +121,9 @@ class _TicketListState extends State<TicketList> {
                                   "Are you sure you want to delete this ticket?"),
                               actions: [
                                 ElevatedButton(
+                                 style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+  ),
                                   onPressed: () {
                                     Navigator.of(context).pop(true);
                                     deleteTicket(ticket);
@@ -128,6 +131,9 @@ class _TicketListState extends State<TicketList> {
                                   child: Text("Yes"),
                                 ),
                                 ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+  ),
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },

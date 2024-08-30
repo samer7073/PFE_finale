@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
+import 'package:flutter_application_stage_project/providers/langue_provider.dart';
 import 'package:flutter_application_stage_project/screens/Activity/create_task.dart';
 import 'package:flutter_application_stage_project/screens/Activity/task_detail.dart';
 import 'package:flutter_application_stage_project/screens/Activity/update_task.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_application_stage_project/services/Activities/api_calend
 import 'package:flutter_application_stage_project/services/Activities/api_delete_task.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -27,6 +29,7 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
   List<Task> _tasks = [];
   Map<DateTime, List<Task>> _taskEvents = {};
   String _noTasksMessage = '';
+bool _isLoading = false; // Add this variable
 
   @override
   void initState() {
@@ -42,8 +45,11 @@ void _onCalendarTapped(DateTime date) {
     }
   });
 }
+void _fetchTasksForSelectedDay() async {
+    setState(() {
+      _isLoading = true; // Start loading
+    });
 
-  void _fetchTasksForSelectedDay() async {
     final start = DateFormat('yyyy-MM-dd').format(_selectedDay);
     final end = DateFormat('yyyy-MM-dd').format(_selectedDay);
     final tasks = await fetchTasks(start, end);
@@ -58,9 +64,10 @@ void _onCalendarTapped(DateTime date) {
     setState(() {
       _tasks = tasks;
       _updateTaskEvents(tasks);
+      _isLoading = false; // Stop loading
+
       if (tasks.isEmpty) {
-        _noTasksMessage =
-            'There are no tasks for ${DateFormat('dd MMMM yyyy').format(_selectedDay)}';
+        _noTasksMessage = 'There are no tasks for ${DateFormat('dd MMMM yyyy').format(_selectedDay)}';
       } else {
         _noTasksMessage = '';
       }
@@ -250,6 +257,8 @@ void _onCalendarTapped(DateTime date) {
 
   @override
   Widget build(BuildContext context) {
+    final langueProvider =
+        Provider.of<LangueProvider>(context);
     return Scaffold(
       
       body: Container(
@@ -260,6 +269,7 @@ void _onCalendarTapped(DateTime date) {
           children: [
             
             TableCalendar(
+              locale:   langueProvider.localeString,
               onHeaderTapped: _onCalendarTapped,
               firstDay: DateTime.utc(2020, 1, 1),
               lastDay: DateTime.utc(2030, 12, 31),
@@ -324,7 +334,11 @@ void _onCalendarTapped(DateTime date) {
               ),
             ),
             Expanded(
-              child: _tasks.isEmpty
+              child:_isLoading
+                  ? Center(child: CircularProgressIndicator(
+                    color: Colors.blue,
+                  )) // Show loading indicator
+                  : _tasks.isEmpty
                   ? Center(
                       child: Text(
                         _noTasksMessage,

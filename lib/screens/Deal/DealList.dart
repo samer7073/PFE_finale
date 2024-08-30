@@ -173,6 +173,9 @@ class _DealsPageState extends State<DealsPage> {
                                       "Are you sure you want to delete this deal?"),
                                   actions: [
                                     ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+  ),
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
                                         deleteElement(deal);
@@ -180,6 +183,9 @@ class _DealsPageState extends State<DealsPage> {
                                       child: Text("Yes"),
                                     ),
                                     ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+  ),
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
                                       },
