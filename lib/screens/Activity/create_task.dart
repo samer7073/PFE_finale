@@ -471,7 +471,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         final newTask = await createTask(taskData);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Task created successfully!'),
+            content: Text('Task created successfully!',style: TextStyle(color: Colors.white),),
             backgroundColor: Colors.green,
           ),
         );
@@ -494,7 +494,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         log("99999999999999999999999999999999     " + e.toString());
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to create task: $e'),
+            content: Text('Failed to create task: $e',style: TextStyle(color: Colors.white),),
             backgroundColor: Colors.red,
           ),
         );

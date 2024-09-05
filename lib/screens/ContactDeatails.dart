@@ -31,9 +31,10 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
         future: _futureContactDetails,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
+            return Center(
+                child: CircularProgressIndicator(
+              color: Colors.blue,
+            ));
           } else if (snapshot.hasError) {
             return Center(
               child: Column(
@@ -103,8 +104,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   ),
                   Card(
                     child: ExpansionTile(
-                      collapsedTextColor:Colors.black,
-                      textColor:Colors.blue,
+                      iconColor: Colors.blue,
+                      collapsedTextColor: Colors.black,
+                      textColor: Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.deals +
                               '(${contactDetails.relations.deal!.length})',
@@ -129,8 +131,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   ),
                   Card(
                     child: ExpansionTile(
-                      collapsedTextColor:Colors.black,
-                      textColor:Colors.blue,
+                      iconColor: Colors.blue,
+                      collapsedTextColor: Colors.black,
+                      textColor: Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.projects +
                               ' (${contactDetails.relations.project!.length})',
@@ -155,12 +158,15 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   ),
                   Card(
                     child: ExpansionTile(
-                      collapsedTextColor:Colors.black,
-                      textColor:Colors.blue,
+                      iconColor: Colors.blue,
+                      collapsedTextColor: Colors.black,
+                      textColor: Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.tickets +
                               ' (${contactDetails.relations.helpdesk!.length})',
-                          style: TextStyle(fontWeight: FontWeight.bold,)),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          )),
                       children: contactDetails.relations.helpdesk!
                           .map((helpdesk) => ListTile(
                                 onTap: () {

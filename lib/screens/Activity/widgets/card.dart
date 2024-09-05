@@ -72,7 +72,7 @@ class _TaskCard1State extends State<TaskCard1> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to fetch task type icons: $e')),
+          SnackBar(content: Text('Failed to fetch task type icons: $e',style: TextStyle(color: Colors.white),)),
         );
       }
     }
@@ -458,7 +458,7 @@ class _TaskCard1State extends State<TaskCard1> {
                   widget.onDelete();
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to delete task: $e')),
+                    SnackBar(content: Text('Failed to delete task: $e',style: TextStyle(color: Colors.white),)),
                   );
                 }
               },

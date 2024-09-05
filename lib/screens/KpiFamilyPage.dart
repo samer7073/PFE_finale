@@ -33,9 +33,10 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
         future: _futureKpiResponse,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
+            return const Center(
+                child: CircularProgressIndicator(
+              color: Colors.blue,
+            ));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
@@ -101,11 +102,13 @@ class _KpiFamilyPageState extends State<KpiFamilyPage> {
                   themeProvider.isDarkMode == true ? Colors.blue : Colors.blue,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
-                  stages[groupIndex].stageLabel + ":   " + rod.y.toString(),
+                  stages[groupIndex].stageLabel +
+                      ":   " +
+                      rod.y.toInt().toString(), // Convertit rod.y en entier
                   TextStyle(
-                      color: themeProvider.isDarkMode == true
-                          ? Colors.white
-                          : Colors.white),
+                    color:
+                        themeProvider.isDarkMode ? Colors.white : Colors.white,
+                  ),
                 );
               },
             ),

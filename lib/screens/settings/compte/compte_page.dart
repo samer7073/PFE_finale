@@ -6,7 +6,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_stage_project/screens/settings/compte/image_piker.dart';
+
 import 'package:flutter_application_stage_project/screens/settings/settings.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,7 +16,7 @@ import '../../../core/constants/shared/config.dart';
 import '../../../models/profil/Profile.dart';
 import '../../../providers/langue_provider.dart';
 import '../../../services/ApiGetProfile.dart';
-import '../../loading.dart';
+
 
 class ComptePage extends StatefulWidget {
   const ComptePage({Key? key}) : super(key: key);
@@ -70,7 +70,7 @@ class _ComptePageState extends State<ComptePage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load image URL: $e')),
+          SnackBar(content: Text('Failed to load image URL: $e',style: TextStyle(color: Colors.white),)),
         );
       }
     }
@@ -523,16 +523,18 @@ class _ComptePageState extends State<ComptePage> {
                             },
                             controller: name,
                             decoration: InputDecoration(
+                              prefixIconColor: Colors.blue,
+                           
                               hintText: "Nom et prénom",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(18),
                                 borderSide: BorderSide.none,
                               ),
-                              fillColor: Color.fromARGB(255, 46, 90, 249)
-                                  .withOpacity(0.1),
+                              fillColor: Colors.grey.shade200,
                               filled: true,
                               prefixIcon: const Icon(
                                 Icons.person,
+                                
                               ),
                             ),
                             validator: validateName,
@@ -547,18 +549,20 @@ class _ComptePageState extends State<ComptePage> {
                                 borderRadius: BorderRadius.circular(18),
                                 borderSide: BorderSide.none,
                               ),
-                              fillColor: Color.fromARGB(255, 15, 65, 245)
-                                  .withOpacity(0.1),
+                               fillColor: Colors.grey.shade200,
                               filled: true,
                               prefixIcon: const Icon(
                                 Icons.mail,
                               ),
+                               prefixIconColor: Colors.blue
                             ),
                             validator: validateEmail,
                             keyboardType: TextInputType.emailAddress,
                           ),
                           SizedBox(height: 30),
                           IntlPhoneField(
+                            showCursor: false,
+                            cursorColor: Colors.blue,
                             initialCountryCode: _resultCountryCode,
                             controller: phone,
                             decoration: InputDecoration(
@@ -567,12 +571,9 @@ class _ComptePageState extends State<ComptePage> {
                                 borderRadius: BorderRadius.circular(18),
                                 borderSide: BorderSide.none,
                               ),
-                              fillColor: Color.fromARGB(255, 15, 65, 245)
-                                  .withOpacity(0.1),
+                              fillColor: Colors.grey.shade200,
                               filled: true,
-                              prefixIcon: const Icon(
-                                Icons.phone,
-                              ),
+                             
                             ),
                             languageCode: providerLangue.localeString,
                             onChanged: (phone) {
@@ -644,7 +645,7 @@ class _ComptePageState extends State<ComptePage> {
                                                   label: "Ok",
                                                   onPressed: () {}),
                                               content: Text(
-                                                  'Profile modifier avec succès !'),
+                                                  'Profile modifier avec succès !',style: TextStyle(color: Colors.white),),
                                             ),
                                           );
                                         }
@@ -659,13 +660,13 @@ class _ComptePageState extends State<ComptePage> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 50, vertical: 16),
                               backgroundColor:
-                                  Color.fromARGB(255, 228, 246, 250),
+                                  Colors.blue,
                             ),
                             child: Text(
                               AppLocalizations.of(context)!.save,
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.blue,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),

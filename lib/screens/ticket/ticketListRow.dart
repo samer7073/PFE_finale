@@ -46,6 +46,7 @@ class _ticketListRowState extends State<ticketListRow> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return FutureBuilder<String>(
       future: imageUrlFuture,
       builder: (context, snapshot) {
@@ -61,139 +62,146 @@ class _ticketListRowState extends State<ticketListRow> {
 
         String baseUrl = snapshot.data ?? "";
 
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.ref + " ",
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(widget.id,
-                          style: Theme.of(context).textTheme.bodyLarge)
-                    ],
-                  ),
-                  Text(
-                    widget.createTime,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.label + " ",
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      Container(
-                        width: 200,
-                        child: Text(
-                          widget.title,
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 5, 104, 225),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
+        return Container(
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: isDarkMode==false?Color.fromARGB(255, 244, 245, 247): Color.fromARGB(255, 31, 24, 24),
+            borderRadius: BorderRadius.circular(25)
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.ref + " ",
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    child: Center(
-                      child: Text(
-                        widget.messageContainer,
-                        style: TextStyle(color: Colors.white),
-                      ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(widget.id,
+                            style: Theme.of(context).textTheme.bodyLarge)
+                      ],
                     ),
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        color: widget.colorContainer,
-                        borderRadius: BorderRadius.horizontal(
-                            left: Radius.circular(20),
-                            right: Radius.circular(20))),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                    Text(
+                      widget.createTime,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.label + " ",
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                        Container(
+                          width: 200,
+                          child: Text(
+                            widget.title,
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 5, 104, 225),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      child: Center(
+                        child: Text(
+                          widget.messageContainer,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          color: widget.colorContainer,
+                          borderRadius: BorderRadius.horizontal(
+                              left: Radius.circular(20),
+                              right: Radius.circular(20))),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
                   
-                  Row(
-                    children: [
-                      
-                      Text(
-                        AppLocalizations.of(context)!.pipeline + " ",
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      Container(
-                        width: 150,
-                        child: Text(
-                          widget.Pipeline,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                          overflow: TextOverflow.ellipsis,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    
+                    Row(
+                      children: [
+                        
+                        Text(
+                          AppLocalizations.of(context)!.pipeline + " ",
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        child: Text(
-                          widget.owner,
-                          style: Theme.of(context).textTheme.headlineSmall,
-                          overflow: TextOverflow.ellipsis,
+                        Container(
+                          width: 150,
+                          child: Text(
+                            widget.Pipeline,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      widget.ownerImage.length == 1
-                          ? CircleAvatar(
-                              backgroundColor: Colors
-                                  .blue, // Choisissez une couleur de fond appropriée
-                              child: Text(
-                                widget.ownerImage,
-                                style: TextStyle(
-                                    color: Colors
-                                        .white), // Choisissez une couleur de texte appropriée
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: 100,
+                          child: Text(
+                            widget.owner,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        widget.ownerImage.length == 1
+                            ? CircleAvatar(
+                                backgroundColor: Colors
+                                    .blue, // Choisissez une couleur de fond appropriée
+                                child: Text(
+                                  widget.ownerImage,
+                                  style: TextStyle(
+                                      color: Colors
+                                          .white), // Choisissez une couleur de texte appropriée
+                                ),
+                                radius: 15,
+                              )
+                            : CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage("$baseUrl${widget.ownerImage}"),
+                                radius: 15,
                               ),
-                              radius: 15,
-                            )
-                          : CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage("$baseUrl${widget.ownerImage}"),
-                              radius: 15,
-                            ),
-                    ],
-                  ),
-                ],
-              ),
-             Divider(color: const Color.fromARGB(255, 229, 228, 228),)
-            ],
+                      ],
+                    ),
+                  ],
+                ),
+          
+              ],
+            ),
           ),
         );
       },

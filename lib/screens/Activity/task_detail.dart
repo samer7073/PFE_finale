@@ -43,7 +43,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load image URL: $e')),
+          SnackBar(
+              content: Text(
+            'Failed to load image URL: $e',
+            style: TextStyle(color: Colors.white),
+          )),
         );
       }
     }
@@ -67,9 +71,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           future: taskDetails,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
+              return const Center(
+                  child: CircularProgressIndicator(
+                color: Colors.blue,
+              ));
             } else if (snapshot.hasError) {
               return Center(
                   child:
@@ -83,9 +88,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                 builder: (context, taskTypeSnapshot) {
                   if (taskTypeSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
+                    return const Center(
+                        child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ));
                   } else if (taskTypeSnapshot.hasError) {
                     return Center(
                         child: Text(
@@ -277,7 +283,7 @@ class TaskDetailTab extends StatelessWidget {
           ),
           Text(
             value,
-            style: valueStyle ?? TextStyle(color: color ),
+            style: valueStyle ?? TextStyle(color: color),
           ),
         ],
       ),
@@ -424,6 +430,9 @@ class TaskDetailTab extends StatelessWidget {
         return Icons.account_balance;
       case 'AtSymbolIcon':
         return Icons.alternate_email;
+      case 'WebOutlined':
+        return FontAwesomeIcons.earthAfrica;
+
       default:
         return Icons.help_outline;
     }

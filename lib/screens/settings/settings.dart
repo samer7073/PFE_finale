@@ -12,6 +12,7 @@ import 'package:flutter_application_stage_project/screens/login_page.dart';
 import 'package:flutter_application_stage_project/screens/settings/aPropos_page.dart';
 import 'package:flutter_application_stage_project/screens/settings/activties_settings_page.dart';
 import 'package:flutter_application_stage_project/screens/settings/affichage_page.dart';
+import 'package:flutter_application_stage_project/screens/settings/changePassswordScreen.dart';
 import 'package:flutter_application_stage_project/screens/settings/compte/compte_page.dart';
 import 'package:flutter_application_stage_project/screens/settings/confidentialite_page.dart';
 import 'package:flutter_application_stage_project/screens/settings/indisponibilite_page.dart';
@@ -213,7 +214,14 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   ),
                   InkWell(
                     onTap: () {
+                       Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return ChangePasswordScreen();
+                        },
+                      ));
+                      /*
                       showDialog(
+
                         context: context,
                         builder: (BuildContext context) {
                           bool securePassword = true;
@@ -466,7 +474,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                             },
                           );
                         },
-                      );
+                      );*/
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -585,7 +593,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                 SnackBar(
                                     duration: Duration(milliseconds:1000 ),
                                     backgroundColor: Colors.green,
-                                    content: Text('Notification activated')),
+                                    content: Text('Notification activated',style: TextStyle(color: Colors.white),)),
                               );
                             } else {
                               MercureNotificationService().dispose();
@@ -593,7 +601,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                 SnackBar(
                                     duration: Duration(seconds: 1),
                                     backgroundColor: Colors.red,
-                                    content: Text('Notification stopped')),
+                                    content: Text('Notification stopped',style: TextStyle(color: Colors.white),)),
                               );
                             }
                             notifier.notification = value;

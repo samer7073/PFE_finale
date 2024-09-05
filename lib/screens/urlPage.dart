@@ -18,11 +18,22 @@ class UrlPage extends StatefulWidget {
 class _UrlPageState extends State<UrlPage> {
   final _formKey = GlobalKey<FormState>();
   String? url;
+  String urlForm = "";
+  final FocusNode _focusNodeURL = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _loadUrl();
+    _focusNodeURL.addListener(() {
+      setState(() {}); // Rebuild the widget to update hintText
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNodeURL.dispose();
+    super.dispose();
   }
 
   void _loadUrl() async {
@@ -100,7 +111,9 @@ class _UrlPageState extends State<UrlPage> {
                     Container(
                       margin: EdgeInsets.fromLTRB(40, 0, 40, 0),
                       child: TextFormField(
+                        focusNode: _focusNodeURL,
                         onChanged: (value) {
+                          urlForm = value;
                           _saveUrl('url', value);
                         },
                         validator: (value) {
@@ -109,8 +122,12 @@ class _UrlPageState extends State<UrlPage> {
                           }
                           return null;
                         },
+                        cursorColor: Colors.white,
                         keyboardType: TextInputType.url,
                         decoration: InputDecoration(
+                          hintText: _focusNodeURL.hasFocus || urlForm.isNotEmpty
+                              ? ''
+                              : "Host server URL",
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: Colors
@@ -119,7 +136,7 @@ class _UrlPageState extends State<UrlPage> {
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white), // C
                           ),
-                          hintText: "Host server URL",
+
                           hintStyle: TextStyle(
                               fontFamily: 'ProstoOne',
                               color: Colors.white), // Texte d'indice en blanc

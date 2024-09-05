@@ -237,7 +237,7 @@ class _EditElmentState extends State<EditElment> {
                                   backgroundColor: Colors.green,
                                   action: SnackBarAction(
                                       label: "Ok", onPressed: () {}),
-                                  content: Text('Form submitted successfully!'),
+                                  content: Text('Form submitted successfully!',style: TextStyle(color: Colors.white),),
                                 ),
                               );
                               if (widget.family_id == "6") {
@@ -281,7 +281,7 @@ class _EditElmentState extends State<EditElment> {
                                   action: SnackBarAction(
                                       label: "Ok", onPressed: () {}),
                                   content: Text(
-                                      'Please check the validations of your required fields.'),
+                                      'Please check the validations of your required fields.',style: TextStyle(color: Colors.white),),
                                 ),
                               );
                             }
@@ -295,7 +295,7 @@ class _EditElmentState extends State<EditElment> {
                               action:
                                   SnackBarAction(label: "Ok", onPressed: () {}),
                               content: Text(
-                                  'Please check the validations of your required fields.'),
+                                  'Please check the validations of your required fields.',style: TextStyle(color: Colors.white),),
                             ),
                           );
                         }

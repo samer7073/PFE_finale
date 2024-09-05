@@ -92,8 +92,7 @@ class _KanbanBoardState extends State<KanbanBoard> {
   // La méthode qui fait l'appel API
   Future<List<Task>> getTasksForStage(int stageId, int page) async {
     final basurl = await Config.getApiUrl("taskStagesElements");
-    final url =
-        '$basurl$stageId?page=$page&limit=10';
+    final url = '$basurl$stageId?page=$page&limit=10';
     log('Fetching tasks from: $url');
 
     try {
@@ -293,9 +292,6 @@ class _KanbanBoardState extends State<KanbanBoard> {
                         children: [
                           for (var stage in stages)
                             InkWell(
-                                splashColor: Colors.white,
-                                overlayColor:
-                                    MaterialStateProperty.all(Colors.white),
                                 onTap: () async {
                                   setState(() {
                                     selectedStageId = stage.id;
@@ -317,7 +313,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
                                     borderRadius: BorderRadius.circular(10),
                                     color: selectedStageId == stage.id
                                         ? Color.fromARGB(255, 34, 63, 249)
-                                        : Colors.white,
+                                        : isDarkMode == true
+                                            ? Colors.black
+                                            : Colors.white,
                                     border: Border.all(
                                       color: selectedStageId == stage.id
                                           ? Color.fromARGB(255, 34, 63, 249)
@@ -348,9 +346,10 @@ class _KanbanBoardState extends State<KanbanBoard> {
             if (isLoading)
               Padding(
                 padding: const EdgeInsets.only(top: 250.0),
-                child: const Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  )),
+                child: const Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.blue,
+                )),
               )
             else if (selectedStageId != null)
               tasks.length > 0
@@ -363,9 +362,10 @@ class _KanbanBoardState extends State<KanbanBoard> {
                                 : 0), // Add an extra item if loading more
                         itemBuilder: (context, taskIndex) {
                           if (taskIndex == tasks.length) {
-                            return Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
+                            return Center(
+                                child: CircularProgressIndicator(
+                              color: Colors.blue,
+                            ));
                           }
                           final task = tasks[taskIndex];
 
@@ -398,7 +398,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
                                       Row(
                                         children: [
                                           _buildPriorityFlag(
-                                              task.priority ?? 'None', task),
+                                              task.priority ?? 'None',
+                                              task,
+                                              isDarkMode),
                                           SizedBox(
                                             width: 10,
                                           ),
@@ -446,8 +448,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
                                               ),
                                           ];
                                         },
-                                        icon: Icon(Icons.more_horiz_outlined,
-                                            color: Colors.black),
+                                        icon: Icon(
+                                          Icons.more_horiz_outlined,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -458,7 +461,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
                                         child: Text(
                                           task.label,
                                           style: TextStyle(
-                                            color: Colors.black,
+                                            color: isDarkMode == true
+                                                ? Colors.white
+                                                : Colors.black,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 25,
                                           ),
@@ -491,7 +496,8 @@ class _KanbanBoardState extends State<KanbanBoard> {
                                             stages, selectedStageId!),
                                         task.stageLabel,
                                         getStageColorById(
-                                            stages, selectedStageId!)),
+                                            stages, selectedStageId!),
+                                        isDarkMode),
                                   ),
                                   SizedBox(
                                     height: 10,
@@ -599,7 +605,7 @@ class _KanbanBoardState extends State<KanbanBoard> {
   }
 
   Widget _buildStageProgressIndicator(
-      int stagePercent, String stageLabel, String stageColor) {
+      int stagePercent, String stageLabel, String stageColor, isDarkMode) {
     return Row(
       children: [
         SizedBox(
@@ -617,7 +623,8 @@ class _KanbanBoardState extends State<KanbanBoard> {
         ),
         Text(
           '${stagePercent}%',
-          style: const TextStyle(fontSize: 16, color: Colors.black),
+          style: TextStyle(
+              fontSize: 16, color: isDarkMode ? Colors.white : Colors.black),
         ),
       ],
     );
@@ -659,24 +666,29 @@ class _KanbanBoardState extends State<KanbanBoard> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.blue),
+              ),
             ),
             TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop();
-                try {
-                  await deleteTasks(task.id);
-                  setState(() {
-                    tasks.remove(task);
-                  });
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to delete task: $e')),
-                  );
-                }
-              },
-              child: const Text('Delete'),
-            ),
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  try {
+                    await deleteTasks(task.id);
+                    setState(() {
+                      tasks.remove(task);
+                    });
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to delete task: $e',style: TextStyle(color: Colors.white),)),
+                    );
+                  }
+                },
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.blue),
+                )),
           ],
         );
       },
@@ -760,8 +772,8 @@ class _KanbanBoardState extends State<KanbanBoard> {
               backgroundColor: Colors.grey,
               radius: 15,
               child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                color: Colors.blue,
+              ),
             );
           }
 
@@ -781,8 +793,8 @@ class _KanbanBoardState extends State<KanbanBoard> {
                 ),
               ),
               placeholder: (context, url) => CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                color: Colors.blue,
+              ),
               errorWidget: (context, url, error) => Icon(Icons.error),
             ),
           );
@@ -873,7 +885,9 @@ class _KanbanBoardState extends State<KanbanBoard> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Close'),
+              child: Text('Close',style: TextStyle(
+                color: Colors.blue
+              ),),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
@@ -964,7 +978,7 @@ class _KanbanBoardState extends State<KanbanBoard> {
     }
   }
 
-  Widget _buildPriorityFlag(String priority, Task task) {
+  Widget _buildPriorityFlag(String priority, Task task, bool isDarkMode) {
     Color flagColor;
     switch (priority.toLowerCase()) {
       case 'low':
@@ -980,7 +994,7 @@ class _KanbanBoardState extends State<KanbanBoard> {
         flagColor = Colors.red;
         break;
       default:
-        flagColor = Colors.transparent;
+        flagColor = isDarkMode ? Colors.white : Colors.transparent;
         break;
     }
     return GestureDetector(
@@ -1029,7 +1043,10 @@ class _KanbanBoardState extends State<KanbanBoard> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(color: Colors.blue),
+              ),
             ),
           ],
         );

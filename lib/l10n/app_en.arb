@@ -68,7 +68,7 @@
   "phoneNumber": "Phone Number",
   "noLabel": "No Label",
   "contactDetails": "Contact Details",
-  "changeYourPassword": "Change your password",
+  "changeYourPassword": "password",
   "currentPassword": "Current Password",
   "pleaseEnterYourCurrentPassword": "Please enter your current password",
   "newPassword": "New Password",
@@ -148,5 +148,6 @@
   "enterActivityNote": "Enter Activity note",
   "uploadFiles": "Upload Files",
   "upload": "Upload",
-  "relatedElement":"Related Element"
+  "relatedElement":"Related Element",
+  "noResultsFound": "No results found for this search."
 }

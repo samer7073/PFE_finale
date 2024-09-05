@@ -60,6 +60,7 @@ String formatDate(String dateString, Locale locale) {
 
   @override
   Widget build(BuildContext context) {
+      final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     Locale currentLocale = Localizations.localeOf(context);
     return FutureBuilder<String>(
       future: imageUrlFuture,
@@ -76,122 +77,129 @@ String formatDate(String dateString, Locale locale) {
 
         String baseUrl = snapshot.data ?? "";
 
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.ref + " ",
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(widget.id,
-                          style: Theme.of(context).textTheme.bodyLarge)
-                    ],
-                  ),
-                  Text(widget.createTime,
-                    ///formatDate(widget.createTime, currentLocale),
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.label + " ",
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      Container(
-                        width: 200,
-                        child: Text(
-                          widget.title,
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 5, 104, 225),
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
+        return Container(
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: isDarkMode==false?Color.fromARGB(255, 244, 245, 247): Color.fromARGB(255, 31, 24, 24),
+            borderRadius: BorderRadius.circular(25)
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.ref + " ",
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.pipeline + " ",
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      Container(
-                        width: 150,
-                        child: Text(
-                          widget.Pipeline,
-                          style: Theme.of(context).textTheme.bodyLarge,
-                          overflow: TextOverflow.ellipsis,
+                        SizedBox(
+                          width: 10,
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        child: Text(
-                          widget.owner,
-                          style: Theme.of(context).textTheme.headlineSmall,
-                          overflow: TextOverflow.ellipsis,
+                        Text(widget.id,
+                            style: Theme.of(context).textTheme.bodyLarge)
+                      ],
+                    ),
+                    Text(widget.createTime,
+                      ///formatDate(widget.createTime, currentLocale),
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.label + " ",
+                          style: Theme.of(context).textTheme.displaySmall,
                         ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      widget.ownerImage.length == 1
-                          ? CircleAvatar(
-                              backgroundColor: Colors
-                                  .blue, // Choisissez une couleur de fond appropriée
-                              child: Text(
-                                widget.ownerImage,
-                                style: TextStyle(
-                                    color: Colors
-                                        .white), // Choisissez une couleur de texte appropriée
+                        Container(
+                          width: 200,
+                          child: Text(
+                            widget.title,
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 5, 104, 225),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.pipeline + " ",
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                        Container(
+                          width: 150,
+                          child: Text(
+                            widget.Pipeline,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: 100,
+                          child: Text(
+                            widget.owner,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        widget.ownerImage.length == 1
+                            ? CircleAvatar(
+                                backgroundColor: Colors
+                                    .blue, // Choisissez une couleur de fond appropriée
+                                child: Text(
+                                  widget.ownerImage,
+                                  style: TextStyle(
+                                      color: Colors
+                                          .white), // Choisissez une couleur de texte appropriée
+                                ),
+                                radius: 15,
+                              )
+                            : CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage("$baseUrl${widget.ownerImage}"),
+                                radius: 15,
                               ),
-                              radius: 15,
-                            )
-                          : CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage("$baseUrl${widget.ownerImage}"),
-                              radius: 15,
-                            ),
-                    ],
-                  ),
-                ],
-              ),
-             Divider(color: const Color.fromARGB(255, 229, 228, 228),)
-            ],
+                      ],
+                    ),
+                  ],
+                ),
+             
+              ],
+            ),
           ),
         );
       },

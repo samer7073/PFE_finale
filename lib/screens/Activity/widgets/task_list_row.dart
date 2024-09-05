@@ -395,7 +395,7 @@ final isDarkMode = Theme.of(context).brightness == Brightness.dark;
               );
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Stage changed successfully'),
+                  content: Text('Stage changed successfully',style: TextStyle(color: Colors.white),),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -403,7 +403,7 @@ final isDarkMode = Theme.of(context).brightness == Brightness.dark;
               // If there is an error, show an error Snackbar
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Problem when updating stage'),
+                  content: Text('Problem when updating stage',style: TextStyle(color: Colors.white),),
                   backgroundColor: Colors.red,
                 ),
               );

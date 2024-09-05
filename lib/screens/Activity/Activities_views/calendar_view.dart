@@ -140,7 +140,7 @@ void _fetchTasksForSelectedDay() async {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete task: $e')),
+        SnackBar(content: Text('Failed to delete task: $e',style: TextStyle(color: Colors.white),)),
       );
     }
   }
@@ -174,7 +174,8 @@ void _fetchTasksForSelectedDay() async {
     'WhatsAppOutlined': FontAwesomeIcons.whatsapp,
     'WrenchScrewdriverIcon':
         FontAwesomeIcons.screwdriverWrench, // Icône pour WrenchScrewdriver
-    'AtSymbolIcon': Icons.alternate_email_outlined
+    'AtSymbolIcon': Icons.alternate_email_outlined,
+     'WebOutlined':FontAwesomeIcons.earthAfrica,
   };
   IconData _getIconData(String taskTypeIcon) {
     return iconMap[taskTypeIcon] ?? Icons.help_outline;

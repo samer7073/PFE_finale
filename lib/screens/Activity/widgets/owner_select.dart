@@ -32,7 +32,7 @@ class _OwnerSelectionSheetState extends State<OwnerSelectionSheet> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load image URL: $e')),
+          SnackBar(content: Text('Failed to load image URL: $e',style: TextStyle(color: Colors.white),)),
         );
       }
       return ''; // Return an empty string in case of failure

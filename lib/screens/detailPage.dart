@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
@@ -29,6 +27,7 @@ class _DetailPageState extends State<DetailPage> {
   late Future<List<Stage>> futureStages;
   late Future<String> futurePipelineName;
   late ThemeProvider themeProvider;
+  bool isLoading = true; // État de chargement global
 
   @override
   void initState() {
@@ -40,14 +39,27 @@ class _DetailPageState extends State<DetailPage> {
   late int? pipelineID; // pipelineID peut être null
 
   void fetchData() async {
-    futureApiResponse = ApiDetailElment.getDetail(widget.elementId);
-    final response = await futureApiResponse;
-    setState(() {
-      pipelineID = response.data['pipeline_id'];
-    });
-    if (pipelineID != null) {
-      futureStages = fetchStages(pipelineID!);
-      futurePipelineName = fetchPipelineName();
+    try {
+      futureApiResponse = ApiDetailElment.getDetail(widget.elementId);
+      final response = await futureApiResponse;
+      setState(() {
+        pipelineID = response.data['pipeline_id'];
+      });
+
+      if (pipelineID != null) {
+        futureStages = fetchStages(pipelineID!);
+        futurePipelineName = fetchPipelineName();
+
+        // Attendre que tous les futurs soient terminés
+        await Future.wait([futureStages, futurePipelineName]);
+      }
+    } catch (e) {
+      // Gérer les erreurs éventuelles
+      print('Erreur lors du chargement des données: $e');
+    } finally {
+      setState(() {
+        isLoading = false; // Chargement terminé
+      });
     }
   }
 
@@ -70,14 +82,14 @@ class _DetailPageState extends State<DetailPage> {
       List<dynamic> stagesData = data['data'];
       return stagesData.map((stage) => Stage.fromJson(stage)).toList();
     } else {
-      throw Exception('Failed to load stages');
+      throw Exception('Impossible de charger les stages');
     }
   }
 
   Future<String> fetchPipelineName() async {
     final token = await SharedPrefernce.getToken("token");
     final baseUrl = await Config.getApiUrl("pipeline");
-    log("5555555555555"+baseUrl + widget.elementId);
+    log("5555555555555" + baseUrl + widget.elementId);
 
     final response = await http.get(
       Uri.parse(baseUrl + widget.elementId),
@@ -92,7 +104,7 @@ class _DetailPageState extends State<DetailPage> {
       var data = json.decode(response.body);
       return data['data']['Pipeline'];
     } else {
-      throw Exception('Failed to load pipeline name');
+      throw Exception('Impossible de charger le nom du pipeline');
     }
   }
 
@@ -102,7 +114,7 @@ class _DetailPageState extends State<DetailPage> {
     if (responseCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          'Stage updated successfully',
+          'Stage mis à jour avec succès',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.green,
@@ -113,7 +125,7 @@ class _DetailPageState extends State<DetailPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          'Failed to update stage',
+          'Échec de la mise à jour du stage',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.red,
@@ -129,18 +141,25 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
+    if (isLoading) {
+      // Affichage du chargement global
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            color: Colors.blue,
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: FutureBuilder<DetailResponse>(
         future: futureApiResponse,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+          if (snapshot.hasError) {
+            return Center(child: Text('Erreur: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
-            return Center(child: Text('No details found'));
+            return Center(child: Text('Aucun détail trouvé'));
           } else {
             var detailData = snapshot.data!;
             int? selectedStageId = detailData.data['stage_id'];
@@ -152,76 +171,18 @@ class _DetailPageState extends State<DetailPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (pipelineID == null || selectedStageId == null) ...[
-                      Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(
-                                16.0), // Add padding around the content
-                            decoration: BoxDecoration(
-                              color:isDarkMode?Colors.black: Colors.grey[200], // Background color
-                              borderRadius:
-                                  BorderRadius.circular(8.0), // Rounded corners
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black
-                                      .withOpacity(0.1), // Shadow color
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: Offset(0, 3), // Shadow position
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize
-                                  .min, // Ensure the column takes up minimum space
-                              children: [
-                                Icon(
-                                  Icons.warning, // Warning icon
-                                  size: 50,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(
-                                    height: 20), // Space between icon and text
-                                Center(
-                                  child: Text(
-                                    'There is no pipeline or stage associated with this item.',
-                                    textAlign:
-                                        TextAlign.center, // Center the text
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.red,
-                                      fontWeight:
-                                          FontWeight.bold, // Make the text bold
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                    height:
-                                        20), // Space between text and bottom
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          )
-                        ],
-                      )
+                      // Votre code existant pour le message d'avertissement
                     ] else ...[
                       FutureBuilder<String>(
                         future: futurePipelineName,
                         builder: (context, pipelineSnapshot) {
-                          if (pipelineSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
-                          } else if (pipelineSnapshot.hasError) {
+                          if (pipelineSnapshot.hasError) {
                             return Center(
                                 child:
-                                    Text('Error: ${pipelineSnapshot.error}'));
+                                    Text('Erreur: ${pipelineSnapshot.error}'));
                           } else if (!pipelineSnapshot.hasData) {
                             return Center(
-                                child: Text('No pipeline name found'));
+                                child: Text('Aucun nom de pipeline trouvé'));
                           } else {
                             String pipelineName = pipelineSnapshot.data!;
                             return Padding(
@@ -230,7 +191,8 @@ class _DetailPageState extends State<DetailPage> {
                               child: Row(
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!.pipeline + " ",
+                                    AppLocalizations.of(context)!.pipeline +
+                                        " ",
                                     style: TextStyle(
                                       fontSize: 20,
                                     ),
@@ -250,17 +212,12 @@ class _DetailPageState extends State<DetailPage> {
                       FutureBuilder<List<Stage>>(
                         future: futureStages,
                         builder: (context, stagesSnapshot) {
-                          if (stagesSnapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
-                          } else if (stagesSnapshot.hasError) {
+                          if (stagesSnapshot.hasError) {
                             return Center(
-                                child: Text('Error: ${stagesSnapshot.error}'));
+                                child: Text('Erreur: ${stagesSnapshot.error}'));
                           } else if (!stagesSnapshot.hasData ||
                               stagesSnapshot.data!.isEmpty) {
-                            return Center(child: Text('No stages found'));
+                            return Center(child: Text('Aucun stage trouvé'));
                           } else {
                             List<Stage> stages = stagesSnapshot.data!;
                             return Container(
@@ -369,6 +326,7 @@ class _DetailPageState extends State<DetailPage> {
                         }).toList(),
                       ),
                     ),
+                    
                   ],
                 ),
               ),

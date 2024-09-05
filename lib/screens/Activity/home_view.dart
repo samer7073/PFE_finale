@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/Activity/Activities_views/calendar_view.dart';
 import 'package:flutter_application_stage_project/screens/Activity/Activities_views/kanban_view.dart';
 import 'package:flutter_application_stage_project/screens/Activity/Activities_views/list_view.dart';
-import 'package:flutter_application_stage_project/screens/Activity/create_task.dart';
-import 'package:flutter_application_stage_project/screens/Activity/task_notification_screen.dart';
+
 import 'package:flutter_application_stage_project/screens/NotficationPage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

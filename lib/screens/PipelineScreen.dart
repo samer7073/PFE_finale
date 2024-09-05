@@ -74,20 +74,20 @@ class _PipelineScreenState extends State<PipelineScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green,
-            action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Item deleted successfully!'),
+            //action: SnackBarAction(label: "Ok", onPressed: () {}),
+            content: Text('Item deleted successfully!',style: TextStyle(color: Colors.white),),
           ),
         );
       } else {
         // Show error snackbar
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: Item not deleted")),
+          SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
         );
       }
     } catch (e) {
       // Handle error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: Item not deleted")),
+        SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
       );
     }
   }
@@ -126,7 +126,7 @@ class _PipelineScreenState extends State<PipelineScreen> {
                   return Column(
                     children: [
                       Align(
-                        alignment: Alignment.topLeft,
+                        alignment: Alignment.topCenter,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
@@ -205,29 +205,38 @@ class _PipelineScreenState extends State<PipelineScreen> {
                                 }
                               },
                               child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                  horizontal: 15.0,
-                                ),
-                                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                decoration: BoxDecoration(
-                                  color: selectedStageId == stage.id
-                                      ? Color.fromARGB(255, 82, 104, 250)
-                                      : isDarkMode
-                                          ? Colors.grey[800]
-                                          : Color.fromARGB(255, 242, 242, 242),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Text(
-                                  stage.label,
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? Colors.white
-                                        : isDarkMode
-                                            ? Colors.white
-                                            : Colors.black,
+                                  height: 42,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 12.0,
+                                    horizontal: 15.0,
                                   ),
-                                ),
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: selectedStageId == stage.id
+                                        ? Color.fromARGB(255, 34, 63, 249)
+                                        : isDarkMode==true? Colors.black: Colors.white,
+                                    border: Border.all(
+                                      color: selectedStageId == stage.id
+                                          ? Color.fromARGB(255, 34, 63, 249)
+                                          : Color.fromARGB(255, 200, 200,
+                                              200), // Couleur de la bordure non sélectionnée
+                                      width: 0.50,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      stage.label,
+                                      style: TextStyle(
+                                        color: selectedStageId == stage.id
+                                            ? Colors.white
+                                            : isDarkMode
+                                                ? Colors.white
+                                                : Colors.grey,
+                                      ),
+                                    ),
+                                  ),
                               ),
                             );
                           }).toList(),

@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -11,6 +9,7 @@ import 'package:flutter_application_stage_project/screens/Activity/widgets/task_
 import 'package:flutter_application_stage_project/services/Activities/api_delete_task.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_tasks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({Key? key}) : super(key: key);
@@ -52,10 +51,11 @@ class _TaskListPageState extends State<TaskListPage> {
     'VideoCameraOutlined': Icons.videocam_outlined,
     'WarningOutlined': Icons.warning_outlined,
     'WhatsAppOutlined': FontAwesomeIcons.whatsapp,
-    'WrenchScrewdriverIcon':
-        FontAwesomeIcons.screwdriverWrench, // Icône pour WrenchScrewdriver
-    'AtSymbolIcon': Icons.alternate_email_outlined
+    'WrenchScrewdriverIcon': FontAwesomeIcons.screwdriverWrench,
+    'AtSymbolIcon': Icons.alternate_email_outlined,
+     'WebOutlined':FontAwesomeIcons.earthAfrica,
   };
+  
   bool isLoading = false;
   int currentPage = 1;
   bool hasMorePages = true;
@@ -84,13 +84,12 @@ class _TaskListPageState extends State<TaskListPage> {
     try {
       final response = await TaskService.fetchTasks(currentPage);
       final List<Task> loadedTasks = response['tasks'];
-
       final int lastPage = response['meta']['last_page'];
 
       if (!mounted) return;
       setState(() {
         tasks.addAll(loadedTasks);
-        filteredTasks = tasks;
+        filteredTasks = List.from(tasks); // Copie la liste chargée
       });
 
       currentPage++;
@@ -121,15 +120,17 @@ class _TaskListPageState extends State<TaskListPage> {
     if (!mounted) return;
 
     setState(() {
-      isLoading = true; // Active le chargement au début de la recherche
+      isLoading = true;
     });
 
     try {
       if (query.isEmpty) {
-        // Si la requête de recherche est vide, charger toutes les tâches pour réinitialiser la liste filtrée
-        await _loadAllTasks();
+        // Si la requête est vide, réinitialiser la liste filtrée avec toutes les tâches chargées
+        setState(() {
+          filteredTasks = List.from(tasks); // Utilise la liste existante
+        });
       } else {
-        // Sinon, effectuer une recherche basée sur la requête
+        // Recherche basée sur la requête
         final List<Task> searchResults = await TaskService.searchTasks(query);
         if (!mounted) return;
 
@@ -148,8 +149,7 @@ class _TaskListPageState extends State<TaskListPage> {
       if (!mounted) return;
 
       setState(() {
-        isLoading =
-            false; // Désactive le chargement une fois la recherche terminée
+        isLoading = false;
       });
     }
   }
@@ -165,7 +165,7 @@ class _TaskListPageState extends State<TaskListPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete task: $e')),
+        SnackBar(content: Text('Failed to delete task: $e',style: TextStyle(color: Colors.white),)),
       );
     }
   }
@@ -262,7 +262,6 @@ class _TaskListPageState extends State<TaskListPage> {
         return Colors.grey;
       default:
         return Colors.transparent;
-        ;
     }
   }
 
@@ -284,99 +283,102 @@ class _TaskListPageState extends State<TaskListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading && tasks.isEmpty
-          ? const Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ))
-          : Column(
+      body:  Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
                     height: 60, // Adjust the height as needed
                     child: TextField(
+                      cursorColor: Colors.blue,
                       controller: _searchController,
                       decoration: InputDecoration(
-  suffix: _searchController.text.isEmpty
-      ? null
-      : IconButton(
-          onPressed: () {
-            _searchController.clear(); // Clear the text in the controller
-            setState(() {}); // Trigger UI update to hide the icon
-          },
-          icon: Center(
-            child: Icon(
-              Icons.cancel,
-              size: 20,
-              color: Colors.blue,
-            ),
-          ),
-        ),
-  hintText: 'Search tasks...',
-  hintStyle: TextStyle(
-    fontSize: 14, // Adjust font size as needed
-  ),
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(16.0),
-    borderSide: BorderSide.none,
-  ),
-  contentPadding:
-      EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0), // Adjust padding as needed
-  filled: true,
- 
-  prefixIcon: const Icon(
-    Icons.search,
-    color: Colors.blue,
-    size: 20, // Adjust icon size as needed
-  ),
-),
-                      style: TextStyle(
-                        fontSize: 14, // Adjust font size as needed
+                        suffix: _searchController.text.isEmpty
+                            ? null
+                            : IconButton(
+                                onPressed: () {
+                                  _searchController.clear(); // Clear the text in the controller
+                                  setState(() {}); // Trigger UI update to hide the icon
+                                },
+                                icon: Center(
+                                  child: Icon(
+                                    Icons.cancel,
+                                    size: 20,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                        hintText: 'Search tasks...',
+                        hintStyle: TextStyle(
+                          fontSize: 14, // Adjust font size as needed
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 12.0), // Adjust padding as needed
+                        filled: true,
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
                       ),
-                      onChanged: (text) {
-                        setState(
-                            () {}); // Trigger UI update to show/hide the icon
+                      onChanged: (value) {
+                        _filterTasks();
                       },
                     ),
                   ),
                 ),
+                isLoading && tasks.isEmpty
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: Colors.blue,
+              ),
+            )
+          :
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: _refreshTasks,
-                    child: ListView.builder(
+                    child:filteredTasks.isEmpty
+                      ? Center(
+                          child: Text(
+                           AppLocalizations.of(context)!.noResultsFound,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
                       controller: _scrollController,
-                      itemCount: filteredTasks.length + (hasMorePages ? 1 : 0),
+                      itemCount: filteredTasks.length,
                       itemBuilder: (context, index) {
-                        if (index == filteredTasks.length) {
-                          return const Center(
-                              child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
-                        }
                         final task = filteredTasks[index];
-                        return TaskListRow(
-                          can_update_task: task.can_update_task,
-                          is_follower: task.is_follower,
-                          start_date: task.startDate,
-                          start_time: task.startTime,
-                          task_type_color: task.task_type_color,
-                          taskIcon: _getIconData(task.task_type_icon),
-                          taskId: task.id,
-                          taskLabel: task.label,
-                          ownerLabel: task.ownerLabel,
-                          startDate: task.startDate,
-                          endDate: task.endDate,
-                          endTime: task.endTime,
-                          priority: task.priority,
-                          priorityIcon: _getPriorityIcon(task.priority),
-                          priorityColor: _getPriorityColor(task.priority),
-                          ownerAvatar: task.ownerAvatar,
-                          stageLabel: task.stageLabel ?? 'N/A',
-                          isOverdue: task.isOverdue,
-                          onDelete: () => _confirmDelete(task),
-                          onEdit: () => _editTask(task),
-                          onTap: () => _navigateToDetail(task),
-                        );
+                        return   TaskListRow(
+                              can_update_task: task.can_update_task,
+                              is_follower: task.is_follower,
+                              start_date: task.startDate,
+                              start_time: task.startTime,
+                              task_type_color: task.task_type_color,
+                              taskIcon: _getIconData(task.task_type_icon),
+                              taskId: task.id,
+                              taskLabel: task.label,
+                              ownerLabel: task.ownerLabel,
+                              startDate: task.startDate,
+                              endDate: task.endDate,
+                              endTime: task.endTime,
+                              priority: task.priority,
+                              priorityIcon: _getPriorityIcon(task.priority),
+                              priorityColor: _getPriorityColor(task.priority),
+                              ownerAvatar: task.ownerAvatar,
+                              stageLabel: task.stageLabel ?? 'N/A',
+                              isOverdue: task.isOverdue,
+                              onDelete: () => _confirmDelete(task),
+                              onEdit: () => _editTask(task),
+                              onTap: () => _navigateToDetail(task),
+                            );
                       },
                     ),
                   ),
@@ -384,12 +386,9 @@ class _TaskListPageState extends State<TaskListPage> {
               ],
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _navigateToCreateTask,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
         backgroundColor: Colors.blue,
+        onPressed: _navigateToCreateTask,
+        child:  Icon(Icons.add,color: Colors.white,),
       ),
     );
   }

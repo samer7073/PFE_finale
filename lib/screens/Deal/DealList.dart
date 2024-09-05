@@ -116,19 +116,19 @@ class _DealsPageState extends State<DealsPage> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Element supprimé avec succès !'),
+            content: Text('Element supprimé avec succès !',style: TextStyle(color: Colors.white),),
           ),
         );
       } else {
         // Show error snackbar
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur : Element non supprimé")),
+          SnackBar(content: Text("Erreur : Element non supprimé",style: TextStyle(color: Colors.white),)),
         );
       }
     } catch (e) {
       // Handle error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur : Element non supprimé")),
+        SnackBar(content: Text("Erreur : Element non supprimé",style: TextStyle(color: Colors.white),)),
       );
     }
   }

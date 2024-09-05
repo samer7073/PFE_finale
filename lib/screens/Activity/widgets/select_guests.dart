@@ -39,7 +39,7 @@ class _GuestsSelectionSheetState extends State<GuestsSelectionSheet> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to load image URL: $e')),
+          SnackBar(content: Text('Failed to load image URL: $e',style: TextStyle(color: Colors.white),)),
         );
       }
       return ''; // Retourner une chaîne vide en cas d'échec

@@ -68,7 +68,7 @@
   "phoneNumber": "Numéro de téléphone",
   "noLabel": "Pas d'étiquette",
   "contactDetails": "Détails de contact",
-  "changeYourPassword": "Changez votre mot de passe",
+  "changeYourPassword": "mot de passe",
   "currentPassword": "Mot de passe actuel",
   "pleaseEnterYourCurrentPassword": "Veuillez entrer votre mot de passe actuel",
   "newPassword": "Nouveau mot de passe",
@@ -148,5 +148,6 @@
   "enterActivityNote": "Entrez une note pour l'activité",
   "uploadFiles": "Télécharger des fichiers",
   "upload": "Télécharger",
-  "relatedElement":"Élément associé"
+  "relatedElement":"Élément associé",
+  "noResultsFound": "Aucun résultat trouvé pour cette recherche."
 }

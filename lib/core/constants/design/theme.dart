@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyThemes {
   static final lightTheme = ThemeData(
+    
     useMaterial3: false,
     tabBarTheme: TabBarTheme(
       labelColor: Colors.black,
@@ -39,6 +40,7 @@ class MyThemes {
     ),
     primaryColor: Colors.white,
     colorScheme: ColorScheme.light(
+      primary: Colors.blue,
       error: Colors.red,
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -104,7 +106,10 @@ class MyThemes {
       displaySmall: TextStyle(fontSize: 14, color: Colors.grey),
     ),
     primaryColor: Colors.black,
-    colorScheme: ColorScheme.dark(),
+    colorScheme: ColorScheme.dark(
+      primary: Colors.blue,
+      error: Colors.red,
+    ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       showSelectedLabels: true,
       showUnselectedLabels: true,

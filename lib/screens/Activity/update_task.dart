@@ -499,11 +499,15 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
           content: const Text('Are you sure you want to update this task?'),
           actions: [
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Cancel',style: TextStyle(
+                color: Colors.blue
+              ),),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
-              child: const Text('Confirm'),
+              child: const Text('Confirm',style: TextStyle(
+                color: Colors.blue
+              ),),
               onPressed: () => Navigator.of(context).pop(true),
             ),
           ],
@@ -552,7 +556,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
           const SnackBar(
             backgroundColor: Colors.green,
             content: Text(
-              'Task updated successfully!',
+              'Task updated successfully!',style: TextStyle(color: Colors.white),
             ),
           ),
         );
@@ -570,7 +574,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               backgroundColor: Colors.red,
-              content: Text('Failed to update task: $e')),
+              content: Text('Failed to update task: $e',style: TextStyle(color: Colors.white),)),
         );
         log('Failed to update task: $e');
       }

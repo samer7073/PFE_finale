@@ -1,6 +1,6 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors
 
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../models/ActivityElment.dart/ActivityEementModel.dart';
@@ -67,7 +67,8 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
     'WhatsAppOutlined': FontAwesomeIcons.whatsapp,
     'WrenchScrewdriverIcon':
         FontAwesomeIcons.screwdriverWrench, // Icône pour WrenchScrewdriver
-    'AtSymbolIcon': Icons.alternate_email_outlined
+    'AtSymbolIcon': Icons.alternate_email_outlined,
+     'WebOutlined':FontAwesomeIcons.earthAfrica,
   };
 
   IconData _getIconData(String taskTypeIcon) {
@@ -217,24 +218,23 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                                   ),
                                 ),
                                 title: Text(activityElement.label),
-                                subtitle: Column(
+                                subtitle: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                  
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                             'Start Date: ${activityElement.startDate}'),
                                         Text(
-                                            'End Date: ${activityElement.endDate}')
+                                            'End Date: ${activityElement.endDate}'),
                                       ],
                                     ),
                                     SizedBox(height: 10),
-                                    Row(
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                             'Start Time: ${activityElement.startTime}'),
@@ -243,37 +243,36 @@ class _ActivityElmentPageState extends State<ActivityElmentPage> {
                                         ),
                                         Text(
                                             'End Time: ${activityElement.endTime}'),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(activityElement.owner.label),
+                                              
+                                        Row(
+                                          children: [
+                                            Text(activityElement.owner.label),
                                         SizedBox(
                                           width: 5,
                                         ),
-                                        activityElement.owner.avatar.length == 1
-                                            ? CircleAvatar(
-                                                backgroundColor: Colors
-                                                    .blue, // Choisissez une couleur de fond appropriée
-                                                child: Text(
-                                                  activityElement.owner.avatar,
-                                                  style: TextStyle(
-                                                      color: Colors
-                                                          .white), // Choisissez une couleur de texte appropriée
-                                                ),
-                                                radius: 15,
-                                              )
-                                            : CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                    "$baseUrl${activityElement.owner.avatar}"),
-                                                radius: 15,
-                                              ),
+                                            activityElement.owner.avatar.length == 1
+                                                ? CircleAvatar(
+                                                    backgroundColor: Colors
+                                                        .blue, // Choisissez une couleur de fond appropriée
+                                                    child: Text(
+                                                      activityElement.owner.avatar,
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .white), // Choisissez une couleur de texte appropriée
+                                                    ),
+                                                    radius: 15,
+                                                  )
+                                                : CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        "$baseUrl${activityElement.owner.avatar}"),
+                                                    radius: 15,
+                                                  ),
+                                          ],
+                                        ),
                                       ],
-                                    )
+                                    ),
+                                    
+                                    
                                   ],
                                 ),
                               );

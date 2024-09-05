@@ -39,7 +39,7 @@ class ApiChangePassword {
       log("${response}");
 
       // Retourner le code de statut HTTP de la réponse
-      return response.statusCode;
+      return response.data["message"];
     } catch (e) {
       print('Error while performing change password request: $e');
       // Retourner null en cas d'erreur

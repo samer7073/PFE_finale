@@ -86,11 +86,19 @@ class _LoginPageState extends State<LoginPage> {
     log('build ${themeProvider.isDarkMode}');
     return loading
         ? Scaffold(
-            body: Container(
-              child: Center(
-                child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Colors.blue,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Veuillez patienter, le traitement est en cours...',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
               ),
             ),
           )
@@ -159,110 +167,94 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 16,
                   fontWeight: FontWeight.w600),
             ),
-            ElevatedButton(
-              onPressed: () {
-                showModalBottomSheet(
+            IconButton(onPressed: (){
+              showModalBottomSheet(
                     context: context,
                     builder: (BuildContext context) {
-                      return SingleChildScrollView(
-                        child: SizedBox(
-                          height: 2000,
-                          child: Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                Text(
-                                  "Connexion à un serveur d'accueil",
-                                  style: Theme.of(context).textTheme.headlineLarge,
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Text("Quelle est l'adresse de votre serveur ?"),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Form(
-                                    child: Column(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
-                                      child: TextFormField(
-                                        initialValue: url,
-                                        onChanged: (value) {
-                                          _saveUrl('url', value);
-                                        },
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Please enter your Url';
-                                          }
-
-                                          return null;
-                                        },
-                                        keyboardType: TextInputType.url,
-                                        decoration: InputDecoration(
-                                            hintText:
-                                                "URL du serveur d'acceuil",
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(18),
-                                                borderSide: BorderSide.none),
-                                            fillColor:
-                                                Color.fromARGB(255, 15, 65, 245)
-                                                    .withOpacity(0.1),
-                                            filled: true,
-                                            prefixIcon: const Icon(
-                                              Icons.link_rounded,
-                                            )),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
+                      return SizedBox(
+                        height: 2000,
+                        child: Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Text(
+                                "Connexion à un serveur d'accueil",
+                                style: Theme.of(context).textTheme.headlineLarge,
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text("Quelle est l'adresse de votre serveur ?"),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Form(
+                                  child: Column(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                                    child: TextFormField(
+                                      initialValue: url,
+                                      onChanged: (value) {
+                                        _saveUrl('url', value);
                                       },
-                                      style: ElevatedButton.styleFrom(
-                                          shape: StadiumBorder(),
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 50, vertical: 16),
-                                          backgroundColor: Color.fromARGB(
-                                              255, 181, 218, 240)),
-                                      child: Text(
-                                        "Modify",
-                                        style: TextStyle(
-                                            fontFamily: 'ProstoOne',
-                                            fontSize: 14,
-                                            color: Colors.blue,
-                                            fontWeight: FontWeight.w900),
-                                      ),
-                                    )
-                                  ],
-                                ))
-                              ],
-                            ),
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter your Url';
+                                        }
+                      
+                                        return null;
+                                      },
+                                      cursorColor: Colors.black,
+                                      keyboardType: TextInputType.url,
+                                      decoration: InputDecoration(
+                                          hintText:
+                                              "URL du serveur d'acceuil",
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18),
+                                              borderSide: BorderSide.none),
+                                          fillColor:
+                                              Colors.grey.shade200,
+                                          filled: true,
+                                          prefixIcon: const Icon(
+                                            Icons.link_rounded,color: Colors.blue,
+                                          )),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        shape: StadiumBorder(),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 50, vertical: 16),
+                                        backgroundColor: Colors.blue),
+                                    child: Text(
+                                      "Modify",
+                                      style: TextStyle(
+                                          fontFamily: 'ProstoOne',
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w900),
+                                    ),
+                                  )
+                                ],
+                              ))
+                            ],
                           ),
                         ),
                       );
                     });
-              },
-              style: ElevatedButton.styleFrom(
-                  shape: StadiumBorder(),
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-                  backgroundColor: Colors.white),
-              child: Text(
-                "Modify",
-                style: TextStyle(
-                    fontFamily: 'ProstoOne',
-                    fontSize: 14,
-                    color: Color.fromARGB(255, 22, 105, 161),
-                    fontWeight: FontWeight.w900),
-              ),
-            )
+            }, icon:  Icon(Icons.edit,color: Colors.white)),
+           
           ],
         ),
         SizedBox(
@@ -411,7 +403,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         SizedBox(
-          height: 100,
+          height: 30,
         ),
         TextButton(
           onPressed: () {
@@ -427,7 +419,9 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text("OK"))
+                              child: Text("OK",style: TextStyle(
+                                color: Colors.blue
+                              ),))
                         ],
                       ));
             } else {

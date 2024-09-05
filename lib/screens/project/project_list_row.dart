@@ -37,6 +37,7 @@ class _ProjectListRowState extends State<ProjectListRow> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return FutureBuilder<String>(
       future: imageUrlFuture,
       builder: (context, snapshot) {
@@ -52,108 +53,119 @@ class _ProjectListRowState extends State<ProjectListRow> {
 
         String baseUrl = snapshot.data ?? "";
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return Container(
+        
+          decoration: BoxDecoration(
+            color: isDarkMode==false?Color.fromARGB(255, 244, 245, 247): Color.fromARGB(255, 31, 24, 24),
+            borderRadius: BorderRadius.circular(25)
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.ref + " ",
-                      style: Theme.of(context).textTheme.displaySmall,
-                    ),
-                    Container(
-                      width: 150,
-                      child: Text(
-                        widget.reference,
-                        style: Theme.of(context).textTheme.headlineLarge,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    )
-                  ],
-                ),
-                Text(
-                  widget.createTime,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                )
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.label + " ",
-                  style: Theme.of(context).textTheme.displaySmall,
-                ),
-                Container(
-                  width: 270,
-                  child: Text(
-                    widget.title,
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 5, 104, 225),
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.pipeline + " ",
-                      style: Theme.of(context).textTheme.displaySmall,
-                    ),
-                    Container(
-                      width: 100,
-                      child: Text(
-                        widget.pipline,
-                        style: Theme.of(context).textTheme.headlineLarge,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.owner,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    widget.ownerImage.length == 1
-                        ? CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            child: Text(
-                              widget.ownerImage,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            radius: 15,
-                          )
-                        : CircleAvatar(
-                            backgroundImage:
-                                NetworkImage("$baseUrl${widget.ownerImage}"),
-                            radius: 15,
+                    Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.ref + " ",
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                        Container(
+                          width: 150,
+                          child: Text(
+                            widget.reference,
+                            style: Theme.of(context).textTheme.headlineLarge,
+                            overflow: TextOverflow.ellipsis,
                           ),
+                        )
+                      ],
+                    ),
+                    Text(
+                      widget.createTime,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    )
                   ],
                 ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.label + " ",
+                      style: Theme.of(context).textTheme.displaySmall,
+                    ),
+                    Container(
+                      width: 270,
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 5, 104, 225),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment:widget.pipline.isNotEmpty? MainAxisAlignment.spaceBetween :MainAxisAlignment.end,
+                  children: [
+                    if(widget.pipline.isNotEmpty)
+                    Row(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.pipeline + " ",
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                        Container(
+                          width: 100,
+                          child: Text(
+                            widget.pipline,
+                            style: Theme.of(context).textTheme.headlineLarge,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.owner,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        widget.ownerImage.length == 1
+                            ? CircleAvatar(
+                                backgroundColor: Colors.blue,
+                                child: Text(
+                                  widget.ownerImage,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                radius: 15,
+                              )
+                            : CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage("$baseUrl${widget.ownerImage}"),
+                                radius: 15,
+                              ),
+                      ],
+                    ),
+                  ],
+                ),
+             
               ],
             ),
-            Divider(color: const Color.fromARGB(255, 229, 228, 228),)
-          ],
+          ),
         );
       },
     );

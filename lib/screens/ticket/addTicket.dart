@@ -307,7 +307,7 @@ class _AddElementState extends State<AddElement> {
                               action:
                                   SnackBarAction(label: "Ok", onPressed: () {}),
                               content: Text(
-                                  'Please check the validations for your required fields.'),
+                                  'Please check the validations for your required fields.',style: TextStyle(color: Colors.white),),
                             ),
                           );
                         }

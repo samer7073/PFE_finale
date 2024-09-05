@@ -36,7 +36,8 @@ Map<String, IconData> iconMap = {
   'WhatsAppOutlined': FontAwesomeIcons.whatsapp, // Icône WhatsApp FontAwesome
   'WrenchScrewdriverIcon':
       FontAwesomeIcons.screwdriverWrench, // Icône pour WrenchScrewdriver
-  'AtSymbolIcon': Icons.alternate_email_outlined
+  'AtSymbolIcon': Icons.alternate_email_outlined,
+  'WebOutlined':FontAwesomeIcons.earthAfrica,
 };
 
 class TaskTypeSelector extends StatefulWidget {

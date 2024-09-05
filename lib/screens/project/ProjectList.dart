@@ -79,17 +79,17 @@ class _ProjectListState extends State<ProjectList> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Element supprimer avec succès !'),
+            content: Text('Element supprimer avec succès !',style: TextStyle(color: Colors.white),),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur : Element non supprimé")),
+          SnackBar(content: Text("Erreur : Element non supprimé",style: TextStyle(color: Colors.white),)),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur : Element non supprimé")),
+        SnackBar(content: Text("Erreur : Element non supprimé",style: TextStyle(color: Colors.white),)),
       );
     }
   }
@@ -156,8 +156,8 @@ class _ProjectListState extends State<ProjectList> {
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+              backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
+            ),
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },

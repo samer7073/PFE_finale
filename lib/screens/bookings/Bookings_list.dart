@@ -78,17 +78,17 @@ class _BookingsListState extends State<BookingsList> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Item successfully deleted!'),
+            content: Text('Item successfully deleted!',style: TextStyle(color: Colors.white),),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: Item not deleted")),
+          SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: Item not deleted")),
+        SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
       );
     }
   }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/KanbanModels/Element.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 
-import '../services/ApiDeleteElment.dart';
+
+
 import 'EditElment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -40,6 +41,28 @@ class _CardwidgetState extends State<Cardwidget> {
     }
   }
 
+  void _onPopupMenuSelected(
+    String value,
+  ) {
+    switch (value) {
+      case 'edit':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditElment(
+              Element_id: widget.element.elementId,
+              family_id: widget.familyId,
+              title: familyName(widget.familyId),
+            ),
+          ),
+        );
+        break;
+      case 'delete':
+        widget.deleteFunction(widget.element);
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
@@ -47,8 +70,8 @@ class _CardwidgetState extends State<Cardwidget> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  );
+            color: Colors.blue,
+          );
         }
 
         if (snapshot.hasError) {
@@ -57,131 +80,97 @@ class _CardwidgetState extends State<Cardwidget> {
 
         String baseUrl = snapshot.data ?? "";
 
-        return Card(
-          color: Color.fromARGB(255, 245, 244, 244),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          margin: const EdgeInsets.all(8.0),
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: [
-                    Text(AppLocalizations.of(context)!.ref + " ",
-                        style: TextStyle(color: Colors.black)),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(widget.element.reference,
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color: Colors.grey.shade300,
+                  width: 1), // Bordure grise de 1 pixel de large
+              borderRadius:
+                  BorderRadius.circular(15), // Coins arrondis (facultatif)
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(AppLocalizations.of(context)!.ref + " ",
+                              ),
+                          Text(widget.element.labelData,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  )),
+                        ],
+                      ),
+                      PopupMenuButton<String>(
+                        onSelected: (String value) {
+                          _onPopupMenuSelected(value);
+                        },
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            const PopupMenuItem<String>(
+                              value: 'edit',
+                              child: ListTile(
+                                leading: Icon(Icons.edit_outlined),
+                                title: Text('Edit'),
+                              ),
+                            ),
+                            const PopupMenuItem<String>(
+                              value: 'delete',
+                              child: ListTile(
+                                leading: Icon(Icons.delete_outline),
+                                title: Text('Delete'),
+                              ),
+                            ),
+                          ];
+                        },
+                        icon: Icon(Icons.more_horiz_outlined,
+                            ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        widget.element.creator.label,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black)),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      widget.element.creator.label,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
+                          
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    widget.element.creator.avatar.isEmpty
-                        ? CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            radius: 25,
-                            child: Text(
-                              widget.element.creator.avatar,
-                              style: TextStyle(color: Colors.white),
+                      const SizedBox(width: 8),
+                      widget.element.creator.avatar.length == 1
+                          ? CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              radius: 15,
+                              child: Text(
+                                widget.element.creator.avatar,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          : CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  "$baseUrl${widget.element.creator.avatar}"),
+                              radius: 15,
                             ),
-                          )
-                        : CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                "$baseUrl${widget.element.creator.avatar}"),
-                            radius: 15,
-                          ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    IconButton(
-                      icon: const Icon(
-                        Icons.note_alt_rounded,
-                        size: 28,
-                        color: Color.fromARGB(255, 28, 175, 9),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditElment(
-                              Element_id: widget.element.elementId,
-                              family_id: widget.familyId,
-                              title: familyName(widget.familyId),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.visibility,
-                        size: 28,
-                        color: Colors.blue,
-                      ),
-                      onPressed: () {},
-                      tooltip: 'Chat',
-                    ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.delete,
-                        size: 28,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Delete"),
-                              content: Text(
-                                  "Are you sure you want to delete this ticket ?"),
-                              actions: [
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(true);
-                                    widget.deleteFunction(widget.element);
-                                  },
-                                  child: Text("Yes"),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(false);
-                                  },
-                                  child: Text("No"),
-                                )
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      tooltip: 'Delete',
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  const SizedBox(height: 8),
+                
+                ]
+                ,
+              ),
             ),
           ),
         );

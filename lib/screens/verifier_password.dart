@@ -1,11 +1,10 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:developer';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart'; // Import pour accéder au presse-papiers
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
 import 'package:flutter_application_stage_project/services/ApiOtpGenerate.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,6 +25,17 @@ class _VerfierPasswordState extends State<VerfierPassword> {
   String errorMessage = "";
   Map<String, dynamic> data = {};
   Map<String, dynamic> otpData = {};
+  bool loading = false;
+
+  final List<TextEditingController> otpControllers =
+      List.generate(6, (_) => TextEditingController());
+
+  final FocusNode focusNode0 = FocusNode();
+  final FocusNode focusNode1 = FocusNode();
+  final FocusNode focusNode2 = FocusNode();
+  final FocusNode focusNode3 = FocusNode();
+  final FocusNode focusNode4 = FocusNode();
+  final FocusNode focusNode5 = FocusNode();
 
   @override
   void initState() {
@@ -73,7 +83,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
       try {
         final postOtp = await ApiOtpGenrate.LoginOtp(otpData);
         if (postOtp!.success == true) {
-          _saveString('token', postOtp!.token.access_token);
+          _saveString('token', postOtp.token.access_token);
           final jwtResponse = await ApiGetJwt.getJwt();
           log("jwt: ${jwtResponse.jwtMercure}");
           _saveString('jwt', jwtResponse.jwtMercure);
@@ -97,11 +107,13 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text("Ok"))
+                        child: Text("Ok",style: TextStyle(
+                          color: Colors.blue
+                        ),))
                   ],
-                  title: Text("Probléme d'authentiification"),
+                  title: Text("Problème d'authentification"),
                   contentPadding: EdgeInsets.all(20),
-                  content: Text("Merci de vérifier votre code otp"),
+                  content: Text("Merci de vérifier votre code OTP."),
                 ));
         log(e.toString());
       }
@@ -113,15 +125,57 @@ class _VerfierPasswordState extends State<VerfierPassword> {
     await SharedPrefernce.saveToken(key, value);
   }
 
-  bool loading = false;
+  Future<void> _handlePaste() async {
+    final clipboardData = await Clipboard.getData('text/plain');
+    if (clipboardData != null) {
+      final pastedText = clipboardData.text;
+      if (pastedText!.length == 6) {
+        setState(() {
+          for (int i = 0; i < 6; i++) {
+            otpControllers[i].text = pastedText[i];
+          }
+          otp = pastedText;
+        });
+       // confirmUser();
+      }
+    }
+  }
+
+  void _handleChange(String value, int index) {
+    if (value.length == 0) {
+      if (index > 0) {
+        FocusScope.of(context).previousFocus();
+      }
+    } else if (value.length == 1) {
+      if (index < 5) {
+        FocusScope.of(context).nextFocus();
+      } else {
+        setState(() {
+          otp = otpControllers.map((controller) => controller.text).join();
+        });
+       // confirmUser();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return loading
         ? Scaffold(
             body: Center(
-              child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Colors.blue,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Veuillez patienter, le traitement est en cours...',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           )
         : Scaffold(
@@ -129,7 +183,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
               children: [
                 Positioned.fill(
                   child: Image.asset(
-                    'assets/bg.png', // Replace with your image asset path
+                    'assets/bg.png', // Remplacez par le chemin de votre image
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -147,7 +201,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                       ),
                       SizedBox(height: 20),
                       Text(
-                        "Enter 6-digit Code code we have sent to at your email",
+                        "Enter 6-digit code we have sent to your email",
                         style: TextStyle(
                             fontFamily: 'ProstoOne',
                             fontSize: 16,
@@ -155,29 +209,58 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 40),
-                      OtpTextField(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        showFieldAsBox: true,
-                        fieldWidth: 50,
-                        keyboardType: TextInputType.number,
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        numberOfFields: 6,
-                        fillColor: Colors.white,
-                        filled: true,
-                        onSubmit: (value) {
-                          log("OTP CODE EST : $value");
-                          setState(() {
-                            otp = value;
-                          });
-                          if (value.length == 6) {
-                            confirmUser();
-                          }
-                        },
-                        onCodeChanged: (value) {
-                          setState(() {
-                            otp = value;
-                          });
-                        },
+                        children: List.generate(6, (index) {
+                          return Container(
+                            width: 40,
+                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            child: TextFormField(
+                              controller: otpControllers[index],
+                              focusNode: [
+                                focusNode0,
+                                focusNode1,
+                                focusNode2,
+                                focusNode3,
+                                focusNode4,
+                                focusNode5
+                              ][index],
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              maxLength: 1,
+                              onChanged: (value) {
+                                _handleChange(value, index);
+                              },
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              cursorColor: Colors.blue, // Couleur du curseur
+                              decoration: InputDecoration(
+                                counterText: '',
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.white), // Couleur du contour
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.white), // Couleur du contour lorsqu'il est focus
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: BorderSide(color: Colors.white), // Couleur du contour lorsqu'il est non focus
+                                ),
+                              ),
+                              onTap: index == 0
+                                  ? () async {
+                                       // Délai court
+                                      await _handlePaste();
+                                    }
+                                  : null,
+                            ),
+                          );
+                        }),
                       ),
                       SizedBox(height: 30),
                       if (errorMessage.isNotEmpty)
@@ -230,8 +313,7 @@ class _VerfierPasswordState extends State<VerfierPassword> {
       isProd = false;
     }
 
-    await setIsProdInSharedPreferences(
-        isProd); // Enregistrement de la valeur isProd dans SharedPreferences
+    await setIsProdInSharedPreferences(isProd);
     return isProd;
   }
 

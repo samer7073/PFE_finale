@@ -65,7 +65,7 @@ class _ContactDetailsElmentState extends State<ContactDetailsElment> {
                   child: ListView(
                     children: detailData.data.entries
                         .where((entry) =>
-                            entry.key != 'id' && entry.key != 'stage_id')
+                            entry.key != 'id' && entry.key != 'stage_id'&& entry.key != 'pipeline_id')
                         .map((entry) {
                       return ListTile(
                         title: Text(

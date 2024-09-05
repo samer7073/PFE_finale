@@ -67,8 +67,8 @@
   "phoneNumberNotAvailable": "رقم الهاتف: (رقم الهاتف غير متاح)",
   "phoneNumber": "رقم الهاتف",
   "noLabel": "لا ملصق",
-   "contactDetails": "تفاصيل الاتصال",
-   "changeYourPassword": "غير كلمة المرور الخاصة بك",
+  "contactDetails": "تفاصيل الاتصال",
+  "changeYourPassword": " كلمة المرور الخاصة بك",
   "currentPassword": "كلمة المرور الحالية",
   "pleaseEnterYourCurrentPassword": "يرجى إدخال كلمة المرور الحالية",
   "newPassword": "كلمة المرور الجديدة",
@@ -148,5 +148,6 @@
   "enterActivityNote": "أدخل ملاحظة النشاط",
   "uploadFiles": "تحميل الملفات",
   "upload": "تحميل",
-  "relatedElement":"العنصر ذو الصلة"
+  "relatedElement":"العنصر ذو الصلة",
+  "noResultsFound": "لم يتم العثور على نتائج لهذا البحث."
 }
