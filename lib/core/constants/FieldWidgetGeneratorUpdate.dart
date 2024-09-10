@@ -1084,8 +1084,9 @@ class _FieldWidgetGeneratorUpdateState
                       ),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                          backgroundColor:
+                              Colors.blue, // Définit la couleur de fond en bleu
+                        ),
                         icon: Icon(Icons.image_outlined),
                         onPressed: () async {
                           _pickImage();
@@ -1199,9 +1200,10 @@ class _FieldWidgetGeneratorUpdateState
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors
+                                  .blue, // Définit la couleur de fond en bleu
+                            ),
                             icon: Icon(Icons.photo_album_outlined),
                             onPressed: () {
                               selectedImages();
@@ -1228,8 +1230,8 @@ class _FieldWidgetGeneratorUpdateState
                                           backgroundColor: Colors.grey,
                                           radius: 15,
                                           child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                                            color: Colors.blue,
+                                          ),
                                         );
                                       }
 
@@ -1334,9 +1336,10 @@ class _FieldWidgetGeneratorUpdateState
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors
+                                  .blue, // Définit la couleur de fond en bleu
+                            ),
                             icon: Icon(Icons.upload_file_outlined),
                             onPressed: () {
                               selectFiles();
@@ -1858,7 +1861,7 @@ class _FieldWidgetGeneratorUpdateState
         );
 
       case "multiselect":
-      /*
+        
         if (widget.dataFieldGroup.listfieldsview.isEmpty) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -1965,8 +1968,8 @@ class _FieldWidgetGeneratorUpdateState
               },
             ),
           );
-        }*/
-        return Text("data");
+        }
+        
 
       case "select":
 

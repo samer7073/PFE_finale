@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../models/ticket/ticket.dart';
@@ -73,17 +73,28 @@ class _TicketListState extends State<TicketList> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Item successfully deleted!',style: TextStyle(color: Colors.white),),
+            content: Text(
+              'Item successfully deleted!',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
+          SnackBar(
+              content: Text(
+            "Error: Item not deleted",
+            style: TextStyle(color: Colors.white),
+          )),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
+        SnackBar(
+            content: Text(
+          "Error: Item not deleted",
+          style: TextStyle(color: Colors.white),
+        )),
       );
     }
   }
@@ -92,6 +103,13 @@ class _TicketListState extends State<TicketList> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+  Color _getColorFromHex(String hexColor) {
+    hexColor = hexColor.replaceAll('#', '');
+    if (hexColor.length == 6) {
+      hexColor = 'FF$hexColor';
+    }
+    return Color(int.parse(hexColor, radix: 16));
   }
 
   @override
@@ -121,9 +139,10 @@ class _TicketListState extends State<TicketList> {
                                   "Are you sure you want to delete this ticket?"),
                               actions: [
                                 ElevatedButton(
-                                 style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors
+                                        .blue, // Définit la couleur de fond en bleu
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop(true);
                                     deleteTicket(ticket);
@@ -132,8 +151,9 @@ class _TicketListState extends State<TicketList> {
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                                    backgroundColor: Colors
+                                        .blue, // Définit la couleur de fond en bleu
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
@@ -159,7 +179,7 @@ class _TicketListState extends State<TicketList> {
                         );
                       },
                       icon: Icons.edit,
-                     foregroundColor: Colors.green,
+                      foregroundColor: Colors.green,
                       backgroundColor: Colors.transparent,
                     )
                   ]),
@@ -187,15 +207,7 @@ class _TicketListState extends State<TicketList> {
                       createTime: ticket.created_at,
                       stateIcon: Icons.abc,
                       stateMessage: "Open",
-                      colorContainer: ticket.severity == "High"
-                          ? Colors.red
-                          : ticket.severity == "Medium"
-                              ? Colors.amber
-                              : ticket.severity == "Normal"
-                                  ? Colors.green
-                                  : ticket.severity == "Low"
-                                      ? Colors.blue
-                                      : Colors.blue,
+                      colorContainer: _getColorFromHex(ticket.severity_color),
                       messageContainer: ticket.severity,
                       ownerImage: ticket.owner_avatar,
                     ),
@@ -208,8 +220,8 @@ class _TicketListState extends State<TicketList> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                color: Colors.blue,
+              ),
             ),
           ],
         ],

@@ -21,9 +21,7 @@ class TaskListRow extends StatefulWidget {
   final Color priorityColor;
   final String? ownerAvatar;
   final String? stageLabel;
-  final VoidCallback onDelete;
-  final VoidCallback onEdit;
-  final VoidCallback onTap;
+
   final bool isOverdue;
   final String task_type_color;
   final String start_date;
@@ -45,9 +43,6 @@ class TaskListRow extends StatefulWidget {
       required this.priorityColor,
       required this.ownerAvatar,
       required this.stageLabel,
-      required this.onDelete,
-      required this.onEdit,
-      required this.onTap,
       required this.isOverdue,
       required this.task_type_color,
       required this.start_date,
@@ -67,7 +62,6 @@ class _TaskListRowState extends State<TaskListRow> {
 
   @override
   void initState() {
-    
     super.initState();
     imageUrlFuture = Config.getApiUrl("urlImage");
     fetchStagesFromApi(); // Fetch stages when the widget initializes
@@ -109,8 +103,8 @@ class _TaskListRowState extends State<TaskListRow> {
               backgroundColor: Colors.grey,
               radius: 15,
               child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                color: Colors.blue,
+              ),
             );
           }
 
@@ -163,136 +157,154 @@ class _TaskListRowState extends State<TaskListRow> {
   @override
   Widget build(BuildContext context) {
     Locale currentLocale = Localizations.localeOf(context);
-final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: hexToColor(widget.task_type_color).withOpacity(0.07),
+        color: isDarkMode == false
+            ? Color.fromARGB(255, 244, 245, 247)
+            : Color.fromARGB(255, 31, 24,
+                24), //hexToColor(widget.task_type_color).withOpacity(0.07),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Slidable(
-            key: ValueKey(widget.taskId),
-            endActionPane: ActionPane(
-              motion: const ScrollMotion(),
-              children: [
-                if (widget.can_update_task == 1 && widget.is_follower == 0)
-                  SlidableAction(
-                    onPressed: (context) => widget.onEdit(),
-                    backgroundColor:
-                        hexToColor(widget.task_type_color).withOpacity(0.01),
-                    foregroundColor: Colors.green,
-                    icon: Icons.edit,
-                    label: 'Edit',
-                  ),
-                if (widget.can_update_task == 1)
-                  SlidableAction(
-                    onPressed: (context) => widget.onDelete(),
-                    backgroundColor: Colors.red.withOpacity(0.01),
-                    foregroundColor: Colors.red,
-                    icon: Icons.delete,
-                    label: 'Delete',
-                  ),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 90, // Adjust the height as needed
+              child: Container(
+                width: 6, // Thickness of the vertical bar
+                decoration: BoxDecoration(
+                  color: hexToColor(widget.task_type_color)
+                      .withOpacity(0.8), // Color of the vertical bar
+                  borderRadius: BorderRadius.circular(
+                      10), // Adjust the radius for round corners
+                ),
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(widget.taskIcon,
-                            color: hexToColor(widget.task_type_color)
-                                .withOpacity(0.6)),
-                        const SizedBox(width: 10),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          child: Text(
-                            widget.taskLabel,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                            overflow: TextOverflow.ellipsis,
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              // Use Expanded to control space allocation
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(widget.taskIcon,
+                          color: hexToColor(widget.task_type_color)
+                              .withOpacity(0.6)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        // Expand the Text widget to avoid overflow
+                        child: Text(
+                          widget.taskLabel,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Icon(
+                        Icons.flag,
+                        color: _getPriorityColor(widget.priority),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_month,
+                        color:
+                            hexToColor(widget.task_type_color).withOpacity(0.6),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        // Make the Text expand to fit within Row
+                        child: Text(
+                          formatDate(widget.start_date, currentLocale) +
+                              " " +
+                              widget.start_time,
+                          style: TextStyle(
+                            color: isDarkMode
+                                ? Colors.white
+                                : Color.fromARGB(255, 9, 1, 71),
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(width: 10),
-                    Icon(
-                      Icons.flag,
-                      color: _getPriorityColor(widget.priority),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_month,
-                      color:
-                          hexToColor(widget.task_type_color).withOpacity(0.6),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      formatDate(widget.start_date, currentLocale) +
-                          " " +
-                          widget.start_time,
-                      style: TextStyle(color:isDarkMode==true? Colors.white:Color.fromARGB(255, 9, 1, 71)),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text("Stage: ",
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Stage: ",
                             style: TextStyle(
-                                color: hexToColor(widget.task_type_color),
-                                fontWeight: FontWeight.w600)),
-                        GestureDetector(
-                          onTap: () {
-                            if (widget.is_follower == 0)
-                              _showStageDialog(
-                                  widget.stageLabel, widget.taskId);
-                          },
-                          child: Text(
+                              color: hexToColor(widget.task_type_color),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (widget.is_follower == 0) {
+                                _showStageDialog(
+                                  widget.stageLabel,
+                                  widget.taskId,
+                                );
+                              }
+                            },
+                            child: Text(
                               widget.stageLabel?.isNotEmpty == true
                                   ? widget.stageLabel!
                                   : "No stage available",
                               style: TextStyle(
-                                  color: hexToColor(widget.task_type_color),
-                                  fontWeight: FontWeight.w600)),
+                                color: hexToColor(widget.task_type_color),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              alignment: Alignment.centerRight,
+                              width: 130,
+                              child: Text(
+                                widget.ownerLabel,
+                                style: TextStyle(
+                                  color: isDarkMode
+                                      ? Colors.white
+                                      : Color.fromARGB(255, 9, 1,
+                                          71), // color: hexToColor(widget.task_type_color),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            _buildAvatar(
+                              widget.ownerAvatar,
+                              widget.ownerLabel,
+                              hexToColor(widget.task_type_color),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          alignment: Alignment.centerRight,
-                          width: 130,
-                          child: Text(widget.ownerLabel,
-                              style: TextStyle(
-                                  color: hexToColor(widget.task_type_color)),
-                              overflow: TextOverflow.ellipsis),
-                        ),
-                        const SizedBox(width: 10),
-                        _buildAvatar(widget.ownerAvatar, widget.ownerLabel,
-                            hexToColor(widget.task_type_color)),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -344,7 +356,10 @@ final isDarkMode = Theme.of(context).brightness == Brightness.dark;
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Close',style: TextStyle(color: Colors.blue),),
+              child: Text(
+                'Close',
+                style: TextStyle(color: Colors.blue),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
@@ -395,7 +410,10 @@ final isDarkMode = Theme.of(context).brightness == Brightness.dark;
               );
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Stage changed successfully',style: TextStyle(color: Colors.white),),
+                  content: Text(
+                    'Stage changed successfully',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -403,7 +421,10 @@ final isDarkMode = Theme.of(context).brightness == Brightness.dark;
               // If there is an error, show an error Snackbar
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Problem when updating stage',style: TextStyle(color: Colors.white),),
+                  content: Text(
+                    'Problem when updating stage',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -429,25 +450,26 @@ final isDarkMode = Theme.of(context).brightness == Brightness.dark;
   }
 
   Future<void> fetchStagesFromApi() async {
-  setState(() {
-    isLoading = true;
-  });
-  try {
-    final fetchedStages = await fetchStages();
-    if (mounted) { // Vérifie si le widget est toujours monté
-      setState(() {
-        stages = fetchedStages;
-        isLoading = false;
-      });
-    }
-  } catch (e) {
-    print('Failed to load stages: $e');
-    if (mounted) { // Vérifie si le widget est toujours monté
-      setState(() {
-        isLoading = false;
-      });
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final fetchedStages = await fetchStages();
+      if (mounted) {
+        // Vérifie si le widget est toujours monté
+        setState(() {
+          stages = fetchedStages;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Failed to load stages: $e');
+      if (mounted) {
+        // Vérifie si le widget est toujours monté
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
-}
-
 }

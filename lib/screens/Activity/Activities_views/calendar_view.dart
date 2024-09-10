@@ -13,8 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-
-
 class Calendarviewpage extends StatefulWidget {
   const Calendarviewpage({super.key});
 
@@ -29,23 +27,25 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
   List<Task> _tasks = [];
   Map<DateTime, List<Task>> _taskEvents = {};
   String _noTasksMessage = '';
-bool _isLoading = false; // Add this variable
+  bool _isLoading = false; // Add this variable
 
   @override
   void initState() {
     super.initState();
     _fetchTasksForSelectedDay();
   }
-void _onCalendarTapped(DateTime date) {
-  setState(() {
-    if (_calendarFormat == CalendarFormat.month) {
-      _calendarFormat = CalendarFormat.week;
-    } else {
-      _calendarFormat = CalendarFormat.month;
-    }
-  });
-}
-void _fetchTasksForSelectedDay() async {
+
+  void _onCalendarTapped(DateTime date) {
+    setState(() {
+      if (_calendarFormat == CalendarFormat.month) {
+        _calendarFormat = CalendarFormat.week;
+      } else {
+        _calendarFormat = CalendarFormat.month;
+      }
+    });
+  }
+
+  void _fetchTasksForSelectedDay() async {
     setState(() {
       _isLoading = true; // Start loading
     });
@@ -67,7 +67,8 @@ void _fetchTasksForSelectedDay() async {
       _isLoading = false; // Stop loading
 
       if (tasks.isEmpty) {
-        _noTasksMessage = 'There are no tasks for ${DateFormat('dd MMMM yyyy').format(_selectedDay)}';
+        _noTasksMessage =
+            'There are no tasks for ${DateFormat('dd MMMM yyyy').format(_selectedDay)}';
       } else {
         _noTasksMessage = '';
       }
@@ -140,7 +141,11 @@ void _fetchTasksForSelectedDay() async {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete task: $e',style: TextStyle(color: Colors.white),)),
+        SnackBar(
+            content: Text(
+          'Failed to delete task: $e',
+          style: TextStyle(color: Colors.white),
+        )),
       );
     }
   }
@@ -175,7 +180,7 @@ void _fetchTasksForSelectedDay() async {
     'WrenchScrewdriverIcon':
         FontAwesomeIcons.screwdriverWrench, // Icône pour WrenchScrewdriver
     'AtSymbolIcon': Icons.alternate_email_outlined,
-     'WebOutlined':FontAwesomeIcons.earthAfrica,
+    'WebOutlined': FontAwesomeIcons.earthAfrica,
   };
   IconData _getIconData(String taskTypeIcon) {
     return iconMap[taskTypeIcon] ?? Icons.help_outline;
@@ -258,19 +263,14 @@ void _fetchTasksForSelectedDay() async {
 
   @override
   Widget build(BuildContext context) {
-    final langueProvider =
-        Provider.of<LangueProvider>(context);
+    final langueProvider = Provider.of<LangueProvider>(context);
     return Scaffold(
-      
       body: Container(
-        decoration: const BoxDecoration(
-          
-        ),
+        decoration: const BoxDecoration(),
         child: Column(
           children: [
-            
             TableCalendar(
-              locale:   langueProvider.localeString,
+              locale: langueProvider.localeString,
               onHeaderTapped: _onCalendarTapped,
               firstDay: DateTime.utc(2020, 1, 1),
               lastDay: DateTime.utc(2030, 12, 31),
@@ -298,28 +298,29 @@ void _fetchTasksForSelectedDay() async {
                 });
               },
               headerStyle: HeaderStyle(
-    titleCentered: true,
-    formatButtonVisible: false,
-    titleTextStyle: TextStyle(
-      color: Colors.blue, // Color for the month title
-      fontSize: 18.0,
-      fontWeight: FontWeight.bold,
-    ),
-    leftChevronIcon: Icon(
-      Icons.chevron_left,
-      color: Colors.blue, // Color for the left button
-    ),
-    rightChevronIcon: Icon(
-      Icons.chevron_right,
-      color: Colors.blue, // Color for the right button
-    ),
-  ),
+                titleCentered: true,
+                formatButtonVisible: false,
+                titleTextStyle: TextStyle(
+                  color: Colors.blue, // Color for the month title
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                leftChevronIcon: Icon(
+                  Icons.chevron_left,
+                  color: Colors.blue, // Color for the left button
+                ),
+                rightChevronIcon: Icon(
+                  Icons.chevron_right,
+                  color: Colors.blue, // Color for the right button
+                ),
+              ),
               calendarStyle: const CalendarStyle(
-                  weekendTextStyle: TextStyle(color: Colors.blue), // Color for weekends
-                    weekendDecoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                   ),
-                
+                weekendTextStyle:
+                    TextStyle(color: Colors.blue), // Color for weekends
+                weekendDecoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+
                 selectedDecoration: BoxDecoration(
                   color: Colors.blue,
                   shape: BoxShape.circle,
@@ -335,90 +336,86 @@ void _fetchTasksForSelectedDay() async {
               ),
             ),
             Expanded(
-              child:_isLoading
-                  ? Center(child: CircularProgressIndicator(
-                    color: Colors.blue,
-                  )) // Show loading indicator
-                  : _tasks.isEmpty
+              child: _isLoading
                   ? Center(
-                      child: Text(
-                        _noTasksMessage,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          color: Colors.blue,
+                      child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    )) // Show loading indicator
+                  : _tasks.isEmpty
+                      ? Center(
+                          child: Text(
+                            _noTasksMessage,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: _tasks.length,
+                          itemBuilder: (context, index) {
+                            final task = _tasks[index];
+                            return Slidable(
+                              key: Key(task.id),
+                              endActionPane: ActionPane(
+                                motion: const ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) =>
+                                        _showDeleteConfirmationDialog(task.id)
+                                            .then((value) {
+                                      if (value == true) _deleteTask(task.id);
+                                    }),
+                                    foregroundColor: Colors.red,
+                                    icon: Icons.delete,
+                                    label: 'Delete',
+                                  ),
+                                  SlidableAction(
+                                    onPressed: (context) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              UpdateTaskScreen(
+                                            taskId: task.id,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    foregroundColor: Colors.green,
+                                    icon: Icons.edit,
+                                    label: 'Edit',
+                                  ),
+                                ],
+                              ),
+                              child: TaskListRow(
+                                can_update_task: task.can_update_task,
+                                is_follower: task.is_follower,
+                                start_date: task.startDate,
+                                start_time: task.startTime,
+                                task_type_color: task.task_type_color,
+                                taskIcon: _getIconData(task.task_type_icon),
+                                taskId: task.id,
+                                taskLabel: task.label,
+                                ownerLabel: task.ownerLabel,
+                                startDate: task.startDate,
+                                endDate: task.endDate,
+                                endTime: task.endTime,
+                                priority: task.priority,
+                                priorityIcon: _getPriorityIcon(task.priority),
+                                priorityColor: _getPriorityColor(task.priority),
+                                ownerAvatar: task.ownerAvatar,
+                                stageLabel: task.stageLabel ?? 'N/A',
+                                isOverdue: task.isOverdue,
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: _tasks.length,
-                      itemBuilder: (context, index) {
-                        final task = _tasks[index];
-                        return Slidable(
-                          key: Key(task.id),
-                          endActionPane: ActionPane(
-                            motion: const ScrollMotion(),
-                            children: [
-                              SlidableAction(
-                                onPressed: (context) =>
-                                    _showDeleteConfirmationDialog(task.id)
-                                        .then((value) {
-                                  if (value == true) _deleteTask(task.id);
-                                }),
-                                backgroundColor: Colors.red.withOpacity(0.1),
-                                foregroundColor: Colors.red,
-                                icon: Icons.delete,
-                                label: 'Delete',
-                              ),
-                              SlidableAction(
-                                onPressed: (context) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => UpdateTaskScreen(
-                                        taskId: task.id,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                backgroundColor: Colors.green.withOpacity(0.1),
-                                foregroundColor: Colors.green,
-                                icon: Icons.edit,
-                                label: 'Edit',
-                              ),
-                            ],
-                          ),
-                          child: TaskListRow(
-                            can_update_task: task.can_update_task,
-                            is_follower: task.is_follower,
-                            start_date: task.startDate,
-                            start_time: task.startTime,
-                            task_type_color: task.task_type_color,
-                            taskIcon: _getIconData(task.task_type_icon),
-                            taskId: task.id,
-                            taskLabel: task.label,
-                            ownerLabel: task.ownerLabel,
-                            startDate: task.startDate,
-                            endDate: task.endDate,
-                            endTime: task.endTime,
-                            priority: task.priority,
-                            priorityIcon: _getPriorityIcon(task.priority),
-                            priorityColor: _getPriorityColor(task.priority),
-                            ownerAvatar: task.ownerAvatar,
-                            stageLabel: task.stageLabel ?? 'N/A',
-                            isOverdue: task.isOverdue,
-                            onDelete: () => _confirmDelete(task),
-                            onEdit: () => _editTask(task),
-                            onTap: () => _navigateToDetail(task),
-                          ),
-                        );
-                      },
-                    ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        
         onPressed: () {
           Navigator.push(
             context,

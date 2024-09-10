@@ -13,7 +13,7 @@ import '../services/ApiField.dart';
 import '../services/ApiFieldGroup.dart';
 import '../services/ApiFieldPost.dart';
 import 'homeNavigate_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class EditElment extends StatefulWidget {
   final String title;

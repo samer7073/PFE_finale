@@ -16,6 +16,7 @@ class TicketData {
   final String created_at;
   final String room_id;
   final int pipeline_id;
+  final String severity_color;
 
   TicketData({
     required this.id,
@@ -35,6 +36,7 @@ class TicketData {
     required this.created_at,
     required this.room_id,
     required this.pipeline_id,
+    required this.severity_color
   });
 
   factory TicketData.fromJson(Map<String, dynamic> json) {
@@ -59,6 +61,7 @@ class TicketData {
       created_at: json["created_at"] ?? "",
       room_id: "${json['room_id']}" ?? "",
       pipeline_id: json["pipeline_id"] ?? 0,
+      severity_color:json["severity_color"]?? "",
     );
   }
 }

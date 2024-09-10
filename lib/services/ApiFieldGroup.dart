@@ -17,6 +17,7 @@ class ApiFieldGroup {
     final apiUrl =await Config.getApiUrl(
         "groupFieldsUrl"); // Utilisation de Config pour obtenir l'URL
     final url = "$apiUrl/$family_id";
+    log("fields $url");
 
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',

@@ -8,6 +8,7 @@ import 'package:flutter_application_stage_project/screens/Activity/update_task.d
 import 'package:flutter_application_stage_project/screens/Activity/widgets/task_list_row.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_delete_task.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_tasks.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -53,9 +54,9 @@ class _TaskListPageState extends State<TaskListPage> {
     'WhatsAppOutlined': FontAwesomeIcons.whatsapp,
     'WrenchScrewdriverIcon': FontAwesomeIcons.screwdriverWrench,
     'AtSymbolIcon': Icons.alternate_email_outlined,
-     'WebOutlined':FontAwesomeIcons.earthAfrica,
+    'WebOutlined': FontAwesomeIcons.earthAfrica,
   };
-  
+
   bool isLoading = false;
   int currentPage = 1;
   bool hasMorePages = true;
@@ -165,7 +166,11 @@ class _TaskListPageState extends State<TaskListPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete task: $e',style: TextStyle(color: Colors.white),)),
+        SnackBar(
+            content: Text(
+          'Failed to delete task: $e',
+          style: TextStyle(color: Colors.white),
+        )),
       );
     }
   }
@@ -280,115 +285,159 @@ class _TaskListPageState extends State<TaskListPage> {
     }
   }
 
+  Color hexToColor(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 60, // Adjust the height as needed
-                    child: TextField(
-                      cursorColor: Colors.blue,
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        suffix: _searchController.text.isEmpty
-                            ? null
-                            : IconButton(
-                                onPressed: () {
-                                  _searchController.clear(); // Clear the text in the controller
-                                  setState(() {}); // Trigger UI update to hide the icon
-                                },
-                                icon: Center(
-                                  child: Icon(
-                                    Icons.cancel,
-                                    size: 20,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ),
-                        hintText: 'Search tasks...',
-                        hintStyle: TextStyle(
-                          fontSize: 14, // Adjust font size as needed
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                            vertical: 20.0, horizontal: 12.0), // Adjust padding as needed
-                        filled: true,
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: Colors.grey,
-                          size: 20,
-                        ),
-                      ),
-                      onChanged: (value) {
-                        _filterTasks();
-                      },
-                    ),
-                  ),
-                ),
-                isLoading && tasks.isEmpty
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: Colors.blue,
-              ),
-            )
-          :
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: _refreshTasks,
-                    child:filteredTasks.isEmpty
-                      ? Center(
-                          child: Text(
-                           AppLocalizations.of(context)!.noResultsFound,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 60, // Adjust the height as needed
+              child: TextField(
+                cursorColor: Colors.blue,
+                controller: _searchController,
+                decoration: InputDecoration(
+                  suffix: _searchController.text.isEmpty
+                      ? null
+                      : IconButton(
+                          onPressed: () {
+                            _searchController
+                                .clear(); // Clear the text in the controller
+                            setState(
+                                () {}); // Trigger UI update to hide the icon
+                          },
+                          icon: Center(
+                            child: Icon(
+                              Icons.cancel,
+                              size: 20,
+                              color: Colors.blue,
                             ),
                           ),
-                        )
-                      : ListView.builder(
-                      controller: _scrollController,
-                      itemCount: filteredTasks.length,
-                      itemBuilder: (context, index) {
-                        final task = filteredTasks[index];
-                        return   TaskListRow(
-                              can_update_task: task.can_update_task,
-                              is_follower: task.is_follower,
-                              start_date: task.startDate,
-                              start_time: task.startTime,
-                              task_type_color: task.task_type_color,
-                              taskIcon: _getIconData(task.task_type_icon),
-                              taskId: task.id,
-                              taskLabel: task.label,
-                              ownerLabel: task.ownerLabel,
-                              startDate: task.startDate,
-                              endDate: task.endDate,
-                              endTime: task.endTime,
-                              priority: task.priority,
-                              priorityIcon: _getPriorityIcon(task.priority),
-                              priorityColor: _getPriorityColor(task.priority),
-                              ownerAvatar: task.ownerAvatar,
-                              stageLabel: task.stageLabel ?? 'N/A',
-                              isOverdue: task.isOverdue,
-                              onDelete: () => _confirmDelete(task),
-                              onEdit: () => _editTask(task),
-                              onTap: () => _navigateToDetail(task),
-                            );
-                      },
-                    ),
+                        ),
+                  hintText: 'Search tasks...',
+                  hintStyle: TextStyle(
+                    fontSize: 14, // Adjust font size as needed
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                      vertical: 20.0,
+                      horizontal: 12.0), // Adjust padding as needed
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                    size: 20,
                   ),
                 ),
-              ],
+                onChanged: (value) {
+                  _filterTasks();
+                },
+              ),
             ),
+          ),
+          isLoading && tasks.isEmpty
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.blue,
+                  ),
+                )
+              : Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: _refreshTasks,
+                    child: filteredTasks.isEmpty
+                        ? Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.noResultsFound,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            controller: _scrollController,
+                            itemCount: filteredTasks.length,
+                            itemBuilder: (context, index) {
+                              final task = filteredTasks[index];
+                              return Slidable(
+                                endActionPane: ActionPane(
+                                  motion: const ScrollMotion(),
+                                  children: [
+                                    if (task.can_update_task == 1 &&
+                                        task.is_follower == 0)
+                                      SlidableAction(
+                                        onPressed: (context) => _editTask(task),
+                                        backgroundColor:
+                                            hexToColor(task.task_type_color)
+                                                .withOpacity(0.01),
+                                        foregroundColor: Colors.green,
+                                        icon: Icons.edit,
+                                        label: 'Edit',
+                                      ),
+                                    if (task.can_update_task == 1)
+                                      SlidableAction(
+                                        onPressed: (context) =>
+                                            _deleteTask(task.id),
+                                        backgroundColor:
+                                            Colors.red.withOpacity(0.01),
+                                        foregroundColor: Colors.red,
+                                        icon: Icons.delete,
+                                        label: 'Delete',
+                                      ),
+                                  ],
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    _navigateToDetail(task);
+                                  },
+                                  child: TaskListRow(
+                                    can_update_task: task.can_update_task,
+                                    is_follower: task.is_follower,
+                                    start_date: task.startDate,
+                                    start_time: task.startTime,
+                                    task_type_color: task.task_type_color,
+                                    taskIcon: _getIconData(task.task_type_icon),
+                                    taskId: task.id,
+                                    taskLabel: task.label,
+                                    ownerLabel: task.ownerLabel,
+                                    startDate: task.startDate,
+                                    endDate: task.endDate,
+                                    endTime: task.endTime,
+                                    priority: task.priority,
+                                    priorityIcon:
+                                        _getPriorityIcon(task.priority),
+                                    priorityColor:
+                                        _getPriorityColor(task.priority),
+                                    ownerAvatar: task.ownerAvatar,
+                                    stageLabel: task.stageLabel ?? 'N/A',
+                                    isOverdue: task.isOverdue,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: _navigateToCreateTask,
-        child:  Icon(Icons.add,color: Colors.white,),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }

@@ -43,6 +43,13 @@ class _ticketListRowState extends State<ticketListRow> {
   }
 
   late Future<String> imageUrlFuture;
+  Color _getColorFromHex(String hexColor) {
+    hexColor = hexColor.replaceAll('#', '');
+    if (hexColor.length == 6) {
+      hexColor = 'FF$hexColor';
+    }
+    return Color(int.parse(hexColor, radix: 16));
+  }
 
   @override
   Widget build(BuildContext context) {
