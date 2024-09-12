@@ -15,7 +15,8 @@ class DataFieldGroupUpdate {
   final String value;
   List<FieldListView> listfieldsview;
   List value_array;
-  List<String> value_id_array; // Change type to List<String>
+  List<String> value_id_array;
+  final bool read_only; // Change type to List<String>
   DataFieldGroupUpdate({
     required this.id,
     required this.alias,
@@ -32,6 +33,7 @@ class DataFieldGroupUpdate {
     required this.value_id,
     required this.value_array,
     required this.value_id_array,
+    required this.read_only
   });
   factory DataFieldGroupUpdate.fromJson(Map<String, dynamic> json) {
     List<dynamic>? valueIdArrayJson = json["value_id_array"];
@@ -69,6 +71,7 @@ class DataFieldGroupUpdate {
       value_id: "${json["value_id"]}" ?? "",
       value_array: json["value_array"] ?? [],
       value_id_array: valueIdArray,
+      read_only: json['read_only']
     );
   }
 }

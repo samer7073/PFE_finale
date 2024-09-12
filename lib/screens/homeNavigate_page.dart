@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:developer';
+
 import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
 import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
 import 'package:flutter_application_stage_project/screens/contactPage.dart';
@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import '../providers/NotificationProvider.dart';
 import '../services/MercureNotificationService.dart';
 import 'Activity/home_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 class HomeNavigate extends StatefulWidget {
   final int id_page;

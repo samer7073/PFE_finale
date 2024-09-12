@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,6 +13,7 @@ Future<int> createTask(Map<String, dynamic> taskData) async {
   // Get the base URL for the API endpoint
   final baseUrl = await Config.getApiUrl("createTask");
   final url = Uri.parse(baseUrl);
+  log("url $url");
 
   // Define headers for the HTTP request
   final headers = {

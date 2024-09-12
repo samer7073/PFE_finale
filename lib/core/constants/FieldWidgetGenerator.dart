@@ -1,21 +1,16 @@
 // ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings
 
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import '../../models/fields/datafieldgroup.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
-
 import '../../services/ApiFamilyModuleData.dart';
-
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class FieldWidgetGenerator extends StatefulWidget {
@@ -35,7 +30,6 @@ class FieldWidgetGenerator extends StatefulWidget {
 }
 
 class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
-  bool? _valueChecked = false;
   List<bool?> _valuesChecked = [];
   List<bool?> _valuesCheckedModule = [];
   String? _selectedRadio;
@@ -63,7 +57,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
   TextEditingController? _textEditingController;
   String? _selectedValue;
   List<dynamic> selectedValuesList = [];
-  bool _isImageSelected = false;
+ 
   @override
   void initState() {
     super.initState();
@@ -83,12 +77,22 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
     _textEditingController!.text =
         widget.formMap["field[${widget.dataFieldGroup.id.toString()}]"] ?? '';
         */
-    if (widget.dataFieldGroup.field_type == "select") {
-      fetchDropdownOptions(widget.dataFieldGroup.module);
+    if (widget.dataFieldGroup.field_type == "select" &&
+        widget.dataFieldGroup.module != null) {
+      fetchDropdownOptions(
+          widget.dataFieldGroup.module, widget.dataFieldGroup.read_only,
+          fieldId: widget.dataFieldGroup.id);
+      /*
+      if(widget.dataFieldGroup.read_only){
+        _selectedValue=_dropdownItems[0]['id'];
+
+      }
+      */
     } else if (widget.dataFieldGroup.field_type == "country") {
       fetchCountries();
     } else if (widget.dataFieldGroup.field_type == "multiselect") {
-      fetchDropdownOptions(widget.dataFieldGroup.module);
+      fetchDropdownOptions(
+          widget.dataFieldGroup.module, widget.dataFieldGroup.read_only);
       log("i am in mutli select ----------------------------------------------");
     } else if (widget.dataFieldGroup.field_type == "monetary") {
       fetchCurrencies();
@@ -127,11 +131,13 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
     super.dispose();
   }
 
-  Future<void> fetchDropdownOptions(int moduleInt) async {
+  Future<void> fetchDropdownOptions(int moduleInt, bool read_only,
+      {int? fieldId}) async {
     try {
       String module = moduleInt.toString();
       List<dynamic> list =
           await ApiFamilyModuleData.getFamilyModuleData(module);
+
       setState(() {
         // Création d'une liste de Map contenant à la fois l'ID et le libellé
         _dropdownItems = list.map<Map<String, dynamic>>((option) {
@@ -140,10 +146,15 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
             'label': option['label'].toString() // Récupération du libellé
           };
         }).toList();
-        print("drop down iteme : $_dropdownItems");
+
+        // Vérifier si read_only est true et stocker l'ID du premier élément dans _selectedValue
+        if (read_only && _dropdownItems.isNotEmpty) {
+          _selectedValue = _dropdownItems[0]['id'];
+          widget.formMap["field[$fieldId]"] = _selectedValue;
+        }
       });
     } catch (e) {
-      print('Failed to fetch Dropdown options : $e');
+      log('Failed to fetch Dropdown options: $e');
     }
   }
 
@@ -344,8 +355,6 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
       ),
       child: child!,
     );
-
-    
   }
 
   @override
@@ -813,7 +822,6 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                             "field[${widget.dataFieldGroup.id.toString()}]"] =
                         formattedDate;
                     log(widget.formMap.toString());
-                   
                   }
                 },
                 icon: Icon(Icons.date_range),
@@ -847,8 +855,9 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                       ),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                          backgroundColor:
+                              Colors.blue, // Définit la couleur de fond en bleu
+                        ),
                         icon: Icon(Icons.image_outlined),
                         onPressed: () async {
                           _pickImage();
@@ -914,9 +923,10 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors
+                                  .blue, // Définit la couleur de fond en bleu
+                            ),
                             icon: Icon(Icons.photo_album_outlined),
                             onPressed: () {
                               selectedImages();
@@ -990,9 +1000,10 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors
+                                  .blue, // Définit la couleur de fond en bleu
+                            ),
                             icon: Icon(Icons.upload_file_outlined),
                             onPressed: () {
                               selectFiles();
@@ -1503,7 +1514,6 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
         );
 
       case "multiselect":
-      
         if (widget.dataFieldGroup.listfieldsview.isEmpty) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -1613,7 +1623,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
             ),
           );
         }
-       // return Text("data");
+      // return Text("data");
 
       case "select":
 
@@ -1664,22 +1674,26 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 2.0, horizontal: 2),
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedValue = value; // Mettre à jour la sélection
-                        _selectedItem = value!;
-                        final fieldId = widget.dataFieldGroup.id.toString();
-                        if (value == null) {
-                          // Supprimer la valeur de la map si la sélection est vide
-                          widget.formMap.remove("field[$fieldId]");
-                        } else {
-                          // Mettre à jour la valeur dans la map
-                          widget.formMap["field[$fieldId]"] = value;
-                        }
-                        // Afficher la map dans les logs
-                        log(widget.formMap.toString());
-                      });
-                    },
+                    onChanged: widget.dataFieldGroup.read_only
+                        ? null
+                        : (value) {
+                            setState(() {
+                              _selectedValue =
+                                  value; // Mettre à jour la sélection
+                              _selectedItem = value!;
+                              final fieldId =
+                                  widget.dataFieldGroup.id.toString();
+                              if (value == null) {
+                                // Supprimer la valeur de la map si la sélection est vide
+                                widget.formMap.remove("field[$fieldId]");
+                              } else {
+                                // Mettre à jour la valeur dans la map
+                                widget.formMap["field[$fieldId]"] = value;
+                              }
+                              // Afficher la map dans les logs
+                              log(widget.formMap.toString());
+                            });
+                          },
                     items: _dropdownItems.map<DropdownMenuItem<String>>((item) {
                       return DropdownMenuItem<String>(
                         value: item['id'],
@@ -1880,6 +1894,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
         return Padding(
           padding: const EdgeInsets.all(10.0),
           child: TextFormField(
+            readOnly: widget.dataFieldGroup.read_only,
             controller: _textEditingController,
             keyboardType: TextInputType.text,
             decoration: DecorationTextFormField(),

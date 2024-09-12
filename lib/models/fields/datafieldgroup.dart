@@ -11,6 +11,7 @@ class DataFieldGroup {
   final int reference;
   final int multiple;
   final int module;
+  final bool read_only;
   List<FieldListView> listfieldsview;
   DataFieldGroup({
     required this.id,
@@ -22,9 +23,9 @@ class DataFieldGroup {
     required this.placeholder,
     required this.reference,
     required this.multiple,
-    
     required this.module,
     required this.listfieldsview,
+    required this.read_only,
   });
   factory DataFieldGroup.fromJson(Map<String, dynamic> json) {
     return DataFieldGroup(
@@ -40,11 +41,13 @@ class DataFieldGroup {
       placeholder: json["placeholder"] ?? "",
       reference: json["reference"],
       multiple: json["multiple"],
-     
+
       module: json["module"] ?? 0,
       listfieldsview: (json["field_list_value"] as List)
-          .map((list) => FieldListView.formJson(list))
-          .toList() ?? [],
+              .map((list) => FieldListView.formJson(list))
+              .toList() ??
+          [],
+      read_only:json['read_only'] ,   
     );
   }
 }

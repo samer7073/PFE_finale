@@ -1,25 +1,17 @@
 // ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings
-
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdate.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
-
 import '../../services/ApiFamilyModuleData.dart';
-
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class FieldWidgetGeneratorUpdate extends StatefulWidget {
@@ -41,7 +33,6 @@ class FieldWidgetGeneratorUpdate extends StatefulWidget {
 
 class _FieldWidgetGeneratorUpdateState
     extends State<FieldWidgetGeneratorUpdate> {
-  bool? _valueChecked = false;
   late TextEditingController _controllerAutocomplete;
   List<bool?> _valuesChecked = [];
   List<bool?> _valuesCheckedModule = [];
@@ -73,8 +64,6 @@ class _FieldWidgetGeneratorUpdateState
   List<dynamic> selectedValuesList = [];
   List<int> selectedValues = [];
   List<dynamic>? listFiels;
-  bool _isImageSelected = false;
-  List<dynamic> _initialSelectedValues = [];
   String? image;
   double? rate;
   late Future<String> imageUrlFuture;
@@ -1861,7 +1850,6 @@ class _FieldWidgetGeneratorUpdateState
         );
 
       case "multiselect":
-        
         if (widget.dataFieldGroup.listfieldsview.isEmpty) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
@@ -1969,7 +1957,6 @@ class _FieldWidgetGeneratorUpdateState
             ),
           );
         }
-        
 
       case "select":
 
@@ -2005,23 +1992,26 @@ class _FieldWidgetGeneratorUpdateState
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      log(widget.dataFieldGroup.value_id);
-                      _selectedItem = value!;
-                      _selectedValue = value; // Mettre à jour la sélection
-                      final fieldId = widget.dataFieldGroup.id.toString();
-                      if (value == null) {
-                        // Supprimer la valeur de la map si la sélection est vide
-                        widget.formMap.remove("field[$fieldId]");
-                      } else {
-                        // Mettre à jour la valeur dans la map
-                        widget.formMap["field[$fieldId]"] = value;
-                      }
-                      // Afficher la map dans les logs
-                      log(widget.formMap.toString());
-                    });
-                  },
+                  onChanged: widget.dataFieldGroup.read_only
+                      ? null
+                      : (value) {
+                          setState(() {
+                            log(widget.dataFieldGroup.value_id);
+                            _selectedItem = value!;
+                            _selectedValue =
+                                value; // Mettre à jour la sélection
+                            final fieldId = widget.dataFieldGroup.id.toString();
+                            if (value == null) {
+                              // Supprimer la valeur de la map si la sélection est vide
+                              widget.formMap.remove("field[$fieldId]");
+                            } else {
+                              // Mettre à jour la valeur dans la map
+                              widget.formMap["field[$fieldId]"] = value;
+                            }
+                            // Afficher la map dans les logs
+                            log(widget.formMap.toString());
+                          });
+                        },
                   items: _dropdownItems.map<DropdownMenuItem<String>>((item) {
                     return DropdownMenuItem<String>(
                       value: item['id'],
@@ -2041,7 +2031,7 @@ class _FieldWidgetGeneratorUpdateState
                       : null,
                 ),
                 SizedBox(height: 10),
-                if (_selectedValue != null)
+                if (_selectedValue != null && !widget.dataFieldGroup.read_only)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
