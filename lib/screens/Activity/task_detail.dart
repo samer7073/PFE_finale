@@ -135,6 +135,7 @@ class TaskDetailTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     DateTime startDate = DateFormat('dd-MM-yyyy').parse(data['start_date']);
     DateTime endDate = DateFormat('dd-MM-yyyy').parse(data['end_date']);
     String startTime = data['start_time'];
@@ -217,7 +218,7 @@ class TaskDetailTab extends StatelessWidget {
                   'End',
                   '${DateFormat('dd-MM-yyyy').format(endDate)} $endTime',
                   valueStyle: TextStyle(
-                    color: isOverdue ? Colors.red : Colors.black,
+                    color: isOverdue ? Colors.red : isDarkMode? Colors.white:Colors.black,
                   ),
                 ),
               ],

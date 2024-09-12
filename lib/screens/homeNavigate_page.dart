@@ -27,7 +27,6 @@ class _HomeNavigateState extends State<HomeNavigate> {
   @override
   void initState() {
     super.initState();
-    
 
     // Obtenez le fournisseur de notifications
     final notificationProvider =
@@ -54,68 +53,116 @@ class _HomeNavigateState extends State<HomeNavigate> {
     HomePage(),
     HomeScreen(),
     TicketPage(),
-    DealPage(), // KanbanPage1(),
+    DealPage(),
     ProjectPage(),
     ContactPage(),
     BookingsPage(),
   ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pageOptions[selectedPage],
-      bottomNavigationBar: BottomNavigationBar(
-        unselectedLabelStyle: TextStyle(color: Colors.grey),
-        unselectedIconTheme: IconThemeData(color: Colors.grey),
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pie_chart_outline_rounded),
-            activeIcon: Icon(Icons.pie_chart),
-            label: AppLocalizations.of(context)!.overview,
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: _pageOptions[selectedPage],
+    bottomNavigationBar: BottomNavigationBar(
+      unselectedLabelStyle: TextStyle(color: Colors.grey, fontSize: 10), // Taille plus petite pour les labels non sélectionnés
+      selectedLabelStyle: TextStyle(color: Colors.blue, fontSize: 10), // Taille plus petite pour les labels sélectionnés
+      unselectedIconTheme: IconThemeData(color: Colors.grey),
+      showSelectedLabels: true, // Afficher les labels sélectionnés
+      showUnselectedLabels: true, // Afficher les labels non sélectionnés
+      selectedFontSize: 5, // Taille du texte pour les labels sélectionnés
+      unselectedFontSize: 8, // Taille du texte pour les labels non sélectionnés
+      enableFeedback: true,
+      items: [
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/Home.png',
+            color: Colors.grey,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.calendar_today_outlined,
-              color: Colors.grey,
+          activeIcon: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
             ),
-            activeIcon: Icon(Icons.calendar_today_rounded),
-            label: AppLocalizations.of(context)!.activities,
+            child: Image.asset(
+              'assets/Home.png',
+              color: Colors.blue,
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons
-                .confirmation_number_outlined), // Utiliser ticketSimple pour l'icône outline
-            activeIcon: Icon(Icons
-                .confirmation_number_rounded), // Utiliser ticket pour l'icône filled
-            label: AppLocalizations.of(context)!.tickets,
+          label: AppLocalizations.of(context)!.overview,
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/calendar-2.png',
+            color: Colors.grey,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.handshake_outlined),
-            activeIcon: Icon(Icons.handshake_rounded),
-            label: AppLocalizations.of(context)!.deals,
+          activeIcon: Image.asset(
+            'assets/calendar-2.png',
+            color: Colors.blue,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event_note_outlined),
-            activeIcon: Icon(Icons.event_note_rounded),
-            label: AppLocalizations.of(context)!.projects,
+          label: AppLocalizations.of(context)!.activities,
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/ticket-2.png',
+            color: Colors.grey,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            activeIcon: Icon(Icons.person_2_rounded),
-            label: AppLocalizations.of(context)!.contacts,
+          activeIcon: Image.asset(
+            'assets/ticket-2.png',
+            color: Colors.blue,
           ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.plane),
-            activeIcon: FaIcon(FontAwesomeIcons.plane, color: Colors.blue),
-            label: "Bookings",
+          label: AppLocalizations.of(context)!.tickets,
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/Activity.png',
+            color: Colors.grey,
           ),
-        ],
-        currentIndex: selectedPage,
-        onTap: (index) {
-          setState(() {
-            selectedPage = index;
-          });
-        },
-      ),
-    );
-  }
+          activeIcon: Image.asset(
+            'assets/Activity.png',
+            color: Colors.blue,
+          ),
+          label: AppLocalizations.of(context)!.deals,
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/document.png',
+            color: Colors.grey,
+          ),
+          activeIcon: Image.asset(
+            'assets/document.png',
+            color: Colors.blue,
+          ),
+          label: AppLocalizations.of(context)!.projects,
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/user.png',
+            color: Colors.grey,
+          ),
+          activeIcon: Image.asset(
+            'assets/user.png',
+            color: Colors.blue,
+          ),
+          label: AppLocalizations.of(context)!.contacts,
+        ),
+        BottomNavigationBarItem(
+          icon: Image.asset(
+            'assets/booking (1).png',
+            color: Colors.grey,
+          ),
+          activeIcon: Image.asset(
+            'assets/booking (1).png',
+           
+            color: Colors.blue,
+          ),
+          label: "Bookings",
+        ),
+      ],
+      currentIndex: selectedPage,
+      onTap: (index) {
+        setState(() {
+          selectedPage = index;
+        });
+      },
+    ),
+  );
+}
 }

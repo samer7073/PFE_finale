@@ -369,6 +369,7 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
                                     foregroundColor: Colors.red,
                                     icon: Icons.delete,
                                     label: 'Delete',
+                                    backgroundColor: Colors.transparent,
                                   ),
                                   SlidableAction(
                                     onPressed: (context) {
@@ -385,6 +386,7 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
                                     foregroundColor: Colors.green,
                                     icon: Icons.edit,
                                     label: 'Edit',
+                                    backgroundColor: Colors.transparent,
                                   ),
                                 ],
                               ),

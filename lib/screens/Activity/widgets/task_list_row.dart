@@ -158,151 +158,129 @@ class _TaskListRowState extends State<TaskListRow> {
   Widget build(BuildContext context) {
     Locale currentLocale = Localizations.localeOf(context);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
-        color: isDarkMode == false
-            ? Color.fromARGB(255, 244, 245, 247)
-            : Color.fromARGB(255, 31, 24,
-                24), //hexToColor(widget.task_type_color).withOpacity(0.07),
-        borderRadius: BorderRadius.circular(10),
+        color: isDarkMode? Colors.black:Colors.white, // Couleur de fond blanche
+        borderRadius: BorderRadius.circular(10), // Coins arrondis
+        border: Border(
+          left: BorderSide(
+            color: hexToColor(widget.task_type_color)
+                .withOpacity(0.8), // Couleur de la bordure gauche
+            width: 6, // Épaisseur de la bordure gauche
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1), // Couleur de l'ombre
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: Offset(0, 2), // Décalage de l'ombre
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: 90, // Adjust the height as needed
-              child: Container(
-                width: 6, // Thickness of the vertical bar
-                decoration: BoxDecoration(
-                  color: hexToColor(widget.task_type_color)
-                      .withOpacity(0.8), // Color of the vertical bar
-                  borderRadius: BorderRadius.circular(
-                      10), // Adjust the radius for round corners
+            Row(
+              children: [
+                Icon(
+                  widget.taskIcon,
+                  color: Colors.grey.shade600,
                 ),
-              ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    widget.taskLabel,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: isDarkMode? Colors.white:Colors.black,
+                        ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Icon(
+                  Icons.flag,
+                  color: _getPriorityColor(widget.priority),
+                ),
+              ],
             ),
-            SizedBox(
-              width: 10,
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(
+                  Icons.calendar_month,
+                  color: Colors.grey.shade600,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    formatDate(widget.start_date, currentLocale) +
+                        " " +
+                        widget.start_time,
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              // Use Expanded to control space allocation
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        if (widget.is_follower == 0) {
+                          _showStageDialog(
+                            widget.stageLabel,
+                            widget.taskId,
+                          );
+                        }
+                      },
+                      child: Text(
+                        widget.stageLabel?.isNotEmpty == true
+                            ? widget.stageLabel!
+                            : "No stage available",
+                        style: TextStyle(
+                          color: hexToColor(widget.task_type_color),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Icon(widget.taskIcon,
-                          color: hexToColor(widget.task_type_color)
-                              .withOpacity(0.6)),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        // Expand the Text widget to avoid overflow
+                      Container(
+                        alignment: Alignment.centerRight,
+                        width: 130,
                         child: Text(
-                          widget.taskLabel,
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          widget.ownerLabel,
+                          style: TextStyle(
+                            color: isDarkMode ? Colors.white : Colors.black,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Icon(
-                        Icons.flag,
-                        color: _getPriorityColor(widget.priority),
+                      _buildAvatar(
+                        widget.ownerAvatar,
+                        widget.ownerLabel,
+                        hexToColor(widget.task_type_color),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_month,
-                        color:
-                            hexToColor(widget.task_type_color).withOpacity(0.6),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        // Make the Text expand to fit within Row
-                        child: Text(
-                          formatDate(widget.start_date, currentLocale) +
-                              " " +
-                              widget.start_time,
-                          style: TextStyle(
-                            color: isDarkMode
-                                ? Colors.white
-                                : Color.fromARGB(255, 9, 1, 71),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Stage: ",
-                            style: TextStyle(
-                              color: hexToColor(widget.task_type_color),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              if (widget.is_follower == 0) {
-                                _showStageDialog(
-                                  widget.stageLabel,
-                                  widget.taskId,
-                                );
-                              }
-                            },
-                            child: Text(
-                              widget.stageLabel?.isNotEmpty == true
-                                  ? widget.stageLabel!
-                                  : "No stage available",
-                              style: TextStyle(
-                                color: hexToColor(widget.task_type_color),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Container(
-                              alignment: Alignment.centerRight,
-                              width: 130,
-                              child: Text(
-                                widget.ownerLabel,
-                                style: TextStyle(
-                                  color: isDarkMode
-                                      ? Colors.white
-                                      : Color.fromARGB(255, 9, 1,
-                                          71), // color: hexToColor(widget.task_type_color),
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            _buildAvatar(
-                              widget.ownerAvatar,
-                              widget.ownerLabel,
-                              hexToColor(widget.task_type_color),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
