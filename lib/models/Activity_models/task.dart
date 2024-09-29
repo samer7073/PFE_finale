@@ -91,21 +91,35 @@ class Task {
     String ownerLabel = '';
     String ownerAvatar = '';
 
-    if (json['owner_id'] is Map) {
+    if (json['owner_id'] is Map<String, dynamic>) {
       ownerId = json['owner_id']?['id'] ?? '';
       ownerLabel = json['owner_id']?['label'] ?? '';
       ownerAvatar = json['owner_id']?['avatar'] ?? '';
-    } else {
-      ownerId = json['owner_id'] ?? '';
-      ownerLabel = json['owner_label'] ?? '';
-      ownerAvatar = json['owner_avatar'] ?? '';
+    } else if (json['owner_id'] is String) {
+      ownerId = json['owner_id'];
     }
+
+    // Handle creator information
+    String creatorLabel = '';
+    String creatorAvatar = '';
+
+    // Check if 'creator' is a Map and extract relevant fields
+    if (json['creator'] is Map<String, dynamic>) {
+      creatorLabel =
+          json['creator']?['label'] ?? ''; // Extract label from the Map
+      creatorAvatar =
+          json['creator']?['avatar'] ?? ''; // Extract avatar from the Map
+    } else if (json['creator'] is String) {
+      // If 'creator' is a String (fallback scenario, if necessary)
+      creatorLabel = json['creator'];
+    }
+
     return Task(
       id: json['id'] ?? '',
       label: json['label'] ?? '',
       priority: json['priority'] ?? '',
-      creatorLabel: json['creator_label'] ?? '',
-      creatorAvatar: json['creator_avatar'] ?? '',
+      creatorLabel: creatorLabel, // Use the extracted creator label
+      creatorAvatar: creatorAvatar, // Use the extracted creator avatar
       ownerId: ownerId,
       ownerLabel: ownerLabel,
       ownerAvatar: ownerAvatar,

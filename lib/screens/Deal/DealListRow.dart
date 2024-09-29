@@ -45,8 +45,8 @@ class _DealListRowState extends State<DealListRow> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  );
+            color: Colors.blue,
+          );
         }
 
         if (snapshot.hasError) {
@@ -56,11 +56,11 @@ class _DealListRowState extends State<DealListRow> {
         String baseUrl = snapshot.data ?? "";
 
         return Container(
-          
           decoration: BoxDecoration(
-            color: isDarkMode==false?Color.fromARGB(255, 244, 245, 247): Color.fromARGB(255, 31, 24, 24),
-            borderRadius: BorderRadius.circular(25)
-          ),
+              color: isDarkMode == false
+                  ? Color.fromARGB(255, 244, 245, 247)
+                  : Color.fromARGB(255, 31, 24, 24),
+              borderRadius: BorderRadius.circular(25)),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
@@ -142,29 +142,29 @@ class _DealListRowState extends State<DealListRow> {
                   height: 10,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: widget.piepline.isNotEmpty
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.pipeline + " ",
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          width: 100,
-                          child: Text(
-                            widget.piepline,
-                            style: Theme.of(context).textTheme.headlineLarge,
-                            overflow: TextOverflow.ellipsis,
+                    if (widget.piepline.isNotEmpty)
+                      Row(
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.pipeline + " ",
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
-                        ),
-                      ],
-                    ),
+                          Container(
+                            width: 100,
+                            child: Text(
+                              widget.piepline,
+                              style: Theme.of(context).textTheme.headlineLarge,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           widget.owner,
@@ -183,15 +183,14 @@ class _DealListRowState extends State<DealListRow> {
                                 radius: 15,
                               )
                             : CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage("$baseUrl${widget.ownerImage}"),
+                                backgroundImage: NetworkImage(
+                                    "$baseUrl${widget.ownerImage}"),
                                 radius: 15,
                               ),
                       ],
                     ),
                   ],
                 ),
-          
               ],
             ),
           ),

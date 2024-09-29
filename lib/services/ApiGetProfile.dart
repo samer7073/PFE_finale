@@ -17,6 +17,7 @@ class ApiProfil {
 
     final baseUrl = await Config.getApiUrl("profile");
     final url = "$baseUrl";
+    log("Profile"+url);
 
     final response = await http.get(
       Uri.parse(url),

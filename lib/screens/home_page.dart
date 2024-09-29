@@ -5,7 +5,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/profil/Profile.dart';
 import 'package:flutter_application_stage_project/screens/NotficationPage.dart';
+import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
+import 'package:flutter_application_stage_project/screens/contactPage.dart';
+import 'package:flutter_application_stage_project/screens/leads/leads_page.dart';
+import 'package:flutter_application_stage_project/screens/notes/notes_page.dart';
+import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
 import 'package:flutter_application_stage_project/screens/taskKpi_page.dart';
+import 'package:flutter_application_stage_project/screens/webViewTest.dart';
 import 'package:flutter_application_stage_project/services/ApiGetProfile.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_stage_project/screens/settings/settings.dart';
@@ -22,7 +28,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late ThemeProvider themeProvider;
   late TabController _tabController;
   String? storedToken;
@@ -60,7 +67,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       Profile profileResponse = await ApiProfil.getProfil();
       setState(() {
         _profile = profileResponse;
-        image = _profile!.avatar.label; // Assign the new image
+        image = _profile?.avatar.label ??
+            ""; // Assign the new image, ensure it's not null
       });
 
       // Check if the cached image URL is different from the new one
@@ -103,7 +111,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   }
 
   void goToNotif() {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => NotificationPage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => NotificationPage()));
   }
 
   @override
@@ -124,28 +133,134 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         log("Image URL: $imageUrl and User Image: $image");
 
         return Scaffold(
-          appBar: AppBar(
-            leading: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: GestureDetector(
-                onTap: goToSettingsPage,
-                child: (image != null && image!.isNotEmpty)
-                    ? (image!.length == 1)
-                        ? CircleAvatar(
-                            child: Text(
-                              image!,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            backgroundColor: Colors.blue,
-                            radius: 15,
-                          )
-                        : CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider("$imageUrl$image"),
-                            radius: 15,
-                          )
-                    : CircularProgressIndicator(color: Colors.blue),
-              ),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 79, 167, 239),
+                  ),
+                  margin: EdgeInsets.zero,
+                  padding: EdgeInsets.zero,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      (image != null && image!.isNotEmpty)
+                          ? (image!.length == 1)
+                              ? CircleAvatar(
+                                  child: Text(
+                                    image!,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                  backgroundColor: Colors.blue,
+                                  radius: 40, // Adjust the radius here
+                                )
+                              : CircleAvatar(
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      "$imageUrl$image"),
+                                  radius: 40, // Adjust the radius here
+                                )
+                          : CircularProgressIndicator(color: Colors.blue),
+                      SizedBox(height: 8),
+                      if (_profile != null) ...[
+                        Text(
+                          _profile!.name.label,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          _profile!.email.label,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ] else
+                        Text(
+                          'Chargement du profil...', // Placeholder text
+                          style: TextStyle(color: Colors.white),
+                        ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  leading: Image.asset(
+                     width: 25,
+                    'assets/user.png',
+                    color: const Color.fromARGB(255, 98, 97, 97),
+                  ),
+                  title: Text(AppLocalizations.of(context)!.contacts),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => ContactPage()));
+                  },
+                ),
+                ListTile(
+                  
+                  leading: Image.asset(
+                     width: 25,
+                    'assets/booking (1).png',
+                    color: const Color.fromARGB(255, 98, 97, 97),
+                  ),
+                  title: Text("Bookings"),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => BookingsPage()));
+                  },
+                ),
+                  ListTile(
+                  leading: Image.asset(
+                     width: 25,
+                    'assets/document.png',
+                    color: const Color.fromARGB(255, 98, 97, 97),
+                  ),
+                  title: Text("Projet"),
+                  onTap: () {
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => ProjectPage()));
+                
+                  },
+                ),
+                 ListTile(
+                  leading: Image.asset(
+                    width: 25,
+                    'assets/lead.png',
+                    color: const Color.fromARGB(255, 98, 97, 97),
+                  ),
+                  title: Text("Leads"),
+                  onTap: () {
+                    
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => LeadsPage()));
+                
+                  },
+                  
+                ),
+                 ListTile(
+                  leading: Icon(Icons.edit_document,size: 25 ,color: const Color.fromARGB(255, 98, 97, 97),),
+                  title: Text("Notes"),
+                  onTap: () {
+                    
+                      Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => NotesPage()));
+                
+                  },
+                  
+                ),
+                ListTile(
+                  leading: Icon(Icons.settings,
+                  color: const Color.fromARGB(255, 98, 97, 97),),
+                  title: Text("Settings"),
+                  onTap: () {
+                    goToSettingsPage();
+                  },
+                ),
+              
+
+                // Add more ListTile here for each additional page
+              ],
             ),
+          ),
+          appBar: AppBar(
             centerTitle: true,
             title: Text('Comunik Sphere'),
             bottom: TabBar(

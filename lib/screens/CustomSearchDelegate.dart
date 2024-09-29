@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_stage_project/models/ticket/Ticket.dart';
 import 'package:flutter_application_stage_project/screens/detailElment.dart';
 import '../core/constants/shared/config.dart';
 import '../models/ticket/ticketData.dart';

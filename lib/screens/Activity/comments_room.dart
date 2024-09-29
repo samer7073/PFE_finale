@@ -31,6 +31,7 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
     final token = await SharedPrefernce.getToken("token");
     final baseUrl = await Config.getApiUrl('chatRomm');
     final url='$baseUrl$id_room?type=task';
+    log(url);
    
     final response = await http.get(
       Uri.parse(url),
@@ -40,7 +41,7 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
         'Authorization': 'Bearer $token',
       },
     );
-    log("999999999999 chat room status code ${response.statusCode}");
+    log("999999999999 chat room status code111111 ${response.statusCode}");
 
     if (response.statusCode == 200) {
       

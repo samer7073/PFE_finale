@@ -59,8 +59,8 @@ class _ticketListRowState extends State<ticketListRow> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  );
+            color: Colors.blue,
+          );
         }
 
         if (snapshot.hasError) {
@@ -72,9 +72,10 @@ class _ticketListRowState extends State<ticketListRow> {
         return Container(
           margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: isDarkMode==false?Color.fromARGB(255, 244, 245, 247): Color.fromARGB(255, 31, 24, 24),
-            borderRadius: BorderRadius.circular(25)
-          ),
+              color: isDarkMode == false
+                  ? Color.fromARGB(255, 244, 245, 247)
+                  : Color.fromARGB(255, 31, 24, 24),
+              borderRadius: BorderRadius.circular(25)),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
@@ -151,62 +152,55 @@ class _ticketListRowState extends State<ticketListRow> {
                   height: 10,
                 ),
                 Row(
-                  
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: widget.Pipeline.isNotEmpty
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
                   children: [
-                    
+                    if (widget.Pipeline.isNotEmpty)
+                      Row(
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.pipeline + " ",
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                          Container(
+                            width: 100,
+                            child: Text(
+                              widget.Pipeline,
+                              style: Theme.of(context).textTheme.headlineLarge,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        
                         Text(
-                          AppLocalizations.of(context)!.pipeline + " ",
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
-                        Container(
-                          width: 150,
-                          child: Text(
-                            widget.Pipeline,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 100,
-                          child: Text(
-                            widget.owner,
-                            style: Theme.of(context).textTheme.headlineSmall,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          widget.owner,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         SizedBox(
                           width: 10,
                         ),
                         widget.ownerImage.length == 1
                             ? CircleAvatar(
-                                backgroundColor: Colors
-                                    .blue, // Choisissez une couleur de fond appropriée
+                                backgroundColor: Colors.blue,
                                 child: Text(
                                   widget.ownerImage,
-                                  style: TextStyle(
-                                      color: Colors
-                                          .white), // Choisissez une couleur de texte appropriée
+                                  style: TextStyle(color: Colors.white),
                                 ),
                                 radius: 15,
                               )
                             : CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage("$baseUrl${widget.ownerImage}"),
+                                backgroundImage: NetworkImage(
+                                    "$baseUrl${widget.ownerImage}"),
                                 radius: 15,
                               ),
                       ],
                     ),
                   ],
                 ),
-          
               ],
             ),
           ),

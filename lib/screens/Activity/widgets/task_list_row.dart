@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:intl/intl.dart';
 import '../../../services/Activities/api_get_stage.dart';
@@ -59,10 +58,11 @@ class _TaskListRowState extends State<TaskListRow> {
   late Future<String> imageUrlFuture;
   List<dynamic> stages = [];
   bool isLoading = false;
-
+late String currentStageLabel;
   @override
   void initState() {
     super.initState();
+    currentStageLabel = widget.stageLabel ?? "No stage available";
     imageUrlFuture = Config.getApiUrl("urlImage");
     fetchStagesFromApi(); // Fetch stages when the widget initializes
   }
@@ -162,7 +162,8 @@ class _TaskListRowState extends State<TaskListRow> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
-        color: isDarkMode? Colors.black:Colors.white, // Couleur de fond blanche
+        color:
+            isDarkMode ? Colors.black : Colors.white, // Couleur de fond blanche
         borderRadius: BorderRadius.circular(10), // Coins arrondis
         border: Border(
           left: BorderSide(
@@ -197,7 +198,7 @@ class _TaskListRowState extends State<TaskListRow> {
                     widget.taskLabel,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: isDarkMode? Colors.white:Colors.black,
+                          color: isDarkMode ? Colors.white : Colors.black,
                         ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -245,9 +246,7 @@ class _TaskListRowState extends State<TaskListRow> {
                         }
                       },
                       child: Text(
-                        widget.stageLabel?.isNotEmpty == true
-                            ? widget.stageLabel!
-                            : "No stage available",
+                       currentStageLabel.isNotEmpty ? currentStageLabel : "No stage available",
                         style: TextStyle(
                           color: hexToColor(widget.task_type_color),
                           fontWeight: FontWeight.w600,
@@ -369,7 +368,7 @@ class _TaskListRowState extends State<TaskListRow> {
           onTap: () async {
             try {
               // Attempt to update the task stage
-              await updateTaskStage(id, stage['id']);
+             bool update= await updateTaskStage(id, stage['id']);
               Navigator.of(context).pop();
 
               // If successful, show a success Snackbar
@@ -377,6 +376,7 @@ class _TaskListRowState extends State<TaskListRow> {
               // Close the dialog after a successful update
 
               // Refresh the page
+              /*
               Navigator.pushAndRemoveUntil<dynamic>(
                 context,
                 MaterialPageRoute<dynamic>(
@@ -386,7 +386,12 @@ class _TaskListRowState extends State<TaskListRow> {
                 ),
                 (route) => false,
               );
-              ScaffoldMessenger.of(context).showSnackBar(
+              */
+              setState(() {
+                 currentStageLabel = stage['label']; // Met à jour le stage dans l'UI
+              });
+              if(update==true){
+                ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
                     'Stage changed successfully',
@@ -395,6 +400,21 @@ class _TaskListRowState extends State<TaskListRow> {
                   backgroundColor: Colors.green,
                 ),
               );
+
+              }else{
+                 ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Problem when updating stage',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.red,
+                ),
+              );
+
+              }
+
+              
             } catch (e) {
               // If there is an error, show an error Snackbar
               ScaffoldMessenger.of(context).showSnackBar(

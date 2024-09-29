@@ -2,37 +2,27 @@
 
 import 'dart:developer';
 
-import 'dart:ui';
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/langue_provider.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
-import 'package:flutter_application_stage_project/screens/login_page.dart';
-import 'package:flutter_application_stage_project/screens/settings/aPropos_page.dart';
-import 'package:flutter_application_stage_project/screens/settings/activties_settings_page.dart';
-import 'package:flutter_application_stage_project/screens/settings/affichage_page.dart';
+
 import 'package:flutter_application_stage_project/screens/settings/changePassswordScreen.dart';
 import 'package:flutter_application_stage_project/screens/settings/compte/compte_page.dart';
-import 'package:flutter_application_stage_project/screens/settings/confidentialite_page.dart';
-import 'package:flutter_application_stage_project/screens/settings/indisponibilite_page.dart';
-import 'package:flutter_application_stage_project/screens/settings/language.dart';
-import 'package:flutter_application_stage_project/screens/settings/notifications_page.dart';
-import 'package:flutter_application_stage_project/screens/settings/securite_page.dart';
-import 'package:flutter_application_stage_project/services/ApiChangePassword.dart';
+
 import 'package:flutter_application_stage_project/services/ApiLogout.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../main.dart';
 import '../../providers/NotificationProvider.dart';
 import '../../services/MercureNotificationService.dart';
 import '../NotficationPage.dart';
 import '../homeNavigate_page.dart';
-import '../loading.dart';
+
 import 'changesLanguges_page.dart';
 
 class Settings extends StatefulWidget {
@@ -159,7 +149,6 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
               padding: EdgeInsets.all(15),
               child: Text(
                 AppLocalizations.of(context)!.account,
-                
               ),
             ), //Text(AppLocalizations.of(context)!.account)),
             Container(
@@ -214,7 +203,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                   ),
                   InkWell(
                     onTap: () {
-                       Navigator.push(context, MaterialPageRoute(
+                      Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
                           return ChangePasswordScreen();
                         },
@@ -591,9 +580,12 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                               MercureNotificationService().initialize();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                    duration: Duration(milliseconds:1000 ),
+                                    duration: Duration(milliseconds: 1000),
                                     backgroundColor: Colors.green,
-                                    content: Text('Notification activated',style: TextStyle(color: Colors.white),)),
+                                    content: Text(
+                                      'Notification activated',
+                                      style: TextStyle(color: Colors.white),
+                                    )),
                               );
                             } else {
                               MercureNotificationService().dispose();
@@ -601,7 +593,10 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                 SnackBar(
                                     duration: Duration(seconds: 1),
                                     backgroundColor: Colors.red,
-                                    content: Text('Notification stopped',style: TextStyle(color: Colors.white),)),
+                                    content: Text(
+                                      'Notification stopped',
+                                      style: TextStyle(color: Colors.white),
+                                    )),
                               );
                             }
                             notifier.notification = value;

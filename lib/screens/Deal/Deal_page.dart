@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../CustomSearchDelegate.dart';
 import '../NotficationPage.dart';
 import '../PipelineScreen.dart';
-import '../notifications/notifications_page.dart';
+
 import '../ticket/addTicket.dart';
 import 'DealList.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

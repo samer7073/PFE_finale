@@ -3,6 +3,7 @@
 
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:flutter_application_stage_project/models/chatUserModel/chatUserModel.dart';
@@ -15,6 +16,7 @@ class ChatRomm {
    
     final token = await SharedPrefernce.getToken("token");
      final baseUrl = await Config.getApiUrl('allUsers');
+     log("allusers"+baseUrl);
     
 
    final response = await http.get(

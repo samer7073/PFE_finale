@@ -11,7 +11,7 @@ class Config {
   static const String devUrl = "https://spherebackmongodb.cmk.biz";
 
   static const Map<String, String> apiProdUrls = {
-    "allUsers":"https://spherechatback.cmk.biz:4543/api/all-users",
+    "allUsers": "https://spherechatback.cmk.biz:4543/api/all-users",
     "taskStagesElements": "$prodUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
         "https://spherechatbackmongodb.cmk.biz:4543/index.php/api/get-discussion-room/",
@@ -96,12 +96,14 @@ class Config {
     "pipeline": "$prodUrl:4543/index.php/api/mobile/get-element-by-id/",
     "StageKanban": "$prodUrl:4543/index.php/api/mobile/stages/",
     "saveFile": "$prodUrl:4543/index.php/api/tasks/upload/save",
+    "leads": "$prodUrl:4543/index.php/api/mobile/get-elements-by-family/9",
+    "note":"$prodUrl:4543/api/get-note"
 
     // Added for ApiFieldGroup
   };
 
   static const Map<String, String> apiDevUrls = {
-    "allUsers":"https://spherechatbackmongodb.cmk.biz:4543/api/all-users",
+    "allUsers": "https://spherechatbackmongodb.cmk.biz:4543/api/all-users",
     "taskStagesElements": "$devUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
         "https://spherechatbackmongodb.cmk.biz:4543/index.php/api/get-discussion-room/",
@@ -184,6 +186,8 @@ class Config {
     "pipeline": "$devUrl:4543/index.php/api/mobile/get-element-by-id/",
     "StageKanban": "$devUrl:4543/index.php/api/mobile/stages/",
     "saveFile": "$devUrl:4543/index.php/api/tasks/upload/save",
+     "leads": "$devUrl:4543/index.php/api/mobile/get-elements-by-family/9",
+     "note":"$devUrl:4543/api/get-note"
   };
 
   static Future<String> getApiUrl(String apiName) async {

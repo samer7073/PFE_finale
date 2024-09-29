@@ -21,7 +21,7 @@ class RommCommanitairePage extends StatefulWidget {
 }
 
 class _RommCommanitairePageState extends State<RommCommanitairePage> {
- late List<ChatUser> Users= [];
+  late List<ChatUser> Users = [];
   late Future<ApiResponseRoom?> futureApiResponse;
   String? storedUuid;
   late Future<String> imageUrlFuture;
@@ -30,9 +30,9 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
     log("999999999999  dans fetch romm ");
     final token = await SharedPrefernce.getToken("token");
     final baseUrl = await Config.getApiUrl('chatRomm');
-    final url='$baseUrl$id_room?type=task';
-   
-   
+    final url = '$baseUrl$id_room?type=task';
+    log("urlchat $url");
+
     final response = await http.get(
       Uri.parse(url),
       headers: {
@@ -44,9 +44,7 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
     log("999999999999 chat room status code ${response.statusCode}");
 
     if (response.statusCode == 200) {
-      
       return ApiResponseRoom.fromJson(json.decode(response.body));
-      
     } else if (response.statusCode == 404) {
       return null; // Retourner null pour indiquer que l'accès est refusé
     } else {
@@ -64,19 +62,16 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
       fetchUsers();
     }
   }
+
   Future<void> fetchUsers() async {
-    
     try {
       final userResponse = await ChatRomm.fetchAllUsers();
       setState(() {
-        Users=userResponse;
+        Users = userResponse;
         log("users ${Users.length}");
-       
-       
       });
     } catch (e) {
       log('Failed to fetch Users: $e');
-      
     }
   }
 
@@ -100,9 +95,10 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
               future: futureApiResponse,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.blue,
+                  ));
                 } else if (snapshot.hasError) {
                   return Center(
                       child: Text('Failed to load data: ${snapshot.error}'));
@@ -121,9 +117,10 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
                     builder: (context, imageUrlSnapshot) {
                       if (imageUrlSnapshot.connectionState ==
                           ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ));
+                        return const Center(
+                            child: CircularProgressIndicator(
+                          color: Colors.blue,
+                        ));
                       } else if (imageUrlSnapshot.hasError) {
                         return Center(
                             child: Text(
@@ -135,11 +132,14 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
                             final message = messages[index];
-                            ChatUser user=
-                            Users.firstWhere(
-    (user) => user.uuid == message.senderUuid,
-    orElse: () => ChatUser(id: "id", name: "name", email: "email", status:0),
-  );
+                            ChatUser user = Users.firstWhere(
+                              (user) => user.uuid == message.senderUuid,
+                              orElse: () => ChatUser(
+                                  id: "id",
+                                  name: "name",
+                                  email: "email",
+                                  status: 0),
+                            );
                             bool isCurrentUser =
                                 message.senderUuid == storedUuid;
                             return Padding(
@@ -153,18 +153,14 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     if (!isCurrentUser)
-                                    
                                       CircleAvatar(
-                                        backgroundImage: user
-                                                    .image!.length ==
-                                                1
+                                        backgroundImage: user.image!.length == 1
                                             ? null
                                             : NetworkImage(
                                                 "$baseUrl${user.image}"),
-                                        backgroundColor:
-                                            user.image!.length == 1
-                                                ? Colors.blue
-                                                : null,
+                                        backgroundColor: user.image!.length == 1
+                                            ? Colors.blue
+                                            : null,
                                         child: user.image!.length == 1
                                             ? Text(
                                                 user.image!,
@@ -174,7 +170,6 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
                                             : null,
                                         radius: 25,
                                       ),
-                                      
                                     if (!isCurrentUser)
                                       const SizedBox(width: 10),
                                     Column(
@@ -182,14 +177,12 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         if (!isCurrentUser)
-                                        
                                           Text(
                                             user.name,
                                             style: TextStyle(
                                                 color: Colors.grey[700],
                                                 fontSize: 12),
                                           ),
-                                          
                                         if (!isCurrentUser)
                                           const SizedBox(height: 10),
                                         Container(
@@ -197,7 +190,8 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
                                               horizontal: 14, vertical: 10),
                                           decoration: BoxDecoration(
                                             color: isCurrentUser
-                                                ?  const Color.fromARGB(255, 83, 196, 222)
+                                                ? const Color.fromARGB(
+                                                    255, 83, 196, 222)
                                                 : Colors.grey[400],
                                             borderRadius: BorderRadius.only(
                                               topRight:
@@ -216,7 +210,6 @@ class _RommCommanitairePageState extends State<RommCommanitairePage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              
                                               Text(
                                                 message.message,
                                                 style: const TextStyle(

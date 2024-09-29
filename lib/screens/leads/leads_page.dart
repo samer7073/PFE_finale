@@ -2,22 +2,22 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_stage_project/models/contactModel/data.dart';
-import 'package:flutter_application_stage_project/screens/ContactDeatails.dart';
-import 'package:flutter_application_stage_project/services/contact/ApiContact.dart';
+import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
+
+import 'package:flutter_application_stage_project/models/leads_models/lead.dart';
+import 'package:flutter_application_stage_project/screens/leads/leadTile.dart';
+import 'package:flutter_application_stage_project/services/leadsService.dart/leadServise.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../core/constants/shared/config.dart';
-
-class ContactPage extends StatefulWidget {
-  const ContactPage({super.key});
+class LeadsPage extends StatefulWidget {
+  const LeadsPage({super.key});
 
   @override
-  State<ContactPage> createState() => _ContactPageState();
+  State<LeadsPage> createState() => _LeadsPageState();
 }
 
-class _ContactPageState extends State<ContactPage> {
-  List<Data> contacts = [];
+class _LeadsPageState extends State<LeadsPage> {
+  List<Lead> leads = [];
   bool isLoading = false;
   bool hasMore = true;
   int page = 1;
@@ -26,17 +26,17 @@ class _ContactPageState extends State<ContactPage> {
   String searchQuery = '';
   Timer? _debounce;
 
-  bool _showExtraButtons = false; // Variable d'état pour les boutons supplémentaires
+  bool _showExtraButtons = false;
 
   @override
   void initState() {
     super.initState();
-    fetchContacts(); // Charger les contacts initiaux
+    fetchLeads();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
               _scrollController.position.maxScrollExtent &&
           hasMore) {
-        fetchMoreContacts();
+        fetchMoreLeads();
       }
     });
     _searchController.addListener(_onSearchChanged);
@@ -46,7 +46,7 @@ class _ContactPageState extends State<ContactPage> {
   void dispose() {
     _scrollController.dispose();
     _searchController.dispose();
-    _debounce?.cancel(); // Annuler le délai lors de la suppression de la page
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -56,13 +56,13 @@ class _ContactPageState extends State<ContactPage> {
       setState(() {
         searchQuery = _searchController.text;
         page = 1;
-        contacts.clear();
-        fetchContacts();
+        leads.clear();
+        fetchLeads();
       });
     });
   }
 
-  Future<void> fetchContacts() async {
+  Future<void> fetchLeads() async {
     if (isLoading) return;
 
     setState(() {
@@ -70,15 +70,15 @@ class _ContactPageState extends State<ContactPage> {
     });
 
     try {
-      List<Data> fetchedContacts =
-          await ApiContact.getAllContact(page: page, search: searchQuery);
+      List<Lead> fetchedLeads =
+          await ServiceLeads.getAllLeads(page: page, search: searchQuery);
       setState(() {
-        contacts.addAll(fetchedContacts);
+        leads.addAll(fetchedLeads);
         isLoading = false;
-        hasMore = fetchedContacts.length == 10; // Taille de la page est 10
+        hasMore = fetchedLeads.length == 10;
       });
     } catch (error) {
-      log('Error fetching contacts: $error');
+      log('Error fetching Leads: $error');
       setState(() {
         isLoading = false;
         hasMore = false;
@@ -86,10 +86,10 @@ class _ContactPageState extends State<ContactPage> {
     }
   }
 
-  Future<void> fetchMoreContacts() async {
+  Future<void> fetchMoreLeads() async {
     if (!isLoading && hasMore) {
       page++;
-      await fetchContacts();
+      await fetchLeads();
     }
   }
 
@@ -103,7 +103,7 @@ class _ContactPageState extends State<ContactPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.contacts),
+        title: Text("Leads"),
         centerTitle: true,
       ),
       body: Column(
@@ -129,23 +129,22 @@ class _ContactPageState extends State<ContactPage> {
                 if (scrollInfo is ScrollEndNotification &&
                     _scrollController.position.extentAfter == 0 &&
                     hasMore) {
-                  fetchMoreContacts();
+                  fetchMoreLeads();
                 }
                 return true;
               },
               child: ListView.builder(
                 controller: _scrollController,
-                itemCount: contacts.length + (hasMore ? 1 : 0),
+                itemCount: leads.length + (hasMore ? 1 : 0),
                 itemBuilder: (context, index) {
-                  if (index < contacts.length) {
-                    final contact = contacts[index];
-                    return ContactTile(contact: contact);
+                  if (index < leads.length) {
+                    final lead = leads[index];
+                    return LeadTile(lead: lead);
                   } else {
-                    // Afficher le CircularProgressIndicator seulement lorsque nous sommes en train de charger plus de contacts
                     return Center(
                       child: isLoading
                           ? CircularProgressIndicator(color: Colors.blue)
-                          : SizedBox.shrink(), // Afficher rien si pas en train de charger
+                          : SizedBox.shrink(),
                     );
                   }
                 },
@@ -189,75 +188,6 @@ class _ContactPageState extends State<ContactPage> {
               ),
             ),
           ],
-        ],
-      ),
-    );
-  }
-}
-
-class ContactTile extends StatelessWidget {
-  final Data contact;
-
-  const ContactTile({Key? key, required this.contact}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return ContactDetailsPage(contactId: contact.id);
-          },
-        ));
-      },
-      leading: CircleAvatar(
-        radius: 25,
-        backgroundColor: Colors.blue,
-        child: contact.avatar.length == 1
-            ? Text(
-                contact.avatar,
-                style: TextStyle(color: Colors.white),
-              )
-            : FutureBuilder<String>(
-                future: Config.getApiUrl('urlImage'),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator(
-                      color: Colors.blue,
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return Icon(Icons.error);
-                  }
-                  if (!snapshot.hasData || snapshot.data == null) {
-                    return Icon(Icons.error);
-                  }
-                  return CircleAvatar(
-                    radius: 25,
-                    backgroundImage: NetworkImage(
-                      "${snapshot.data}${contact.avatar}",
-                    ),
-                  );
-                },
-              ),
-      ),
-      title: Text(contact.label),
-      subtitle: Row(
-        children: [
-          if (contact.familyLabel == "Organisation")
-            Icon(
-              Icons.business,
-              color: Colors.grey,
-              size: 16,
-            )
-          else
-            Icon(
-              Icons.person,
-              color: Colors.grey,
-              size: 16,
-            ),
-          SizedBox(width: 8),
-          Text(contact.familyLabel),
         ],
       ),
     );
