@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
+
 
 import 'package:flutter_application_stage_project/models/leads_models/lead.dart';
 import 'package:flutter_application_stage_project/screens/leads/leadTile.dart';
 import 'package:flutter_application_stage_project/services/leadsService.dart/leadServise.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class LeadsPage extends StatefulWidget {
   const LeadsPage({super.key});
@@ -113,7 +113,7 @@ class _LeadsPageState extends State<LeadsPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search Organisation...',
+                hintText: 'Search Lead...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16.0),
                   borderSide: BorderSide.none,
@@ -153,43 +153,7 @@ class _LeadsPageState extends State<LeadsPage> {
           ),
         ],
       ),
-      floatingActionButton: Stack(
-        children: [
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton(
-              onPressed: _toggleExtraButtons,
-              child: Icon(_showExtraButtons ? Icons.close : Icons.add, color: Colors.white),
-              backgroundColor: Colors.blue,
-            ),
-          ),
-          if (_showExtraButtons) ...[
-            Positioned(
-              bottom: 80,
-              right: 16,
-              child: FloatingActionButton(
-                onPressed: () {
-                  // Action à exécuter lorsque ce bouton est pressé
-                },
-                child: Icon(Icons.business, color: Colors.white),
-                backgroundColor: Colors.blue,
-              ),
-            ),
-            Positioned(
-              bottom: 144,
-              right: 16,
-              child: FloatingActionButton(
-                onPressed: () {
-                  // Action à exécuter lorsque ce bouton est pressé
-                },
-                child: Icon(Icons.person, color: Colors.white),
-                backgroundColor: Colors.blue,
-              ),
-            ),
-          ],
-        ],
-      ),
+     
     );
   }
 }

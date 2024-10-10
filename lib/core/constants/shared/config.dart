@@ -97,7 +97,8 @@ class Config {
     "StageKanban": "$prodUrl:4543/index.php/api/mobile/stages/",
     "saveFile": "$prodUrl:4543/index.php/api/tasks/upload/save",
     "leads": "$prodUrl:4543/index.php/api/mobile/get-elements-by-family/9",
-    "note":"$prodUrl:4543/api/get-note"
+    "note":"$prodUrl:4543/api/get-note",
+    "rmcChat":"https://rmcdemo.comunikcrm.info/comuniksocial/admin.php"
 
     // Added for ApiFieldGroup
   };
@@ -187,7 +188,9 @@ class Config {
     "StageKanban": "$devUrl:4543/index.php/api/mobile/stages/",
     "saveFile": "$devUrl:4543/index.php/api/tasks/upload/save",
      "leads": "$devUrl:4543/index.php/api/mobile/get-elements-by-family/9",
-     "note":"$devUrl:4543/api/get-note"
+     "note":"$devUrl:4543/api/get-note",
+     "rmcChat":"https://rmcdemo.comunikcrm.info/comuniksocialdev/admin.php"
+     
   };
 
   static Future<String> getApiUrl(String apiName) async {

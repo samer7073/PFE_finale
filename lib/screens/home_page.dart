@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/profil/Profile.dart';
+import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
 import 'package:flutter_application_stage_project/screens/NotficationPage.dart';
 import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
 import 'package:flutter_application_stage_project/screens/contactPage.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_application_stage_project/screens/leads/leads_page.dart'
 import 'package:flutter_application_stage_project/screens/notes/notes_page.dart';
 import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
 import 'package:flutter_application_stage_project/screens/taskKpi_page.dart';
+import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
 import 'package:flutter_application_stage_project/screens/webViewTest.dart';
 import 'package:flutter_application_stage_project/services/ApiGetProfile.dart';
 import 'package:provider/provider.dart';
@@ -182,9 +184,10 @@ class _HomePageState extends State<HomePage>
                     ],
                   ),
                 ),
+                /*
                 ListTile(
                   leading: Image.asset(
-                     width: 25,
+                    width: 25,
                     'assets/user.png',
                     color: const Color.fromARGB(255, 98, 97, 97),
                   ),
@@ -194,10 +197,10 @@ class _HomePageState extends State<HomePage>
                         MaterialPageRoute(builder: (_) => ContactPage()));
                   },
                 ),
+                */
                 ListTile(
-                  
                   leading: Image.asset(
-                     width: 25,
+                    width: 25,
                     'assets/booking (1).png',
                     color: const Color.fromARGB(255, 98, 97, 97),
                   ),
@@ -207,20 +210,20 @@ class _HomePageState extends State<HomePage>
                         MaterialPageRoute(builder: (_) => BookingsPage()));
                   },
                 ),
-                  ListTile(
+                ListTile(
                   leading: Image.asset(
-                     width: 25,
+                    width: 25,
                     'assets/document.png',
                     color: const Color.fromARGB(255, 98, 97, 97),
                   ),
                   title: Text("Projet"),
                   onTap: () {
-                      Navigator.push(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (_) => ProjectPage()));
-                
                   },
                 ),
-                 ListTile(
+                /*
+                ListTile(
                   leading: Image.asset(
                     width: 25,
                     'assets/lead.png',
@@ -228,33 +231,55 @@ class _HomePageState extends State<HomePage>
                   ),
                   title: Text("Leads"),
                   onTap: () {
-                    
-                      Navigator.push(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (_) => LeadsPage()));
-                
                   },
-                  
                 ),
-                 ListTile(
-                  leading: Icon(Icons.edit_document,size: 25 ,color: const Color.fromARGB(255, 98, 97, 97),),
+                */
+                ListTile(
+                  leading: Icon(
+                    Icons.edit_document,
+                    size: 25,
+                    color: const Color.fromARGB(255, 98, 97, 97),
+                  ),
                   title: Text("Notes"),
                   onTap: () {
-                    
-                      Navigator.push(context,
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (_) => NotesPage()));
-                
                   },
-                  
                 ),
                 ListTile(
-                  leading: Icon(Icons.settings,
-                  color: const Color.fromARGB(255, 98, 97, 97),),
+                  leading: Image.asset(
+                    'assets/Activity.png',
+                    color: const Color.fromARGB(255, 98, 97, 97),
+                  ),
+                  title: Text(AppLocalizations.of(context)!.deals),
+                  onTap: () {
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (_) => DealPage()));
+                  },
+                ),
+                ListTile(
+                  leading: Image.asset(
+                    'assets/ticket-2.png',
+                    color: const Color.fromARGB(255, 98, 97, 97),
+                  ),
+                  title: Text(AppLocalizations.of(context)!.tickets,),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => TicketPage()));
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.settings,
+                    color: const Color.fromARGB(255, 98, 97, 97),
+                  ),
                   title: Text("Settings"),
                   onTap: () {
                     goToSettingsPage();
                   },
                 ),
-              
 
                 // Add more ListTile here for each additional page
               ],

@@ -14,7 +14,11 @@ class Lead {
   final String reference;
   final String conversation_id;
   final String avatar;
-
+  final String seen_by;
+  final String updated_at;
+  final String date_last_message;
+  final String last_message;
+  
   Lead({
     required this.id,
     required this.owner,
@@ -30,7 +34,12 @@ class Lead {
     required this.partagerAvec,
     required this.reference,
     required this.conversation_id,
-    required this.avatar
+    required this.avatar,
+    required this.seen_by,
+    required this.updated_at,
+    required this.date_last_message,
+    required this.last_message
+
   });
 
   factory Lead.fromJson(Map<String, dynamic> json) {
@@ -49,7 +58,12 @@ class Lead {
       partagerAvec: List<String>.from(json['partager_avec'] ?? []),
       reference: json['reference'] ?? '',
       conversation_id: json['conversation_id'] ?? '',
-      avatar:json['avatar'] ?? ''
+      avatar:json['avatar'] ?? '',
+      seen_by: json['seen_by'] ?? '',
+      updated_at:json['updated_at'] ?? '',
+      date_last_message:json['date_last_message'] ?? '',
+      last_message:json['last_message']?? '',
+      
     );
   }
 }

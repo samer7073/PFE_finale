@@ -113,7 +113,7 @@ class _ContactPageState extends State<ContactPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search Organisation...',
+                hintText: 'Search Organisation and Contacts...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16.0),
                   borderSide: BorderSide.none,
@@ -202,63 +202,81 @@ class ContactTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return ContactDetailsPage(contactId: contact.id);
+     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Card(
+       color: isDarkMode == false
+              ? Color.fromARGB(255, 244, 245, 247)
+              : Color.fromARGB(255, 31, 24, 24),
+      shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+      elevation: 1,
+      child: Padding(
+        
+        padding: const EdgeInsets.all(6.0),
+        child: ListTile(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return ContactDetailsPage(contactId: contact.id);
+              },
+            ));
           },
-        ));
-      },
-      leading: CircleAvatar(
-        radius: 25,
-        backgroundColor: Colors.blue,
-        child: contact.avatar.length == 1
-            ? Text(
-                contact.avatar,
-                style: TextStyle(color: Colors.white),
-              )
-            : FutureBuilder<String>(
-                future: Config.getApiUrl('urlImage'),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator(
-                      color: Colors.blue,
-                    );
-                  }
-                  if (snapshot.hasError) {
-                    return Icon(Icons.error);
-                  }
-                  if (!snapshot.hasData || snapshot.data == null) {
-                    return Icon(Icons.error);
-                  }
-                  return CircleAvatar(
-                    radius: 25,
-                    backgroundImage: NetworkImage(
-                      "${snapshot.data}${contact.avatar}",
-                    ),
-                  );
-                },
-              ),
-      ),
-      title: Text(contact.label),
-      subtitle: Row(
-        children: [
-          if (contact.familyLabel == "Organisation")
-            Icon(
-              Icons.business,
-              color: Colors.grey,
-              size: 16,
-            )
-          else
-            Icon(
-              Icons.person,
-              color: Colors.grey,
-              size: 16,
-            ),
-          SizedBox(width: 8),
-          Text(contact.familyLabel),
-        ],
+          leading: CircleAvatar(
+            radius: 25,
+            backgroundColor: Colors.blue,
+            child: contact.avatar.length == 1
+                ? Text(
+                    contact.avatar,
+                    style: TextStyle(color: Colors.white),
+                  )
+                : FutureBuilder<String>(
+                    future: Config.getApiUrl('urlImage'),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator(
+                          color: Colors.blue,
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Icon(Icons.error);
+                      }
+                      if (!snapshot.hasData || snapshot.data == null) {
+                        return Icon(Icons.error);
+                      }
+                      return CircleAvatar(
+                        radius: 25,
+                        backgroundImage: NetworkImage(
+                          "${snapshot.data}${contact.avatar}",
+                        ),
+                      );
+                    },
+                  ),
+          ),
+          title: Text(contact.label, style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color:isDarkMode? Colors.white :Colors.black87
+                        ),),
+          subtitle: Row(
+            children: [
+              if (contact.familyLabel == "Organisation")
+                Icon(
+                  Icons.business,
+                  color: Colors.grey,
+                  size: 16,
+                )
+              else
+                Icon(
+                  Icons.person,
+                  color: Colors.grey,
+                  size: 16,
+                ),
+              SizedBox(width: 8),
+              Text(contact.familyLabel,style :TextStyle(color: Colors.blueGrey)),
+            ],
+          ),
+        ),
       ),
     );
   }

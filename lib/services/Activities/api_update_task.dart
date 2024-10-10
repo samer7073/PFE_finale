@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -43,12 +45,14 @@ Future<bool> updateTask(String taskId, Map<String, dynamic> taskData) async {
     'Accept': 'application/json',
     'Authorization': 'Bearer $token',
   };
+  
 
   final response = await http.post(
     url,
     headers: headers,
     body: jsonEncode(taskData),
   );
+  log(response.statusCode.toString());
 
   if (response.statusCode == 200) {
     return true;

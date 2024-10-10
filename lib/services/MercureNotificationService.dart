@@ -97,10 +97,11 @@ class MercureNotificationService {
           topics: ['$topic$uuid'],
         );
         log(_mercure.isBroadcast.toString() + "gggggggggggggggggggggggg");
+        log(_mercure.last.toString());
 
         _subscription = _mercure.listen((event) {
           var eventData = jsonDecode(event.data);
-          log("**************************** ${eventData['type_event']}");
+          log("Mercure Event ${eventData['type_event']}");
           if ([
             'new_task',
             'update_priority_task',

@@ -108,7 +108,7 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.contacts),
+        title: Text("Notes"),
         centerTitle: true,
       ),
       body: Column(

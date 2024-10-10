@@ -3,6 +3,7 @@
 import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
 import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
 import 'package:flutter_application_stage_project/screens/contactPage.dart';
+import 'package:flutter_application_stage_project/screens/leads/leads_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
@@ -50,7 +51,8 @@ class _HomeNavigateState extends State<HomeNavigate> {
   final _pageOptions = [
     HomePage(),
     HomeScreen(),
-    TicketPage(),
+    ContactPage(),
+    LeadsPage(),
     DealPage(),
     ProjectPage(),
     ContactPage(),
@@ -64,10 +66,12 @@ class _HomeNavigateState extends State<HomeNavigate> {
         items: [
           BottomNavigationBarItem(
             icon: Image.asset(
+                width: 30,
               'assets/Home.png',
               color: Colors.grey,
             ),
             activeIcon: Image.asset(
+                width: 30,
               'assets/Home.png',
               color: Colors.blue,
             ),
@@ -75,10 +79,12 @@ class _HomeNavigateState extends State<HomeNavigate> {
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
+                width: 30,
               'assets/calendar-2.png',
               color: Colors.grey,
             ),
             activeIcon: Image.asset(
+                width: 30,
               'assets/calendar-2.png',
               color: Colors.blue,
             ),
@@ -86,25 +92,29 @@ class _HomeNavigateState extends State<HomeNavigate> {
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/ticket-2.png',
+              width: 30,
+              'assets/user.png',
               color: Colors.grey,
             ),
             activeIcon: Image.asset(
-              'assets/ticket-2.png',
+              width: 30,
+              'assets/user.png',
               color: Colors.blue,
             ),
-            label: AppLocalizations.of(context)!.tickets,
+            label: AppLocalizations.of(context)!.contacts,
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/Activity.png',
+              width: 30,
+               'assets/lead.png',
               color: Colors.grey,
             ),
             activeIcon: Image.asset(
-              'assets/Activity.png',
+              width: 30,
+               'assets/lead.png',
               color: Colors.blue,
             ),
-            label: AppLocalizations.of(context)!.deals,
+            label: "Leads",
           ),
         ],
         currentIndex: selectedPage,
