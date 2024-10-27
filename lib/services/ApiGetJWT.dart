@@ -33,7 +33,7 @@ class ApiGetJwt {
       // Access "data" key and create ApiResponseJwt object
       return ApiResponseJwt.fromJson(responseData);
     } else {
-      throw Exception('Failed to load tickets222222');
+      throw Exception('Failed to load  JWT ');
     }
   }
 }

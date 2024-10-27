@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -21,7 +19,7 @@ class MercureNotificationService {
   factory MercureNotificationService() {
     return _instance;
   }
-  @override
+
   MercureNotificationService._internal();
 
   Future<void> initialize() async {
@@ -75,7 +73,7 @@ class MercureNotificationService {
     try {
       log('Initializing Mercure...');
       final jwt = await SharedPrefernce.getToken("jwt");
-      log('Retrieved token jwt : $jwt');
+      log('Retrieved token jwt: $jwt');
       final uuid = await SharedPrefernce.getToken("uuid");
       log('Retrieved uuid: $uuid');
 
@@ -84,66 +82,65 @@ class MercureNotificationService {
         return;
       }
       if (uuid == null) {
-        print('uuid is null, cannot initialize Mercure');
+        print('UUID is null, cannot initialize Mercure');
         return;
       }
-      if (uuid != null && jwt != null) {
-        final topic = await Config.getApiUrl("notifTopic");
-        log("topic" + topic);
-        _mercure = Mercure(
-          url: await Config.getApiUrl(
-              "mercure"), //'https://spheremercuredev.cmk.biz:4443/.well-known/mercure',
-          token: jwt,
-          topics: ['$topic$uuid'],
-        );
-        log(_mercure.isBroadcast.toString() + "gggggggggggggggggggggggg");
-        log(_mercure.last.toString());
 
-        _subscription = _mercure.listen((event) {
-          var eventData = jsonDecode(event.data);
-          log("Mercure Event ${eventData['type_event']}");
-          if ([
-            'new_task',
-            'update_priority_task',
-            'update_stage_task',
-            'update_task',
-            'delete_task'
-          ].contains(eventData['type_event'])) {
-            log('Received relevant event: ${event.data}');
+      final topic = await Config.getApiUrl("notifTopic");
+      log("Topic: $topic");
 
-            if (eventData['type_event'] == "new_task") {
-              String title = eventData['type_event'].replaceAll('_', ' ');
-              String initiatorName =
-                  "${eventData['initiator']['label']} create new task";
-              _showNotification(title, initiatorName);
-            }
-            if (eventData['type_event'] == "update_task") {
-              String title = eventData['type_event'].replaceAll('_', ' ');
-              String initiatorName =
-                  "${eventData['initiator']['label']} ${eventData['action']} ${eventData['label']}  ";
-              _showNotification(title, initiatorName);
-            }
-            if (eventData['type_event'] == "delete_task") {
-              String title = eventData['type_event'].replaceAll('_', ' ');
-              String initiatorName =
-                  "${eventData['initiator']['label']} ${eventData['action'][0]} ${eventData['action'][1]}   ";
-              _showNotification(title, initiatorName);
-            }
-            if (eventData['type_event'] == "update_stage_task") {
-              String title = eventData['type_event'].replaceAll('_', ' ');
-              String initiatorName =
-                  "${eventData['initiator']['label']} has changed the stage of the activity  ${eventData['action'][1]} ";
-              _showNotification(title, initiatorName);
-            }
-            if (eventData['type_event'] == "update_priority_task") {
-              String title = eventData['type_event'].replaceAll('_', ' ');
-              String initiatorName =
-                  "${eventData['initiator']['label']} updated the priority of the activity  ${eventData['action'][1]} ";
-              _showNotification(title, initiatorName);
-            }
+      _mercure = Mercure(
+        url: await Config.getApiUrl("mercure"),
+        token: jwt,
+        topics: ['$topic$uuid'],
+      );
+
+      log(_mercure.isBroadcast.toString() + " - Mercure is broadcast stream");
+
+      // Cancel any existing subscription before creating a new one
+      _subscription?.cancel();
+      _subscription = _mercure.listen((event) {
+        var eventData = jsonDecode(event.data);
+        log("Mercure Event ${eventData['type_event']}");
+
+        if ([
+          'new_task',
+          'update_priority_task',
+          'update_stage_task',
+          'update_task',
+          'delete_task',
+          'message_rmc'
+        ].contains(eventData['type_event'])) {
+          log('Received relevant event: ${event.data}');
+
+          String title = eventData['type_event'].replaceAll('_', ' ');
+          String initiatorName = "";
+
+          switch (eventData['type_event']) {
+            case "new_task":
+              initiatorName = "${eventData['initiator']['label']} created a new task";
+              break;
+            case "update_task":
+              initiatorName = "${eventData['initiator']['label']} updated ${eventData['label']}";
+              break;
+            case "delete_task":
+              initiatorName = "${eventData['initiator']['label']} deleted the task";
+              break;
+            case "update_stage_task":
+              initiatorName = "${eventData['initiator']['label']} changed the stage to ${eventData['action'][1]}";
+              break;
+            case "update_priority_task":
+              initiatorName = "${eventData['initiator']['label']} updated the priority to ${eventData['action'][1]}";
+              break;
+            case "message_rmc":
+              // For message_rmc event, display the message content in the notification
+              initiatorName = eventData['message']; // Get the message content
+              break;
           }
-        });
-      }
+
+          _showNotification(title, initiatorName);
+        }
+      });
 
       print('Mercure connection established');
     } catch (error) {
@@ -151,7 +148,7 @@ class MercureNotificationService {
     }
   }
 
-  Future<void> _showNotification(String title, String decription) async {
+  Future<void> _showNotification(String title, String description) async {
     const androidDetails = AndroidNotificationDetails(
       'channel_id',
       'channel_name',
@@ -168,23 +165,17 @@ class MercureNotificationService {
     );
 
     await _flutterLocalNotificationsPlugin
-        .show(
-          0,
-          title,
-          decription,
-          notificationDetails,
-        )
+        .show(0, title, description, notificationDetails)
         .then((value) => print('Notification shown successfully'))
         .catchError((error) => print('Error showing notification: $error'));
   }
 
   void _handleNotificationResponse(
       BuildContext context, NotificationResponse response) {
-    // Utilisez le BuildContext pour naviguer vers la page d'accueil
     Navigator.pushNamed(context, '/home');
   }
 
   void dispose() {
-    _subscription?.cancel();
+    _subscription?.cancel(); // Cancel the subscription when disposing
   }
 }

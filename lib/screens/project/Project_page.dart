@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
 import 'package:flutter_application_stage_project/screens/project/ProjectList.dart';
 import 'package:provider/provider.dart';
 
@@ -57,6 +58,20 @@ class _ProjectPageState extends State<ProjectPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.projects),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil<dynamic>(
+              context,
+              MaterialPageRoute<dynamic>(
+                builder: (BuildContext context) => HomeNavigate(
+                  id_page: 0,
+                ),
+              ),
+              (route) => false,
+            );
+          },
+        ),
         actions: [
           IconButton(
             onPressed: () {

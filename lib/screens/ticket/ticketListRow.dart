@@ -139,7 +139,7 @@ class _ticketListRowState extends State<ticketListRow> {
                         ),
                       ),
                       height: 30,
-                      width: 100,
+                      width: 80,
                       decoration: BoxDecoration(
                           color: widget.colorContainer,
                           borderRadius: BorderRadius.horizontal(

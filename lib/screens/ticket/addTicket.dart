@@ -2,7 +2,12 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
+import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
+
 import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
+import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
+import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
 
 import 'package:flutter_application_stage_project/services/ApiFieldGroup.dart';
 import 'package:flutter_application_stage_project/services/ApiFieldPost.dart';
@@ -243,20 +248,21 @@ class _AddElementState extends State<AddElement> {
                                   context,
                                   MaterialPageRoute<dynamic>(
                                     builder: (BuildContext context) =>
-                                        HomeNavigate(
-                                      id_page: 2,
-                                    ),
+                                     TicketPage()
                                   ),
-                                  (route) => false,
+                                  (route) => true,
                                 );
                               } else if (widget.family_id == "7") {
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
                                     builder: (BuildContext context) =>
+                                    /*
                                         HomeNavigate(
                                       id_page: 4,
                                     ),
+                                    */
+                                    ProjectPage()
                                   ),
                                   (route) => false,
                                 );
@@ -265,9 +271,7 @@ class _AddElementState extends State<AddElement> {
                                   context,
                                   MaterialPageRoute<dynamic>(
                                     builder: (BuildContext context) =>
-                                        HomeNavigate(
-                                      id_page: 3,
-                                    ),
+                                      DealPage()
                                   ),
                                   (route) => false,
                                 );
@@ -276,9 +280,8 @@ class _AddElementState extends State<AddElement> {
                                   context,
                                   MaterialPageRoute<dynamic>(
                                     builder: (BuildContext context) =>
-                                        HomeNavigate(
-                                      id_page: 6,
-                                    ),
+                                       
+                                    BookingsPage()
                                   ),
                                   (route) => false,
                                 );

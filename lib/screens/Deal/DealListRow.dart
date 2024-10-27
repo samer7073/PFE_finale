@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
@@ -33,9 +35,11 @@ class _DealListRowState extends State<DealListRow> {
   void initState() {
     super.initState();
     imageUrlFuture = Config.getApiUrl("urlImage");
+    log("44444444444444   ${widget.piepline}");
   }
 
   late Future<String> imageUrlFuture;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +130,7 @@ class _DealListRowState extends State<DealListRow> {
                       width: 10,
                     ),
                     Container(
-                      width: 300,
+                      width: 150,
                       child: Text(
                         widget.title,
                         style: TextStyle(

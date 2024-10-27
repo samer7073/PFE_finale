@@ -116,19 +116,30 @@ class _DealsPageState extends State<DealsPage> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Element supprimé avec succès !',style: TextStyle(color: Colors.white),),
+            content: Text(
+              'Element supprimé avec succès !',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       } else {
         // Show error snackbar
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur : Element non supprimé",style: TextStyle(color: Colors.white),)),
+          SnackBar(
+              content: Text(
+            "Erreur : Element non supprimé",
+            style: TextStyle(color: Colors.white),
+          )),
         );
       }
     } catch (e) {
       // Handle error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur : Element non supprimé",style: TextStyle(color: Colors.white),)),
+        SnackBar(
+            content: Text(
+          "Erreur : Element non supprimé",
+          style: TextStyle(color: Colors.white),
+        )),
       );
     }
   }
@@ -160,8 +171,8 @@ class _DealsPageState extends State<DealsPage> {
                           ActionPane(motion: DrawerMotion(), children: [
                         SlidableAction(
                           icon: Icons.delete,
-                         foregroundColor: Colors.red,
-                      backgroundColor: Colors.transparent,
+                          foregroundColor: Colors.red,
+                          backgroundColor: Colors.transparent,
                           onPressed: (context) {
                             log("delete");
                             showDialog(
@@ -174,8 +185,9 @@ class _DealsPageState extends State<DealsPage> {
                                   actions: [
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                                        backgroundColor: Colors
+                                            .blue, // Définit la couleur de fond en bleu
+                                      ),
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
                                         deleteElement(deal);
@@ -184,8 +196,9 @@ class _DealsPageState extends State<DealsPage> {
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                                        backgroundColor: Colors
+                                            .blue, // Définit la couleur de fond en bleu
+                                      ),
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
                                       },
@@ -256,8 +269,8 @@ class _DealsPageState extends State<DealsPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                color: Colors.blue,
+              ),
             ),
           ],
         ],

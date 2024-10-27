@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_final_fields
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
 
 import '../CustomSearchDelegate.dart';
 import '../NotficationPage.dart';
@@ -61,6 +62,20 @@ class _DealPageState extends State<DealPage> {
         ),
       ),
       appBar: AppBar(
+         leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil<dynamic>(
+              context,
+              MaterialPageRoute<dynamic>(
+                builder: (BuildContext context) => HomeNavigate(
+                  id_page: 0,
+                ),
+              ),
+              (route) => false,
+            );
+          },
+        ),
         title: Text(AppLocalizations.of(context)!.deals),
         actions: [
           IconButton(

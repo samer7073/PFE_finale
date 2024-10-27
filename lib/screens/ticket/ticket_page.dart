@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
 
 import 'package:flutter_application_stage_project/screens/PipelineScreen.dart';
+import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
 import 'package:flutter_application_stage_project/screens/ticket/addTicket.dart';
 import 'package:flutter_application_stage_project/screens/ticket/ticket_list.dart';
 import 'package:provider/provider.dart';
@@ -88,6 +89,20 @@ class _TicketState extends State<TicketPage> {
       ),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.tickets),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil<dynamic>(
+              context,
+              MaterialPageRoute<dynamic>(
+                builder: (BuildContext context) => HomeNavigate(
+                  id_page: 0,
+                ),
+              ),
+              (route) => false,
+            );
+          },
+        ),
         actions: [
           IconButton(
             onPressed: () {

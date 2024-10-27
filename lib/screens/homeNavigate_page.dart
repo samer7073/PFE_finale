@@ -8,7 +8,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
 import 'package:flutter_application_stage_project/screens/home_page.dart';
-import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
 import 'package:provider/provider.dart';
 import '../providers/NotificationProvider.dart';
 import '../services/MercureNotificationService.dart';
