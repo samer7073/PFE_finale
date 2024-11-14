@@ -90,6 +90,7 @@ class _TicketState extends State<BookingsPage> {
       ),
       appBar: AppBar(
         title: Text("Bookings"),
+        
          leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () {
@@ -102,7 +103,9 @@ class _TicketState extends State<BookingsPage> {
               ),
               (route) => false,
             );
+            
           },
+        
         ),
         actions: [
           IconButton(

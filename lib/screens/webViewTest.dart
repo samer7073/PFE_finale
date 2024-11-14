@@ -120,12 +120,20 @@ class _WebViewState extends State<WebView> {
                             if (snapshot.hasError || !snapshot.hasData) {
                               return Icon(Icons.error);
                             }
-                            return CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(
-                                "${snapshot.data}${widget.lead.avatar}",
-                              ),
-                            );
+                           String imageUrl = "${snapshot.data}${widget.lead.avatar}";
+                            bool isSvg =
+                                imageUrl.toLowerCase().endsWith(".svg");
+
+                            return isSvg
+                                ? CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: AssetImage(
+                                        'assets/user17301116397295.png'),
+                                  )
+                                : CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: NetworkImage(imageUrl),
+                                  );
                           },
                         ),
                 ),

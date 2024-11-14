@@ -13,9 +13,11 @@ class ApiProfil {
   static Future<Profile> getProfil() async {
     log("Fetching data from API");
     final token = await SharedPrefernce.getToken("token");
-    log("Token: $token");
+
+    
 
     final baseUrl = await Config.getApiUrl("profile");
+    log("profile ${baseUrl}");
     final url = "$baseUrl";
     log("Profile"+url);
 

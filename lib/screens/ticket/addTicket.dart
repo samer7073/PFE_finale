@@ -101,6 +101,7 @@ class _AddElementState extends State<AddElement> {
                                   ))))
         : Scaffold(
             appBar: AppBar(
+              /*
               leading: IconButton(
                   onPressed: () {
                     if (widget.family_id == "6") {
@@ -150,6 +151,7 @@ class _AddElementState extends State<AddElement> {
                     }
                   },
                   icon: Icon(Icons.arrow_back)),
+                  */
               title: Text("Add a ${widget.titel}"),
             ),
             body: SingleChildScrollView(

@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/core/constants/FieldWidgetGeneratorUpdate.dart';
 import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdate.dart';
 import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdateResponse.dart';
+import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
+import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
+import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
+import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
 
 import '../models/fields/datafieldsresponse.dart';
 import '../models/fields/fileData.dart';
@@ -13,7 +17,6 @@ import '../services/ApiField.dart';
 import '../services/ApiFieldGroup.dart';
 import '../services/ApiFieldPost.dart';
 import 'homeNavigate_page.dart';
-
 
 class EditElment extends StatefulWidget {
   final String title;
@@ -91,8 +94,10 @@ class _EditElmentState extends State<EditElment> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit a ${widget.title}"),
+        /*
         leading: IconButton(
             onPressed: () {
+              /*
               if (widget.family_id == "6") {
                 Navigator.pushAndRemoveUntil<dynamic>(
                   context,
@@ -126,7 +131,7 @@ class _EditElmentState extends State<EditElment> {
                   (route) =>
                       false, //if you want to disable back feature set to false
                 );
-              }else if (widget.family_id == "8") {
+              } else if (widget.family_id == "8") {
                 Navigator.pushAndRemoveUntil<dynamic>(
                   context,
                   MaterialPageRoute<dynamic>(
@@ -138,15 +143,53 @@ class _EditElmentState extends State<EditElment> {
                       false, //if you want to disable back feature set to false
                 );
               }
+              */
+              if (widget.family_id == "6") {
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                      builder: (BuildContext context) => TicketPage()),
+                  (route) => true,
+                );
+              } else if (widget.family_id == "7") {
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                      builder: (BuildContext context) =>
+                          /*
+                                        HomeNavigate(
+                                      id_page: 4,
+                                    ),
+                                    */
+                          ProjectPage()),
+                  (route) => false,
+                );
+              } else if (widget.family_id == "3") {
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                      builder: (BuildContext context) => DealPage()),
+                  (route) => false,
+                );
+              } else if (widget.family_id == "8") {
+                Navigator.pushAndRemoveUntil<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                      builder: (BuildContext context) => BookingsPage()),
+                  (route) => false,
+                );
+              }
             },
             icon: Icon(Icons.arrow_back)),
+            */
       ),
+
       body: loading
           ? Container(
               child: Center(
                 child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                  color: Colors.blue,
+                ),
               ),
             )
           : SingleChildScrollView(
@@ -210,8 +253,9 @@ class _EditElmentState extends State<EditElment> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-  ),
+                        backgroundColor:
+                            Colors.blue, // Définit la couleur de fond en bleu
+                      ),
                       onPressed: () async {
                         log(fieldValues.toString());
 
@@ -237,10 +281,15 @@ class _EditElmentState extends State<EditElment> {
                                   backgroundColor: Colors.green,
                                   action: SnackBarAction(
                                       label: "Ok", onPressed: () {}),
-                                  content: Text('Form submitted successfully!',style: TextStyle(color: Colors.white),),
+                                  content: Text(
+                                    'Form submitted successfully!',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               );
+
                               if (widget.family_id == "6") {
+                                /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
@@ -251,7 +300,17 @@ class _EditElmentState extends State<EditElment> {
                                   ),
                                   (route) => false,
                                 );
+                                */
+
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                      builder: (BuildContext context) =>
+                                          TicketPage()),
+                                  (route) => true,
+                                );
                               } else if (widget.family_id == "7") {
+                                /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
@@ -261,8 +320,21 @@ class _EditElmentState extends State<EditElment> {
                                     ),
                                   ),
                                   (route) => false,
+                                );*/
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                      builder: (BuildContext context) =>
+                                          /*
+                                        HomeNavigate(
+                                      id_page: 4,
+                                    ),
+                                    */
+                                          ProjectPage()),
+                                  (route) => false,
                                 );
                               } else if (widget.family_id == "3") {
+                                /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
@@ -273,6 +345,22 @@ class _EditElmentState extends State<EditElment> {
                                   ),
                                   (route) => false,
                                 );
+                                */
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                      builder: (BuildContext context) =>
+                                          DealPage()),
+                                  (route) => false,
+                                );
+                              } else if (widget.family_id == "8") {
+                                Navigator.pushAndRemoveUntil<dynamic>(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                      builder: (BuildContext context) =>
+                                          BookingsPage()),
+                                  (route) => false,
+                                );
                               }
                             } else if (postUpdate == 500) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -281,7 +369,9 @@ class _EditElmentState extends State<EditElment> {
                                   action: SnackBarAction(
                                       label: "Ok", onPressed: () {}),
                                   content: Text(
-                                      'Please check the validations of your required fields.',style: TextStyle(color: Colors.white),),
+                                    'Please check the validations of your required fields.',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               );
                             }
@@ -295,7 +385,9 @@ class _EditElmentState extends State<EditElment> {
                               action:
                                   SnackBarAction(label: "Ok", onPressed: () {}),
                               content: Text(
-                                  'Please check the validations of your required fields.',style: TextStyle(color: Colors.white),),
+                                'Please check the validations of your required fields.',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           );
                         }

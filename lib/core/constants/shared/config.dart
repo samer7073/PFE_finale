@@ -6,15 +6,15 @@ import '../../../services/sharedPreference.dart';
 
 class Config {
   //static const String prodUrl = "https://sphere.comunikcrm.info";
-  static const String prodUrl = "https://sphereback.cmk.biz";
+  static const String prodUrl = "https://spherebackcomunik.cmk.biz";
 
   static const String devUrl = "https://spherebackdev1.sphere.tn";
 
   static const Map<String, String> apiProdUrls = {
-    "allUsers": "https://spherechatback.cmk.biz:4543/api/all-users",
+    "allUsers": "https://chatbackcomunik.cmk.biz:4543/api/all-users",
     "taskStagesElements": "$prodUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
-        "https://spherechatbackmongodb.cmk.biz:4543/index.php/api/get-discussion-room/",
+        "https://chatbackcomunik.cmk.biz:4543/index.php/api/get-discussion-room/",
     "kanban": "$prodUrl:4543/index.php/api/mobile/kanban-by-stage",
     "tasksKpi": "$prodUrl:4543/index.php/api/mobile/tasks/kpi",
     "login": "https://sphereauthback.cmk.biz:4543/index.php/api/mobile/login",
@@ -30,7 +30,7 @@ class Config {
     "profile": "$prodUrl:4543/index.php/api/mobile/profile",
     "modifyProfile": "$prodUrl:4543/index.php/api/edit-profile",
     "pipelines": "$prodUrl:4543/index.php/api/mobile/pipelines-by-family",
-    "jwt": "https://spherechatback.cmk.biz:4543/api/user",
+    "jwt": "https://chatbackcomunik.cmk.biz:4543/api/user",
 
     "kpiFamilyUrl":
         "$prodUrl:4543/index.php/api/mobile/kpi-family", // Added for ApiKpiFamily
@@ -189,7 +189,7 @@ class Config {
     "saveFile": "$devUrl:4543/index.php/api/tasks/upload/save",
      "leads": "$devUrl:4543/index.php/api/mobile/get-elements-by-family/9",
      "note":"$devUrl:4543/api/get-note",
-     "rmcChat":"https://rmcdemo.comunikcrm.info/rmcbackdev1/admin.php"
+     "rmcChat":"https://rmcbackdev1.sphere.tn:4543/admin.php"
      
   };
 

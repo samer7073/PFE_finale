@@ -75,19 +75,30 @@ class _PipelineScreenState extends State<PipelineScreen> {
           SnackBar(
             backgroundColor: Colors.green,
             //action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Item deleted successfully!',style: TextStyle(color: Colors.white),),
+            content: Text(
+              'Item deleted successfully!',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       } else {
         // Show error snackbar
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
+          SnackBar(
+              content: Text(
+            "Error: Item not deleted",
+            style: TextStyle(color: Colors.white),
+          )),
         );
       }
     } catch (e) {
       // Handle error
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
+        SnackBar(
+            content: Text(
+          "Error: Item not deleted",
+          style: TextStyle(color: Colors.white),
+        )),
       );
     }
   }
@@ -102,8 +113,8 @@ class _PipelineScreenState extends State<PipelineScreen> {
             body: Container(
               child: Center(
                 child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                  color: Colors.blue,
+                ),
               ),
             ),
           )
@@ -205,38 +216,40 @@ class _PipelineScreenState extends State<PipelineScreen> {
                                 }
                               },
                               child: Container(
-                                  height: 42,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 12.0,
-                                    horizontal: 15.0,
-                                  ),
-                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
+                                height: 42,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 12.0,
+                                  horizontal: 15.0,
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: selectedStageId == stage.id
+                                      ? Color.fromARGB(255, 34, 63, 249)
+                                      : isDarkMode == true
+                                          ? Colors.black
+                                          : Colors.white,
+                                  border: Border.all(
                                     color: selectedStageId == stage.id
                                         ? Color.fromARGB(255, 34, 63, 249)
-                                        : isDarkMode==true? Colors.black: Colors.white,
-                                    border: Border.all(
+                                        : Color.fromARGB(255, 200, 200,
+                                            200), // Couleur de la bordure non sélectionnée
+                                    width: 0.50,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    stage.label,
+                                    style: TextStyle(
                                       color: selectedStageId == stage.id
-                                          ? Color.fromARGB(255, 34, 63, 249)
-                                          : Color.fromARGB(255, 200, 200,
-                                              200), // Couleur de la bordure non sélectionnée
-                                      width: 0.50,
+                                          ? Colors.white
+                                          : isDarkMode
+                                              ? Colors.white
+                                              : Colors.grey,
                                     ),
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      stage.label,
-                                      style: TextStyle(
-                                        color: selectedStageId == stage.id
-                                            ? Colors.white
-                                            : isDarkMode
-                                                ? Colors.white
-                                                : Colors.grey,
-                                      ),
-                                    ),
-                                  ),
+                                ),
                               ),
                             );
                           }).toList(),
@@ -247,10 +260,9 @@ class _PipelineScreenState extends State<PipelineScreen> {
                         child: stageLoading
                             ? Container(
                                 child: Center(
-                                    child:
-                                        CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ))) // Show loading indicator for stage data
+                                    child: CircularProgressIndicator(
+                                color: Colors.blue,
+                              ))) // Show loading indicator for stage data
                             : kanbanData == null || kanbanData!.isEmpty
                                 ? Center(
                                     child: Text(
