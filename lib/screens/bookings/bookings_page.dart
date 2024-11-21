@@ -78,7 +78,7 @@ class _TicketState extends State<BookingsPage> {
             MaterialPageRoute(
               builder: (context) => AddElement(
                 family_id: "8",
-                titel: "Booking",
+                titel: "${AppLocalizations.of(context)!.booking}",
               ),
             ),
           );
@@ -89,7 +89,7 @@ class _TicketState extends State<BookingsPage> {
         ),
       ),
       appBar: AppBar(
-        title: Text("Bookings"),
+        title: Text("${AppLocalizations.of(context)!.bookings}"),
         
          leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),

@@ -7,7 +7,7 @@ import 'package:flutter_application_stage_project/providers/theme_provider.dart'
 import 'package:flutter_application_stage_project/services/ApiOtpGenerate.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/ApiGetJWT.dart';
 import '../services/sharedPreference.dart';
 
@@ -107,13 +107,13 @@ class _VerfierPasswordState extends State<VerfierPassword> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text("Ok",style: TextStyle(
+                        child: Text("${AppLocalizations.of(context)!.ok}",style: TextStyle(
                           color: Colors.blue
                         ),))
                   ],
-                  title: Text("Problème d'authentification"),
+                  title: Text("${AppLocalizations.of(context)!.authenticationproblem}"),
                   contentPadding: EdgeInsets.all(20),
-                  content: Text("Merci de vérifier votre code OTP."),
+                  content: Text("${AppLocalizations.of(context)!.merciverifiercode}"),
                 ));
         log(e.toString());
       }

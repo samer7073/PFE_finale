@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/bookings_models/BookingsApiRespose.dart';
 import 'package:flutter_application_stage_project/models/bookings_models/bookingsData.dart';
 import 'package:flutter_application_stage_project/screens/bookings/BookingListRow.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/services/bookingsService/BookingsService.dart';
 
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -78,17 +78,17 @@ class _BookingsListState extends State<BookingsList> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Item successfully deleted!',style: TextStyle(color: Colors.white),),
+            content: Text('${AppLocalizations.of(context)!.elementdeletedsuccessfully}',style: TextStyle(color: Colors.white),),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
+          SnackBar(content: Text("${AppLocalizations.of(context)!.errorelementnotdeleted}",style: TextStyle(color: Colors.white),)),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: Item not deleted",style: TextStyle(color: Colors.white),)),
+        SnackBar(content: Text("${AppLocalizations.of(context)!.errorelementnotdeleted}",style: TextStyle(color: Colors.white),)),
       );
     }
   }
@@ -122,22 +122,21 @@ class _BookingsListState extends State<BookingsList> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Delete"),
-                              content: Text(
-                                  "Are you sure you want to delete this ticket?"),
+                              title: Text("${AppLocalizations.of(context)!.delete}"),
+                              content: Text("${AppLocalizations.of(context)!.deletebooking}"),
                               actions: [
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(true);
                                     deleteTicket(booking);
                                   },
-                                  child: Text("Yes"),
+                                  child: Text("${AppLocalizations.of(context)!.yesword}"),
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
-                                  child: Text("No"),
+                                  child:Text("${AppLocalizations.of(context)!.noword}"),
                                 )
                               ],
                             );

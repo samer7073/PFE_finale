@@ -8,7 +8,7 @@ import '../../services/tickets/getTicketApi.dart';
 import '../EditElment.dart';
 import '../detailElment.dart';
 import 'ticketListRow.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class TicketList extends StatefulWidget {
   const TicketList({Key? key}) : super(key: key);
 
@@ -134,9 +134,9 @@ class _TicketListState extends State<TicketList> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Delete"),
+                              title: Text("${AppLocalizations.of(context)!.delete}"),
                               content: Text(
-                                  "Are you sure you want to delete this ticket?"),
+                                  "${AppLocalizations.of(context)!.deleteticket}"),
                               actions: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -147,7 +147,7 @@ class _TicketListState extends State<TicketList> {
                                     Navigator.of(context).pop(true);
                                     deleteTicket(ticket);
                                   },
-                                  child: Text("Yes"),
+                                  child: Text("${AppLocalizations.of(context)!.yesword}"),
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -157,7 +157,7 @@ class _TicketListState extends State<TicketList> {
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
-                                  child: Text("No"),
+                                  child: Text("${AppLocalizations.of(context)!.noword}"),
                                 )
                               ],
                             );
@@ -173,7 +173,7 @@ class _TicketListState extends State<TicketList> {
                             builder: (context) => EditElment(
                               Element_id: ticket.id,
                               family_id: "6",
-                              title: "Ticket",
+                              title: AppLocalizations.of(context)!.ticket,
                             ),
                           ),
                         );

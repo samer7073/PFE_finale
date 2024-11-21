@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../models/Deal/DealModel.dart';
 import '../../services/ApiDeleteElment.dart';
 import '../../services/deal/ApiDeal.dart';
@@ -117,7 +117,7 @@ class _DealsPageState extends State<DealsPage> {
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
             content: Text(
-              'Element supprimé avec succès !',
+             " ${AppLocalizations.of(context)!.elementdeletedsuccessfully}",
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -127,7 +127,7 @@ class _DealsPageState extends State<DealsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text(
-            "Erreur : Element non supprimé",
+            "${AppLocalizations.of(context)!.errorelementnotdeleted}",
             style: TextStyle(color: Colors.white),
           )),
         );
@@ -137,7 +137,7 @@ class _DealsPageState extends State<DealsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-          "Erreur : Element non supprimé",
+        "${AppLocalizations.of(context)!.errorelementnotdeleted}",
           style: TextStyle(color: Colors.white),
         )),
       );
@@ -174,14 +174,13 @@ class _DealsPageState extends State<DealsPage> {
                           foregroundColor: Colors.red,
                           backgroundColor: Colors.transparent,
                           onPressed: (context) {
-                            log("delete");
+                           
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("Delete"),
-                                  content: Text(
-                                      "Are you sure you want to delete this deal?"),
+                                  title: Text("${AppLocalizations.of(context)!.delete}"),
+                                  content: Text("${AppLocalizations.of(context)!.deletedeal}"),
                                   actions: [
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
@@ -192,7 +191,7 @@ class _DealsPageState extends State<DealsPage> {
                                         Navigator.of(context).pop(true);
                                         deleteElement(deal);
                                       },
-                                      child: Text("Yes"),
+                                      child: Text("${AppLocalizations.of(context)!.yesword}"),
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
@@ -202,7 +201,7 @@ class _DealsPageState extends State<DealsPage> {
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
                                       },
-                                      child: Text("No"),
+                                      child:Text("${AppLocalizations.of(context)!.noword}"),
                                     )
                                   ],
                                 );

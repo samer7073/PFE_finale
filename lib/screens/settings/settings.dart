@@ -716,8 +716,8 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text("Disconnect"),
-                            content: Text("Do you really want to disconnect?"),
+                            title: Text("${AppLocalizations.of(context)!.disconnect}"),
+                            content: Text("${AppLocalizations.of(context)!.doyoureallywanttodisconnect}"),
                             actions: [
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -728,7 +728,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                   Navigator.of(context)
                                       .pop(false); // User cancelled deletion
                                 },
-                                child: Text("No"),
+                                child:Text("${AppLocalizations.of(context)!.noword}"),
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -752,7 +752,7 @@ class _SettingsState extends State<Settings> with WidgetsBindingObserver {
                                     print("problem de logout $e");
                                   }
                                 },
-                                child: Text("Yes"),
+                                child: Text("${AppLocalizations.of(context)!.yesword}"),
                               ),
                             ],
                           );

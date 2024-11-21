@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:flutter_application_stage_project/models/leads_models/lead.dart';
 import 'package:flutter_application_stage_project/screens/leads/leadTile.dart';
@@ -103,7 +103,7 @@ class _LeadsPageState extends State<LeadsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Leads"),
+        title: Text("${AppLocalizations.of(context)!.leads}"),
         centerTitle: true,
       ),
       body: Column(
@@ -113,7 +113,7 @@ class _LeadsPageState extends State<LeadsPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search Lead...',
+                hintText: AppLocalizations.of(context)!.searchlead,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16.0),
                   borderSide: BorderSide.none,

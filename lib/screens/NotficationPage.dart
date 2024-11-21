@@ -134,15 +134,15 @@ class _NotificationPageState extends State<NotificationPage> {
 
   String _generateNotificationText(List action) {
     if (action.contains('Update_stage')) {
-      return 'has changed the stage of the activity ${action[1]}';
+      return '${AppLocalizations.of(context)!.haschangedthestageoftheactivity} ${action[1]}';
     } else if (action.contains('update_priority')) {
-      return 'has updated the priority of the activity ${action[1]}';
+      return '${AppLocalizations.of(context)!.hasupdatedthepriorityoftheactivity} ${action[1]}';
     } else if (action.contains('Creation')) {
-      return ' added you as Participant in new activity ${action[1]}';
+      return ' ${AppLocalizations.of(context)!.addedyouasParticipantinnewactivity} ${action[1]}';
     } else if (action.contains('Deletion')) {
-      return 'has has deleted the activity ${action[1]}';
+      return '${AppLocalizations.of(context)!.hasdeletedtheactivity} ${action[1]}';
     } else {
-      return ' has updated ${action[1]}';
+      return ' ${AppLocalizations.of(context)!.hasupdated} ${action[1]}';
     }
   }
 
@@ -161,7 +161,7 @@ Widget build(BuildContext context) {
 
       if (snapshot.hasError) {
         return Center(
-          child: Text('Error loading image URL'),
+          child: Text('${AppLocalizations.of(context)!.errorloadingimageurl}'),
         );
       }
 
@@ -179,7 +179,7 @@ Widget build(BuildContext context) {
               )
             : _tasks.isEmpty
                 ? Center(
-                    child: Text('There are no notifications'),
+                    child: Text("${AppLocalizations.of(context)!.therearenonotifications}"),
                   )
                 : ListView.builder(
                     controller: _scrollController,

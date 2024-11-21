@@ -181,13 +181,13 @@ class _LoginPageState extends State<LoginPage> {
                                 height: 30,
                               ),
                               Text(
-                                "Connexion à un serveur d'accueil",
+                                "${AppLocalizations.of(context)!.connectingtoahostserver}",
                                 style: Theme.of(context).textTheme.headlineLarge,
                               ),
                               SizedBox(
                                 height: 15,
                               ),
-                              Text("Quelle est l'adresse de votre serveur ?"),
+                              Text("${AppLocalizations.of(context)!.address}"),
                               SizedBox(
                                 height: 15,
                               ),
@@ -212,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                                       keyboardType: TextInputType.url,
                                       decoration: InputDecoration(
                                           hintText:
-                                              "URL du serveur d'acceuil",
+                                              "${AppLocalizations.of(context)!.homeserverurl}",
                                           border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(18),
@@ -238,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
                                             horizontal: 50, vertical: 16),
                                         backgroundColor: Colors.blue),
                                     child: Text(
-                                      "Modify",
+                                      "${AppLocalizations.of(context)!.modifyurl}",
                                       style: TextStyle(
                                           fontFamily: 'ProstoOne',
                                           fontSize: 14,
@@ -412,14 +412,14 @@ class _LoginPageState extends State<LoginPage> {
               showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                        title: Text("Invalid Email"),
-                        content: Text("Please enter a valid email address."),
+                        title: Text("${AppLocalizations.of(context)!.invalidemail}"),
+                        content: Text("${AppLocalizations.of(context)!.pleaseenteravalidemailaddress}"),
                         actions: [
                           TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text("OK",style: TextStyle(
+                              child: Text("${AppLocalizations.of(context)!.ok}",style: TextStyle(
                                 color: Colors.blue
                               ),))
                         ],
@@ -435,7 +435,7 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
           child: Text(
-            "Send me a code !",
+            "${AppLocalizations.of(context)!.sendmeacode}",
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'ProstoOne',
@@ -513,17 +513,17 @@ class _LoginPageState extends State<LoginPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text("Problème d'authentification"),
+            title: Text("${AppLocalizations.of(context)!.authenticationproblem}"),
             contentPadding: EdgeInsets.all(20),
             content: Text(
-              "Merci de vérifier vos informations ou bien contacter l'administrateur.\n$e",
+              "${AppLocalizations.of(context)!.pleasecheckyourinformationorcontacttheadministrator} \n$e",
             ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Ok"),
+                child: Text("${AppLocalizations.of(context)!.ok}"),
               ),
             ],
           ),
@@ -537,17 +537,17 @@ class _LoginPageState extends State<LoginPage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text("Problème d'authentification"),
+            title: Text("${AppLocalizations.of(context)!.authenticationproblem}"),
             contentPadding: EdgeInsets.all(20),
             content: Text(
-              "Merci de vérifier vos informations ou bien contacter l'administrateur.\n$e",
+             " ${AppLocalizations.of(context)!.pleasecheckyourinformationorcontacttheadministrator}\n$e",
             ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Text("Ok"),
+                child: Text("${AppLocalizations.of(context)!.ok}"),
               ),
             ],
           ),

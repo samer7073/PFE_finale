@@ -457,7 +457,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
           : fileList.length *
               50, // Assurez-vous que cette hauteur est suffisante
       child: fileList == null || fileList.isEmpty
-          ? Text("Aucun fichier sélectionné")
+          ? Text("${AppLocalizations.of(context)!.nofilesselected}")
           : ListView.builder(
               itemCount: fileList
                   .length, // Utilisation de fileList.length comme itemCount

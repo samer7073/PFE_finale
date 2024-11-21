@@ -10,7 +10,7 @@ import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
 import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
 import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
 import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../models/fields/datafieldsresponse.dart';
 import '../models/fields/fileData.dart';
 import '../services/ApiField.dart';
@@ -93,7 +93,7 @@ class _EditElmentState extends State<EditElment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit a ${widget.title}"),
+        title: Text("${AppLocalizations.of(context)!.edit} ${widget.title}"),
         /*
         leading: IconButton(
             onPressed: () {
@@ -282,7 +282,7 @@ class _EditElmentState extends State<EditElment> {
                                   action: SnackBarAction(
                                       label: "Ok", onPressed: () {}),
                                   content: Text(
-                                    'Form submitted successfully!',
+                                    "${AppLocalizations.of(context)!.formsubmittedsuccessfully}",
                                     style: TextStyle(color: Colors.white),
                                   ),
                                 ),
@@ -392,7 +392,7 @@ class _EditElmentState extends State<EditElment> {
                           );
                         }
                       },
-                      child: Text("Save"),
+                      child: Text("${AppLocalizations.of(context)!.save}"),
                     )
                   ],
                 ),

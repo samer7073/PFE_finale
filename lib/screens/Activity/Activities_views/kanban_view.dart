@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -277,7 +278,7 @@ class _KanbanBoardState extends State<KanbanBoard> {
                 } else if (snapshot.hasError) {
                   return Text("${snapshot.error}");
                 }
-                return const Text("Loading...");
+                return  Text(AppLocalizations.of(context)!.loadingwaittt);
               },
             ),
             const SizedBox(height: 18),

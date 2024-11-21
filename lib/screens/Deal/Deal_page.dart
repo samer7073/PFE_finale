@@ -52,7 +52,7 @@ class _DealPageState extends State<DealPage> {
             MaterialPageRoute(
                 builder: (context) => AddElement(
                       family_id: "3",
-                      titel: "Deal",
+                      titel: AppLocalizations.of(context)!.deal,
                     )),
           );
         },

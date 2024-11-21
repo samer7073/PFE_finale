@@ -4,7 +4,6 @@ import 'package:flutter_application_stage_project/models/leads_models/lead.dart'
 import 'package:flutter_application_stage_project/screens/webViewTest.dart';
 import 'package:intl/intl.dart';
 
-
 class LeadTile extends StatelessWidget {
   final Lead lead;
 
@@ -112,7 +111,7 @@ class LeadTile extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w500,
                                   color: isDarkMode
                                       ? Colors.white
                                       : Colors.black87),
@@ -147,17 +146,43 @@ class LeadTile extends StatelessWidget {
                         if (lead.seen_by != null &&
                             lead.seen_by.isNotEmpty) ...[
                           Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment
+                                .center, // Aligne verticalement au centre
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Text(
-                                   overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  "${lead.seen_by} :",
-                                  style: TextStyle(color: Colors.blueGrey),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5
+                                  ),
+                                  color: const Color.fromARGB(255, 207, 225, 240)
+                                ),
+                                child: Row(
+                                  children: [
+                                    SizedBox(width: 5,),
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                          maxWidth:
+                                              100), // Limite la largeur à 100 pixels
+                                      child: Text(
+                                        lead.seen_by,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(color: Colors.blueGrey),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                        width:
+                                            4), // Ajoute un espace entre le nom et le message
+                                    Text(":"),
+                                        SizedBox(
+                                  width:
+                                      4), 
+                                  ],
                                 ),
                               ),
-                              SizedBox(width: 4),
+                              SizedBox(width: 5,),
+
+                          // Ajoute un espace entre le ":" et le message
                               Expanded(
                                 child: Text(
                                   lead.last_message,
@@ -167,7 +192,7 @@ class LeadTile extends StatelessWidget {
                                 ),
                               ),
                             ],
-                          ),
+                          )
                         ],
                       ],
                     ],

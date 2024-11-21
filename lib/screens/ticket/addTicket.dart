@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
 import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
 import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
 import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
 
@@ -152,7 +152,7 @@ class _AddElementState extends State<AddElement> {
                   },
                   icon: Icon(Icons.arrow_back)),
                   */
-              title: Text("Add a ${widget.titel}"),
+              title: Text("${AppLocalizations.of(context)!.add_a} ${widget.titel}"),
             ),
             body: SingleChildScrollView(
               child: Form(
@@ -242,7 +242,7 @@ class _AddElementState extends State<AddElement> {
                                       textColor: Colors.white,
                                       label: "Ok",
                                       onPressed: () {}),
-                                  content: Text('Form submitted successfully!'),
+                                  content: Text("${AppLocalizations.of(context)!.formsubmittedsuccessfully}"),
                                 ),
                               );
                               if (widget.family_id == "6") {
@@ -316,7 +316,7 @@ class _AddElementState extends State<AddElement> {
                           );
                         }
                       },
-                      child: Text("Save"),
+                      child: Text("${AppLocalizations.of(context)!.save}"),
                     )
                   ],
                 ),

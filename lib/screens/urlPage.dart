@@ -4,7 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/sharedPreference.dart';
 import 'login_page.dart';
 
@@ -170,7 +170,7 @@ class _UrlPageState extends State<UrlPage> {
                               horizontal: 130, vertical: 16),
                           backgroundColor: Colors.white),
                       child: Text(
-                        "Save",
+                        "${AppLocalizations.of(context)!.save}",
                         style: TextStyle(
                           fontSize: 14,
                           color: Color.fromARGB(255, 22, 105, 161),

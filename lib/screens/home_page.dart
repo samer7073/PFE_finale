@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage>
                     'assets/booking (1).png',
                     color: const Color.fromARGB(255, 98, 97, 97),
                   ),
-                  title: Text("Bookings"),
+                  title: Text("${AppLocalizations.of(context)!.bookings}"),
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (_) => BookingsPage()));
@@ -216,7 +216,7 @@ class _HomePageState extends State<HomePage>
                     'assets/document.png',
                     color: const Color.fromARGB(255, 98, 97, 97),
                   ),
-                  title: Text("Projet"),
+                  title: Text("${AppLocalizations.of(context)!.projects}"),
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (_) => ProjectPage()));
@@ -242,7 +242,7 @@ class _HomePageState extends State<HomePage>
                     size: 25,
                     color: const Color.fromARGB(255, 98, 97, 97),
                   ),
-                  title: Text("Notes"),
+                  title: Text("${AppLocalizations.of(context)!.notes}"),
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (_) => NotesPage()));
@@ -275,7 +275,7 @@ class _HomePageState extends State<HomePage>
                     Icons.settings,
                     color: const Color.fromARGB(255, 98, 97, 97),
                   ),
-                  title: Text("Settings"),
+                  title: Text("${AppLocalizations.of(context)!.settings}"),
                   onTap: () {
                     goToSettingsPage();
                   },

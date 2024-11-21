@@ -113,7 +113,7 @@ class _HomeNavigateState extends State<HomeNavigate> {
                'assets/lead.png',
               color: Colors.blue,
             ),
-            label: "Leads",
+            label: AppLocalizations.of(context)!.leads,
           ),
         ],
         currentIndex: selectedPage,

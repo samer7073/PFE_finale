@@ -322,7 +322,7 @@ class _TaskListPageState extends State<TaskListPage> {
                             ),
                           ),
                         ),
-                  hintText: 'Search tasks...',
+                  hintText: AppLocalizations.of(context)!.searchactivites,
                   hintStyle: TextStyle(
                     fontSize: 14, // Adjust font size as needed
                   ),

@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/chatUserModel/chatUserModel.dart';
 import 'package:flutter_application_stage_project/models/commanitaireRoom/Message.dart';
@@ -86,8 +86,8 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
   Widget build(BuildContext context) {
     return widget.roomId == "null"
         ? Container(
-            child: const Center(
-              child: Text("No Comment Room Available"),
+            child:  Center(
+              child: Text(AppLocalizations.of(context)!.nocommentroomavailable),
             ),
           )
         : Scaffold(
@@ -101,10 +101,10 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
                   ));
                 } else if (snapshot.hasError) {
                   return Center(
-                      child: Text('Failed to load data: ${snapshot.error}'));
+                      child: Text('${AppLocalizations.of(context)!.failedtoloaddata} ${snapshot.error}'));
                 } else if (snapshot.data == null) {
-                  return const Center(
-                      child: Text("You do not have access to this room"));
+                  return  Center(
+                      child: Text("${AppLocalizations.of(context)!.youdonothaveaccesstothisroom}"));
                 } else if (snapshot.hasData) {
                   List<Message> messages = snapshot.data!.data;
 
@@ -124,7 +124,7 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
                       } else if (imageUrlSnapshot.hasError) {
                         return Center(
                             child: Text(
-                                'Failed to load image URL: ${imageUrlSnapshot.error}'));
+                                '${AppLocalizations.of(context)!.errorloadingimageurl} ${imageUrlSnapshot.error}'));
                       } else if (imageUrlSnapshot.hasData) {
                         String baseUrl = imageUrlSnapshot.data ?? "";
 
@@ -239,12 +239,12 @@ class _RommCommentairePageState extends State<RommCommentairePage> {
                           },
                         );
                       } else {
-                        return const Center(child: Text("No data available"));
+                        return  Center(child: Text("${AppLocalizations.of(context)!.nodataavailable}"));
                       }
                     },
                   );
                 } else {
-                  return const Center(child: Text("No data available"));
+                  return  Center(child: Text("${AppLocalizations.of(context)!.nodataavailable}"));
                 }
               },
             ),

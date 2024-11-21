@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import '../../services/ApiFamilyModuleData.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class FieldWidgetGeneratorUpdate extends StatefulWidget {
   final DataFieldGroupUpdate dataFieldGroup;
   final TextEditingController? emailController;
@@ -1080,7 +1080,7 @@ class _FieldWidgetGeneratorUpdateState
                         onPressed: () async {
                           _pickImage();
                         },
-                        label: Text("Upload"),
+                        label: Text("${AppLocalizations.of(context)!.upload}"),
                       ),
                     ],
                   ),
@@ -1197,7 +1197,7 @@ class _FieldWidgetGeneratorUpdateState
                             onPressed: () {
                               selectedImages();
                             },
-                            label: Text("Upload")),
+                            label: Text("${AppLocalizations.of(context)!.upload}")),
                       ],
                     ),
                     albumlist == null
@@ -1333,7 +1333,7 @@ class _FieldWidgetGeneratorUpdateState
                             onPressed: () {
                               selectFiles();
                             },
-                            label: Text("Upload")),
+                            label: Text("${AppLocalizations.of(context)!.upload}")),
                       ],
                     ),
                     Text(
@@ -1384,7 +1384,7 @@ class _FieldWidgetGeneratorUpdateState
                           : fileList.length *
                               50, // Assurez-vous que cette hauteur est suffisante
                       child: fileList == null || fileList.isEmpty
-                          ? Text("Aucun fichier sélectionné")
+                          ? Text("${AppLocalizations.of(context)!.nofilesselected}")
                           : ListView.builder(
                               itemCount: fileList
                                   .length, // Utilisation de fileList.length comme itemCount
@@ -1854,7 +1854,7 @@ class _FieldWidgetGeneratorUpdateState
           return Padding(
             padding: const EdgeInsets.all(10.0),
             child: MultiSelectDialogField(
-              buttonText: Text("Select " + widget.dataFieldGroup.alias),
+              buttonText: Text("${AppLocalizations.of(context)!.select} " + widget.dataFieldGroup.alias),
               title: Text(widget.dataFieldGroup.alias),
               buttonIcon: Icon(
                 Icons.arrow_drop_down_outlined,
@@ -1907,7 +1907,7 @@ class _FieldWidgetGeneratorUpdateState
           return Padding(
             padding: const EdgeInsets.all(10.0),
             child: MultiSelectDialogField(
-              buttonText: Text("Select " + widget.dataFieldGroup.alias),
+              buttonText: Text("${AppLocalizations.of(context)!.select} " + widget.dataFieldGroup.alias),
               title: Text(widget.dataFieldGroup.alias),
               buttonIcon: Icon(
                 Icons.arrow_drop_down_outlined,
@@ -1972,7 +1972,7 @@ class _FieldWidgetGeneratorUpdateState
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 DropdownButtonFormField<String>(
-                  hint: Text("Select " + widget.dataFieldGroup.alias),
+                  hint: Text("${AppLocalizations.of(context)!.select} " + widget.dataFieldGroup.alias),
                   icon: Icon(
                     Icons.arrow_drop_down,
                     color: Colors.black,
@@ -2071,7 +2071,7 @@ class _FieldWidgetGeneratorUpdateState
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 DropdownButtonFormField<String>(
-                  hint: Text("Select " + widget.dataFieldGroup.alias),
+                  hint: Text("${AppLocalizations.of(context)!.select}" + widget.dataFieldGroup.alias),
                   icon: Icon(
                     Icons.arrow_drop_down,
                     color: Colors.black,

@@ -1,7 +1,7 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors
 
 import 'dart:developer';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/Activity/comments_room.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_task.dart';
@@ -476,7 +476,7 @@ class TaskCommentsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return roomId == null
-        ? const Center(child: Text("No Comment Room Available"))
+        ?  Center(child: Text(AppLocalizations.of(context)!.nocommentroomavailable))
         : RommCommentairePage(roomId: roomId!);
   }
 }

@@ -49,7 +49,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           // Show error message via SnackBar
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("An error occurred: $e"),
+              content: Text("${AppLocalizations.of(context)!.anerroroccurred} $e"),
               backgroundColor: Colors.red,
             ),
           );
@@ -83,7 +83,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'Loading, please wait...',
+                      AppLocalizations.of(context)!.loadingwaittt,
                       style: TextStyle(color: Colors.blue),
                     ),
                   ],

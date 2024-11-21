@@ -113,7 +113,7 @@ class _ContactPageState extends State<ContactPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search Organisation and Contacts...',
+                hintText: AppLocalizations.of(context)!.searchorganisationandcontacts,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16.0),
                   borderSide: BorderSide.none,

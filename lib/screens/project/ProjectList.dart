@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:flutter_application_stage_project/screens/project/project_list_row.dart';
 import 'package:flutter_application_stage_project/screens/ticket/addTicket.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../models/ticket/ticket.dart';
 import '../../../models/ticket/ticketData.dart';
 import 'package:flutter_application_stage_project/services/tickets/getTicketApi.dart';
@@ -12,7 +12,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../services/ApiDeleteElment.dart';
 import '../EditElment.dart';
 import '../detailElment.dart';
-import '../loading.dart';
+
 
 class ProjectList extends StatefulWidget {
   const ProjectList({super.key});
@@ -79,17 +79,17 @@ class _ProjectListState extends State<ProjectList> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('Element supprimer avec succès !',style: TextStyle(color: Colors.white),),
+            content: Text('${AppLocalizations.of(context)!.elementdeletedsuccessfully}',style: TextStyle(color: Colors.white),),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur : Element non supprimé",style: TextStyle(color: Colors.white),)),
+          SnackBar(content: Text("${AppLocalizations.of(context)!.errorelementnotdeleted}",style: TextStyle(color: Colors.white),)),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur : Element non supprimé",style: TextStyle(color: Colors.white),)),
+        SnackBar(content: Text("${AppLocalizations.of(context)!.errorelementnotdeleted}",style: TextStyle(color: Colors.white),)),
       );
     }
   }
@@ -111,7 +111,7 @@ class _ProjectListState extends State<ProjectList> {
             MaterialPageRoute(
                 builder: (context) => AddElement(
                       family_id: "7",
-                      titel: "Project",
+                      titel: AppLocalizations.of(context)!.project,
                     )),
           );
         },
@@ -140,9 +140,8 @@ class _ProjectListState extends State<ProjectList> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Delete"),
-                              content: Text(
-                                  "Are you sure you want to delete this ticket ?"),
+                              title: Text("${AppLocalizations.of(context)!.delete}"),
+                              content: Text("${AppLocalizations.of(context)!.deleteproject}"),
                               actions: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -152,7 +151,7 @@ class _ProjectListState extends State<ProjectList> {
                                     Navigator.of(context).pop(true);
                                     deleteTicket(project);
                                   },
-                                  child: Text("Yes"),
+                                  child: Text("${AppLocalizations.of(context)!.yesword}"),
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -161,7 +160,7 @@ class _ProjectListState extends State<ProjectList> {
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
-                                  child: Text("No"),
+                                  child: Text("${AppLocalizations.of(context)!.noword}"),
                                 )
                               ],
                             );

@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:flutter_application_stage_project/models/leads_models/lead.dart';
@@ -284,7 +284,7 @@ class _WebViewState extends State<WebView> {
                 ),
                 SizedBox(height: 10,),
                 Center(
-                  child: Text("Loading .......",style: TextStyle(color: Colors.blue),),
+                  child: Text("${AppLocalizations.of(context)!.nodataavailable}",style: TextStyle(color: Colors.blue),),
                 )
               ],
             ),
