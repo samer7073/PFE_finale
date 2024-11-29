@@ -23,6 +23,7 @@ import 'package:flutter_application_stage_project/services/Activities/api_guests
 import 'package:flutter_application_stage_project/services/Activities/api_update_task.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/constants/shared/config.dart';
@@ -517,12 +518,11 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
       if (!confirm) return;
 
       try {
-        final formattedStartDate = DateFormat('dd-MM-yyyy').format(
-          DateFormat('d-M-y').parse(_startDateController.text),
-        );
-        final formattedEndDate = DateFormat('dd-MM-yyyy').format(
-          DateFormat('d-M-y').parse(_endDateController.text),
-        );
+        final formattedStartDate =_startDateController.text;
+        
+        final formattedEndDate = 
+          _endDateController.text
+        ;
 
         final taskData = {
           'label': _taskNameController.text,
@@ -693,11 +693,18 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
       );
 
       if (pickedDateRange != null) {
+         SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? dateFormat = prefs.getString('date_formate') ??
+          'DD-MM-YYYY'; // Valeur par défaut si non définie
+      String pattern = dateFormat
+          .replaceAll('DD', 'dd')
+          .replaceAll('YYYY', 'yyyy')
+          .replaceAll('MM', 'MM');
         setState(() {
           _startDateController.text =
-              DateFormat('d-M-y').format(pickedDateRange.start);
+              DateFormat(pattern).format(pickedDateRange.start);
           _endDateController.text =
-              DateFormat('d-M-y').format(pickedDateRange.end);
+              DateFormat(pattern).format(pickedDateRange.end);
           isStartDateValid = true;
           isEndDateValid = true;
         });
@@ -709,11 +716,18 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
         firstDate: DateTime(2000),
         lastDate: DateTime(2101),
       );
+           SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? dateFormat = prefs.getString('date_formate') ??
+          'DD-MM-YYYY'; // Valeur par défaut si non définie
+      String pattern = dateFormat
+          .replaceAll('DD', 'dd')
+          .replaceAll('YYYY', 'yyyy')
+          .replaceAll('MM', 'MM');
 
       if (pickedDate != null) {
         setState(() {
-          _startDateController.text = DateFormat('d-M-y').format(pickedDate);
-          _endDateController.text = DateFormat('d-M-y').format(pickedDate);
+          _startDateController.text = DateFormat(pattern).format(pickedDate);
+          _endDateController.text = DateFormat(pattern).format(pickedDate);
           isStartDateValid = true;
           isEndDateValid = true;
         });

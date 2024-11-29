@@ -10,6 +10,7 @@ import 'package:flutter_application_stage_project/services/Activities/api_delete
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -75,10 +76,17 @@ class _CalendarviewpageState extends State<Calendarviewpage> {
     });
   }
 
-  void _updateTaskEvents(List<Task> tasks) {
+  void _updateTaskEvents(List<Task> tasks)async {
     Map<DateTime, List<Task>> taskEvents = {};
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? dateFormat = prefs.getString('date_formate') ??
+          'DD-MM-YYYY'; // Valeur par défaut si non définie
+      String pattern = dateFormat
+          .replaceAll('DD', 'dd')
+          .replaceAll('YYYY', 'yyyy')
+          .replaceAll('MM', 'MM');
     for (var task in tasks) {
-      final date = DateFormat('dd-MM-yyyy').parse(task.startDate);
+      final date = DateFormat(pattern).parse(task.startDate);
       if (taskEvents[date] == null) {
         taskEvents[date] = [];
       }

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/fields/datafieldgroup.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import '../../services/ApiFamilyModuleData.dart';
@@ -58,7 +59,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
   TextEditingController? _textEditingController;
   String? _selectedValue;
   List<dynamic> selectedValuesList = [];
- 
+
   @override
   void initState() {
     super.initState();
@@ -340,7 +341,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
   }
 
   String? _selectedItem;
-  Widget customDatePickerBuilder(BuildContext context, Widget? child) {
+ Widget customDatePickerBuilder(BuildContext context, Widget? child) {
     return Theme(
       data: ThemeData.light().copyWith(
         primaryColor: Colors.blue, // Couleur de fond de l'en-tête
@@ -352,12 +353,11 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
           onSurface: Colors.black, // Couleur du texte
         ),
         dialogBackgroundColor:
-            Colors.transparent, // Couleur de fond de la boîte de dialogue
+            Colors.white, // Couleur de fond de la boîte de dialogue
       ),
       child: child!,
     );
   }
-
   @override
   Widget build(BuildContext context) {
     switch (widget.dataFieldGroup.field_type) {
@@ -607,70 +607,80 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
         );
       case "time":
         return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: TextFormField(
-            validator: widget.dataFieldGroup.required == true
-                ? (value) {
-                    if (value!.isEmpty) {
-                      return 'Ce champs est obligatoire';
-                    } else {
-                      return null;
-                    }
-                  }
-                : null,
-            readOnly: true,
-            controller: _textEditingController,
-            decoration: InputDecoration(
-              labelStyle: TextStyle(color: Colors.grey),
-              hintStyle: TextStyle(color: Colors.grey),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(5.5)),
-              enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(5.5)),
-              labelText: widget.dataFieldGroup.alias,
-              hintText: "Search",
-              suffix: IconButton(
-                onPressed: () {
-                  _textEditingController!
-                      .clear(); // Efface la valeur du contrôleur
-                  widget.formMap
-                      .remove("field[${widget.dataFieldGroup.id.toString()}]");
-                  log(widget.formMap.toString());
-                },
-                icon: Icon(Icons.cancel),
+  padding: const EdgeInsets.all(10.0),
+  child: TextFormField(
+    validator: widget.dataFieldGroup.required == true
+        ? (value) {
+            if (value!.isEmpty) {
+              return 'Ce champs est obligatoire';
+            } else {
+              return null;
+            }
+          }
+        : null,
+    readOnly: true,
+    controller: _textEditingController,
+    decoration: InputDecoration(
+      labelStyle: TextStyle(color: Colors.grey),
+      hintStyle: TextStyle(color: Colors.grey),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(5.5),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+        borderRadius: BorderRadius.circular(5.5),
+      ),
+      labelText: widget.dataFieldGroup.alias,
+      hintText: "Search",
+      suffixIcon: _textEditingController!.text.isNotEmpty
+          ? IconButton(
+              onPressed: () {
+                _textEditingController!.clear();
+                widget.formMap.remove(
+                    "field[${widget.dataFieldGroup.id.toString()}]");
+                log(widget.formMap.toString());
+              },
+              icon: Icon(
+                Icons.cancel,
+                size: 20,
+                color: Colors.blue,
               ),
-              prefixIcon: IconButton(
-                  onPressed: () async {
-                    TimeOfDay? timeOfDay = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay(hour: 00, minute: 00),
-                        builder: customDatePickerBuilder);
-                    if (timeOfDay != null) {
-                      // Vérifiez si l'heure sélectionnée n'est pas nulle
-                      String formattedTime = _formatTimeOfDay(timeOfDay);
-                      print(formattedTime);
-                      setState(() {
-                        _textEditingController?.text = formattedTime;
-                      });
-                      widget.formMap[
-                              "field[${widget.dataFieldGroup.id.toString()}]"] =
-                          formattedTime;
-                      log(widget.formMap.toString());
-                    }
-                  },
-                  icon: Icon(Icons.date_range)),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10.0),
-                ),
-              ),
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
-            ),
-          ),
-        );
+            )
+          : null,
+      prefixIcon: IconButton(
+        onPressed: () async {
+          TimeOfDay? timeOfDay = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay(hour: 00, minute: 00),
+            builder: customDatePickerBuilder,
+          );
+          if (timeOfDay != null) {
+            String formattedTime = _formatTimeOfDay(timeOfDay);
+            log(formattedTime);
+            setState(() {
+              _textEditingController?.text = formattedTime;
+            });
+            widget.formMap[
+                "field[${widget.dataFieldGroup.id.toString()}]"] = formattedTime;
+            log(widget.formMap.toString());
+          }
+        },
+        icon: Icon(Icons.date_range, size: 20, color: Colors.blue),
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+      contentPadding: EdgeInsets.symmetric(
+        vertical: 12.0, // Ajustez la hauteur intérieure
+        horizontal: 12.0, // Ajustez la largeur intérieure
+      ),
+    ),
+  ),
+);
+
       case "date_time":
         return Padding(
           padding: const EdgeInsets.all(10.0),
@@ -730,10 +740,24 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     );
 
                     if (dateTime != null) {
-                      // Vérifiez si la date et l'heure sélectionnées ne sont pas nulles
+                      // Récupérer le format de date depuis SharedPreferences
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      String? dateFormat =
+                          prefs.getString('date_formate') ?? 'DD-MM-YYYY';
 
+                      // Ajouter le format de l'heure au format de la date
+                      String pattern = dateFormat
+                          .replaceAll('DD', 'dd')
+                          .replaceAll('YYYY', 'yyyy')
+                          .replaceAll('MM', 'MM');
+                      pattern += ' HH:mm'; // Ajouter l'heure au format
+
+                      // Formater la date et l'heure
                       String formattedDateTime =
-                          DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
+                          DateFormat(pattern).format(dateTime);
+
+                      // Mettre à jour le champ texte et le formulaire
                       setState(() {
                         _textEditingController?.text = formattedDateTime;
                       });
@@ -741,7 +765,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                       widget.formMap[
                               "field[${widget.dataFieldGroup.id.toString()}]"] =
                           formattedDateTime;
-                      log(widget.formMap.toString());
+
+                      log("FormMap : ${widget.formMap}");
                     }
                   },
                   icon: Icon(
@@ -811,18 +836,32 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                     builder: customDatePickerBuilder,
                   );
                   if (picked != null) {
-                    // Vérifiez si la date sélectionnée n'est pas nulle
-                    String formattedDate =
-                        DateFormat('dd-MM-yyyy').format(picked);
+                    // Récupérer le format de la date depuis SharedPreferences
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    String? dateFormat = prefs.getString('date_formate') ??
+                        'DD-MM-YYYY'; // Valeur par défaut si non définie
+
+                    // Convertir le format en un pattern compatible avec intl
+                    String pattern = dateFormat
+                        .replaceAll('DD', 'dd')
+                        .replaceAll('YYYY', 'yyyy')
+                        .replaceAll('MM', 'MM');
+
+                    // Formater la date sélectionnée
+                    String formattedDate = DateFormat(pattern).format(picked);
+
+                    // Mettre à jour le champ et la map
                     setState(() {
                       _textEditingController?.text = formattedDate;
                     });
 
-                    print(formattedDate);
                     widget.formMap[
                             "field[${widget.dataFieldGroup.id.toString()}]"] =
                         formattedDate;
-                    log(widget.formMap.toString());
+
+                    log("Date formatée : $formattedDate");
+                    log("FormMap : ${widget.formMap}");
                   }
                 },
                 icon: Icon(Icons.date_range),
@@ -932,7 +971,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                             onPressed: () {
                               selectedImages();
                             },
-                            label: Text("${AppLocalizations.of(context)!.upload}")),
+                            label: Text(
+                                "${AppLocalizations.of(context)!.upload}")),
                       ],
                     ),
                     Container(
@@ -1009,7 +1049,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                             onPressed: () {
                               selectFiles();
                             },
-                            label: Text("${AppLocalizations.of(context)!.upload}")),
+                            label: Text(
+                                "${AppLocalizations.of(context)!.upload}")),
                       ],
                     ),
                     Text(
@@ -1024,7 +1065,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
                           : fileList.length *
                               50, // Assurez-vous que cette hauteur est suffisante
                       child: fileList == null || fileList.isEmpty
-                          ? Text("${AppLocalizations.of(context)!.nofilesselected}")
+                          ? Text(
+                              "${AppLocalizations.of(context)!.nofilesselected}")
                           : ListView.builder(
                               itemCount: fileList
                                   .length, // Utilisation de fileList.length comme itemCount
@@ -1519,7 +1561,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
           return Padding(
             padding: const EdgeInsets.all(10.0),
             child: MultiSelectDialogField(
-              buttonText: Text("${AppLocalizations.of(context)!.select} " + widget.dataFieldGroup.alias),
+              buttonText: Text("${AppLocalizations.of(context)!.select} " +
+                  widget.dataFieldGroup.alias),
               title: Text(widget.dataFieldGroup.alias),
               buttonIcon: Icon(
                 Icons.arrow_drop_down_outlined,
@@ -1573,7 +1616,8 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
           return Padding(
             padding: const EdgeInsets.all(10.0),
             child: MultiSelectDialogField(
-              buttonText: Text("${AppLocalizations.of(context)!.select} " + widget.dataFieldGroup.alias),
+              buttonText: Text("${AppLocalizations.of(context)!.select} " +
+                  widget.dataFieldGroup.alias),
               title: Text(widget.dataFieldGroup.alias),
               buttonIcon: Icon(
                 Icons.arrow_drop_down_outlined,

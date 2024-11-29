@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_stage_project/screens/login_page.dart';
 import 'package:flutter_application_stage_project/services/ApiTaskKpi.dart';
 import '../models/TaskpiModel.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,6 +13,7 @@ class TaskKpiPage extends StatefulWidget {
 
 class _TaskKpiPageState extends State<TaskKpiPage> {
   late Future<TaskKpiModel> futureApiResponse;
+  
 
   @override
   void initState() {
@@ -112,35 +112,79 @@ class _TaskKpiPageState extends State<TaskKpiPage> {
       ),
     );
   }
+  void _showBottomSheet(String title, int? value) {
+  showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (BuildContext context) {
+      return Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Total tasks: $value',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // Ferme la BottomSheet
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
   Widget _buildKpiCard(String title, int? value, IconData icon, Color? bgColor,
       Color? iconColor, Color? textColor) {
-    return Card(
-      color: iconColor?.withOpacity(0.1),
-      elevation: 0.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: iconColor?.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(
-                    15), // Optionnel : pour arrondir les coins
+    return GestureDetector(
+      onTap: () {
+           _showBottomSheet(title, value);
+      },
+      child: Card(
+        color: iconColor?.withOpacity(0.1),
+        elevation: 0.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: iconColor?.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(
+                      15), // Optionnel : pour arrondir les coins
+                ),
+                child: Icon(icon, size: 40, color: Colors.white),
               ),
-              child: Icon(icon, size: 40, color: Colors.white),
-            ),
-            SizedBox(height: 10.0),
-            Text(title, style: Theme.of(context).textTheme.headlineLarge),
-            SizedBox(height: 05.0),
-            Text('$value task', style: Theme.of(context).textTheme.headlineMedium),
-          ],
+              SizedBox(height: 10.0),
+              Text(title, style: Theme.of(context).textTheme.headlineLarge),
+              SizedBox(height: 05.0),
+              Text('$value task', style: Theme.of(context).textTheme.headlineMedium),
+            ],
+          ),
         ),
       ),
     );
   }
+
 }

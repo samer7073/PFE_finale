@@ -1,14 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/NotificationProvider.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:flutter_application_stage_project/core/constants/design/theme.dart';
 import 'package:flutter_application_stage_project/providers/langue_provider.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';

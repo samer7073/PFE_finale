@@ -24,7 +24,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   late Future<Map<String, dynamic>> taskDetails;
   late Future<List<TaskType>> taskTypes;
   late String _imageUrl;
-
+late Locale currentLocale; 
   @override
   void initState() {
     super.initState();
@@ -136,8 +136,8 @@ class TaskDetailTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    DateTime startDate = DateFormat('dd-MM-yyyy').parse(data['start_date']);
-    DateTime endDate = DateFormat('dd-MM-yyyy').parse(data['end_date']);
+    String startDate = data['start_date'];
+    String endDate = data['end_date'];
     String startTime = data['start_time'];
     String endTime = data['end_time'];
     bool isOverdue = data['is_overdue'] ?? false;
@@ -153,7 +153,7 @@ class TaskDetailTab extends StatelessWidget {
           .map((file) => (file as Map<String, dynamic>)['fileName'] as String)
           .toList();
     }
-    log("123456789" + taskType.icon);
+    
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
@@ -210,13 +210,14 @@ class TaskDetailTab extends StatelessWidget {
               if (data['start_date'] != null && data['start_time'] != null) ...[
                 _buildDetailRow(
                   'Start',
-                  '${DateFormat('dd-MM-yyyy').format(startDate)} $startTime',
+                  
+                  '$startDate  $startTime',
                 ),
               ],
               if (data['end_date'] != null && data['end_time'] != null) ...[
                 _buildDetailRow(
                   'End',
-                  '${DateFormat('dd-MM-yyyy').format(endDate)} $endTime',
+                  '$endDate $endTime',
                   valueStyle: TextStyle(
                     color: isOverdue ? Colors.red : isDarkMode? Colors.white:Colors.black,
                   ),

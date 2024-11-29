@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/langue_provider.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
-import 'package:flutter_application_stage_project/screens/Activity/home_view.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/owner_select.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_followers.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_guests.dart';
@@ -23,6 +22,7 @@ import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants/shared/config.dart';
 import '../homeNavigate_page.dart';
@@ -96,19 +96,36 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     super.initState();
     imageUrlFuture = Config.getApiUrl("urlImage");
 
+    // Initialiser les contrôleurs de texte
     _startTimeController.text = DateFormat('HH:mm').format(_startTime);
     _endTimeController.text = DateFormat('HH:mm').format(_endTime);
     _reminderDurationController.text = selectedReminderDuration;
     _taskNameController.addListener(_validateForm);
 
-    // Set default date to today's date
-    _startDateController.text = DateFormat('d/M/y').format(DateTime.now());
-    _endDateController.text = DateFormat('d/M/y').format(DateTime.now());
+    // Récupérer le format de la date depuis SharedPreferences
+    _setDateFormat();
 
     fetchUsersFromApi();
     fetchStagesFromApi();
     fetchGuestsFromApi();
     fetchModulesFromApi();
+  }
+
+  Future<void> _setDateFormat() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? dateFormat = prefs.getString('date_formate') ??
+        'DD-MM-YYYY'; // Valeur par défaut si non définie
+    String pattern = dateFormat
+        .replaceAll('DD', 'dd')
+        .replaceAll('YYYY', 'yyyy')
+        .replaceAll('MM', 'MM');
+
+    // Appliquer le format de date récupéré
+    DateFormat customFormat = DateFormat(pattern);
+
+    // Appliquer le format de date à start et end date
+    _startDateController.text = customFormat.format(DateTime.now());
+    _endDateController.text = customFormat.format(DateTime.now());
   }
 
   void _validateForm() {
@@ -438,10 +455,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
       if (!confirm) return;
 
-      final formattedStartDate = DateFormat('dd-MM-yyyy')
-          .format(DateFormat('d/M/y').parse(_startDateController.text));
-      final formattedEndDate = DateFormat('dd-MM-yyyy')
-          .format(DateFormat('d/M/y').parse(_endDateController.text));
+      final formattedStartDate = _startDateController.text;
+      final formattedEndDate = _endDateController.text;
 
       final taskData = {
         'label': _taskNameController.text,
@@ -471,7 +486,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         final newTask = await createTask(taskData);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Task created successfully!',style: TextStyle(color: Colors.white),),
+            content: Text(
+              'Task created successfully!',
+              style: TextStyle(color: Colors.white),
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -494,7 +512,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         log("99999999999999999999999999999999     " + e.toString());
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to create task: $e',style: TextStyle(color: Colors.white),),
+            content: Text(
+              'Failed to create task: $e',
+              style: TextStyle(color: Colors.white),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -589,15 +610,22 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
           end: DateTime.now().add(const Duration(days: 1)),
         ),
       );
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? dateFormat = prefs.getString('date_formate') ??
+          'DD-MM-YYYY'; // Valeur par défaut si non définie
+      String pattern = dateFormat
+          .replaceAll('DD', 'dd')
+          .replaceAll('YYYY', 'yyyy')
+          .replaceAll('MM', 'MM');
 
       if (pickedDateRange != null) {
         setState(() {
           _startDateController.text =
-              DateFormat('d/M/y').format(pickedDateRange.start);
-          log("////" + _startDateController.text);
+              DateFormat(pattern).format(pickedDateRange.start);
+
           _endDateController.text =
-              DateFormat('d/M/y').format(pickedDateRange.end);
-          log("////" + _endDateController.text);
+              DateFormat(pattern).format(pickedDateRange.end);
+
           isStartDateValid = true;
           isEndDateValid = true;
         });
@@ -610,11 +638,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         firstDate: DateTime(2000),
         lastDate: DateTime(2101),
       );
+         SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? dateFormat = prefs.getString('date_formate') ??
+          'DD-MM-YYYY'; // Valeur par défaut si non définie
+      String pattern = dateFormat
+          .replaceAll('DD', 'dd')
+          .replaceAll('YYYY', 'yyyy')
+          .replaceAll('MM', 'MM');
 
       if (pickedDate != null) {
         setState(() {
-          _startDateController.text = DateFormat('d/M/y').format(pickedDate);
-          _endDateController.text = DateFormat('d/M/y').format(pickedDate);
+          _startDateController.text = DateFormat(pattern).format(pickedDate);
+          _endDateController.text = DateFormat(pattern).format(pickedDate);
           isStartDateValid = true;
           isEndDateValid = true;
         });
@@ -712,8 +747,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   backgroundColor: Colors.grey,
                   radius: 15,
                   child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                    color: Colors.blue,
+                  ),
                 );
               }
 
@@ -892,14 +927,16 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(height: 16.0),
                       Container(
                         decoration: BoxDecoration(
-                            color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                            color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
                             borderRadius: BorderRadius.circular(5)),
                         // Définir la couleur de fond ici
                         child: TextFormField(
                           controller: _taskNameController,
                           decoration: InputDecoration(
-                            hintText:
-                                AppLocalizations.of(context)!.enterActivityLabel,
+                            hintText: AppLocalizations.of(context)!
+                                .enterActivityLabel,
                             hintStyle: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
@@ -944,7 +981,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(height: 18.0),
                       Container(
                         decoration: BoxDecoration(
-                            color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                            color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
                             borderRadius: BorderRadius.circular(5)),
                         child: InputDecorator(
                           decoration: InputDecoration(
@@ -1022,7 +1061,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       const SizedBox(height: 16.0),
                       Container(
                         decoration: BoxDecoration(
-                             color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                            color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
                             borderRadius: BorderRadius.circular(5)),
                         child: Row(
                           children: [
@@ -1083,7 +1124,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
-                                        color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                                      color: themeProvider.isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 29, 28, 28)
+                                          : Color.fromARGB(255, 240, 241, 241),
                                       borderRadius: BorderRadius.circular(5)),
                                   child: TextFormField(
                                     controller: _startDateController,
@@ -1145,7 +1189,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
-                                        color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                                      color: themeProvider.isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 29, 28, 28)
+                                          : Color.fromARGB(255, 240, 241, 241),
                                       borderRadius: BorderRadius.circular(5)),
                                   child: TextFormField(
                                     controller: _endDateController,
@@ -1204,7 +1251,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       Container(
                         height: 50,
                         decoration: BoxDecoration(
-                              color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                            color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
                             borderRadius: BorderRadius.circular(5)),
                         child: InputDecorator(
                           decoration: InputDecoration(
@@ -1254,7 +1303,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
-                                        color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                                      color: themeProvider.isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 29, 28, 28)
+                                          : Color.fromARGB(255, 240, 241, 241),
                                       borderRadius: BorderRadius.circular(5)),
                                   child: TextFormField(
                                     controller: _startTimeController,
@@ -1314,7 +1366,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
-                                        color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                                      color: themeProvider.isDarkMode
+                                          ? const Color.fromARGB(
+                                              255, 29, 28, 28)
+                                          : Color.fromARGB(255, 240, 241, 241),
                                       borderRadius: BorderRadius.circular(5)),
                                   child: TextFormField(
                                     controller: _endTimeController,
@@ -1372,9 +1427,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 color: Colors.blueGrey),
                           ),
                           Container(
-                            decoration:BoxDecoration(
-                                        color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
-                                      borderRadius: BorderRadius.circular(5)),
+                            decoration: BoxDecoration(
+                                color: themeProvider.isDarkMode
+                                    ? const Color.fromARGB(255, 29, 28, 28)
+                                    : Color.fromARGB(255, 240, 241, 241),
+                                borderRadius: BorderRadius.circular(5)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -1420,7 +1477,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                         child: IconButton(
                                           icon: Container(
                                             decoration: BoxDecoration(
-                                                color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                                                color: themeProvider.isDarkMode
+                                                    ? const Color.fromARGB(
+                                                        255, 29, 28, 28)
+                                                    : Color.fromARGB(
+                                                        255, 240, 241, 241),
                                                 borderRadius:
                                                     BorderRadius.circular(100)),
                                             child: const Icon(Icons.close,
@@ -1472,7 +1533,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           ),
                           Container(
                             decoration: BoxDecoration(
-                               color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                                color: themeProvider.isDarkMode
+                                    ? const Color.fromARGB(255, 29, 28, 28)
+                                    : Color.fromARGB(255, 240, 241, 241),
                                 borderRadius: BorderRadius.circular(5)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -1518,7 +1581,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                         child: IconButton(
                                           icon: Container(
                                               decoration: BoxDecoration(
-                                                 color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
+                                                  color: themeProvider
+                                                          .isDarkMode
+                                                      ? const Color.fromARGB(
+                                                          255, 29, 28, 28)
+                                                      : Color.fromARGB(
+                                                          255, 240, 241, 241),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           100)),
@@ -1556,8 +1624,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                             flex: 1,
                             child: Container(
                               decoration: BoxDecoration(
-                               color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
-                                borderRadius: BorderRadius.circular(5)),
+                                  color: themeProvider.isDarkMode
+                                      ? const Color.fromARGB(255, 29, 28, 28)
+                                      : Color.fromARGB(255, 240, 241, 241),
+                                  borderRadius: BorderRadius.circular(5)),
                               child: TextField(
                                 controller: _reminderDurationController,
                                 decoration: InputDecoration(
@@ -1585,9 +1655,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           Flexible(
                             flex: 2,
                             child: Container(
-                              decoration:  BoxDecoration(
-                               color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
-                                borderRadius: BorderRadius.circular(5)),
+                              decoration: BoxDecoration(
+                                  color: themeProvider.isDarkMode
+                                      ? const Color.fromARGB(255, 29, 28, 28)
+                                      : Color.fromARGB(255, 240, 241, 241),
+                                  borderRadius: BorderRadius.circular(5)),
                               child: DropdownButtonFormField<String>(
                                 style: const TextStyle(color: Colors.blueGrey),
                                 decoration: InputDecoration(
@@ -1678,9 +1750,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         height: 18,
                       ),
                       Container(
-                        decoration:  BoxDecoration(
-                               color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
-                                borderRadius: BorderRadius.circular(5)),
+                        decoration: BoxDecoration(
+                            color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
+                            borderRadius: BorderRadius.circular(5)),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: DropdownButtonFormField<int>(
@@ -1733,9 +1807,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         height: 18,
                       ),
                       Container(
-                        decoration:  BoxDecoration(
-                               color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
-                                borderRadius: BorderRadius.circular(5)),
+                        decoration: BoxDecoration(
+                            color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
+                            borderRadius: BorderRadius.circular(5)),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: TextField(
@@ -1816,9 +1892,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         height: 18,
                       ),
                       Container(
-                        decoration:  BoxDecoration(
-                               color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
-                                borderRadius: BorderRadius.circular(5)),
+                        decoration: BoxDecoration(
+                            color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
+                            borderRadius: BorderRadius.circular(5)),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: InputDecorator(
@@ -1865,8 +1943,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                               color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
-                                borderRadius: BorderRadius.circular(5)),
+                            color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
+                            borderRadius: BorderRadius.circular(5)),
                         child: TextFormField(
                           controller: _descriptionController,
                           decoration: InputDecoration(
@@ -1897,9 +1977,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         height: 18,
                       ),
                       Container(
-                        decoration:  BoxDecoration(
-                               color:themeProvider.isDarkMode?const Color.fromARGB(255, 29, 28, 28): Color.fromARGB(255, 240, 241, 241),
-                                borderRadius: BorderRadius.circular(5)),
+                        decoration: BoxDecoration(
+                            color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
+                            borderRadius: BorderRadius.circular(5)),
                         child: TextFormField(
                           controller: _noteController,
                           decoration: InputDecoration(

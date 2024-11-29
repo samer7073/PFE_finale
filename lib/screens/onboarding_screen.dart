@@ -13,11 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../main.dart';
-import 'login_page.dart';
-import '../../models/ticket/ticket.dart';
-import '../../models/ticket/ticketData.dart';
-import '../../services/tickets/getTicketApi.dart';
-
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
 

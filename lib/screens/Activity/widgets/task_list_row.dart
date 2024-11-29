@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/Activities/api_get_stage.dart';
 import '../../../services/Activities/api_update_stage_task.dart';
 import '../../homeNavigate_page.dart';
@@ -58,14 +59,27 @@ class _TaskListRowState extends State<TaskListRow> {
   late Future<String> imageUrlFuture;
   List<dynamic> stages = [];
   bool isLoading = false;
-late String currentStageLabel;
+  late String currentStageLabel;
+  late Future<String> formattedStartDate;
+late Locale currentLocale;  // Déclare currentLocale
+
   @override
   void initState() {
     super.initState();
+    //formattedStartDate = formatDate(widget.start_date, Localizations.localeOf(context));
     currentStageLabel = widget.stageLabel ?? "No stage available";
     imageUrlFuture = Config.getApiUrl("urlImage");
     fetchStagesFromApi(); // Fetch stages when the widget initializes
   }
+    @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Maintenant que l'arbre de widgets est complètement initialisé, on peut accéder aux propriétés basées sur le context.
+    currentLocale = Localizations.localeOf(context);
+    formattedStartDate = formatDate(widget.start_date, currentLocale);
+    currentStageLabel = widget.stageLabel ?? "No stage available";
+  }
+
 
   Color _getPriorityColor(String priority) {
     switch (priority.toLowerCase()) {
@@ -155,140 +169,157 @@ late String currentStageLabel;
   }
 
   @override
-  Widget build(BuildContext context) {
-    Locale currentLocale = Localizations.localeOf(context);
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+ Widget build(BuildContext context) {
+  Locale currentLocale = Localizations.localeOf(context);
+  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        color:
-            isDarkMode ? Colors.black : Colors.white, // Couleur de fond blanche
-        borderRadius: BorderRadius.circular(10), // Coins arrondis
-        border: Border(
-          left: BorderSide(
-            color: hexToColor(widget.task_type_color)
-                .withOpacity(0.8), // Couleur de la bordure gauche
-            width: 6, // Épaisseur de la bordure gauche
-          ),
+  return Container(
+    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+    decoration: BoxDecoration(
+      color: isDarkMode ? Colors.black : Colors.white,
+      borderRadius: BorderRadius.circular(10),
+      border: Border(
+        left: BorderSide(
+          color: hexToColor(widget.task_type_color).withOpacity(0.8),
+          width: 6,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1), // Couleur de l'ombre
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(0, 2), // Décalage de l'ombre
-          ),
-        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  widget.taskIcon,
-                  color: Colors.grey.shade600,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          spreadRadius: 1,
+          blurRadius: 3,
+          offset: Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                widget.taskIcon,
+                color: Colors.grey.shade600,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  widget.taskLabel,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    widget.taskLabel,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(width: 10),
+              Icon(
+                Icons.flag,
+                color: _getPriorityColor(widget.priority),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Icon(
+                Icons.calendar_month,
+                color: Colors.grey.shade600,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FutureBuilder<String>(
+                  future: formattedStartDate,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error loading date');
+                    } else {
+                      return Text(
+                        snapshot.data! + " " + widget.start_time,
+                        style: TextStyle(
                           color: isDarkMode ? Colors.white : Colors.black,
                         ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                      );
+                    }
+                  },
                 ),
-                const SizedBox(width: 10),
-                Icon(
-                  Icons.flag,
-                  color: _getPriorityColor(widget.priority),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Icon(
-                  Icons.calendar_month,
-                  color: Colors.grey.shade600,
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    formatDate(widget.start_date, currentLocale) +
-                        " " +
-                        widget.start_time,
-                    style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      if (widget.is_follower == 0) {
+                        _showStageDialog(widget.stageLabel, widget.taskId);
+                      }
+                    },
+                    child: Text(
+                      currentStageLabel.isNotEmpty
+                          ? currentStageLabel
+                          : "No stage available",
+                      style: TextStyle(
+                        color: hexToColor(widget.task_type_color),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+                ],
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (widget.is_follower == 0) {
-                          _showStageDialog(
-                            widget.stageLabel,
-                            widget.taskId,
-                          );
-                        }
-                      },
+                    Container(
+                      alignment: Alignment.centerRight,
+                      width: 130,
                       child: Text(
-                       currentStageLabel.isNotEmpty ? currentStageLabel : "No stage available",
+                        widget.ownerLabel,
                         style: TextStyle(
-                          color: hexToColor(widget.task_type_color),
-                          fontWeight: FontWeight.w600,
+                          color: isDarkMode ? Colors.white : Colors.black,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
+                    ),
+                    const SizedBox(width: 10),
+                    _buildAvatar(
+                      widget.ownerAvatar,
+                      widget.ownerLabel,
+                      hexToColor(widget.task_type_color),
                     ),
                   ],
                 ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        width: 130,
-                        child: Text(
-                          widget.ownerLabel,
-                          style: TextStyle(
-                            color: isDarkMode ? Colors.white : Colors.black,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      _buildAvatar(
-                        widget.ownerAvatar,
-                        widget.ownerLabel,
-                        hexToColor(widget.task_type_color),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  String formatDate(String dateString, Locale locale) {
-    DateTime date = DateFormat('dd-MM-yyyy').parse(dateString);
+  Future<String> formatDate(String dateString, Locale locale) async {
+    // Récupérer le format de la date depuis SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? dateFormat = prefs.getString('date_formate') ??
+        'DD-MM-YYYY'; // Valeur par défaut si non définie
+
+    // Convertir le format en un pattern compatible avec intl
+    String pattern = dateFormat
+        .replaceAll('DD', 'dd')
+        .replaceAll('YYYY', 'yyyy')
+        .replaceAll('MM', 'MM');
+
+    DateTime date = DateFormat(pattern).parse(dateString);
     String formattedDate = DateFormat.yMMMMd(locale.languageCode).format(date);
     return formattedDate;
   }
@@ -368,7 +399,7 @@ late String currentStageLabel;
           onTap: () async {
             try {
               // Attempt to update the task stage
-             bool update= await updateTaskStage(id, stage['id']);
+              bool update = await updateTaskStage(id, stage['id']);
               Navigator.of(context).pop();
 
               // If successful, show a success Snackbar
@@ -388,33 +419,30 @@ late String currentStageLabel;
               );
               */
               setState(() {
-                 currentStageLabel = stage['label']; // Met à jour le stage dans l'UI
+                currentStageLabel =
+                    stage['label']; // Met à jour le stage dans l'UI
               });
-              if(update==true){
+              if (update == true) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Stage changed successfully',
-                    style: TextStyle(color: Colors.white),
+                  SnackBar(
+                    content: Text(
+                      'Stage changed successfully',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: Colors.green,
                   ),
-                  backgroundColor: Colors.green,
-                ),
-              );
-
-              }else{
-                 ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Problem when updating stage',
-                    style: TextStyle(color: Colors.white),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Problem when updating stage',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: Colors.red,
                   ),
-                  backgroundColor: Colors.red,
-                ),
-              );
-
+                );
               }
-
-              
             } catch (e) {
               // If there is an error, show an error Snackbar
               ScaffoldMessenger.of(context).showSnackBar(

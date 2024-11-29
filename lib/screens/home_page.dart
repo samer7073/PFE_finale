@@ -7,13 +7,10 @@ import 'package:flutter_application_stage_project/models/profil/Profile.dart';
 import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
 import 'package:flutter_application_stage_project/screens/NotficationPage.dart';
 import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
-import 'package:flutter_application_stage_project/screens/contactPage.dart';
-import 'package:flutter_application_stage_project/screens/leads/leads_page.dart';
 import 'package:flutter_application_stage_project/screens/notes/notes_page.dart';
 import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
 import 'package:flutter_application_stage_project/screens/taskKpi_page.dart';
 import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
-import 'package:flutter_application_stage_project/screens/webViewTest.dart';
 import 'package:flutter_application_stage_project/services/ApiGetProfile.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_application_stage_project/screens/settings/settings.dart';
@@ -64,24 +61,33 @@ class _HomePageState extends State<HomePage>
   Profile? _profile;
 
   Future<void> fetchProfile() async {
-    try {
-      log("Fetching profile...");
-      Profile profileResponse = await ApiProfil.getProfil();
-      setState(() {
-        _profile = profileResponse;
-        image = _profile?.avatar.label ??
-            ""; // Assign the new image, ensure it's not null
-      });
+  try {
+    log("Fetching profile...");
+    Profile profileResponse = await ApiProfil.getProfil();
 
-      // Check if the cached image URL is different from the new one
-      if (image != null && image != cachedImageUrl) {
-        SharedPrefernce.saveToken('cachedImageUrl', image!);
-        cachedImageUrl = image; // Update cached image
-      }
-    } catch (e) {
-      log('Failed to fetch Profile: $e');
+    setState(() {
+      _profile = profileResponse;
+      image = _profile?.avatar.label ?? ""; // Assign the new image, ensure it's not null
+    });
+
+    // Sauvegarder la date formatée dans SharedPreferences
+    await SharedPrefernce.saveToken(
+        'date_formate', _profile!.location.date_format);
+
+    // Récupérer la date formatée de SharedPreferences
+    String? dateFormate = await SharedPrefernce.getToken('date_formate');
+    log("date_formate: $dateFormate");
+
+    // Vérifier si l'image mise en cache est différente de la nouvelle
+    if (image != null && image != cachedImageUrl) {
+      await SharedPrefernce.saveToken('cachedImageUrl', image!);
+      cachedImageUrl = image; // Mettre à jour l'image mise en cache
     }
+  } catch (e) {
+    log('Failed to fetch Profile: $e');
   }
+}
+
 
   void _loadCachedImage() async {
     cachedImageUrl = await SharedPrefernce.getToken('cachedImageUrl');
@@ -264,7 +270,9 @@ class _HomePageState extends State<HomePage>
                     'assets/ticket-2.png',
                     color: const Color.fromARGB(255, 98, 97, 97),
                   ),
-                  title: Text(AppLocalizations.of(context)!.tickets,),
+                  title: Text(
+                    AppLocalizations.of(context)!.tickets,
+                  ),
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (_) => TicketPage()));

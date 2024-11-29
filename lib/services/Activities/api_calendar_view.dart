@@ -12,8 +12,8 @@ Future<List<Task>> fetchTasks(String start, String end) async {
     'getTasksCalendar',
   ); // Utiliser Config pour obtenir l'URL
   final url = Uri.parse(baseUrl);
-  log("ttttttttttttttttttttttttttttttttttttttttttttttt" + url.toString());
-  log("tttttttttttttttttttttttttttttttttt" + start + end);
+  log("" + url.toString());
+  log("" + start + end);
 
   final token = await SharedPrefernce.getToken("token");
 

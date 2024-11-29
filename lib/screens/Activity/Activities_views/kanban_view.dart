@@ -3,17 +3,14 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/pipeline.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
-
 import 'package:flutter_application_stage_project/services/Activities/api_get_pipeline.dart';
-
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/constants/shared/config.dart';
 import '../../../services/Activities/api_delete_task.dart';
 import '../../../services/Activities/api_get_stage.dart';
@@ -230,377 +227,370 @@ class _KanbanBoardState extends State<KanbanBoard> {
     final brightness = Theme.of(context).brightness;
     final isDarkMode = brightness == Brightness.dark;
 
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            const SizedBox(height: 20),
-            FutureBuilder<List<Pipeline>>(
-              future: pipelines,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Container(
-                    width: 200,
-                    child: InputDecorator(
-                      expands: false,
-                      decoration: InputDecoration(
-                        labelText: 'Pipeline', // Adding the label
-                        border: OutlineInputBorder(), // Adding the border
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 4.0),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<Pipeline>(
-                          isExpanded: true,
-                          style: const TextStyle(color: Colors.grey),
-                          hint: const Text('Select Pipeline'),
-                          value: selectedPipeline,
-                          onChanged: (Pipeline? newValue) {
-                            if (newValue != null) {
-                              _clearTasks();
-                              _initializeDefaultPipelineAndStage(newValue);
-                              setState(() {
-                                _pageController =
-                                    PageController(initialPage: 0);
-                              });
-                            }
-                          },
-                          items: snapshot.data!.map((Pipeline pipeline) {
-                            return DropdownMenuItem<Pipeline>(
-                              value: pipeline,
-                              child: Text(pipeline.label),
-                            );
-                          }).toList(),
-                        ),
+    return Scaffold(
+      body: Column(
+        children: [
+          const SizedBox(height: 20),
+          FutureBuilder<List<Pipeline>>(
+            future: pipelines,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Container(
+                  width: 200,
+                  child: InputDecorator(
+                    expands: false,
+                    decoration: InputDecoration(
+                      labelText: 'Pipeline', // Adding the label
+                      border: OutlineInputBorder(), // Adding the border
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4.0),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<Pipeline>(
+                        isExpanded: true,
+                        style: const TextStyle(color: Colors.grey),
+                        hint: const Text('Select Pipeline'),
+                        value: selectedPipeline,
+                        onChanged: (Pipeline? newValue) {
+                          if (newValue != null) {
+                            _clearTasks();
+                            _initializeDefaultPipelineAndStage(newValue);
+                            setState(() {
+                              _pageController =
+                                  PageController(initialPage: 0);
+                            });
+                          }
+                        },
+                        items: snapshot.data!.map((Pipeline pipeline) {
+                          return DropdownMenuItem<Pipeline>(
+                            value: pipeline,
+                            child: Text(pipeline.label),
+                          );
+                        }).toList(),
                       ),
                     ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
-                return  Text(AppLocalizations.of(context)!.loadingwaittt);
-              },
-            ),
-            const SizedBox(height: 18),
-            if (selectedPipeline != null && stages.isNotEmpty)
-              PreferredSize(
-                preferredSize: const Size.fromHeight(70),
-                child: Center(
-                  child: SizedBox(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          for (var stage in stages)
-                            InkWell(
-                                onTap: () async {
-                                  setState(() {
-                                    selectedStageId = stage.id;
-                                    _currentPage = 1; // Reset the page to 1
-
-                                    _loadTasksForStage(stage
-                                        .id); // Load tasks for the selected stage
-                                  });
-                                },
-                                child: Container(
-                                  height: 42,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 12.0,
-                                    horizontal: 15.0,
-                                  ),
-                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Text("${snapshot.error}");
+              }
+              return Text(AppLocalizations.of(context)!.loadingwaittt);
+            },
+          ),
+          const SizedBox(height: 18),
+          if (selectedPipeline != null && stages.isNotEmpty)
+            PreferredSize(
+              preferredSize: const Size.fromHeight(70),
+              child: Center(
+                child: SizedBox(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        for (var stage in stages)
+                          InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  selectedStageId = stage.id;
+                                  _currentPage = 1; // Reset the page to 1
+    
+                                  _loadTasksForStage(stage
+                                      .id); // Load tasks for the selected stage
+                                });
+                              },
+                              child: Container(
+                                height: 42,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 12.0,
+                                  horizontal: 15.0,
+                                ),
+                                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: selectedStageId == stage.id
+                                      ? Color.fromARGB(255, 34, 63, 249)
+                                      : isDarkMode == true
+                                          ? Colors.black
+                                          : Colors.white,
+                                  border: Border.all(
                                     color: selectedStageId == stage.id
                                         ? Color.fromARGB(255, 34, 63, 249)
-                                        : isDarkMode == true
-                                            ? Colors.black
-                                            : Colors.white,
-                                    border: Border.all(
+                                        : Color.fromARGB(255, 200, 200,
+                                            200), // Couleur de la bordure non sélectionnée
+                                    width: 0.50,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    stage.label,
+                                    style: TextStyle(
                                       color: selectedStageId == stage.id
-                                          ? Color.fromARGB(255, 34, 63, 249)
-                                          : Color.fromARGB(255, 200, 200,
-                                              200), // Couleur de la bordure non sélectionnée
-                                      width: 0.50,
+                                          ? Colors.white
+                                          : isDarkMode
+                                              ? Colors.white
+                                              : Colors.grey,
                                     ),
                                   ),
-                                  child: Center(
-                                    child: Text(
-                                      stage.label,
-                                      style: TextStyle(
-                                        color: selectedStageId == stage.id
-                                            ? Colors.white
-                                            : isDarkMode
-                                                ? Colors.white
-                                                : Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                )),
-                        ],
-                      ),
+                                ),
+                              )),
+                      ],
                     ),
                   ),
                 ),
               ),
-            if (isLoading)
-              Padding(
-                padding: const EdgeInsets.only(top: 250.0),
-                child: const Center(
-                    child: CircularProgressIndicator(
-                  color: Colors.blue,
-                )),
-              )
-            else if (selectedStageId != null)
-              tasks.length > 0
-                  ? Expanded(
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        itemCount: tasks.length +
-                            (_isLoadingMore
-                                ? 1
-                                : 0), // Add an extra item if loading more
-                        itemBuilder: (context, taskIndex) {
-                          if (taskIndex == tasks.length) {
-                            return Center(
-                                child: CircularProgressIndicator(
+            ),
+          if (isLoading)
+            Padding(
+              padding: const EdgeInsets.only(top: 250.0),
+              child: const Center(
+                  child: CircularProgressIndicator(
+                color: Colors.blue,
+              )),
+            )
+          else if (selectedStageId != null)
+            tasks.length > 0
+                ? Expanded(
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: tasks.length +
+                          (_isLoadingMore
+                              ? 1
+                              : 0), // Add an extra item if loading more
+                      itemBuilder: (context, taskIndex) {
+                        if (taskIndex == tasks.length) {
+                          return Center(
+                            child: CircularProgressIndicator(
                               color: Colors.blue,
-                            ));
-                          }
-                          final task = tasks[taskIndex];
-
-                          DateTime startDate = _parseDate(task.startDate);
-                          DateTime endDate = _parseDate(task.endDate);
-                          bool isOverdue = endDate.isBefore(DateTime.now());
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
+                            ),
+                          );
+                        }
+    
+                        final task = tasks[taskIndex];
+    
+                        // Use FutureBuilder to handle asynchronous date parsing
+                        return FutureBuilder<List<DateTime>>(
+                          future: Future.wait([
+                            _parseDate(task.startDate),
+                            _parseDate(task.endDate),
+                          ]),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                  child: CircularProgressIndicator());
+                            }
+    
+                            if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            }
+    
+                            // Retrieve parsed dates
+                            final dates = snapshot.data!;
+                            final startDate = dates[0];
+                            final endDate = dates[1];
+                            final isOverdue =
+                                endDate.isBefore(DateTime.now());
+    
+                            return Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
                                   color: Colors.grey.shade300,
                                   width:
-                                      1), // Bordure grise de 1 pixel de large
-                              borderRadius: BorderRadius.circular(
-                                  15), // Coins arrondis (facultatif)
-                            ),
-                            //borderOnForeground: false,
-                            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-                            //color: Colors.white,
-                            margin: const EdgeInsets.all(10.0),
-                            //elevation: 5,
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          _buildPriorityFlag(
-                                              task.priority ?? 'None',
-                                              task,
-                                              isDarkMode),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Text(
-                                            task.task_type_label,
-                                            style: TextStyle(
+                                      1, // Bordure grise de 1 pixel de large
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                    15), // Coins arrondis
+                              ),
+                              margin: const EdgeInsets.all(10.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    // First Row with Task Type and Popup Menu
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            _buildPriorityFlag(
+                                                task.priority ?? 'None',
+                                                task,
+                                                isDarkMode),
+                                            const SizedBox(width: 10),
+                                            Text(
+                                              task.task_type_label,
+                                              style: const TextStyle(
                                                 fontSize: 20,
                                                 color: Color.fromARGB(
                                                     255, 59, 85, 251),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                      PopupMenuButton<String>(
-                                        onSelected: (String value) {
-                                          _onPopupMenuSelected(value, task);
-                                        },
-                                        itemBuilder: (BuildContext context) {
-                                          return [
-                                            const PopupMenuItem<String>(
-                                              value: 'details',
-                                              child: ListTile(
-                                                leading:
-                                                    Icon(Icons.info_outline),
-                                                title: Text('Details'),
+                                                fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            if (task.can_update_task == 1)
+                                          ],
+                                        ),
+                                        PopupMenuButton<String>(
+                                          onSelected: (String value) {
+                                            _onPopupMenuSelected(value, task);
+                                          },
+                                          itemBuilder:
+                                              (BuildContext context) {
+                                            return [
                                               const PopupMenuItem<String>(
-                                                value: 'edit',
-                                                child: ListTile(
-                                                  leading:
-                                                      Icon(Icons.edit_outlined),
-                                                  title: Text('Edit'),
-                                                ),
-                                              ),
-                                            if (task.can_update_task == 1)
-                                              const PopupMenuItem<String>(
-                                                value: 'delete',
+                                                value: 'details',
                                                 child: ListTile(
                                                   leading: Icon(
-                                                      Icons.delete_outline),
-                                                  title: Text('Delete'),
+                                                      Icons.info_outline),
+                                                  title: Text('Details'),
                                                 ),
                                               ),
-                                          ];
-                                        },
-                                        icon: Icon(
-                                          Icons.more_horiz_outlined,
+                                              if (task.can_update_task == 1)
+                                                const PopupMenuItem<String>(
+                                                  value: 'edit',
+                                                  child: ListTile(
+                                                    leading: Icon(
+                                                        Icons.edit_outlined),
+                                                    title: Text('Edit'),
+                                                  ),
+                                                ),
+                                              if (task.can_update_task == 1)
+                                                const PopupMenuItem<String>(
+                                                  value: 'delete',
+                                                  child: ListTile(
+                                                    leading: Icon(
+                                                        Icons.delete_outline),
+                                                    title: Text('Delete'),
+                                                  ),
+                                                ),
+                                            ];
+                                          },
+                                          icon: const Icon(
+                                              Icons.more_horiz_outlined),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          task.label,
-                                          style: TextStyle(
-                                            color: isDarkMode == true
-                                                ? Colors.white
-                                                : Colors.black,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 25,
+                                      ],
+                                    ),
+                                    // Second Row with Task Label
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            task.label,
+                                            style: TextStyle(
+                                              color: isDarkMode == true
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 25,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ),
-                                      //_buildPriorityFlag(_task.priority ?? 'None'),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 10.0),
-                                  Text(
-                                    "Progress",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.grey.shade700),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  // Stage Progress Indicator
-
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (task.is_follower == 0)
-                                        _showStageDialogKanban(
-                                            task.stageLabel, task.id, task);
-                                    },
-                                    child: _buildStageProgressIndicator(
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10.0),
+                                    const Text(
+                                      "Progress",
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.grey),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (task.is_follower == 0) {
+                                          _showStageDialogKanban(
+                                              task.stageLabel, task.id, task);
+                                        }
+                                      },
+                                      child: _buildStageProgressIndicator(
                                         getStagePercentageById(
                                             stages, selectedStageId!),
                                         task.stageLabel,
                                         getStageColorById(
                                             stages, selectedStageId!),
-                                        isDarkMode),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-
-                                  // Level 2
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(Icons.calendar_today,
-                                              color: Colors
-                                                  .blue), // Icône pour le début
-                                          SizedBox(
-                                              width:
-                                                  4), // Espacement entre l'icône et le texte
-                                          Text(
-                                              " ${DateFormat('dd-MM-yyyy').format(startDate)}"),
-                                          SizedBox(
-                                              width:
-                                                  16), // Espacement entre les deux paires
-                                          Icon(Icons.event,
-                                              color: Colors
-                                                  .red), // Icône pour la fin
-                                          SizedBox(
-                                              width:
-                                                  4), // Espacement entre l'icône et le texte
-                                          Text(
-                                            " ${DateFormat('dd-MM-yyyy').format(endDate)}",
-                                            style: TextStyle(
-                                              color: isOverdue
-                                                  ? Colors.red
-                                                  : Colors.black,
-                                            ),
-                                          ),
-                                        ],
+                                        isDarkMode,
                                       ),
-                                      if (task.guests.isNotEmpty) ...[
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: _buildAvatars(
-                                            task.guests
-                                                .map((guest) => {
-                                                      'avatar': guest['avatar']
-                                                          as String?,
-                                                      'label': guest['label']
-                                                          as String
-                                                    })
-                                                .toList(),
-                                            maxAvatars: 4,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        Icon(Icons.calendar_today,
+                                            color: Colors.blue),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                            " ${DateFormat('dd-MM-yyyy').format(startDate)}"),
+                                        const SizedBox(width: 16),
+                                        Icon(Icons.event, color: Colors.red),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          " ${DateFormat('dd-MM-yyyy').format(endDate)}",
+                                          style: TextStyle(
+                                            color: isOverdue
+                                                ? Colors.red
+                                                : Colors.black,
                                           ),
                                         ),
-                                        const SizedBox(height: 5),
                                       ],
-                                      if (task.followers.isNotEmpty) ...[
-                                        SizedBox(
-                                          height: 10,
+                                    ),
+                                    if (task.guests.isNotEmpty) ...[
+                                      const SizedBox(height: 10),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: _buildAvatars(
+                                          task.guests
+                                              .map((guest) => {
+                                                    'avatar': guest['avatar']
+                                                        as String?,
+                                                    'label': guest['label']
+                                                        as String,
+                                                  })
+                                              .toList(),
+                                          maxAvatars: 4,
                                         ),
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: _buildAvatarsFollowers(
-                                              task.followers
-                                                  .map((follower) => {
-                                                        'avatar':
-                                                            follower['avatar']
-                                                                as String?,
-                                                        'label':
-                                                            follower['label']
-                                                                as String
-                                                      })
-                                                  .toList(),
-                                              maxAvatars: 4),
-                                        ),
-                                        const SizedBox(height: 5),
-                                      ],
+                                      ),
+                                      const SizedBox(height: 5),
                                     ],
-                                  ),
-
-                                  // Level 4
-                                ],
+                                    if (task.followers.isNotEmpty) ...[
+                                      const SizedBox(height: 10),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: _buildAvatarsFollowers(
+                                          task.followers
+                                              .map((follower) => {
+                                                    'avatar':
+                                                        follower['avatar']
+                                                            as String?,
+                                                    'label': follower['label']
+                                                        as String,
+                                                  })
+                                              .toList(),
+                                          maxAvatars: 4,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                    ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(top: 250),
-                      child: Center(
-                        child: Text(
-                          'No data to display for this stage',
-                          style: TextStyle(fontSize: 16),
-                        ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(top: 250),
+                    child: Center(
+                      child: Text(
+                        'No data to display for this stage',
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
-          ],
-        ),
+                  ),
+        ],
       ),
     );
   }
@@ -682,7 +672,11 @@ class _KanbanBoardState extends State<KanbanBoard> {
                     });
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to delete task: $e',style: TextStyle(color: Colors.white),)),
+                      SnackBar(
+                          content: Text(
+                        'Failed to delete task: $e',
+                        style: TextStyle(color: Colors.white),
+                      )),
                     );
                   }
                 },
@@ -886,9 +880,10 @@ class _KanbanBoardState extends State<KanbanBoard> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Close',style: TextStyle(
-                color: Colors.blue
-              ),),
+              child: Text(
+                'Close',
+                style: TextStyle(color: Colors.blue),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
@@ -1081,104 +1076,18 @@ class _KanbanBoardState extends State<KanbanBoard> {
     );
   }
 
-  DateTime _parseDate(String date) {
+  Future<DateTime> _parseDate(String date) async {
     try {
-      return DateFormat('dd-MM-yyyy').parse(date);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? dateFormat = prefs.getString('date_formate') ??
+          'DD-MM-YYYY'; // Valeur par défaut si non définie
+      String pattern = dateFormat
+          .replaceAll('DD', 'dd')
+          .replaceAll('YYYY', 'yyyy')
+          .replaceAll('MM', 'MM');
+      return DateFormat(pattern).parse(date);
     } catch (e) {
       throw FormatException('Invalid date format: $date');
     }
   }
 }
-/*
-class KanbanStage extends StatefulWidget {
-  final String pipelineId;
-  final Stage stage;
-  final List<Task> tasks;
-  final Function(int, Task) onStageChanged;
-
-  KanbanStage({
-    super.key,
-    required this.pipelineId,
-    required this.stage,
-    required this.tasks,
-    required this.onStageChanged,
-  });
-
-  @override
-  State<KanbanStage> createState() => _KanbanStageState();
-}
-
-class _KanbanStageState extends State<KanbanStage> {
-  late List<Task> _tasks;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _tasks = List.from(widget.tasks); // Create a copy of the tasks list
-  }
-
-  @override
-  void didUpdateWidget(covariant KanbanStage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.pipelineId != oldWidget.pipelineId ||
-        widget.stage.id != oldWidget.stage.id ||
-        widget.tasks != oldWidget.tasks) {
-      setState(() {
-        _tasks = List.from(widget.tasks); // Create a copy of the tasks list
-      });
-      _sortTasksByDate();
-    }
-  }
-
-  void _sortTasksByDate() {
-    _tasks.sort((a, b) {
-      DateTime dateA = DateFormat('dd-MM-yyyy').parse(a.startDate);
-      DateTime dateB = DateFormat('dd-MM-yyyy').parse(b.startDate);
-      return dateB.compareTo(dateA); // Change to descending order
-    });
-  }
-
-  void _removeTask(Task task) {
-    setState(() {
-      _tasks.remove(task);
-    });
-  }
-
-  void _onStageChanged(int newStageId, Task task) {
-    _removeTask(task);
-    widget.onStageChanged(newStageId, task);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DragTarget<Task>(
-      builder: (context, candidateData, rejectedData) {
-        return Container(
-          width: 300,
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _tasks.length,
-                  itemBuilder: (context, taskIndex) {
-                    final task = _tasks[taskIndex];
-                    return TaskCard1(
-                      key: ValueKey(
-                          task.id), // Ensure each card has a unique key
-                      task: task,
-                      onStageChanged: (newStageId) =>
-                          _onStageChanged(newStageId, task),
-                      onDelete: () => _removeTask(task),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-*/

@@ -9,11 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import '../../services/ApiFamilyModuleData.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class FieldWidgetGeneratorUpdate extends StatefulWidget {
   final DataFieldGroupUpdate dataFieldGroup;
   final TextEditingController? emailController;
@@ -563,7 +565,7 @@ class _FieldWidgetGeneratorUpdateState
         colorScheme: ColorScheme.light(
           primary: Colors.blue, // Couleur de fond de l'en-tête
           onPrimary: Colors.white, // Couleur du texte de l'en-tête
-          surface: Colors.pink, // Couleur de fond du calendrier
+          surface: Colors.white, // Couleur de fond du calendrier
           onSurface: Colors.black, // Couleur du texte
         ),
         dialogBackgroundColor:
@@ -943,7 +945,7 @@ class _FieldWidgetGeneratorUpdateState
                           colorScheme: ColorScheme.light(
                             primary: Colors.blue,
                             onPrimary: Colors.white,
-                            surface: Colors.pink,
+                            surface: Colors.white,
                             onSurface: Colors.black,
                           ),
                           dialogBackgroundColor: Colors.white,
@@ -955,8 +957,24 @@ class _FieldWidgetGeneratorUpdateState
                     if (dateTime != null) {
                       // Vérifiez si la date et l'heure sélectionnées ne sont pas nulles
 
+                      // Récupérer le format de date depuis SharedPreferences
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      String? dateFormat =
+                          prefs.getString('date_formate') ?? 'DD-MM-YYYY';
+
+                      // Ajouter le format de l'heure au format de la date
+                      String pattern = dateFormat
+                          .replaceAll('DD', 'dd')
+                          .replaceAll('YYYY', 'yyyy')
+                          .replaceAll('MM', 'MM');
+                      pattern += ' HH:mm'; // Ajouter l'heure au format
+
+                      // Formater la date et l'heure
                       String formattedDateTime =
-                          DateFormat('dd-MM-yyyy HH:mm').format(dateTime);
+                          DateFormat(pattern).format(dateTime);
+
+                      // Mettre à jour le champ texte et le formulaire
                       setState(() {
                         _textEditingController?.text = formattedDateTime;
                       });
@@ -1030,9 +1048,21 @@ class _FieldWidgetGeneratorUpdateState
                       builder: customDatePickerBuilder,
                     );
                     if (picked != null) {
-                      // Vérifiez si la date sélectionnée n'est pas nulle
-                      String formattedDate =
-                          DateFormat('dd-MM-yyyy').format(picked);
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      String? dateFormat = prefs.getString('date_formate') ??
+                          'DD-MM-YYYY'; // Valeur par défaut si non définie
+
+                      // Convertir le format en un pattern compatible avec intl
+                      String pattern = dateFormat
+                          .replaceAll('DD', 'dd')
+                          .replaceAll('YYYY', 'yyyy')
+                          .replaceAll('MM', 'MM');
+
+                      // Formater la date sélectionnée
+                      String formattedDate = DateFormat(pattern).format(picked);
+
+                      // Mettre à jour le champ et la map
                       setState(() {
                         _textEditingController?.text = formattedDate;
                       });
@@ -1197,7 +1227,8 @@ class _FieldWidgetGeneratorUpdateState
                             onPressed: () {
                               selectedImages();
                             },
-                            label: Text("${AppLocalizations.of(context)!.upload}")),
+                            label: Text(
+                                "${AppLocalizations.of(context)!.upload}")),
                       ],
                     ),
                     albumlist == null
@@ -1333,7 +1364,8 @@ class _FieldWidgetGeneratorUpdateState
                             onPressed: () {
                               selectFiles();
                             },
-                            label: Text("${AppLocalizations.of(context)!.upload}")),
+                            label: Text(
+                                "${AppLocalizations.of(context)!.upload}")),
                       ],
                     ),
                     Text(
@@ -1384,7 +1416,8 @@ class _FieldWidgetGeneratorUpdateState
                           : fileList.length *
                               50, // Assurez-vous que cette hauteur est suffisante
                       child: fileList == null || fileList.isEmpty
-                          ? Text("${AppLocalizations.of(context)!.nofilesselected}")
+                          ? Text(
+                              "${AppLocalizations.of(context)!.nofilesselected}")
                           : ListView.builder(
                               itemCount: fileList
                                   .length, // Utilisation de fileList.length comme itemCount
@@ -1854,7 +1887,8 @@ class _FieldWidgetGeneratorUpdateState
           return Padding(
             padding: const EdgeInsets.all(10.0),
             child: MultiSelectDialogField(
-              buttonText: Text("${AppLocalizations.of(context)!.select} " + widget.dataFieldGroup.alias),
+              buttonText: Text("${AppLocalizations.of(context)!.select} " +
+                  widget.dataFieldGroup.alias),
               title: Text(widget.dataFieldGroup.alias),
               buttonIcon: Icon(
                 Icons.arrow_drop_down_outlined,
@@ -1907,7 +1941,8 @@ class _FieldWidgetGeneratorUpdateState
           return Padding(
             padding: const EdgeInsets.all(10.0),
             child: MultiSelectDialogField(
-              buttonText: Text("${AppLocalizations.of(context)!.select} " + widget.dataFieldGroup.alias),
+              buttonText: Text("${AppLocalizations.of(context)!.select} " +
+                  widget.dataFieldGroup.alias),
               title: Text(widget.dataFieldGroup.alias),
               buttonIcon: Icon(
                 Icons.arrow_drop_down_outlined,
@@ -1972,7 +2007,8 @@ class _FieldWidgetGeneratorUpdateState
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 DropdownButtonFormField<String>(
-                  hint: Text("${AppLocalizations.of(context)!.select} " + widget.dataFieldGroup.alias),
+                  hint: Text("${AppLocalizations.of(context)!.select} " +
+                      widget.dataFieldGroup.alias),
                   icon: Icon(
                     Icons.arrow_drop_down,
                     color: Colors.black,
@@ -2071,7 +2107,8 @@ class _FieldWidgetGeneratorUpdateState
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 DropdownButtonFormField<String>(
-                  hint: Text("${AppLocalizations.of(context)!.select}" + widget.dataFieldGroup.alias),
+                  hint: Text("${AppLocalizations.of(context)!.select}" +
+                      widget.dataFieldGroup.alias),
                   icon: Icon(
                     Icons.arrow_drop_down,
                     color: Colors.black,
