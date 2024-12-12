@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/KanbanModels/Element.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
-
-
+import 'package:flutter_application_stage_project/providers/providerstagechange.dart';
+import 'package:provider/provider.dart';
 
 import 'EditElment.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -55,7 +55,13 @@ class _CardwidgetState extends State<Cardwidget> {
               title: familyName(widget.familyId),
             ),
           ),
-        );
+        ).then((value) {
+          if (value == true) {
+            // Rafraîchissez les données après une mise à jour
+            Provider.of<stagechangeprovider>(context, listen: false)
+                .setNeedsRefresh(true);
+          }
+        });
         break;
       case 'delete':
         widget.deleteFunction(widget.element);
@@ -100,12 +106,13 @@ class _CardwidgetState extends State<Cardwidget> {
                     children: [
                       Row(
                         children: [
-                          Text(AppLocalizations.of(context)!.ref + " ",
-                              ),
+                          Text(
+                            AppLocalizations.of(context)!.ref + " ",
+                          ),
                           Text(widget.element.labelData,
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  )),
+                                fontWeight: FontWeight.bold,
+                              )),
                         ],
                       ),
                       PopupMenuButton<String>(
@@ -130,8 +137,9 @@ class _CardwidgetState extends State<Cardwidget> {
                             ),
                           ];
                         },
-                        icon: Icon(Icons.more_horiz_outlined,
-                            ),
+                        icon: Icon(
+                          Icons.more_horiz_outlined,
+                        ),
                       ),
                     ],
                   ),
@@ -144,7 +152,6 @@ class _CardwidgetState extends State<Cardwidget> {
                       Text(
                         widget.element.creator.label,
                         style: const TextStyle(
-                          
                           fontSize: 16,
                         ),
                       ),
@@ -167,9 +174,7 @@ class _CardwidgetState extends State<Cardwidget> {
                   ),
                   const SizedBox(height: 8),
                   const SizedBox(height: 8),
-                
-                ]
-                ,
+                ],
               ),
             ),
           ),

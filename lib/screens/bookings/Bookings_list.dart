@@ -1,27 +1,22 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/bookings_models/BookingsApiRespose.dart';
 import 'package:flutter_application_stage_project/models/bookings_models/bookingsData.dart';
 import 'package:flutter_application_stage_project/screens/bookings/BookingListRow.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/services/bookingsService/BookingsService.dart';
-
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import '../../services/ApiDeleteElment.dart';
-
 import '../EditElment.dart';
 import '../detailElment.dart';
-
 
 class BookingsList extends StatefulWidget {
   const BookingsList({Key? key}) : super(key: key);
 
   @override
-  State<BookingsList> createState() => _BookingsListState();
+  State<BookingsList> createState() => BookingsListState();
 }
 
-class _BookingsListState extends State<BookingsList> {
+class BookingsListState extends State<BookingsList> {
   List<Bookingsdata> bookings = [];
   bool isLoading = false;
   int page = 1;
@@ -42,10 +37,14 @@ class _BookingsListState extends State<BookingsList> {
   Future<void> fetchBookings() async {
     setState(() {
       isLoading = true;
+      bookings
+          .clear(); // Réinitialiser les tickets pour forcer le rafraîchissement
+      page = 1; // Réinitialiser la pagination si nécessaire
     });
 
     try {
-      BookingsApiResponse Bookings = await Bookingsservice.getAllBookings(page: page);
+      BookingsApiResponse Bookings =
+          await Bookingsservice.getAllBookings(page: page);
       setState(() {
         bookings.addAll(Bookings.data);
         isLoading = false;
@@ -78,17 +77,28 @@ class _BookingsListState extends State<BookingsList> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('${AppLocalizations.of(context)!.elementdeletedsuccessfully}',style: TextStyle(color: Colors.white),),
+            content: Text(
+              '${AppLocalizations.of(context)!.elementdeletedsuccessfully}',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("${AppLocalizations.of(context)!.errorelementnotdeleted}",style: TextStyle(color: Colors.white),)),
+          SnackBar(
+              content: Text(
+            "${AppLocalizations.of(context)!.errorelementnotdeleted}",
+            style: TextStyle(color: Colors.white),
+          )),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("${AppLocalizations.of(context)!.errorelementnotdeleted}",style: TextStyle(color: Colors.white),)),
+        SnackBar(
+            content: Text(
+          "${AppLocalizations.of(context)!.errorelementnotdeleted}",
+          style: TextStyle(color: Colors.white),
+        )),
       );
     }
   }
@@ -97,6 +107,24 @@ class _BookingsListState extends State<BookingsList> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void editBooking(Bookingsdata booking) async {
+    final isEdited = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditElment(
+          Element_id: booking.id,
+          family_id: "8",
+          title: "${AppLocalizations.of(context)!.booking}",
+        ),
+      ),
+    );
+
+    if (isEdited == true) {
+      // Rafraîchir la liste des tickets après modification
+      fetchBookings();
+    }
   }
 
   @override
@@ -115,28 +143,31 @@ class _BookingsListState extends State<BookingsList> {
                     SlidableAction(
                       icon: Icons.delete,
                       foregroundColor: Colors.red,
-                      
                       backgroundColor: Colors.transparent,
                       onPressed: (context) {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("${AppLocalizations.of(context)!.delete}"),
-                              content: Text("${AppLocalizations.of(context)!.deletebooking}"),
+                              title: Text(
+                                  "${AppLocalizations.of(context)!.delete}"),
+                              content: Text(
+                                  "${AppLocalizations.of(context)!.deletebooking}"),
                               actions: [
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(true);
                                     deleteTicket(booking);
                                   },
-                                  child: Text("${AppLocalizations.of(context)!.yesword}"),
+                                  child: Text(
+                                      "${AppLocalizations.of(context)!.yesword}"),
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
-                                  child:Text("${AppLocalizations.of(context)!.noword}"),
+                                  child: Text(
+                                      "${AppLocalizations.of(context)!.noword}"),
                                 )
                               ],
                             );
@@ -146,16 +177,18 @@ class _BookingsListState extends State<BookingsList> {
                     ),
                     SlidableAction(
                       onPressed: (context) {
+                        /*
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => EditElment(
                               Element_id: booking.id,
                               family_id: "8",
-                              title: "Bookings",
+                              title: "${AppLocalizations.of(context)!.booking}",
                             ),
                           ),
-                        );
+                        );*/
+                        editBooking(booking);
                       },
                       icon: Icons.edit,
                       foregroundColor: Colors.green,
@@ -184,7 +217,6 @@ class _BookingsListState extends State<BookingsList> {
                       title: booking.label,
                       owner: booking.owner,
                       createTime: booking.createdAt,
-                     
                       ownerImage: booking.ownerAvatar,
                     ),
                   ),
@@ -196,8 +228,8 @@ class _BookingsListState extends State<BookingsList> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                color: Colors.blue,
+              ),
             ),
           ],
         ],

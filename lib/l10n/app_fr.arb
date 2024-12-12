@@ -189,5 +189,10 @@
   "failedtoloaddata": "Échec du chargement des données :",
   "youdonothaveaccesstothisroom": "Vous n'avez pas accès à cette salle",
   "nodataavailable": "Aucune donnée disponible",
-  "merciverifiercode":"Merci de vérifier votre code OTP."
+  "merciverifiercode":"Merci de vérifier votre code OTP.",
+  "confirmationTask":"Confirmation",
+  "cancel":"Annuler",
+   "update":"mise à jour",
+     "updateactivity":"mise a jour activité",
+        "areyousureyouwanttoupdatethistask":"Êtes-vous sûr de vouloir mettre à jour cette tâche ?"
 }

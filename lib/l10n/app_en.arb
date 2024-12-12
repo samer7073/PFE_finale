@@ -189,5 +189,10 @@
   "failedtoloaddata":"Failed to load data:",
   "youdonothaveaccesstothisroom":"You do not have access to this room",
   "nodataavailable":"No data available",
-  "merciverifiercode":"Please verify your OTP code."
+  "merciverifiercode":"Please verify your OTP code.",
+  "confirmationTask":"Confirmation",
+  "cancel":"Cancel",
+  "update":"update",
+  "updateactivity":"Update Activity",
+  "areyousureyouwanttoupdatethistask":"Are you sure you want to update this task?"
 }

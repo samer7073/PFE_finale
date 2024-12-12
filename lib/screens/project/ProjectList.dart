@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:flutter_application_stage_project/screens/project/project_list_row.dart';
-import 'package:flutter_application_stage_project/screens/ticket/addTicket.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../models/ticket/ticket.dart';
 import '../../../models/ticket/ticketData.dart';
@@ -13,15 +12,14 @@ import '../../services/ApiDeleteElment.dart';
 import '../EditElment.dart';
 import '../detailElment.dart';
 
-
 class ProjectList extends StatefulWidget {
-  const ProjectList({super.key});
+  const ProjectList({Key? key}) : super(key: key);
 
   @override
-  State<ProjectList> createState() => _ProjectListState();
+  State<ProjectList> createState() => ProjectListState();
 }
 
-class _ProjectListState extends State<ProjectList> {
+class ProjectListState extends State<ProjectList> {
   List<TicketData> tickets = [];
   bool isLoading = false;
   int page = 1;
@@ -40,13 +38,16 @@ class _ProjectListState extends State<ProjectList> {
   }
 
   Future<void> fetchTickets() async {
+    log("Fetching tickets...");
     setState(() {
       isLoading = true;
+      tickets
+          .clear(); // Réinitialiser les tickets pour forcer le rafraîchissement
+      page = 1; // Réinitialiser la pagination si nécessaire
     });
 
     try {
       Ticket ticketResponse = await GetTicketApi.getAllTickets("7", page: page);
-
       setState(() {
         tickets.addAll(ticketResponse.data);
         isLoading = false;
@@ -79,17 +80,28 @@ class _ProjectListState extends State<ProjectList> {
           SnackBar(
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
-            content: Text('${AppLocalizations.of(context)!.elementdeletedsuccessfully}',style: TextStyle(color: Colors.white),),
+            content: Text(
+              '${AppLocalizations.of(context)!.elementdeletedsuccessfully}',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("${AppLocalizations.of(context)!.errorelementnotdeleted}",style: TextStyle(color: Colors.white),)),
+          SnackBar(
+              content: Text(
+            "${AppLocalizations.of(context)!.errorelementnotdeleted}",
+            style: TextStyle(color: Colors.white),
+          )),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("${AppLocalizations.of(context)!.errorelementnotdeleted}",style: TextStyle(color: Colors.white),)),
+        SnackBar(
+            content: Text(
+          "${AppLocalizations.of(context)!.errorelementnotdeleted}",
+          style: TextStyle(color: Colors.white),
+        )),
       );
     }
   }
@@ -100,26 +112,27 @@ class _ProjectListState extends State<ProjectList> {
     super.dispose();
   }
 
+  void editProject(TicketData project) async {
+    final isEdited = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditElment(
+          Element_id: project.id,
+          family_id: "7",
+          title: "Project",
+        ),
+      ),
+    );
+
+    if (isEdited == true) {
+      // Rafraîchir la liste des tickets après modification
+      fetchTickets();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        onPressed: () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AddElement(
-                      family_id: "7",
-                      titel: AppLocalizations.of(context)!.project,
-                    )),
-          );
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
       body: Column(
         children: [
           Expanded(
@@ -132,7 +145,7 @@ class _ProjectListState extends State<ProjectList> {
                   endActionPane: ActionPane(motion: DrawerMotion(), children: [
                     SlidableAction(
                       icon: Icons.delete,
-                     foregroundColor: Colors.red,
+                      foregroundColor: Colors.red,
                       backgroundColor: Colors.transparent,
                       onPressed: (context) {
                         log("hello");
@@ -140,27 +153,33 @@ class _ProjectListState extends State<ProjectList> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("${AppLocalizations.of(context)!.delete}"),
-                              content: Text("${AppLocalizations.of(context)!.deleteproject}"),
+                              title: Text(
+                                  "${AppLocalizations.of(context)!.delete}"),
+                              content: Text(
+                                  "${AppLocalizations.of(context)!.deleteproject}"),
                               actions: [
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-                                    ),
+                                    backgroundColor: Colors
+                                        .blue, // Définit la couleur de fond en bleu
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop(true);
                                     deleteTicket(project);
                                   },
-                                  child: Text("${AppLocalizations.of(context)!.yesword}"),
+                                  child: Text(
+                                      "${AppLocalizations.of(context)!.yesword}"),
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue, // Définit la couleur de fond en bleu
-            ),
+                                    backgroundColor: Colors
+                                        .blue, // Définit la couleur de fond en bleu
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
-                                  child: Text("${AppLocalizations.of(context)!.noword}"),
+                                  child: Text(
+                                      "${AppLocalizations.of(context)!.noword}"),
                                 )
                               ],
                             );
@@ -171,6 +190,7 @@ class _ProjectListState extends State<ProjectList> {
                     SlidableAction(
                       onPressed: (context) {
                         log("edit");
+                        /*
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -181,6 +201,8 @@ class _ProjectListState extends State<ProjectList> {
                             ),
                           ),
                         );
+                        */
+                        editProject(project);
                       },
                       icon: Icons.edit,
                       foregroundColor: Colors.green,
@@ -222,8 +244,8 @@ class _ProjectListState extends State<ProjectList> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                color: Colors.blue,
+              ),
             ),
         ],
       ),

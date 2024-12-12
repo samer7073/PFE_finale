@@ -8,16 +8,21 @@ import '../screens/error_reporter.dart';
 // Importez la configuration
 
 class ApiTaskKpi {
-  static Future<TaskKpiModel> getApiResponse() async {
+  static Future<TaskKpiModel> getApiResponse(
+    String start,
+    String end,
+  ) async {
     log("Fetching data from API");
     final token = await SharedPrefernce.getToken("token");
     log("Token: $token");
 
     final url = await Config.getApiUrl("tasksKpi");
+    final fullUrl = '$url?start=$start&end=$end'; // Ajoutez les paramètres à l'URL
+    log("urlKpi: $fullUrl");
 
     try {
       final response = await http.get(
-        Uri.parse(url),
+        Uri.parse(fullUrl),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',

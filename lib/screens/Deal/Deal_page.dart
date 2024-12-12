@@ -2,11 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
-
 import '../CustomSearchDelegate.dart';
 import '../NotficationPage.dart';
 import '../PipelineScreen.dart';
-
 import '../ticket/addTicket.dart';
 import 'DealList.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,13 +17,27 @@ class DealPage extends StatefulWidget {
 }
 
 class _DealPageState extends State<DealPage> {
+  final GlobalKey<DealsPageState> dealsListKey = GlobalKey();
+  final GlobalKey<PipelineScreenState> dealsKanbanKey = GlobalKey();
+
+  late List<Widget> _widgetOptions;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialisez _widgetOptions ici
+    _widgetOptions = [
+      DealsPage(key: dealsListKey),
+      PipelineScreen(
+        idFamily: "3",
+        key: dealsKanbanKey, // Passer la clé ici
+      ),
+    ];
+  }
+
   int _selectedIndex = 0;
   String _viewMode = 'List view';
-
-  static List<Widget> _widgetOptions = <Widget>[
-    DealsPage(),
-    PipelineScreen(idFamily: "3"),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -41,20 +53,34 @@ class _DealPageState extends State<DealPage> {
     _onItemTapped(newIndex);
   }
 
+
+Future<void> _adddeal() async {
+  final adddeal = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => AddElement(
+        family_id: "3",
+        titel: AppLocalizations.of(context)!.deal,
+      ),
+    ),
+  );
+
+  if (adddeal == true) {
+    // Rafraîchir la vue active en fonction de l'index sélectionné
+    if (_selectedIndex == 0) {
+      dealsListKey.currentState?.fetchDeals(); // Rafraîchit la liste des tickets
+    } else if (_selectedIndex == 1) {
+      dealsKanbanKey.currentState?.initializeFirstStage(); // Rafraîchit la vue kanban
+    }
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AddElement(
-                      family_id: "3",
-                      titel: AppLocalizations.of(context)!.deal,
-                    )),
-          );
+        _adddeal();
         },
         child: Icon(
           Icons.add,
@@ -62,20 +88,6 @@ class _DealPageState extends State<DealPage> {
         ),
       ),
       appBar: AppBar(
-         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil<dynamic>(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (BuildContext context) => HomeNavigate(
-                  id_page: 0,
-                ),
-              ),
-              (route) => false,
-            );
-          },
-        ),
         title: Text(AppLocalizations.of(context)!.deals),
         actions: [
           IconButton(
@@ -104,9 +116,21 @@ class _DealPageState extends State<DealPage> {
           ),
           PopupMenuButton(
             initialValue: _viewMode,
-            onSelected: _changeViewMode,
+            onSelected: (String viewMode) {
+              setState(() {
+                _viewMode = viewMode;
+              });
+              int newIndex = [
+                AppLocalizations.of(context)!.listView,
+                AppLocalizations.of(context)!.kanban,
+              ].indexOf(viewMode);
+              _onItemTapped(newIndex);
+            },
             itemBuilder: (BuildContext context) {
-              return ['List view', 'Kanban ']
+              return [
+                AppLocalizations.of(context)!.listView,
+                AppLocalizations.of(context)!.kanban,
+              ]
                   .map((mode) => PopupMenuItem(
                         value: mode,
                         child: Text(mode),
@@ -116,7 +140,7 @@ class _DealPageState extends State<DealPage> {
           ),
         ],
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: _widgetOptions[_selectedIndex], // Utilisation de la liste définie
     );
   }
 }

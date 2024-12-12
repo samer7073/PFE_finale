@@ -1,21 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
-
 import 'package:flutter_application_stage_project/screens/PipelineScreen.dart';
 import 'package:flutter_application_stage_project/screens/bookings/Bookings_list.dart';
 import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
 import 'package:flutter_application_stage_project/screens/ticket/addTicket.dart';
-import 'package:flutter_application_stage_project/screens/ticket/ticket_list.dart';
 import 'package:provider/provider.dart';
-
 import '../CustomSearchDelegate.dart';
 import '../NotficationPage.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BookingsPage extends StatefulWidget {
@@ -28,11 +23,23 @@ class BookingsPage extends StatefulWidget {
 class _TicketState extends State<BookingsPage> {
   late ThemeProvider themeProvider;
   late String _viewMode;
+  late List<Widget> _widgetOptions;
+
+  final GlobalKey<BookingsListState> bookingListKey = GlobalKey();
+  final GlobalKey<PipelineScreenState> bookingKanbanKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     log("test Init state activated");
+    // Initialisez _widgetOptions ici
+    _widgetOptions = [
+      BookingsList(key: bookingListKey),
+      PipelineScreen(
+        idFamily: "8",
+        key: bookingKanbanKey, // Passer la clé ici
+      ),
+    ];
   }
 
   @override
@@ -44,11 +51,6 @@ class _TicketState extends State<BookingsPage> {
   }
 
   int _selectedIndex = 0;
-
-  static List<Widget> _widgetOptions = <Widget>[
-   BookingsList(),
-    PipelineScreen(idFamily: "8"),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -67,21 +69,36 @@ class _TicketState extends State<BookingsPage> {
     _onItemTapped(newIndex);
   }
 
+  Future<void> _addBooking() async {
+    final addBooking = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddElement(
+          family_id: "8",
+          titel: "${AppLocalizations.of(context)!.booking}",
+        ),
+      ),
+    );
+
+    if (addBooking == true) {
+      // Rafraîchir la vue active en fonction de l'index sélectionné
+      if (_selectedIndex == 0) {
+        bookingListKey.currentState
+            ?.fetchBookings(); // Rafraîchit la liste des tickets
+      } else if (_selectedIndex == 1) {
+        bookingKanbanKey.currentState
+            ?.initializeFirstStage(); // Rafraîchit la vue kanban
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddElement(
-                family_id: "8",
-                titel: "${AppLocalizations.of(context)!.booking}",
-              ),
-            ),
-          );
+         _addBooking();
         },
         child: Icon(
           Icons.add,
@@ -90,23 +107,6 @@ class _TicketState extends State<BookingsPage> {
       ),
       appBar: AppBar(
         title: Text("${AppLocalizations.of(context)!.bookings}"),
-        
-         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil<dynamic>(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (BuildContext context) => HomeNavigate(
-                  id_page: 0,
-                ),
-              ),
-              (route) => false,
-            );
-            
-          },
-        
-        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -134,11 +134,20 @@ class _TicketState extends State<BookingsPage> {
           ),
           PopupMenuButton(
             initialValue: _viewMode,
-            onSelected: _changeViewMode,
+            onSelected: (String viewMode) {
+              setState(() {
+                _viewMode = viewMode;
+              });
+              int newIndex = [
+                AppLocalizations.of(context)!.listView,
+                AppLocalizations.of(context)!.kanban,
+              ].indexOf(viewMode);
+              _onItemTapped(newIndex);
+            },
             itemBuilder: (BuildContext context) {
               return [
                 AppLocalizations.of(context)!.listView,
-                AppLocalizations.of(context)!.kanban
+                AppLocalizations.of(context)!.kanban,
               ]
                   .map((mode) => PopupMenuItem(
                         value: mode,
@@ -149,7 +158,7 @@ class _TicketState extends State<BookingsPage> {
           ),
         ],
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: _widgetOptions[_selectedIndex], // Utilisation de la liste définie
     );
   }
 }

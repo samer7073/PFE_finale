@@ -6,17 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/core/constants/FieldWidgetGeneratorUpdate.dart';
 import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdate.dart';
 import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdateResponse.dart';
-import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
 import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
-import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
-import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../models/fields/datafieldsresponse.dart';
 import '../models/fields/fileData.dart';
 import '../services/ApiField.dart';
 import '../services/ApiFieldGroup.dart';
 import '../services/ApiFieldPost.dart';
-import 'homeNavigate_page.dart';
 
 class EditElment extends StatefulWidget {
   final String title;
@@ -39,6 +35,22 @@ class _EditElmentState extends State<EditElment> {
   Map<String, dynamic> fieldValues = {};
   Map<String, bool> fieldDataFetchedMap = {};
   List<String> fetchedGroupIds = [];
+  void saveEditedTicket() {
+    // Effectuer les modifications nécessaires
+    Navigator.pop(context, true); // Retourne `true` après modification
+  }
+   void saveEditedProject() {
+    // Effectuer les modifications nécessaires
+    Navigator.pop(context, true); // Retourne `true` après modification
+  }
+   void saveEditedDeal() {
+    // Effectuer les modifications nécessaires
+    Navigator.pop(context, true); // Retourne `true` après modification
+  }
+   void saveEditedBooking() {
+    // Effectuer les modifications nécessaires
+    Navigator.pop(context, true); // Retourne `true` après modification
+  }
 
   @override
   void initState() {
@@ -183,7 +195,6 @@ class _EditElmentState extends State<EditElment> {
             icon: Icon(Icons.arrow_back)),
             */
       ),
-
       body: loading
           ? Container(
               child: Center(
@@ -301,6 +312,7 @@ class _EditElmentState extends State<EditElment> {
                                   (route) => false,
                                 );
                                 */
+                                /*
 
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
@@ -309,6 +321,8 @@ class _EditElmentState extends State<EditElment> {
                                           TicketPage()),
                                   (route) => true,
                                 );
+                                */
+                                saveEditedTicket();
                               } else if (widget.family_id == "7") {
                                 /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
@@ -320,7 +334,7 @@ class _EditElmentState extends State<EditElment> {
                                     ),
                                   ),
                                   (route) => false,
-                                );*/
+                                );*//*
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
@@ -332,7 +346,8 @@ class _EditElmentState extends State<EditElment> {
                                     */
                                           ProjectPage()),
                                   (route) => false,
-                                );
+                                );*/
+                                saveEditedProject();
                               } else if (widget.family_id == "3") {
                                 /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
@@ -346,6 +361,7 @@ class _EditElmentState extends State<EditElment> {
                                   (route) => false,
                                 );
                                 */
+                                /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
@@ -353,14 +369,18 @@ class _EditElmentState extends State<EditElment> {
                                           DealPage()),
                                   (route) => false,
                                 );
+                                */
+                                saveEditedDeal();
                               } else if (widget.family_id == "8") {
+                                /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
                                       builder: (BuildContext context) =>
                                           BookingsPage()),
                                   (route) => false,
-                                );
+                                );*/
+                                saveEditedBooking();
                               }
                             } else if (postUpdate == 500) {
                               ScaffoldMessenger.of(context).showSnackBar(

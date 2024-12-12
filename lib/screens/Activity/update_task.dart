@@ -8,13 +8,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
-import 'package:flutter_application_stage_project/screens/Activity/home_view.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/owner_select.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_followers.dart';
-
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_guests.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/task_type.dart';
-import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_families.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_stage.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_task.dart';
@@ -496,19 +493,21 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
       bool confirm = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Confirmation'),
-          content: const Text('Are you sure you want to update this task?'),
+          title: Text(AppLocalizations.of(context)!.confirmationTask),
+          content:  Text(AppLocalizations.of(context)!.areyousureyouwanttoupdatethistask),
           actions: [
             TextButton(
-              child: const Text('Cancel',style: TextStyle(
-                color: Colors.blue
-              ),),
+              child: Text(
+                AppLocalizations.of(context)!.yesword,
+                style: TextStyle(color: Colors.blue),
+              ),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
-              child: const Text('Confirm',style: TextStyle(
-                color: Colors.blue
-              ),),
+              child:  Text(
+                 AppLocalizations.of(context)!.noword,
+                style: TextStyle(color: Colors.blue),
+              ),
               onPressed: () => Navigator.of(context).pop(true),
             ),
           ],
@@ -518,11 +517,9 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
       if (!confirm) return;
 
       try {
-        final formattedStartDate =_startDateController.text;
-        
-        final formattedEndDate = 
-          _endDateController.text
-        ;
+        final formattedStartDate = _startDateController.text;
+
+        final formattedEndDate = _endDateController.text;
 
         final taskData = {
           'label': _taskNameController.text,
@@ -556,11 +553,13 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
           const SnackBar(
             backgroundColor: Colors.green,
             content: Text(
-              'Task updated successfully!',style: TextStyle(color: Colors.white),
+              'Task updated successfully!',
+              style: TextStyle(color: Colors.white),
             ),
           ),
         );
 
+/*
         Navigator.pushAndRemoveUntil<dynamic>(
           context,
           MaterialPageRoute<dynamic>(
@@ -569,12 +568,17 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
             ),
           ),
           (route) => false,
-        );
+        );*/
+
+        Navigator.pop(context, true);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               backgroundColor: Colors.red,
-              content: Text('Failed to update task: $e',style: TextStyle(color: Colors.white),)),
+              content: Text(
+                'Failed to update task: $e',
+                style: TextStyle(color: Colors.white),
+              )),
         );
         log('Failed to update task: $e');
       }
@@ -693,13 +697,13 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
       );
 
       if (pickedDateRange != null) {
-         SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? dateFormat = prefs.getString('date_formate') ??
-          'DD-MM-YYYY'; // Valeur par défaut si non définie
-      String pattern = dateFormat
-          .replaceAll('DD', 'dd')
-          .replaceAll('YYYY', 'yyyy')
-          .replaceAll('MM', 'MM');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? dateFormat = prefs.getString('date_formate') ??
+            'DD-MM-YYYY'; // Valeur par défaut si non définie
+        String pattern = dateFormat
+            .replaceAll('DD', 'dd')
+            .replaceAll('YYYY', 'yyyy')
+            .replaceAll('MM', 'MM');
         setState(() {
           _startDateController.text =
               DateFormat(pattern).format(pickedDateRange.start);
@@ -716,7 +720,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
         firstDate: DateTime(2000),
         lastDate: DateTime(2101),
       );
-           SharedPreferences prefs = await SharedPreferences.getInstance();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? dateFormat = prefs.getString('date_formate') ??
           'DD-MM-YYYY'; // Valeur par défaut si non définie
       String pattern = dateFormat
@@ -788,8 +792,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
               backgroundColor: Colors.grey,
               radius: 15,
               child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                color: Colors.blue,
+              ),
             );
           }
 
@@ -838,13 +842,14 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Update Activity',
+           AppLocalizations.of(context)!.updateactivity,
             style: TextStyle(color: Colors.blue, fontSize: 25),
           ),
         ),
-        body: const Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  )),
+        body: const Center(
+            child: CircularProgressIndicator(
+          color: Colors.blue,
+        )),
       );
     }
 
@@ -852,19 +857,19 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Update Activity',
+          title:  Text(
+            AppLocalizations.of(context)!.updateactivity,
             style: TextStyle(color: Colors.blue, fontSize: 25),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             labelColor: Colors.blue,
             unselectedLabelColor: Colors.grey,
             indicatorColor: Colors.blue,
             tabs: [
               Tab(
-                text: 'Activity',
+                text: AppLocalizations.of(context)!.activity,
               ),
-              Tab(text: 'Details'),
+              Tab(text: AppLocalizations.of(context)!.details),
             ],
           ),
           actions: [
@@ -905,8 +910,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           vertical: 6.0, horizontal: 8.0),
                     ),
                   ),
-                  child: const Text(
-                    "update",
+                  child:  Text(
+                    AppLocalizations.of(context)!.update,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -925,7 +930,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView(
                     children: [
-                      const Text('Activity Type *',
+                      Text(AppLocalizations.of(context)!.activityTypeRequired,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -936,16 +941,17 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         onSelected: onTaskTypeSelected,
                       ),
                       if (!isTaskTypeValid)
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Please select an Activity type',
+                            AppLocalizations.of(context)!
+                                .pleaseSelectActivityType,
                             style: TextStyle(color: Colors.red, fontSize: 12.0),
                           ),
                         ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Label *',
+                      Text(
+                        AppLocalizations.of(context)!.labelRequired,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -959,7 +965,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                             readOnly: can_update_task == 0,
                             controller: _taskNameController,
                             decoration: InputDecoration(
-                              hintText: 'Enter Activity label',
+                              hintText: AppLocalizations.of(context)!
+                                  .enterActivityLabel,
                               hintStyle: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
@@ -981,14 +988,14 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         Padding(
                           padding: EdgeInsets.only(top: 8),
                           child: Text(
-                            "Please enter a label !",
-                            style:
-                                TextStyle(color: Theme.of(context).colorScheme.error),
+                            AppLocalizations.of(context)!.labelRequired,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error),
                           ),
                         ),
                       const SizedBox(height: 16.0),
-                      const Text(
-                        'Owner *',
+                      Text(
+                        AppLocalizations.of(context)!.ownerRequired,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -999,7 +1006,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         decoration: boxdecoration(),
                         child: InputDecorator(
                           decoration: InputDecoration(
-                            hintText: 'Select owner',
+                            hintText: AppLocalizations.of(context)!.selectOwner,
                             enabledBorder: InputBorder
                                 .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
                             focusedBorder: InputBorder.none,
@@ -1047,15 +1054,15 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Please select an owner !',
+                            AppLocalizations.of(context)!.pleaseSelectOwner,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.error,
                                 fontSize: 14.0),
                           ),
                         ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Select Date Type',
+                      Text(
+                        AppLocalizations.of(context)!.selectDateType,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1076,8 +1083,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                               },
                               activeColor: Color.fromARGB(255, 52, 7, 255),
                             ),
-                            const Text(
-                              'Single Day',
+                            Text(
+                              AppLocalizations.of(context)!.singleDay,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -1094,8 +1101,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                               },
                               activeColor: Color.fromARGB(255, 52, 7, 255),
                             ),
-                            const Text(
-                              'Range of Days',
+                            Text(
+                              AppLocalizations.of(context)!.rangeOfDays,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -1111,8 +1118,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Start Date',
+                                Text(
+                                  AppLocalizations.of(context)!.startDate,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1126,7 +1133,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   child: TextFormField(
                                     controller: _startDateController,
                                     decoration: InputDecoration(
-                                      hintText: 'Select start date',
+                                      hintText: AppLocalizations.of(context)!
+                                          .selectStartDate,
                                       hintStyle: const TextStyle(
                                           fontSize: 15, color: Colors.blueGrey),
                                       enabledBorder: InputBorder
@@ -1140,17 +1148,19 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                     onTap: _handleStartDateSelection,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please select a start date';
+                                        return AppLocalizations.of(context)!
+                                            .pleaseSelectStartDate;
                                       }
                                       return null;
                                     },
                                   ),
                                 ),
                                 if (!isStartDateValid)
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      'Start date cannot be after end date',
+                                      AppLocalizations.of(context)!
+                                          .startDateAfterEndDate,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
                                     ),
@@ -1163,8 +1173,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'End Date',
+                                Text(
+                                  AppLocalizations.of(context)!.endDate,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1178,7 +1188,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   child: TextFormField(
                                     controller: _endDateController,
                                     decoration: InputDecoration(
-                                      hintText: 'Select end date',
+                                      hintText: AppLocalizations.of(context)!
+                                          .selectEndDate,
                                       hintStyle: const TextStyle(
                                           fontSize: 15, color: Colors.blueGrey),
                                       enabledBorder: InputBorder
@@ -1192,17 +1203,19 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                     onTap: _handleStartDateSelection,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please select an end date';
+                                        return AppLocalizations.of(context)!
+                                            .pleaseSelectEndDate;
                                       }
                                       return null;
                                     },
                                   ),
                                 ),
                                 if (!isEndDateValid)
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      'End date cannot be before start date',
+                                      AppLocalizations.of(context)!
+                                          .endDateBeforeStartDate,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
                                     ),
@@ -1213,8 +1226,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         ],
                       ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Corresponding Stage',
+                      Text(
+                        AppLocalizations.of(context)!.correspondingStage,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1227,7 +1240,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: InputDecorator(
                             decoration: InputDecoration(
-                              hintText: 'Select Activity Stage',
+                              hintText: AppLocalizations.of(context)!
+                                  .selectActivityStage,
                               hintStyle: const TextStyle(
                                   fontSize: 15, color: Colors.blueGrey),
                               enabledBorder: InputBorder
@@ -1260,8 +1274,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Start Time',
+                                Text(
+                                  AppLocalizations.of(context)!.startTime,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1275,7 +1289,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   child: TextFormField(
                                     controller: _startTimeController,
                                     decoration: InputDecoration(
-                                      hintText: 'Select start time',
+                                      hintText: AppLocalizations.of(context)!
+                                          .selectStartTime,
                                       hintStyle: const TextStyle(
                                           fontSize: 15, color: Colors.blueGrey),
                                       enabledBorder: InputBorder
@@ -1289,7 +1304,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                     onTap: () => _selectTime(context, true),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please select a start time';
+                                        return AppLocalizations.of(context)!
+                                            .pleaseSelectStartTime;
                                       }
                                       return null;
                                     },
@@ -1299,10 +1315,11 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   ),
                                 ),
                                 if (!isStartTimeValid)
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      'Start time cannot be after end time',
+                                      AppLocalizations.of(context)!
+                                          .startTimeAfterEndTime,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
                                     ),
@@ -1315,8 +1332,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'End Time',
+                                Text(
+                                  AppLocalizations.of(context)!.endTime,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
@@ -1330,7 +1347,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   child: TextFormField(
                                     controller: _endTimeController,
                                     decoration: InputDecoration(
-                                      hintText: 'Select end time',
+                                      hintText: AppLocalizations.of(context)!
+                                          .selectEndTime,
                                       hintStyle: const TextStyle(
                                           fontSize: 15, color: Colors.blueGrey),
                                       enabledBorder: InputBorder
@@ -1344,7 +1362,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                     onTap: () => _selectTime(context, false),
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please select an end time';
+                                        return AppLocalizations.of(context)!
+                                            .pleaseSelectEndTime;
                                       }
                                       return null;
                                     },
@@ -1354,10 +1373,11 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   ),
                                 ),
                                 if (!isEndTimeValid)
-                                  const Padding(
+                                  Padding(
                                     padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
-                                      'End time cannot be before start time',
+                                      AppLocalizations.of(context)!
+                                          .endTimeBeforeStartTime,
                                       style: TextStyle(
                                           color: Colors.red, fontSize: 12.0),
                                     ),
@@ -1371,8 +1391,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Guests',
+                          Text(
+                            AppLocalizations.of(context)!.guests,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -1389,8 +1409,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                     Icons.add,
                                     color: Colors.blueGrey,
                                   ),
-                                  label: const Text(
-                                    'Add',
+                                  label: Text(
+                                    AppLocalizations.of(context)!.add,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -1451,8 +1471,9 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: CheckboxListTile(
                             activeColor: Colors.blueGrey,
-                            title: const Text(
-                              'Send email to external members selected',
+                            title: Text(
+                              AppLocalizations.of(context)!
+                                  .sendEmailToExternalMembers,
                               style: TextStyle(color: Colors.blueGrey),
                             ),
                             value: sendEmailToExternalMembers,
@@ -1467,8 +1488,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Followers',
+                          Text(
+                            AppLocalizations.of(context)!.followers,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -1485,8 +1506,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                     Icons.add,
                                     color: Colors.blueGrey,
                                   ),
-                                  label: const Text(
-                                    'Add',
+                                  label: Text(
+                                    AppLocalizations.of(context)!.add,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -1543,8 +1564,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           ),
                         ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Reminder before',
+                       Text(
+                       AppLocalizations.of(context)!.reminderBefore,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1562,7 +1583,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                               child: TextField(
                                 controller: _reminderDurationController,
                                 decoration: InputDecoration(
-                                  hintText: 'Duration',
+                                  hintText:   AppLocalizations.of(context)!.duration,
                                   hintStyle: const TextStyle(
                                       fontSize: 15, color: Colors.blueGrey),
                                   enabledBorder: InputBorder
@@ -1589,7 +1610,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                               child: DropdownButtonFormField<String>(
                                 style: const TextStyle(color: Colors.blueGrey),
                                 decoration: InputDecoration(
-                                  hintText: 'Time Unit',
+                                  hintText:   AppLocalizations.of(context)!.timeUnit,
                                   hintStyle: const TextStyle(
                                       fontSize: 15, color: Colors.blueGrey),
                                   enabledBorder: InputBorder
@@ -1618,8 +1639,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                       ),
                       const SizedBox(height: 16.0),
                       CheckboxListTile(
-                        title: const Text(
-                          'Reminder before due date',
+                        title:  Text(
+                          AppLocalizations.of(context)!.reminderBeforeDueDate,
                           style:
                               TextStyle(color: Colors.blueGrey, fontSize: 15),
                         ),
@@ -1639,8 +1660,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: ListView(
                     children: [
-                      const Text(
-                        'Select Module',
+                       Text(
+                         AppLocalizations.of(context)!.selectModule,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1668,10 +1689,19 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                               });
                             },
                             decoration: InputDecoration(
-                              hintText: 'Select Module',
-                              enabledBorder: InputBorder
-                                  .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
+                            ),
+                            hint: Center(
+                              // Propriété spécifique de DropdownButtonFormField
+                              child: Text(
+                                AppLocalizations.of(context)!.selectModule,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.grey),
+                              ),
                             ),
                           ),
                         ),
@@ -1690,8 +1720,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      const Text(
-                        'Select Related Module',
+                       Text(
+                      AppLocalizations.of(context)!.relatedElement,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1706,7 +1736,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: InputDecorator(
                             decoration: InputDecoration(
-                              hintText: 'Select Related Module',
+                              hintText: AppLocalizations.of(context)!
+                                  .searchRelatedModule,
                               hintStyle: const TextStyle(
                                   fontSize: 15, color: Colors.blueGrey),
                               enabledBorder: InputBorder
@@ -1734,15 +1765,16 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         ),
                       ),
                       if (!isRelatedModuleValid)
-                        const Padding(
+                         Padding(
                           padding: EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Please select a related module',
+                           AppLocalizations.of(context)!
+                                .pleaseSelectRelatedModule,
                             style: TextStyle(color: Colors.red, fontSize: 12.0),
                           ),
                         ),
-                      const Text(
-                        'Select Priority',
+                       Text(
+                        AppLocalizations.of(context)!.selectPriority,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1757,7 +1789,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: InputDecorator(
                             decoration: InputDecoration(
-                              hintText: 'Select Priority',
+                              hintText:   AppLocalizations.of(context)!.selectPriority,
                               hintStyle: const TextStyle(
                                   fontSize: 15, color: Colors.blueGrey),
                               enabledBorder: InputBorder
@@ -1790,8 +1822,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         ),
                       ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Description',
+                       Text(
+                        AppLocalizations.of(context)!.description,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1805,7 +1837,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         child: TextFormField(
                           controller: _descriptionController,
                           decoration: InputDecoration(
-                            hintText: 'Enter Activity description',
+                            hintText:  AppLocalizations.of(context)!
+                                .enterActivityDescription,
                             hintStyle: const TextStyle(
                                 fontSize: 15, color: Colors.blueGrey),
                             enabledBorder: InputBorder
@@ -1820,8 +1853,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         ),
                       ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Note',
+                       Text(
+                         AppLocalizations.of(context)!.note,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1835,7 +1868,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         child: TextFormField(
                           controller: _noteController,
                           decoration: InputDecoration(
-                            hintText: 'Enter Activity note',
+                            hintText:  AppLocalizations.of(context)!.enterActivityNote,
                             hintStyle: const TextStyle(
                                 fontSize: 15, color: Colors.blueGrey),
                             enabledBorder: InputBorder
@@ -1850,8 +1883,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         ),
                       ),
                       const SizedBox(height: 18.0),
-                      const Text(
-                        'Upload Files ',
+                       Text(
+                          AppLocalizations.of(context)!.uploadFiles,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -1866,8 +1899,8 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                               MaterialStateProperty.all<Color>(Colors.blueGrey),
                         ),
                         onPressed: selectFiles,
-                        child: const Text(
-                          'Upload',
+                        child:  Text(
+                          AppLocalizations.of(context)!.upload,
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

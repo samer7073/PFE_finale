@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -9,14 +10,15 @@ import '../EditElment.dart';
 import '../detailElment.dart';
 import 'ticketListRow.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class TicketList extends StatefulWidget {
   const TicketList({Key? key}) : super(key: key);
 
   @override
-  State<TicketList> createState() => _TicketListState();
+  State<TicketList> createState() => TicketListState();
 }
 
-class _TicketListState extends State<TicketList> {
+class TicketListState extends State<TicketList> {
   List<TicketData> tickets = [];
   bool isLoading = false;
   int page = 1;
@@ -35,8 +37,12 @@ class _TicketListState extends State<TicketList> {
   }
 
   Future<void> fetchTickets() async {
+    log("Fetching tickets...");
     setState(() {
       isLoading = true;
+      tickets
+          .clear(); // Réinitialiser les tickets pour forcer le rafraîchissement
+      page = 1; // Réinitialiser la pagination si nécessaire
     });
 
     try {
@@ -104,12 +110,31 @@ class _TicketListState extends State<TicketList> {
     _scrollController.dispose();
     super.dispose();
   }
+
   Color _getColorFromHex(String hexColor) {
     hexColor = hexColor.replaceAll('#', '');
     if (hexColor.length == 6) {
       hexColor = 'FF$hexColor';
     }
     return Color(int.parse(hexColor, radix: 16));
+  }
+
+  void editTicket(TicketData ticket) async {
+    final isEdited = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditElment(
+          Element_id: ticket.id,
+          family_id: "6",
+          title: "Edit Ticket",
+        ),
+      ),
+    );
+
+    if (isEdited == true) {
+      // Rafraîchir la liste des tickets après modification
+      fetchTickets();
+    }
   }
 
   @override
@@ -134,7 +159,8 @@ class _TicketListState extends State<TicketList> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("${AppLocalizations.of(context)!.delete}"),
+                              title: Text(
+                                  "${AppLocalizations.of(context)!.delete}"),
                               content: Text(
                                   "${AppLocalizations.of(context)!.deleteticket}"),
                               actions: [
@@ -147,7 +173,8 @@ class _TicketListState extends State<TicketList> {
                                     Navigator.of(context).pop(true);
                                     deleteTicket(ticket);
                                   },
-                                  child: Text("${AppLocalizations.of(context)!.yesword}"),
+                                  child: Text(
+                                      "${AppLocalizations.of(context)!.yesword}"),
                                 ),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -157,7 +184,8 @@ class _TicketListState extends State<TicketList> {
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
-                                  child: Text("${AppLocalizations.of(context)!.noword}"),
+                                  child: Text(
+                                      "${AppLocalizations.of(context)!.noword}"),
                                 )
                               ],
                             );
@@ -167,6 +195,7 @@ class _TicketListState extends State<TicketList> {
                     ),
                     SlidableAction(
                       onPressed: (context) {
+                        /*
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -176,7 +205,8 @@ class _TicketListState extends State<TicketList> {
                               title: AppLocalizations.of(context)!.ticket,
                             ),
                           ),
-                        );
+                        );*/
+                        editTicket(ticket);
                       },
                       icon: Icons.edit,
                       foregroundColor: Colors.green,

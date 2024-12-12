@@ -11,11 +11,12 @@ import '../detailElment.dart';
 import 'DealListRow.dart';
 
 class DealsPage extends StatefulWidget {
+  const DealsPage({Key? key}) : super(key: key);
   @override
-  _DealsPageState createState() => _DealsPageState();
+  DealsPageState createState() => DealsPageState();
 }
 
-class _DealsPageState extends State<DealsPage> {
+class DealsPageState extends State<DealsPage> {
   List<Deal> deals = [];
   bool isLoading = false;
   bool isLoadingMore = false;
@@ -117,7 +118,7 @@ class _DealsPageState extends State<DealsPage> {
             backgroundColor: Colors.green,
             action: SnackBarAction(label: "Ok", onPressed: () {}),
             content: Text(
-             " ${AppLocalizations.of(context)!.elementdeletedsuccessfully}",
+              " ${AppLocalizations.of(context)!.elementdeletedsuccessfully}",
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -137,10 +138,28 @@ class _DealsPageState extends State<DealsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-        "${AppLocalizations.of(context)!.errorelementnotdeleted}",
+          "${AppLocalizations.of(context)!.errorelementnotdeleted}",
           style: TextStyle(color: Colors.white),
         )),
       );
+    }
+  }
+
+  void editDeal(Deal deal) async {
+    final isEdited = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditElment(
+          Element_id: deal.id,
+          family_id: "3",
+          title: "${AppLocalizations.of(context)!.deal}",
+        ),
+      ),
+    );
+
+    if (isEdited == true) {
+      // Rafraîchir la liste des tickets après modification
+      fetchDeals();
     }
   }
 
@@ -174,13 +193,14 @@ class _DealsPageState extends State<DealsPage> {
                           foregroundColor: Colors.red,
                           backgroundColor: Colors.transparent,
                           onPressed: (context) {
-                           
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text("${AppLocalizations.of(context)!.delete}"),
-                                  content: Text("${AppLocalizations.of(context)!.deletedeal}"),
+                                  title: Text(
+                                      "${AppLocalizations.of(context)!.delete}"),
+                                  content: Text(
+                                      "${AppLocalizations.of(context)!.deletedeal}"),
                                   actions: [
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
@@ -191,7 +211,8 @@ class _DealsPageState extends State<DealsPage> {
                                         Navigator.of(context).pop(true);
                                         deleteElement(deal);
                                       },
-                                      child: Text("${AppLocalizations.of(context)!.yesword}"),
+                                      child: Text(
+                                          "${AppLocalizations.of(context)!.yesword}"),
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
@@ -201,7 +222,8 @@ class _DealsPageState extends State<DealsPage> {
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
                                       },
-                                      child:Text("${AppLocalizations.of(context)!.noword}"),
+                                      child: Text(
+                                          "${AppLocalizations.of(context)!.noword}"),
                                     )
                                   ],
                                 );
@@ -211,17 +233,7 @@ class _DealsPageState extends State<DealsPage> {
                         ),
                         SlidableAction(
                           onPressed: (context) {
-                            log("edit");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditElment(
-                                  Element_id: deal.id,
-                                  family_id: "3",
-                                  title: "Deal",
-                                ),
-                              ),
-                            );
+                           editDeal(deal);
                           },
                           icon: Icons.edit,
                           foregroundColor: Colors.green,

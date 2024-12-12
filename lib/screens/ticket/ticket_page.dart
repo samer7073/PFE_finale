@@ -5,18 +5,13 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/theme_provider.dart';
-
 import 'package:flutter_application_stage_project/screens/PipelineScreen.dart';
-import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart';
 import 'package:flutter_application_stage_project/screens/ticket/addTicket.dart';
 import 'package:flutter_application_stage_project/screens/ticket/ticket_list.dart';
 import 'package:provider/provider.dart';
-
 import '../CustomSearchDelegate.dart';
 import '../NotficationPage.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 class TicketPage extends StatefulWidget {
   const TicketPage({Key? key}) : super(key: key);
 
@@ -28,10 +23,23 @@ class _TicketState extends State<TicketPage> {
   late ThemeProvider themeProvider;
   late String _viewMode;
 
+  final GlobalKey<TicketListState> ticketListKey = GlobalKey();
+  final GlobalKey<PipelineScreenState> ticketKanbanKey = GlobalKey();
+  late List<Widget> _widgetOptions;
+
   @override
   void initState() {
     super.initState();
     log("test Init state activated");
+
+    // Initialisez _widgetOptions ici
+    _widgetOptions = [
+      TicketList(key: ticketListKey),
+      PipelineScreen(
+        idFamily: "6",
+        key: ticketKanbanKey, // Passer la clé ici
+      ),
+    ];
   }
 
   @override
@@ -44,27 +52,33 @@ class _TicketState extends State<TicketPage> {
 
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
-    TicketList(),
-    PipelineScreen(idFamily: "6"),
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  void _changeViewMode(String viewMode) {
-    setState(() {
-      _viewMode = viewMode;
-    });
-    int newIndex = [
-      AppLocalizations.of(context)!.listView,
-      AppLocalizations.of(context)!.kanban
-    ].indexOf(viewMode);
-    _onItemTapped(newIndex);
+ Future<void> _addticket() async {
+  final addticket = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => AddElement(
+        family_id: "6",
+        titel: "Ticket",
+      ),
+    ),
+  );
+
+  if (addticket == true) {
+    // Rafraîchir la vue active en fonction de l'index sélectionné
+    if (_selectedIndex == 0) {
+      ticketListKey.currentState?.fetchTickets(); // Rafraîchit la liste des tickets
+    } else if (_selectedIndex == 1) {
+      ticketKanbanKey.currentState?.initializeFirstStage(); // Rafraîchit la vue kanban
+    }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,15 +86,7 @@ class _TicketState extends State<TicketPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () async {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddElement(
-                family_id: "6",
-                titel: "Ticket",
-              ),
-            ),
-          );
+          _addticket();
         },
         child: Icon(
           Icons.add,
@@ -89,26 +95,13 @@ class _TicketState extends State<TicketPage> {
       ),
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.tickets),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.pushAndRemoveUntil<dynamic>(
-              context,
-              MaterialPageRoute<dynamic>(
-                builder: (BuildContext context) => HomeNavigate(
-                  id_page: 0,
-                ),
-              ),
-              (route) => false,
-            );
-          },
-        ),
         actions: [
           IconButton(
             onPressed: () {
               showSearch(
-                  context: context,
-                  delegate: CustomSearchDelegate(idFamily: "6"));
+                context: context,
+                delegate: CustomSearchDelegate(idFamily: "6"),
+              );
             },
             icon: Icon(
               Icons.search,
@@ -130,11 +123,20 @@ class _TicketState extends State<TicketPage> {
           ),
           PopupMenuButton(
             initialValue: _viewMode,
-            onSelected: _changeViewMode,
+            onSelected: (String viewMode) {
+              setState(() {
+                _viewMode = viewMode;
+              });
+              int newIndex = [
+                AppLocalizations.of(context)!.listView,
+                AppLocalizations.of(context)!.kanban,
+              ].indexOf(viewMode);
+              _onItemTapped(newIndex);
+            },
             itemBuilder: (BuildContext context) {
               return [
                 AppLocalizations.of(context)!.listView,
-                AppLocalizations.of(context)!.kanban
+                AppLocalizations.of(context)!.kanban,
               ]
                   .map((mode) => PopupMenuItem(
                         value: mode,
@@ -145,7 +147,7 @@ class _TicketState extends State<TicketPage> {
           ),
         ],
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: _widgetOptions[_selectedIndex], // Utilisation de la liste définie
     );
   }
 }

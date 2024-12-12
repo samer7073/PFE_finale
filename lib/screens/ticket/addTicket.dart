@@ -1,24 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-
-import 'package:flutter_application_stage_project/screens/Deal/Deal_page.dart';
 import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import 'package:flutter_application_stage_project/screens/project/Project_page.dart';
-import 'package:flutter_application_stage_project/screens/ticket/ticket_page.dart';
-
 import 'package:flutter_application_stage_project/services/ApiFieldGroup.dart';
 import 'package:flutter_application_stage_project/services/ApiFieldPost.dart';
-
 import '../../core/constants/FieldWidgetGenerator.dart';
 import '../../models/fields/datafieldgroup.dart';
 import '../../models/fields/datafieldgroupresponse.dart';
 import '../../models/fields/datafieldsresponse.dart';
 import '../../models/fields/fileData.dart';
 import '../../services/ApiField.dart';
-
 
 class AddElement extends StatefulWidget {
   final String family_id;
@@ -96,9 +88,11 @@ class _AddElementState extends State<AddElement> {
   Widget build(BuildContext context) {
     return loading
         ? Scaffold(
-            body: Container(child: Center(child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ))))
+            body: Container(
+                child: Center(
+                    child: CircularProgressIndicator(
+            color: Colors.blue,
+          ))))
         : Scaffold(
             appBar: AppBar(
               /*
@@ -152,7 +146,8 @@ class _AddElementState extends State<AddElement> {
                   },
                   icon: Icon(Icons.arrow_back)),
                   */
-              title: Text("${AppLocalizations.of(context)!.add_a} ${widget.titel}"),
+              title: Text(
+                  "${AppLocalizations.of(context)!.add_a} ${widget.titel}"),
             ),
             body: SingleChildScrollView(
               child: Form(
@@ -178,10 +173,11 @@ class _AddElementState extends State<AddElement> {
                         return ExpansionPanel(
                           headerBuilder: (context, isExpanded) {
                             return ListTile(
-                              title: Text(item.label,style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17
-                              ),),
+                              title: Text(
+                                item.label,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
+                              ),
                             );
                           },
                           body: dataGroupMap[item.id.toString()]?.isEmpty ??
@@ -212,9 +208,9 @@ class _AddElementState extends State<AddElement> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors
-                                          .blue, // Changer la couleur de fond ici
-                                    ),
+                        backgroundColor:
+                            Colors.blue, // Changer la couleur de fond ici
+                      ),
                       onPressed: () async {
                         print(fieldValues.toString());
                         if (_formKey.currentState!.validate()) {
@@ -242,51 +238,47 @@ class _AddElementState extends State<AddElement> {
                                       textColor: Colors.white,
                                       label: "Ok",
                                       onPressed: () {}),
-                                  content: Text("${AppLocalizations.of(context)!.formsubmittedsuccessfully}"),
+                                  content: Text(
+                                      "${AppLocalizations.of(context)!.formsubmittedsuccessfully}"),
                                 ),
                               );
                               if (widget.family_id == "6") {
+                                /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
-                                    builder: (BuildContext context) =>
-                                     TicketPage()
-                                  ),
+                                      builder: (BuildContext context) =>
+                                          TicketPage()),
                                   (route) => true,
-                                );
+                                );*/
+                                Navigator.pop(context, true);
                               } else if (widget.family_id == "7") {
+                                /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
-                                    builder: (BuildContext context) =>
-                                    /*
+                                      builder: (BuildContext context) =>
+                                          /*
                                         HomeNavigate(
                                       id_page: 4,
                                     ),
                                     */
-                                    ProjectPage()
-                                  ),
+                                          ProjectPage()),
                                   (route) => false,
-                                );
+                                );*/
+                                Navigator.pop(context, true);
                               } else if (widget.family_id == "3") {
+                                /*
                                 Navigator.pushAndRemoveUntil<dynamic>(
                                   context,
                                   MaterialPageRoute<dynamic>(
-                                    builder: (BuildContext context) =>
-                                      DealPage()
-                                  ),
+                                      builder: (BuildContext context) =>
+                                          DealPage()),
                                   (route) => false,
-                                );
-                              }else if (widget.family_id == "8") {
-                                Navigator.pushAndRemoveUntil<dynamic>(
-                                  context,
-                                  MaterialPageRoute<dynamic>(
-                                    builder: (BuildContext context) =>
-                                       
-                                    BookingsPage()
-                                  ),
-                                  (route) => false,
-                                );
+                                );*/
+                                Navigator.pop(context, true);
+                              } else if (widget.family_id == "8") {
+                                Navigator.pop(context, true);
                               }
                             } else if (fielPostResponse == 500) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -311,7 +303,9 @@ class _AddElementState extends State<AddElement> {
                               action:
                                   SnackBarAction(label: "Ok", onPressed: () {}),
                               content: Text(
-                                  'Please check the validations for your required fields.',style: TextStyle(color: Colors.white),),
+                                'Please check the validations for your required fields.',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           );
                         }

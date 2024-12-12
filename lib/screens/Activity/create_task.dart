@@ -66,6 +66,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   bool isStartTimeValid = true;
   bool isEndTimeValid = true;
   bool isRelatedModuleValid = true;
+  bool isrelatedModuleSearchController =true;
 
   List<Map<String, dynamic>> users = [];
   List<Map<String, dynamic>> followers = [];
@@ -426,25 +427,25 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     setState(() {
       isTaskTypeValid = selectedTaskTypeId != null;
       isOwnerValid = selectedOwner != null;
-    });
+       });
 
-    if (_formKey.currentState!.validate() && isTaskTypeValid && isOwnerValid) {
+    if (_formKey.currentState!.validate() && isTaskTypeValid && isOwnerValid ) {
       bool confirm = await showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Confirmation'),
-          content: const Text('Are you sure you want to create this task?'),
+          title:  Text(AppLocalizations.of(context)!.confirmationTask),
+          content:  Text(AppLocalizations.of(context)!.areyousureyouwanttoupdatethistask),
           actions: [
             TextButton(
-              child: const Text(
-                'Cancel',
+              child:  Text(
+                AppLocalizations.of(context)!.yesword,
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
-              child: const Text(
-                'Confirm',
+              child:  Text(
+                 AppLocalizations.of(context)!.noword,
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () => Navigator.of(context).pop(true),
@@ -638,7 +639,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         firstDate: DateTime(2000),
         lastDate: DateTime(2101),
       );
-         SharedPreferences prefs = await SharedPreferences.getInstance();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? dateFormat = prefs.getString('date_formate') ??
           'DD-MM-YYYY'; // Valeur par défaut si non définie
       String pattern = dateFormat
@@ -873,8 +874,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               vertical: 8.0, horizontal: 8.0),
                         ),
                       ),
-                      child: const Text(
-                        "Enregistrer",
+                      child:  Text(
+                       AppLocalizations.of(context)!.save,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -1772,14 +1773,19 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               });
                             },
                             decoration: InputDecoration(
-                              hintText:
-                                  AppLocalizations.of(context)!.selectModule,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              enabledBorder: InputBorder
-                                  .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
+                              enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
+                            ),
+                            hint: Center(
+                              // Propriété spécifique de DropdownButtonFormField
+                              child: Text(
+                                AppLocalizations.of(context)!.selectModule,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.grey),
+                              ),
                             ),
                           ),
                         ),

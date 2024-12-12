@@ -189,5 +189,10 @@
   "failedtoloaddata": "فشل في تحميل البيانات:",
   "youdonothaveaccesstothisroom": "لا يمكنك الوصول إلى هذه القاعة",
   "nodataavailable": "لا توجد بيانات متاحة",
-    "merciverifiercode":"يُرجى التحقق من رمز OTP الخاص بك."
+  "merciverifiercode":"يُرجى التحقق من رمز OTP الخاص بك.",
+  "confirmationTask":"تأكيد",
+  "cancel":"يلغي",
+  "update":"تحديث",
+  "updateactivity":"تحديث النشاط",
+   "areyousureyouwanttoupdatethistask":"هل أنت متأكد من أنك تريد تحديث هذه المهمة؟"
 }

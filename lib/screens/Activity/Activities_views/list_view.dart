@@ -186,14 +186,25 @@ class _TaskListPageState extends State<TaskListPage> {
     await _loadAllTasks();
   }
 
-  void _editTask(Task task) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => UpdateTaskScreen(taskId: task.id),
-      ),
-    );
+Future<void> _editTask(Task task) async {
+  // Naviguer vers la page de mise à jour et récupérer le résultat
+  final updatedTask = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => UpdateTaskScreen(taskId: task.id),
+    ),
+  );
+
+  // Si la tâche a été mise à jour (le résultat est true)
+  if (updatedTask == true) {
+   
+    setState(() {
+      // Rafraîchir les tâches filtrées après la mise à jour
+      _refreshTasks();
+    });
   }
+}
+
 
   void _confirmDelete(Task task) {
     showDialog(

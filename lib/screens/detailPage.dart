@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
+import 'package:flutter_application_stage_project/providers/providerstagechange.dart';
 import 'package:flutter_application_stage_project/services/ApiDetailElment.dart';
 import 'package:flutter_application_stage_project/services/ApiUpdateStageFamily.dart';
 import 'package:http/http.dart' as http;
@@ -122,6 +123,10 @@ class _DetailPageState extends State<DetailPage> {
       setState(() {
         fetchData();
       });
+      // Notifiez le Provider
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<stagechangeprovider>(context, listen: false).setNeedsRefresh(true);
+    });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -309,7 +314,9 @@ class _DetailPageState extends State<DetailPage> {
                         physics: NeverScrollableScrollPhysics(),
                         children: detailData.data.entries
                             .where((entry) =>
-                                entry.key != 'id' && entry.key != 'stage_id'&& entry.key!='pipeline_id')
+                                entry.key != 'id' &&
+                                entry.key != 'stage_id' &&
+                                entry.key != 'pipeline_id')
                             .map((entry) {
                           return ListTile(
                             title: Text(
@@ -326,7 +333,6 @@ class _DetailPageState extends State<DetailPage> {
                         }).toList(),
                       ),
                     ),
-                    
                   ],
                 ),
               ),
