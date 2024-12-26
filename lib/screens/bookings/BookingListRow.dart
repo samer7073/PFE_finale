@@ -11,7 +11,7 @@ class BookingsListRow extends StatefulWidget {
   final String title;
   final String owner;
   final String createTime;
- 
+
   final String ownerImage;
   final String Pipeline;
 
@@ -22,7 +22,6 @@ class BookingsListRow extends StatefulWidget {
       required this.title,
       required this.owner,
       required this.createTime,
-  
       required this.ownerImage,
       required this.Pipeline});
 
@@ -36,39 +35,36 @@ class _BookingsListRowState extends State<BookingsListRow> {
     super.initState();
     imageUrlFuture = Config.getApiUrl("urlImage");
   }
-String formatDate(String dateString, Locale locale) {
-  try {
-    // Parse le format de date avec l'heure
-    DateTime date = DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateString);
-    // Formate la date en utilisant le format complet pour le locale donné
-    String formattedDate = DateFormat.yMMMMd(locale.languageCode).format(date);
-    return formattedDate;
-  } catch (e) {
-    try {
-      // Si l'analyse échoue, essaye un autre format sans l'heure
-      DateTime date = DateFormat('dd-MM-yyyy').parse(dateString);
-      String formattedDate = DateFormat.yMMMMd(locale.languageCode).format(date);
-      return formattedDate;
-    } catch (e) {
-      // Retourne le format original si aucun format n'est compatible
-      return dateString;
+
+  String formatDate(String dateString, Locale locale) {
+    DateTime date = DateTime.parse(dateString);
+    DateTime now = DateTime.now();
+
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      return DateFormat.Hm(locale.languageCode).format(date);
     }
+
+    if (now.difference(date).inDays < 7) {
+      return DateFormat.E(locale.languageCode).format(date);
+    }
+
+    return DateFormat('d MMM yyyy HH:MM', locale.languageCode).format(date);
   }
-}
 
   late Future<String> imageUrlFuture;
 
   @override
   Widget build(BuildContext context) {
-      final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    Locale currentLocale = Localizations.localeOf(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return FutureBuilder<String>(
       future: imageUrlFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  );
+            color: Colors.blue,
+          );
         }
 
         if (snapshot.hasError) {
@@ -80,9 +76,10 @@ String formatDate(String dateString, Locale locale) {
         return Container(
           margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: isDarkMode==false?Color.fromARGB(255, 244, 245, 247): Color.fromARGB(255, 31, 24, 24),
-            borderRadius: BorderRadius.circular(25)
-          ),
+              color: isDarkMode == false
+                  ? Color.fromARGB(255, 244, 245, 247)
+                  : Color.fromARGB(255, 31, 24, 24),
+              borderRadius: BorderRadius.circular(25)),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
@@ -104,8 +101,9 @@ String formatDate(String dateString, Locale locale) {
                             style: Theme.of(context).textTheme.bodyLarge)
                       ],
                     ),
-                    Text(widget.createTime,
-                      ///formatDate(widget.createTime, currentLocale),
+                    Text(
+                        formatDate(
+                          widget.createTime, Localizations.localeOf(context)),
                       style: Theme.of(context).textTheme.headlineMedium,
                     )
                   ],
@@ -138,7 +136,6 @@ String formatDate(String dateString, Locale locale) {
                     SizedBox(
                       width: 10,
                     ),
-                  
                   ],
                 ),
                 SizedBox(
@@ -189,15 +186,14 @@ String formatDate(String dateString, Locale locale) {
                                 radius: 15,
                               )
                             : CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage("$baseUrl${widget.ownerImage}"),
+                                backgroundImage: NetworkImage(
+                                    "$baseUrl${widget.ownerImage}"),
                                 radius: 15,
                               ),
                       ],
                     ),
                   ],
                 ),
-             
               ],
             ),
           ),

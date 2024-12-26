@@ -6,10 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/Activity/comments_room.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_get_task.dart';
 import 'package:flutter_application_stage_project/services/Activities/api_task_type.dart';
-import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../core/constants/shared/config.dart';
-
 import 'package:html/parser.dart' as html_parser;
 
 class TaskDetailPage extends StatefulWidget {
@@ -59,11 +57,11 @@ late Locale currentLocale;
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Task Details'),
-          bottom: const TabBar(
+          title:  Text('${AppLocalizations.of(context)!.details}  ${AppLocalizations.of(context)!.activity}'),
+          bottom:  TabBar(
             tabs: [
-              Tab(text: 'Details'),
-              Tab(text: 'Comments'),
+              Tab(text: '${AppLocalizations.of(context)!.details}'),
+              Tab(text: '${AppLocalizations.of(context)!.comment}'),
             ],
           ),
         ),

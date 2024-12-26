@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/providers/NotificationProvider.dart';
 import 'package:flutter_application_stage_project/providers/providerstagechange.dart';
@@ -14,49 +15,54 @@ import 'package:flutter_application_stage_project/screens/homeNavigate_page.dart
 import 'package:flutter_application_stage_project/screens/home_page.dart';
 import 'package:flutter_application_stage_project/screens/login_page.dart';
 import 'package:flutter_application_stage_project/screens/onboarding_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 const String onboardingCompletedKey = 'onboardingCompleted';
 
-Future<bool> isFirstTimeLaunch() async {
+// Fonction pour les messages en arrière-plan
+Future< void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  log("Message reçu en arrière-plan : ${message.notification?.title}");
+}
+
+Future< bool> isFirstTimeLaunch() async {
   final prefs = await SharedPreferences.getInstance();
   final onboardingCompleted = prefs.getBool(onboardingCompletedKey) ?? false;
   return !onboardingCompleted;
 }
 
 void main() async {
-  HttpOverrides.global =
-      MyHttpOverrides(); // Disable SSL verification for development
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Gérer les messages en arrière-plan
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Souscrire à un topic (exemple : "test")
+  await FirebaseMessaging.instance.subscribeToTopic("test");
+
+  // Configurer les overrides HTTP pour ignorer SSL en développement
+  HttpOverrides.global = MyHttpOverrides();
+
   final showOnboarding = await isFirstTimeLaunch();
   final prefs = await SharedPreferences.getInstance();
   String token = prefs.getString('token') ?? "";
-  log('Token retrieved: $token'); // Log the token value
+
+  log('Token récupéré: $token'); // Log le token stocké
   log("Token est null: ${token.isEmpty}");
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) =>
-              ThemeProvider(), // Assuming ThemeProvider manages theme
-        ),
-        ChangeNotifierProvider(
-          create: (_) =>
-              LangueProvider(), // Assuming LangueProvider manages language
-        ),
-        ChangeNotifierProvider(
-          create: (_) =>
-              NotificationProvider(), // Assuming LangueProvider manages language
-        ),
-        ChangeNotifierProvider(
-          create: (_) =>
-              stagechangeprovider(), // Assuming ThemeProvider manages theme
-        ),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => LangueProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => stagechangeprovider()),
       ],
-      child: MyApp(
-        showOnboarding: showOnboarding,
-        token: token,
-      ),
+      child: MyApp(showOnboarding: showOnboarding, token: token),
     ),
   );
 }
@@ -70,7 +76,7 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final bool showOnboarding;
   final String token;
 
@@ -78,27 +84,64 @@ class MyApp extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final themeProvider =
-        Provider.of<ThemeProvider>(context); // Access ThemeProvider
-    final langueProvider =
-        Provider.of<LangueProvider>(context); // Access LangueProvider
+  State< MyApp> createState() => _MyAppState();
+}
 
-    log('Building MaterialApp with token: $token'); // Log the token before using it
+class _MyAppState extends State< MyApp> {
+  String _fcmToken = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFCM();
+  }
+
+  // Fonction pour initialiser FCM
+ Future< void> _initializeFCM() async {
+  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  log("Notification permission status: ${settings.authorizationStatus}");
+
+  if (Platform.isIOS) {
+    final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+    log("APNs Token: $apnsToken");
+  }
+
+  final token = await FirebaseMessaging.instance.getToken();
+  log("FCM Token: $token");
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    log("Foreground message: ${message.notification?.title}");
+  });
+
+  FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+    log("Token refreshed: $newToken");
+  });
+}
+
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of< ThemeProvider>(context);
+    final langueProvider = Provider.of< LangueProvider>(context);
 
     return MaterialApp(
       initialRoute: '/',
       routes: {
         '/': (context) {
-          if (showOnboarding) {
+          if (widget.showOnboarding) {
             return const OnBoardingScreen();
-          } else if (token.isNotEmpty) {
+          } else if (widget.token.isNotEmpty) {
             return HomeNavigate(id_page: 0);
           } else {
             return const LoginPage();
           }
         },
-        '/login': (context) => const LoginPage(), // Assuming LoginPage exists
+        '/login': (context) => const LoginPage(),
         '/home': (context) => HomePage(),
         '/homeNavigate': (context) => HomeNavigate(id_page: 0),
       },
@@ -108,7 +151,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: langueProvider.locale, // Set locale based on LangueProvider
+      locale: langueProvider.locale,
       supportedLocales: const [
         Locale('en'),
         Locale('fr'),
@@ -117,7 +160,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: themeProvider.isDarkMode
           ? MyThemes.darkTheme
-          : MyThemes.lightTheme, // Apply theme based on ThemeProvider
+          : MyThemes.lightTheme,
       themeMode: themeProvider.themeMode,
     );
   }

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
+import 'package:intl/intl.dart';
 
 class ProjectListRow extends StatefulWidget {
   final String reference;
@@ -34,6 +35,22 @@ class _ProjectListRowState extends State<ProjectListRow> {
   }
 
   late Future<String> imageUrlFuture;
+  String formatDate(String dateString, Locale locale) {
+    DateTime date = DateTime.parse(dateString);
+    DateTime now = DateTime.now();
+
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      return DateFormat.Hm(locale.languageCode).format(date);
+    }
+
+    if (now.difference(date).inDays < 7) {
+      return DateFormat.E(locale.languageCode).format(date);
+    }
+
+    return DateFormat('d MMM yyyy HH:MM', locale.languageCode).format(date);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +60,8 @@ class _ProjectListRowState extends State<ProjectListRow> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  );
+            color: Colors.blue,
+          );
         }
 
         if (snapshot.hasError) {
@@ -54,11 +71,11 @@ class _ProjectListRowState extends State<ProjectListRow> {
         String baseUrl = snapshot.data ?? "";
 
         return Container(
-        
           decoration: BoxDecoration(
-            color: isDarkMode==false?Color.fromARGB(255, 244, 245, 247): Color.fromARGB(255, 31, 24, 24),
-            borderRadius: BorderRadius.circular(25)
-          ),
+              color: isDarkMode == false
+                  ? Color.fromARGB(255, 244, 245, 247)
+                  : Color.fromARGB(255, 31, 24, 24),
+              borderRadius: BorderRadius.circular(25)),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
@@ -84,7 +101,8 @@ class _ProjectListRowState extends State<ProjectListRow> {
                       ],
                     ),
                     Text(
-                      widget.createTime,
+                      formatDate(
+                          widget.createTime, Localizations.localeOf(context)),
                       style: Theme.of(context).textTheme.headlineMedium,
                     )
                   ],
@@ -115,25 +133,27 @@ class _ProjectListRowState extends State<ProjectListRow> {
                   height: 10,
                 ),
                 Row(
-                  mainAxisAlignment:widget.pipline.isNotEmpty? MainAxisAlignment.spaceBetween :MainAxisAlignment.end,
+                  mainAxisAlignment: widget.pipline.isNotEmpty
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
                   children: [
-                    if(widget.pipline.isNotEmpty)
-                    Row(
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.pipeline + " ",
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
-                        Container(
-                          width: 100,
-                          child: Text(
-                            widget.pipline,
-                            style: Theme.of(context).textTheme.headlineLarge,
-                            overflow: TextOverflow.ellipsis,
+                    if (widget.pipline.isNotEmpty)
+                      Row(
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.pipeline + " ",
+                            style: Theme.of(context).textTheme.displaySmall,
                           ),
-                        ),
-                      ],
-                    ),
+                          Container(
+                            width: 100,
+                            child: Text(
+                              widget.pipline,
+                              style: Theme.of(context).textTheme.headlineLarge,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -154,15 +174,14 @@ class _ProjectListRowState extends State<ProjectListRow> {
                                 radius: 15,
                               )
                             : CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage("$baseUrl${widget.ownerImage}"),
+                                backgroundImage: NetworkImage(
+                                    "$baseUrl${widget.ownerImage}"),
                                 radius: 15,
                               ),
                       ],
                     ),
                   ],
                 ),
-             
               ],
             ),
           ),

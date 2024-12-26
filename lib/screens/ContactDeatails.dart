@@ -80,7 +80,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                       leading: Icon(Icons.email),
                       title: Text(
                         contactDetails.info.email == "null" ||
-                                contactDetails.info.email!.isEmpty
+                                contactDetails.info.email.isEmpty
                             ? AppLocalizations.of(context)!.emailNotAvailable
                             : AppLocalizations.of(context)!.email +
                                 ' ${contactDetails.info.email}',
@@ -93,7 +93,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                       leading: Icon(Icons.phone),
                       title: Text(
                         contactDetails.info.phoneNumber == "null" ||
-                                contactDetails.info.phoneNumber!.isEmpty
+                                contactDetails.info.phoneNumber.isEmpty
                             ? AppLocalizations.of(context)!
                                 .phoneNumberNotAvailable
                             : AppLocalizations.of(context)!.phoneNumber +
@@ -109,9 +109,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                       textColor: Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.deals +
-                              '(${contactDetails.relations.deal!.length})',
+                              '(${contactDetails.relations.deal.length})',
                           style: TextStyle(fontWeight: FontWeight.bold)),
-                      children: contactDetails.relations.deal!
+                      children: contactDetails.relations.deal
                           .map((deal) => ListTile(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(
@@ -136,9 +136,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                       textColor: Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.projects +
-                              ' (${contactDetails.relations.project!.length})',
+                              ' (${contactDetails.relations.project.length})',
                           style: TextStyle(fontWeight: FontWeight.bold)),
-                      children: contactDetails.relations.project!
+                      children: contactDetails.relations.project
                           .map((project) => ListTile(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(
@@ -163,11 +163,11 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                       textColor: Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.tickets +
-                              ' (${contactDetails.relations.helpdesk!.length})',
+                              ' (${contactDetails.relations.helpdesk.length})',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           )),
-                      children: contactDetails.relations.helpdesk!
+                      children: contactDetails.relations.helpdesk
                           .map((helpdesk) => ListTile(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(

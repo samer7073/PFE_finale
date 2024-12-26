@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:developer';
 import 'package:flutter_application_stage_project/screens/project/project_list_row.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import '../../../models/ticket/ticket.dart';
 import '../../../models/ticket/ticketData.dart';
 import 'package:flutter_application_stage_project/services/tickets/getTicketApi.dart';
@@ -129,7 +130,7 @@ class ProjectListState extends State<ProjectList> {
       fetchTickets();
     }
   }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +149,7 @@ class ProjectListState extends State<ProjectList> {
                       foregroundColor: Colors.red,
                       backgroundColor: Colors.transparent,
                       onPressed: (context) {
-                        log("hello");
+                      
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -189,7 +190,7 @@ class ProjectListState extends State<ProjectList> {
                     ),
                     SlidableAction(
                       onPressed: (context) {
-                        log("edit");
+                     
                         /*
                         Navigator.push(
                           context,

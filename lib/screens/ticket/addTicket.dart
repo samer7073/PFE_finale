@@ -1,7 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_application_stage_project/screens/bookings/bookings_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/services/ApiFieldGroup.dart';
 import 'package:flutter_application_stage_project/services/ApiFieldPost.dart';
@@ -63,12 +64,15 @@ class _AddElementState extends State<AddElement> {
   }
 
   Future<void> fetchFeildData(String groupId) async {
+    /*
+    
     if (fetchedGroupIds.contains(groupId)) {
       // Si les données pour ce groupe ont déjà été récupérées, ne lancez pas d'appel API redondant
       return;
-    }
+    }*/
 
     try {
+      
       DataFieldGroupResponse fetchDataGroup =
           await ApiField.getFeildsData(groupId);
 
@@ -95,57 +99,7 @@ class _AddElementState extends State<AddElement> {
           ))))
         : Scaffold(
             appBar: AppBar(
-              /*
-              leading: IconButton(
-                  onPressed: () {
-                    if (widget.family_id == "6") {
-                      Navigator.pushAndRemoveUntil<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (BuildContext context) => HomeNavigate(
-                            id_page: 2,
-                          ),
-                        ),
-                        (route) =>
-                            false, //if you want to disable back feature set to false
-                      );
-                    } else if (widget.family_id == "7") {
-                      Navigator.pushAndRemoveUntil<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (BuildContext context) => HomeNavigate(
-                            id_page: 4,
-                          ),
-                        ),
-                        (route) =>
-                            false, //if you want to disable back feature set to false
-                      );
-                    } else if (widget.family_id == "3") {
-                      Navigator.pushAndRemoveUntil<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (BuildContext context) => HomeNavigate(
-                            id_page: 3,
-                          ),
-                        ),
-                        (route) =>
-                            false, //if you want to disable back feature set to false
-                      );
-                    }else if (widget.family_id == "8") {
-                      Navigator.pushAndRemoveUntil<dynamic>(
-                        context,
-                        MaterialPageRoute<dynamic>(
-                          builder: (BuildContext context) => HomeNavigate(
-                            id_page: 6,
-                          ),
-                        ),
-                        (route) =>
-                            false, //if you want to disable back feature set to false
-                      );
-                    }
-                  },
-                  icon: Icon(Icons.arrow_back)),
-                  */
+              
               title: Text(
                   "${AppLocalizations.of(context)!.add_a} ${widget.titel}"),
             ),
@@ -161,13 +115,21 @@ class _AddElementState extends State<AddElement> {
                       expandedHeaderPadding:
                           EdgeInsets.all(0), // Optional: adjust padding
                       expansionCallback: (panelIndex, isExpanded) {
+                          log("hereee");
                         final groupId = data[panelIndex].id.toString();
+                        /*
                         if (!isExpanded && !dataGroupMap.containsKey(groupId)) {
-                          fetchFeildData(groupId);
+                        
+                         
                         }
+                        */
+                        fetchFeildData(groupId);
+                         
+                         log("avant le chanher le valeur expanded :  ${data[panelIndex].isExpanded}");
                         setState(() {
-                          data[panelIndex].isExpanded = !isExpanded;
+                          data[panelIndex].isExpanded = true;
                         });
+                         log("apres le chanher le valeur expanded :  ${data[panelIndex].isExpanded}");
                       },
                       children: data.map<ExpansionPanel>((DataFields item) {
                         return ExpansionPanel(
@@ -243,39 +205,13 @@ class _AddElementState extends State<AddElement> {
                                 ),
                               );
                               if (widget.family_id == "6") {
-                                /*
-                                Navigator.pushAndRemoveUntil<dynamic>(
-                                  context,
-                                  MaterialPageRoute<dynamic>(
-                                      builder: (BuildContext context) =>
-                                          TicketPage()),
-                                  (route) => true,
-                                );*/
+                               
                                 Navigator.pop(context, true);
                               } else if (widget.family_id == "7") {
-                                /*
-                                Navigator.pushAndRemoveUntil<dynamic>(
-                                  context,
-                                  MaterialPageRoute<dynamic>(
-                                      builder: (BuildContext context) =>
-                                          /*
-                                        HomeNavigate(
-                                      id_page: 4,
-                                    ),
-                                    */
-                                          ProjectPage()),
-                                  (route) => false,
-                                );*/
+                               
                                 Navigator.pop(context, true);
                               } else if (widget.family_id == "3") {
-                                /*
-                                Navigator.pushAndRemoveUntil<dynamic>(
-                                  context,
-                                  MaterialPageRoute<dynamic>(
-                                      builder: (BuildContext context) =>
-                                          DealPage()),
-                                  (route) => false,
-                                );*/
+                             
                                 Navigator.pop(context, true);
                               } else if (widget.family_id == "8") {
                                 Navigator.pop(context, true);

@@ -6,8 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../services/Activities/api_get_stage.dart';
 import '../../../services/Activities/api_update_stage_task.dart';
-import '../../homeNavigate_page.dart';
-
 class TaskListRow extends StatefulWidget {
   final IconData taskIcon;
   final String taskId;
@@ -170,9 +168,7 @@ late Locale currentLocale;  // Déclare currentLocale
 
   @override
  Widget build(BuildContext context) {
-  Locale currentLocale = Localizations.localeOf(context);
   final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
   return Container(
     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
     decoration: BoxDecoration(

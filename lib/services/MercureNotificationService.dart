@@ -178,4 +178,5 @@ class MercureNotificationService {
   void dispose() {
     _subscription?.cancel(); // Cancel the subscription when disposing
   }
+  
 }

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
+import 'package:intl/intl.dart';
 
 class ticketListRow extends StatefulWidget {
   final IconData SourceIcon;
@@ -49,6 +50,22 @@ class _ticketListRowState extends State<ticketListRow> {
       hexColor = 'FF$hexColor';
     }
     return Color(int.parse(hexColor, radix: 16));
+  }
+   String formatDate(String dateString, Locale locale) {
+    DateTime date = DateTime.parse(dateString);
+    DateTime now = DateTime.now();
+
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      return DateFormat.Hm(locale.languageCode).format(date);
+    }
+
+    if (now.difference(date).inDays < 7) {
+      return DateFormat.E(locale.languageCode).format(date);
+    }
+
+    return DateFormat('d MMM yyyy HH:MM', locale.languageCode).format(date);
   }
 
   @override
@@ -98,7 +115,8 @@ class _ticketListRowState extends State<ticketListRow> {
                       ],
                     ),
                     Text(
-                      widget.createTime,
+                    formatDate(
+                          widget.createTime, Localizations.localeOf(context)),
                       style: Theme.of(context).textTheme.headlineMedium,
                     )
                   ],

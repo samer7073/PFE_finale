@@ -4,8 +4,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_application_stage_project/models/fields/datafieldgroupresponse.dart';
-import 'package:flutter_application_stage_project/models/fields/datafieldsresponse.dart';
-import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdate.dart';
 import 'package:flutter_application_stage_project/models/fields/update/dataFieldGroupUpdateResponse.dart';
 import 'package:flutter_application_stage_project/services/sharedPreference.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +18,7 @@ class ApiField {
     final apiUrl = await Config.getApiUrl(
         "fieldsByGroupUrl"); // Utilisation de Config pour obtenir l'URL
     final url = "$apiUrl/$groupId";
+    log("fields ulr    $url");
 
     final response = await http.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',

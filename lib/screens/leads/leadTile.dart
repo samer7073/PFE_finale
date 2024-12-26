@@ -23,7 +23,7 @@ class LeadTile extends StatelessWidget {
       return DateFormat.E(locale.languageCode).format(date);
     }
 
-    return DateFormat('d MMM yyyy', locale.languageCode).format(date);
+    return DateFormat('d MMM yyyy ', locale.languageCode).format(date);
   }
 
   @override

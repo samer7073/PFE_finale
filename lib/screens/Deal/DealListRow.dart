@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_application_stage_project/core/constants/shared/config.dart';
+import 'package:intl/intl.dart';
 
 class DealListRow extends StatefulWidget {
   final String reference;
@@ -39,7 +40,22 @@ class _DealListRowState extends State<DealListRow> {
   }
 
   late Future<String> imageUrlFuture;
-  
+  String formatDate(String dateString, Locale locale) {
+    DateTime date = DateTime.parse(dateString);
+    DateTime now = DateTime.now();
+
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
+      return DateFormat.Hm(locale.languageCode).format(date);
+    }
+
+    if (now.difference(date).inDays < 7) {
+      return DateFormat.E(locale.languageCode).format(date);
+    }
+
+    return DateFormat('d MMM yyyy HH:MM', locale.languageCode).format(date);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +104,8 @@ class _DealListRowState extends State<DealListRow> {
                       ],
                     ),
                     Text(
-                      widget.createTime,
+                         formatDate(
+                          widget.createTime, Localizations.localeOf(context)),
                       style: Theme.of(context).textTheme.headlineMedium,
                     )
                   ],
