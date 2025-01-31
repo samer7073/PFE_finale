@@ -13,7 +13,7 @@ class Relations {
   factory Relations.fromJson(Map<String, dynamic> json) {
     return Relations(
       deal: (json['Deal'] as List).map((item) => Deal.fromJson(item)).toList(),
-      helpdesk: (json['Helpdesk'] as List)
+      helpdesk: (json['Ticket'] as List)
           .map((item) => Helpdesk.fromJson(item))
           .toList(),
       project: (json['Project'] as List)

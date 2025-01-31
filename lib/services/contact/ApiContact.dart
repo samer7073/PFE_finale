@@ -54,6 +54,7 @@ class ApiContact {
     // Utilisation de Config pour obtenir l'URL
     final baseUrl = await Config.getApiUrl('getElementDetails');
     final url = "$baseUrl/$id_Contact";
+    log(url);
 
     final response = await http.get(
       Uri.parse(url),
