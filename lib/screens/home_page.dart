@@ -242,6 +242,7 @@ class _HomePageState extends State<HomePage>
                   },
                 ),
                 */
+                /*
                 ListTile(
                   leading: Icon(
                     Icons.edit_document,
@@ -254,6 +255,7 @@ class _HomePageState extends State<HomePage>
                         MaterialPageRoute(builder: (_) => NotesPage()));
                   },
                 ),
+                */
                 ListTile(
                   leading: Image.asset(
                     'assets/Activity.png',
