@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class NotificationProvider extends ChangeNotifier {
   bool _notification = true;
@@ -8,6 +7,18 @@ class NotificationProvider extends ChangeNotifier {
 
   set notification(bool value) {
     _notification = value;
+    notifyListeners();
+  }
+
+  // Méthode pour activer les notifications
+  void enableNotifications() {
+    _notification = true;
+    notifyListeners();
+  }
+
+  // Méthode pour désactiver les notifications
+  void disableNotifications() {
+    _notification = false;
     notifyListeners();
   }
 }

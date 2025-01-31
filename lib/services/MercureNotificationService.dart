@@ -175,8 +175,12 @@ class MercureNotificationService {
     Navigator.pushNamed(context, '/home');
   }
 
+  void stop() {
+    _subscription?.cancel(); // Cancels the Mercure subscription to stop receiving events
+    print('Mercure connection stopped');
+  }
+
   void dispose() {
     _subscription?.cancel(); // Cancel the subscription when disposing
   }
-  
 }

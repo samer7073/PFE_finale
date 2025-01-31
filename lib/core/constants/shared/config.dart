@@ -11,6 +11,7 @@ class Config {
   static const String devUrl = "https://spherebackdev1.sphere.tn";
 
   static const Map<String, String> apiProdUrls = {
+    "fcm": "$prodUrl:4543/api/mobile/fcm/create",
     "allUsers": "https://chatbackcomunik.cmk.biz:4543/api/all-users",
     "taskStagesElements": "$prodUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
@@ -91,27 +92,27 @@ class Config {
     "mercure": "https://spheremercure.cmk.biz:4443/.well-known/mercure",
     "notifTopic": "/notification/prod/user/",
     "chatTopic": "/chat/dev/user/232",
-    "urlImage": "$prodUrl:4543/storage/uploads/",
+    "urlImage": "$prodUrl:4543/storage/comunik/uploads/",
     "taskNotif": "$prodUrl:4543/api/mobile/tasks/",
     "pipeline": "$prodUrl:4543/index.php/api/mobile/get-element-by-id/",
     "StageKanban": "$prodUrl:4543/index.php/api/mobile/stages/",
     "saveFile": "$prodUrl:4543/index.php/api/tasks/upload/save",
     "leads": "$prodUrl:4543/index.php/api/mobile/get-elements-by-family/9",
-    "note":"$prodUrl:4543/api/get-note",
-    "rmcChat":"https://rmcdemo.comunikcrm.info/comuniksocial/admin.php"
+    "note": "$prodUrl:4543/api/get-note",
+    "rmcChat": "https://rmcdemo.comunikcrm.info/comuniksocial/admin.php"
 
     // Added for ApiFieldGroup
   };
 
   static const Map<String, String> apiDevUrls = {
+    "fcm": "$devUrl:4543/api/mobile/fcm/create",
     "allUsers": "https://chatbackdev1.sphere.tn:4543/api/all-users",
     "taskStagesElements": "$devUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
         "https://chatbackdev1.sphere.tn:4543/index.php/api/get-discussion-room/",
     "kanban": "$devUrl:4543/index.php/api/mobile/kanban-by-stage",
     "tasksKpi": "$devUrl:4543/index.php/api/mobile/tasks/kpi",
-    "login":
-        "https://authbackdev.sphere.tn:4543/index.php/api/mobile/login",
+    "login": "https://authbackdev.sphere.tn:4543/index.php/api/mobile/login",
     "overview": "$devUrl:4543/index.php/api/mobile/log-family-elements",
     "updateStageFamily":
         "$devUrl:4543/index.php/api/mobile/update-stage-family",
@@ -187,10 +188,9 @@ class Config {
     "pipeline": "$devUrl:4543/index.php/api/mobile/get-element-by-id/",
     "StageKanban": "$devUrl:4543/index.php/api/mobile/stages/",
     "saveFile": "$devUrl:4543/index.php/api/tasks/upload/save",
-     "leads": "$devUrl:4543/index.php/api/mobile/get-elements-by-family/9",
-     "note":"$devUrl:4543/api/get-note",
-     "rmcChat":"https://rmcbackdev1.sphere.tn:4543/admin.php"
-     
+    "leads": "$devUrl:4543/index.php/api/mobile/get-elements-by-family/9",
+    "note": "$devUrl:4543/api/get-note",
+    "rmcChat": "https://rmcbackdev1.sphere.tn:4543/admin.php"
   };
 
   static Future<String> getApiUrl(String apiName) async {

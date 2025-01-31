@@ -21,12 +21,12 @@ import 'firebase_options.dart';
 const String onboardingCompletedKey = 'onboardingCompleted';
 
 // Fonction pour les messages en arrière-plan
-Future< void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   log("Message reçu en arrière-plan : ${message.notification?.title}");
 }
 
-Future< bool> isFirstTimeLaunch() async {
+Future<bool> isFirstTimeLaunch() async {
   final prefs = await SharedPreferences.getInstance();
   final onboardingCompleted = prefs.getBool(onboardingCompletedKey) ?? false;
   return !onboardingCompleted;
@@ -84,50 +84,19 @@ class MyApp extends StatefulWidget {
       : super(key: key);
 
   @override
-  State< MyApp> createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State< MyApp> {
-  String _fcmToken = "";
-
+class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _initializeFCM();
   }
-
-  // Fonction pour initialiser FCM
- Future< void> _initializeFCM() async {
-  NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-
-  log("Notification permission status: ${settings.authorizationStatus}");
-
-  if (Platform.isIOS) {
-    final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-    log("APNs Token: $apnsToken");
-  }
-
-  final token = await FirebaseMessaging.instance.getToken();
-  log("FCM Token: $token");
-
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    log("Foreground message: ${message.notification?.title}");
-  });
-
-  FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-    log("Token refreshed: $newToken");
-  });
-}
-
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of< ThemeProvider>(context);
-    final langueProvider = Provider.of< LangueProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final langueProvider = Provider.of<LangueProvider>(context);
 
     return MaterialApp(
       initialRoute: '/',
@@ -158,9 +127,8 @@ class _MyAppState extends State< MyApp> {
         Locale('ar'),
       ],
       debugShowCheckedModeBanner: false,
-      theme: themeProvider.isDarkMode
-          ? MyThemes.darkTheme
-          : MyThemes.lightTheme,
+      theme:
+          themeProvider.isDarkMode ? MyThemes.darkTheme : MyThemes.lightTheme,
       themeMode: themeProvider.themeMode,
     );
   }

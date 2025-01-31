@@ -1,0 +1,29 @@
+{
+    "project_info": {
+      "project_number": "554727672198",
+      "project_id": "samer-fcm",
+      "storage_bucket": "samer-fcm.firebasestorage.app"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:554727672198:android:d96eadc3e35ead98d84407",
+          "android_client_info": {
+            "package_name": "com.example.flutter_application_stage_project"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyDLT1OZwvJtOI-s4_WTixBZvzAq45MsGHM"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }

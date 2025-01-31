@@ -154,6 +154,7 @@ class _ContactPageState extends State<ContactPage> {
           ),
         ],
       ),
+      /*
       floatingActionButton: Stack(
         children: [
           Positioned(
@@ -191,6 +192,7 @@ class _ContactPageState extends State<ContactPage> {
           ],
         ],
       ),
+      */
     );
   }
 }

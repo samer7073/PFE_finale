@@ -498,14 +498,14 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
           actions: [
             TextButton(
               child: Text(
-                AppLocalizations.of(context)!.yesword,
+                AppLocalizations.of(context)!.noword,
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () => Navigator.of(context).pop(false),
             ),
             TextButton(
               child:  Text(
-                 AppLocalizations.of(context)!.noword,
+                 AppLocalizations.of(context)!.yesword ,
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () => Navigator.of(context).pop(true),
