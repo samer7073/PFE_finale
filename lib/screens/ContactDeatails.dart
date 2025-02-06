@@ -105,7 +105,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ExpansionTile(
                       iconColor: Colors.blue,
-                      collapsedTextColor: Colors.black,
+                     // collapsedTextColor: Colors.black,
                       textColor: Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.deals +
@@ -132,7 +132,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ExpansionTile(
                       iconColor: Colors.blue,
-                      collapsedTextColor: Colors.black,
+                      //collapsedTextColor: Colors.black,
                       textColor: Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.projects +
@@ -159,7 +159,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                   Card(
                     child: ExpansionTile(
                       iconColor: Colors.blue,
-                      collapsedTextColor: Colors.black,
+                      //collapsedTextColor: Colors.black,
                       textColor: Colors.blue,
                       title: Text(
                           AppLocalizations.of(context)!.tickets +

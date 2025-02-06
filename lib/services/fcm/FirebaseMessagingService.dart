@@ -89,7 +89,7 @@ class FirebaseMessagingService {
   
 
      final url = await Config.getApiUrl(
-        'fcm'); // Utilisation de Config pour obtenir l'URL
+        'fcmdelete'); // Utilisation de Config pour obtenir l'URL
 
     try {
       final response = await http.post(
@@ -105,7 +105,7 @@ class FirebaseMessagingService {
       if (response.statusCode == 200) {
         log("FCM token successfully deleted from server.");
       } else {
-        log("Failed to delete FCM token from server. Status code: \${response.statusCode}");
+        log("Failed to delete FCM token from server. Status code: \ ${response.statusCode} ${response.body}");
       }
     } catch (e) {
       log("Error deleting FCM token from server: \$e");

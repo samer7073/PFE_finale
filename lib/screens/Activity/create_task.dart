@@ -942,19 +942,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                                 color: Colors.blueGrey),
-                            /*
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: Colors.blueGrey),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  const BorderSide(color: Colors.blueGrey),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            */
+                      
                             enabledBorder: InputBorder
                                 .none, // Enlever la bordure lorsque le TextFormField n'est pas sélectionné
                             focusedBorder: InputBorder

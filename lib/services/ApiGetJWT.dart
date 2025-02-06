@@ -17,7 +17,7 @@ class ApiGetJwt {
     final url = await Config.getApiUrl('jwt');
     // Using Config class for URL
     log(url);
-    final response = await http.get(
+    final response = await http.post(
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',

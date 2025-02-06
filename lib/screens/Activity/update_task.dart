@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/models/Activity_models/task.dart';
+import 'package:flutter_application_stage_project/providers/theme_provider.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/owner_select.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_followers.dart';
 import 'package:flutter_application_stage_project/screens/Activity/widgets/select_guests.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_application_stage_project/services/Activities/api_guests
 import 'package:flutter_application_stage_project/services/Activities/api_update_task.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,6 +58,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
   late TextEditingController _locationController;
   late TextEditingController _reminderDurationController;
   late List<Upload> saveFiels = [];
+  late ThemeProvider themeProvider;
 
   bool isStartDateValid = true;
   bool isEndDateValid = true;
@@ -838,6 +841,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    themeProvider = Provider.of<ThemeProvider>(context);
     if (isTaskTypeLoading) {
       return Scaffold(
         appBar: AppBar(
@@ -960,7 +964,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                       const SizedBox(height: 16.0),
                       Container(
                         child: Container(
-                          decoration: boxdecoration(),
+                          decoration: boxdecoration(themeProvider),
                           child: TextFormField(
                             readOnly: can_update_task == 0,
                             controller: _taskNameController,
@@ -1003,7 +1007,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                       ),
                       const SizedBox(height: 18.0),
                       Container(
-                        decoration: boxdecoration(),
+                        decoration: boxdecoration(themeProvider),
                         child: InputDecorator(
                           decoration: InputDecoration(
                             hintText: AppLocalizations.of(context)!.selectOwner,
@@ -1070,7 +1074,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                       ),
                       const SizedBox(height: 16.0),
                       Container(
-                        decoration: boxdecoration(),
+                        decoration: boxdecoration(themeProvider),
                         child: Row(
                           children: [
                             Radio(
@@ -1129,7 +1133,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   height: 8,
                                 ),
                                 Container(
-                                  decoration: boxdecoration(),
+                                  decoration: boxdecoration(themeProvider),
                                   child: TextFormField(
                                     controller: _startDateController,
                                     decoration: InputDecoration(
@@ -1184,7 +1188,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   height: 8,
                                 ),
                                 Container(
-                                  decoration: boxdecoration(),
+                                  decoration: boxdecoration(themeProvider),
                                   child: TextFormField(
                                     controller: _endDateController,
                                     decoration: InputDecoration(
@@ -1235,7 +1239,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                       ),
                       const SizedBox(height: 16.0),
                       Container(
-                        decoration: boxdecoration(),
+                        decoration: boxdecoration(themeProvider),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: InputDecorator(
@@ -1285,7 +1289,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   height: 8,
                                 ),
                                 Container(
-                                  decoration: boxdecoration(),
+                                  decoration: boxdecoration(themeProvider),
                                   child: TextFormField(
                                     controller: _startTimeController,
                                     decoration: InputDecoration(
@@ -1343,7 +1347,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                   height: 8,
                                 ),
                                 Container(
-                                  decoration: boxdecoration(),
+                                  decoration: boxdecoration(themeProvider),
                                   child: TextFormField(
                                     controller: _endTimeController,
                                     decoration: InputDecoration(
@@ -1399,7 +1403,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                 color: Colors.blueGrey),
                           ),
                           Container(
-                            decoration: boxdecoration(),
+                            decoration: boxdecoration(themeProvider),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -1496,7 +1500,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                                 color: Colors.blueGrey),
                           ),
                           Container(
-                            decoration: boxdecoration(),
+                            decoration: boxdecoration(themeProvider),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -1579,7 +1583,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           Flexible(
                             flex: 1,
                             child: Container(
-                              decoration: boxdecoration(),
+                              decoration: boxdecoration(themeProvider),
                               child: TextField(
                                 controller: _reminderDurationController,
                                 decoration: InputDecoration(
@@ -1606,7 +1610,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                           Flexible(
                             flex: 2,
                             child: Container(
-                              decoration: boxdecoration(),
+                              decoration: boxdecoration(themeProvider),
                               child: DropdownButtonFormField<String>(
                                 style: const TextStyle(color: Colors.blueGrey),
                                 decoration: InputDecoration(
@@ -1671,7 +1675,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         height: 18,
                       ),
                       Container(
-                        decoration: boxdecoration(),
+                        decoration: boxdecoration(themeProvider),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
                           child: DropdownButtonFormField<int>(
@@ -1731,7 +1735,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         height: 18,
                       ),
                       Container(
-                        decoration: boxdecoration(),
+                        decoration: boxdecoration(themeProvider),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: InputDecorator(
@@ -1784,7 +1788,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         height: 18,
                       ),
                       Container(
-                        decoration: boxdecoration(),
+                        decoration: boxdecoration(themeProvider),
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: InputDecorator(
@@ -1833,7 +1837,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         height: 18,
                       ),
                       Container(
-                        decoration: boxdecoration(),
+                        decoration: boxdecoration(themeProvider),
                         child: TextFormField(
                           controller: _descriptionController,
                           decoration: InputDecoration(
@@ -1864,7 +1868,7 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
                         height: 18,
                       ),
                       Container(
-                        decoration: boxdecoration(),
+                        decoration: boxdecoration(themeProvider),
                         child: TextFormField(
                           controller: _noteController,
                           decoration: InputDecoration(
@@ -1971,8 +1975,11 @@ class _UpdateTaskScreenState extends State<UpdateTaskScreen> {
     }
   }
 
-  BoxDecoration boxdecoration() {
+  BoxDecoration boxdecoration(ThemeProvider themeProvider) {
     return BoxDecoration(
-        color: Color(0xFFF8F9FA), borderRadius: BorderRadius.circular(5));
+        color: themeProvider.isDarkMode
+                                ? const Color.fromARGB(255, 29, 28, 28)
+                                : Color.fromARGB(255, 240, 241, 241),
+        borderRadius: BorderRadius.circular(5));
   }
 }

@@ -19,7 +19,7 @@ class ChatRomm {
      log("allusers"+baseUrl);
     
 
-   final response = await http.get(
+   final response = await http.post(
       Uri.parse(baseUrl),
       headers: {
         'Content-Type': 'application/json',

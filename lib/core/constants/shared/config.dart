@@ -12,7 +12,8 @@ class Config {
 
   static const Map<String, String> apiProdUrls = {
     "fcm": "$prodUrl:4543/api/mobile/fcm/create",
-    "allUsers": "https://chatbackcomunik.cmk.biz:4543/api/all-users",
+    "fcmdelete": "$prodUrl:4543/api/mobile/fcm/delete",
+    "allUsers": "https://chatbackcomunik.cmk.biz:4543/api/mobile/all-users",
     "taskStagesElements": "$prodUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
         "https://chatbackcomunik.cmk.biz:4543/index.php/api/get-discussion-room/",
@@ -31,7 +32,7 @@ class Config {
     "profile": "$prodUrl:4543/index.php/api/mobile/profile",
     "modifyProfile": "$prodUrl:4543/index.php/api/edit-profile",
     "pipelines": "$prodUrl:4543/index.php/api/mobile/pipelines-by-family",
-    "jwt": "https://chatbackcomunik.cmk.biz:4543/api/user",
+    "jwt": "https://chatbackcomunik.cmk.biz:4543/api/mobile/user",
 
     "kpiFamilyUrl":
         "$prodUrl:4543/index.php/api/mobile/kpi-family", // Added for ApiKpiFamily
@@ -106,7 +107,8 @@ class Config {
 
   static const Map<String, String> apiDevUrls = {
     "fcm": "$devUrl:4543/api/mobile/fcm/create",
-    "allUsers": "https://chatbackdev1.sphere.tn:4543/api/all-users",
+    "fcmdelete": "$devUrl:4543/api/mobile/fcm/delete",
+    "allUsers": "https://chatbackdev1.sphere.tn:4543/api/mobile/all-users",
     "taskStagesElements": "$devUrl:4543/index.php/api/mobile/tasks/kanban/",
     "chatRomm":
         "https://chatbackdev1.sphere.tn:4543/index.php/api/get-discussion-room/",
@@ -125,7 +127,7 @@ class Config {
     "profile": "$devUrl:4543/index.php/api/mobile/profile",
     "modifyProfile": "$devUrl:4543/index.php/api/edit-profile",
     "pipelines": "$devUrl:4543/index.php/api/mobile/pipelines-by-family",
-    "jwt": "https://chatbackdev1.sphere.tn:4543/api/user",
+    "jwt": "https://chatbackdev1.sphere.tn:4543/api/mobile/user",
 
     "kpiFamilyUrl":
         "$devUrl:4543/index.php/api/mobile/kpi-family", // Added for ApiKpiFamily
