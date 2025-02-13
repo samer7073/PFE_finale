@@ -13,8 +13,10 @@ class FirebaseMessagingService {
   FirebaseMessagingService._internal();
 
   Future<void> initialize(String authToken) async {
+    try{
     // Initialiser Firebase
     await Firebase.initializeApp();
+    
 
     // Demander l'autorisation pour les notifications
     NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
@@ -54,7 +56,9 @@ class FirebaseMessagingService {
     });
 
     // Gérer les messages reçus en arrière-plan
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);}catch(e){
+      log("Erreur lors de l'abonnement : $e");
+    }
   }
 
   static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {

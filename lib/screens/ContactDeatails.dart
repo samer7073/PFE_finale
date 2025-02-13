@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_stage_project/screens/ContactDeatilsElment.dart';
 import '../models/contactModel/ContactModelDetails/ApiResponseContactDeatils.dart';
@@ -36,10 +38,12 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
               color: Colors.blue,
             ));
           } else if (snapshot.hasError) {
+            print(snapshot.error.toString());
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  
                   Text('Error: ${snapshot.error}'),
                   SizedBox(height: 10),
                   ElevatedButton(
@@ -55,6 +59,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
               ),
             );
           } else {
+            
             final contactDetails = snapshot.data;
             String cleanedPhoneNumber = contactDetails?.info.phoneNumber
                     .toString()
@@ -62,6 +67,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                     .replaceAll(']', '')
                     .replaceAll(',', '') ??
                 'N/A';
+
 
             return Padding(
               padding: const EdgeInsets.all(8.0),

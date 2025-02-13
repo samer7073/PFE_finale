@@ -7,6 +7,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mercure_client/mercure_client.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../services/sharedPreference.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+Future<bool> checkNetworkConnectivity() async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  return connectivityResult != ConnectivityResult.none;
+}
 
 class MercureNotificationService {
   late Mercure _mercure;
@@ -24,7 +30,11 @@ class MercureNotificationService {
 
   Future<void> initialize() async {
     await _initializeNotifications();
-    await _initializeMercure();
+    if (await checkNetworkConnectivity()) {
+      await _initializeMercure();
+    } else {
+      print('No network connectivity');
+    }
   }
 
   Future<void> _initializeNotifications() async {
@@ -118,19 +128,24 @@ class MercureNotificationService {
 
           switch (eventData['type_event']) {
             case "new_task":
-              initiatorName = "${eventData['initiator']['label']} created a new task";
+              initiatorName =
+                  "${eventData['initiator']['label']} created a new task";
               break;
             case "update_task":
-              initiatorName = "${eventData['initiator']['label']} updated ${eventData['label']}";
+              initiatorName =
+                  "${eventData['initiator']['label']} updated ${eventData['label']}";
               break;
             case "delete_task":
-              initiatorName = "${eventData['initiator']['label']} deleted the task";
+              initiatorName =
+                  "${eventData['initiator']['label']} deleted the task";
               break;
             case "update_stage_task":
-              initiatorName = "${eventData['initiator']['label']} changed the stage to ${eventData['action'][1]}";
+              initiatorName =
+                  "${eventData['initiator']['label']} changed the stage to ${eventData['action'][1]}";
               break;
             case "update_priority_task":
-              initiatorName = "${eventData['initiator']['label']} updated the priority to ${eventData['action'][1]}";
+              initiatorName =
+                  "${eventData['initiator']['label']} updated the priority to ${eventData['action'][1]}";
               break;
             case "message_rmc":
               // For message_rmc event, display the message content in the notification
@@ -176,7 +191,8 @@ class MercureNotificationService {
   }
 
   void stop() {
-    _subscription?.cancel(); // Cancels the Mercure subscription to stop receiving events
+    _subscription
+        ?.cancel(); // Cancels the Mercure subscription to stop receiving events
     print('Mercure connection stopped');
   }
 

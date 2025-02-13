@@ -33,16 +33,21 @@ Future<bool> isFirstTimeLaunch() async {
 }
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+    try {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+   } catch (e) {
+    log("Erreur lors de l'initialisation de Firebase : $e");
+  }
 
   // Gérer les messages en arrière-plan
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // Souscrire à un topic (exemple : "test")
-  await FirebaseMessaging.instance.subscribeToTopic("test");
+  //await FirebaseMessaging.instance.subscribeToTopic("test");
 
   // Configurer les overrides HTTP pour ignorer SSL en développement
   HttpOverrides.global = MyHttpOverrides();
