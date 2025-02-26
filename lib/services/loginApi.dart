@@ -19,6 +19,7 @@ class LoginApi {
       body: jsonEncode(<String, String>{
         'email': email,
         'password': password,
+        'app_name':"comunik_sphere"
       }),
     );
     log(response.statusCode.toString());

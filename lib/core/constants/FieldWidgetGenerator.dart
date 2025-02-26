@@ -341,7 +341,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
   }
 
   String? _selectedItem;
- Widget customDatePickerBuilder(BuildContext context, Widget? child) {
+  Widget customDatePickerBuilder(BuildContext context, Widget? child) {
     return Theme(
       data: ThemeData.light().copyWith(
         primaryColor: Colors.blue, // Couleur de fond de l'en-tête
@@ -358,6 +358,7 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
       child: child!,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     switch (widget.dataFieldGroup.field_type) {
@@ -607,79 +608,80 @@ class _FieldWidgetGeneratorState extends State<FieldWidgetGenerator> {
         );
       case "time":
         return Padding(
-  padding: const EdgeInsets.all(10.0),
-  child: TextFormField(
-    validator: widget.dataFieldGroup.required == true
-        ? (value) {
-            if (value!.isEmpty) {
-              return 'Ce champs est obligatoire';
-            } else {
-              return null;
-            }
-          }
-        : null,
-    readOnly: true,
-    controller: _textEditingController,
-    decoration: InputDecoration(
-      labelStyle: TextStyle(color: Colors.grey),
-      hintStyle: TextStyle(color: Colors.grey),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey),
-        borderRadius: BorderRadius.circular(5.5),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey),
-        borderRadius: BorderRadius.circular(5.5),
-      ),
-      labelText: widget.dataFieldGroup.alias,
-      hintText: "Search",
-      suffixIcon: _textEditingController!.text.isNotEmpty
-          ? IconButton(
-              onPressed: () {
-                _textEditingController!.clear();
-                widget.formMap.remove(
-                    "field[${widget.dataFieldGroup.id.toString()}]");
-                log(widget.formMap.toString());
-              },
-              icon: Icon(
-                Icons.cancel,
-                size: 20,
-                color: Colors.blue,
+          padding: const EdgeInsets.all(10.0),
+          child: TextFormField(
+            validator: widget.dataFieldGroup.required == true
+                ? (value) {
+                    if (value!.isEmpty) {
+                      return 'Ce champs est obligatoire';
+                    } else {
+                      return null;
+                    }
+                  }
+                : null,
+            readOnly: true,
+            controller: _textEditingController,
+            decoration: InputDecoration(
+              labelStyle: TextStyle(color: Colors.grey),
+              hintStyle: TextStyle(color: Colors.grey),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5.5),
               ),
-            )
-          : null,
-      prefixIcon: IconButton(
-        onPressed: () async {
-          TimeOfDay? timeOfDay = await showTimePicker(
-            context: context,
-            initialTime: TimeOfDay(hour: 00, minute: 00),
-            builder: customDatePickerBuilder,
-          );
-          if (timeOfDay != null) {
-            String formattedTime = _formatTimeOfDay(timeOfDay);
-            log(formattedTime);
-            setState(() {
-              _textEditingController?.text = formattedTime;
-            });
-            widget.formMap[
-                "field[${widget.dataFieldGroup.id.toString()}]"] = formattedTime;
-            log(widget.formMap.toString());
-          }
-        },
-        icon: Icon(Icons.date_range, size: 20, color: Colors.blue),
-      ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10.0),
-        ),
-      ),
-      contentPadding: EdgeInsets.symmetric(
-        vertical: 12.0, // Ajustez la hauteur intérieure
-        horizontal: 12.0, // Ajustez la largeur intérieure
-      ),
-    ),
-  ),
-);
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+                borderRadius: BorderRadius.circular(5.5),
+              ),
+              labelText: widget.dataFieldGroup.alias,
+              hintText: "Search",
+              suffixIcon: _textEditingController!.text.isNotEmpty
+                  ? IconButton(
+                      onPressed: () {
+                        _textEditingController!.clear();
+                        widget.formMap.remove(
+                            "field[${widget.dataFieldGroup.id.toString()}]");
+                        log(widget.formMap.toString());
+                      },
+                      icon: Icon(
+                        Icons.cancel,
+                        size: 20,
+                        color: Colors.blue,
+                      ),
+                    )
+                  : null,
+              prefixIcon: IconButton(
+                onPressed: () async {
+                  TimeOfDay? timeOfDay = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay(hour: 00, minute: 00),
+                    builder: customDatePickerBuilder,
+                  );
+                  if (timeOfDay != null) {
+                    String formattedTime = _formatTimeOfDay(timeOfDay);
+                    log(formattedTime);
+                    setState(() {
+                      _textEditingController?.text = formattedTime;
+                    });
+                    widget.formMap[
+                            "field[${widget.dataFieldGroup.id.toString()}]"] =
+                        formattedTime;
+                    log(widget.formMap.toString());
+                  }
+                },
+                icon: Icon(Icons.date_range, size: 20, color: Colors.blue),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10.0),
+                ),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 12.0, // Ajustez la hauteur intérieure
+                horizontal: 12.0, // Ajustez la largeur intérieure
+              ),
+            ),
+          ),
+        );
 
       case "date_time":
         return Padding(

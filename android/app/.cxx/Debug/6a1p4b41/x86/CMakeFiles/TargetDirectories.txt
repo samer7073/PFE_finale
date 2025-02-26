@@ -1,0 +1,2 @@
+/Users/comunik/Desktop/dev/PFE_finale/android/app/.cxx/Debug/6a1p4b41/x86/CMakeFiles/rebuild_cache.dir
+/Users/comunik/Desktop/dev/PFE_finale/android/app/.cxx/Debug/6a1p4b41/x86/CMakeFiles/edit_cache.dir
